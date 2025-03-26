@@ -1,0 +1,13 @@
+{
+  "name": "@chealt/coffee",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chealt/coffee.git"
+  },
+  "homepage": "https://github.com/chealt/coffee",
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT"
+}
