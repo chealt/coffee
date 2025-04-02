@@ -7,6 +7,7 @@
     "packages/*"
   ],
   "scripts": {
+    "build": "yarn workspace @chealt/coffee build",
     "lint": "eslint ."
   },
   "devDependencies": {
