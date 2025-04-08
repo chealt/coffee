@@ -8,6 +8,8 @@ __metadata:
 "@chealt/coffee@workspace:packages/coffee.chealt.com":
   version: 0.0.0-use.local
   resolution: "@chealt/coffee@workspace:packages/coffee.chealt.com"
+  dependencies:
+    wrangler: "npm:^4.6.0"
   languageName: unknown
   linkType: soft
 
@@ -988,7 +990,6 @@ __metadata:
     eslint-config-prettier: "npm:^10.1.1"
     eslint-plugin-import: "npm:^2.31.0"
     globals: "npm:^16.0.0"
-    wrangler: "npm:^4.6.0"
   languageName: unknown
   linkType: soft
 

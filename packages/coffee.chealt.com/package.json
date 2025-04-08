@@ -12,5 +12,8 @@
   "license": "MIT",
   "scripts": {
     "build": "rm -rf dist && mkdir -p dist && cp src/index.html dist"
+  },
+  "devDependencies": {
+    "wrangler": "^4.6.0"
   }
 }
