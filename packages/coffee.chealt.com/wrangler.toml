@@ -1,2 +1,2 @@
-name = "coffee.chealt.com"
+name = "coffee-chealt-com"
 assets = { directory = "./dist" }
