@@ -1,3 +1,3 @@
-name = "coffee-chealt-com"
+name = "coffee"
 compatibility_date = "2025-04-08"
 assets = { directory = "./dist" }
