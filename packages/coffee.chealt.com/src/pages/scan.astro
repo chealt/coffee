@@ -1,0 +1,15 @@
+---
+import Common from "./common.astro";
+import Button from "../components/button.astro";
+---
+
+<Common>
+  <h1>Scan your coffee</h1>
+  <Button id="scan">SCAN</Button>
+</Common>
+
+<script>
+  document.querySelector("#scan")?.addEventListener("click", () => {
+    console.log("scan");
+  });
+</script>
