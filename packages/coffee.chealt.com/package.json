@@ -11,9 +11,15 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "rm -rf dist && mkdir -p dist && cp src/index.html dist"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
   },
   "devDependencies": {
+    "@astrojs/cloudflare": "^12.4.0",
     "wrangler": "^4.6.0"
+  },
+  "dependencies": {
+    "astro": "^5.6.1"
   }
 }

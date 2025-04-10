@@ -14,3 +14,10 @@
 
 # Build
 dist
+
+# Mac
+.DS_Store
+
+# Astro
+.astro
+node_modules/
