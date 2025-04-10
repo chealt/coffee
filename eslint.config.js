@@ -4,7 +4,7 @@ import globals from 'globals';
 import importPlugin from 'eslint-plugin-import';
 
 export default defineConfig([
-  globalIgnores(['.yarn/*', '.*', '**/dist/*']),
+  globalIgnores(['.yarn/*', '.*', '**/dist/*', '**/.astro/*']),
   importPlugin.flatConfigs.recommended,
   {
     languageOptions: {
