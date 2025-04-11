@@ -1,0 +1,19 @@
+---
+import Common from "../common.astro";
+import Button from "../../components/button.astro";
+
+import "./scan.css";
+---
+
+<Common>
+  <h1>Add your coffee</h1>
+  <ul id="pictures"></ul>
+  <Button id="open-camera">Use the camera</Button>
+  <div id="camera">
+    <video id="video">Video stream not available.</video>
+    <Button id="capture-photo">Take a photo</Button>
+    <canvas id="photo"></canvas>
+  </div>
+</Common>
+
+<script src="./capture.js"></script>

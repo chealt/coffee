@@ -1,0 +1,8 @@
+:root {
+  --gap: 1rem;
+}
+
+html,
+body {
+  margin: 0;
+}
