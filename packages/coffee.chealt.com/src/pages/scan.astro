@@ -7,13 +7,18 @@ import "../components/scan/scan.css";
 
 <Common>
   <h1>Add your coffee</h1>
-  <ul id="pictures"></ul>
-  <Button id="open-camera">Use the camera</Button>
-  <div id="camera">
-    <video id="video">Video stream not available.</video>
-    <Button id="capture-photo">Take a photo</Button>
-    <canvas id="photo"></canvas>
-  </div>
+  <coffee-gallery>
+    <ul id="pictures"></ul>
+    <Button id="open-camera">Use the camera</Button>
+    <Button id="open-upload">Upload an image</Button>
+    <div id="camera">
+      <video id="video">Video stream not available.</video>
+      <Button id="capture-photo">Take a photo</Button>
+      <canvas id="photo"></canvas>
+    </div>
+  </coffee-gallery>
 </Common>
 
+<script src="../components/scan/coffee-gallery.js"></script>
 <script src="../components/scan/scan.js"></script>
+<script src="../components/scan/upload.js"></script>

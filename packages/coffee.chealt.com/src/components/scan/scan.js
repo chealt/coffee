@@ -1,8 +1,9 @@
+import { writeFile } from '../../utils/file';
+
 const video = document.getElementById('video');
 const camera = document.getElementById('camera');
 const photo = document.getElementById('photo');
 const captureButton = document.getElementById('capture-photo');
-const pictures = document.getElementById('pictures');
 
 document.querySelector('#open-camera').addEventListener('click', () => {
   navigator.mediaDevices
@@ -45,16 +46,17 @@ captureButton.addEventListener(
       photo.height = height;
       context.drawImage(video, 0, 0, width, height);
 
-      const data = photo.toDataURL('image/png');
-      const image = new Image(width, height);
-      image.src = data;
+      photo.toBlob(async (blob) => {
+        const fileData = new File([blob], `${Date.now()}.png`, blob); // PNG is the default for a canvas' toBlob method
 
-      const picture = document.createElement('li');
+        await writeFile(fileData);
+
+        const refreshEvent = new CustomEvent('coffee-gallery-refresh', { bubbles: true });
+
+        document.querySelector('coffee-gallery').dispatchEvent(refreshEvent);
+      });
 
       camera.classList.remove('recording');
-
-      picture.appendChild(image);
-      pictures.appendChild(picture);
     }
 
     event.preventDefault();
