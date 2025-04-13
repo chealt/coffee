@@ -7,5 +7,7 @@ document.getElementById('open-upload').addEventListener('click', async () => {
     multiple: false
   });
 
-  writeFile(fileData);
+  await writeFile(fileData);
+
+  document.querySelector('coffee-gallery').dispatchEvent(new CustomEvent('coffee-gallery-refresh'));
 });

@@ -51,9 +51,7 @@ captureButton.addEventListener(
 
         await writeFile(fileData);
 
-        const refreshEvent = new CustomEvent('coffee-gallery-refresh', { bubbles: true });
-
-        document.querySelector('coffee-gallery').dispatchEvent(refreshEvent);
+        document.querySelector('coffee-gallery').dispatchEvent(new CustomEvent('coffee-gallery-refresh'));
       });
 
       camera.classList.remove('recording');
