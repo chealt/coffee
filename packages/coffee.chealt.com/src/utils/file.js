@@ -24,4 +24,11 @@ const writeFile = async (fileData) => {
   writable.close();
 };
 
-export { openFile, writeFile, onlyImagePickerOptions };
+const deleteFile = async (name) => {
+  const rootDirectory = await navigator.storage.getDirectory();
+  const fileHandle = await rootDirectory.getFileHandle(name);
+
+  return fileHandle.remove();
+};
+
+export { openFile, writeFile, deleteFile, onlyImagePickerOptions };

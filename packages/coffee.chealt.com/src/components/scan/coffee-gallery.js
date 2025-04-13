@@ -1,3 +1,5 @@
+import { deleteFile } from '../../utils/file';
+
 class CoffeeGallery extends HTMLElement {
   static refreshEventName = 'coffee-gallery-refresh';
 
@@ -19,10 +21,22 @@ class CoffeeGallery extends HTMLElement {
         const image = new Image(this.pictures.clientWidth);
         image.src = URL.createObjectURL(fileData);
 
+        // add a list item
         const picture = document.createElement('li');
         picture.setAttribute('data-name', name);
 
         picture.appendChild(image);
+
+        // add a delete button
+        const deleteButton = document.createElement('button');
+        deleteButton.innerText = 'delete';
+
+        deleteButton.addEventListener('click', () => {
+          this.pictures.removeChild(picture);
+          deleteFile(name);
+        });
+
+        picture.appendChild(deleteButton);
 
         this.pictures.appendChild(picture);
       }
