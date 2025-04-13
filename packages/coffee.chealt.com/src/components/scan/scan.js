@@ -7,7 +7,7 @@ const captureButton = document.getElementById('capture-photo');
 
 document.querySelector('#open-camera').addEventListener('click', () => {
   navigator.mediaDevices
-    .getUserMedia({ video: true, audio: false })
+    .getUserMedia({ video: true, audio: false, facingMode: { exact: 'environment' } })
     .then((stream) => {
       video.srcObject = stream;
       video.play();
