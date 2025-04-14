@@ -10,7 +10,9 @@ import "../components/scan/scan.css";
   <coffee-gallery>
     <ul id="pictures"></ul>
     <Button id="open-camera">Use the camera</Button>
-    <Button id="open-upload">Upload an image</Button>
+    <coffee-image-upload>
+      <Button>Upload an image</Button>
+    </coffee-image-upload>
     <div id="camera">
       <video id="video">Video stream not available.</video>
       <Button id="capture-photo">Take a photo</Button>
@@ -21,4 +23,4 @@ import "../components/scan/scan.css";
 
 <script src="../components/scan/coffee-gallery.js"></script>
 <script src="../components/scan/scan.js"></script>
-<script src="../components/scan/upload.js"></script>
+<script src="../components/scan/coffee-image-upload.js"></script>
