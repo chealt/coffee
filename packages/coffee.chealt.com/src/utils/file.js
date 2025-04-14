@@ -20,8 +20,8 @@ const writeFile = async (fileData) => {
   const fileHandle = await rootDirectory.getFileHandle(fileData.name, { create: true });
   const writable = await fileHandle.createWritable();
 
-  writable.write(fileData);
-  writable.close();
+  await writable.write(fileData);
+  await writable.close();
 };
 
 const deleteFile = async (name) => {

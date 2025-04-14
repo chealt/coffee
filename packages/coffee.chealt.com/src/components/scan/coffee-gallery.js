@@ -45,11 +45,7 @@ class CoffeeGallery extends HTMLElement {
 
   addRefreshListener() {
     this.addEventListener(CoffeeGallery.refreshEventName, () => {
-      // need to trigger this async so the storage can be read outside of the event handler
-      // otherwise an error is thrown about not being able to access the directory
-      setTimeout(() => {
-        this.render();
-      }, 10);
+      this.render();
     });
   }
 }

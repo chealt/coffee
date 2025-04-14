@@ -9,7 +9,7 @@ document.querySelector('#open-camera').addEventListener('click', () => {
   navigator.mediaDevices
     .getUserMedia({
       video: {
-        facingMode: { exact: 'environment' }
+        facingMode: { ideal: 'environment' }
       },
       audio: false
     })
