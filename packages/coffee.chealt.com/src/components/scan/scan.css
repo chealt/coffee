@@ -20,3 +20,8 @@
 #pictures img {
   width: 100%;
 }
+
+#pictures .processing img::after {
+  content: 'loading';
+  width: 100%;
+}

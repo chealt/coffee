@@ -4,5 +4,19 @@
     "**/.pnp.*": true
   },
   "eslint.nodePath": ".yarn/sdks",
-  "typescript.validate.enable": false
+  "typescript.validate.enable": false,
+  "cSpell.words": [
+    "gutenye",
+    "Imread",
+    "Imshow",
+    "linalg",
+    "ocrad",
+    "onnx",
+    "ppocr",
+    "preds",
+    "RETR",
+    "sside",
+    "techstark",
+    "unclip"
+  ]
 }

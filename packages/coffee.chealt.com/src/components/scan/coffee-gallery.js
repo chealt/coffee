@@ -1,3 +1,4 @@
+import { extractText } from './ocr';
 import { deleteFile } from '../../utils/file';
 
 class CoffeeGallery extends HTMLElement {
@@ -24,7 +25,6 @@ class CoffeeGallery extends HTMLElement {
         // add a list item
         const picture = document.createElement('li');
         picture.setAttribute('data-name', name);
-
         picture.appendChild(image);
 
         // add a delete button
@@ -41,12 +41,20 @@ class CoffeeGallery extends HTMLElement {
         this.pictures.appendChild(picture);
       }
     }
+
+    this.triggerOcr();
   }
 
   addRefreshListener() {
     this.addEventListener(CoffeeGallery.refreshEventName, () => {
       this.render();
     });
+  }
+
+  async triggerOcr() {
+    for await (const image of this.pictures.querySelectorAll('img')) {
+      await extractText(image);
+    }
   }
 }
 
