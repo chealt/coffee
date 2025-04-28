@@ -1,4 +1,4 @@
-import { InferenceSession } from 'onnxruntime-web/wasm';
+import { InferenceSession } from 'onnxruntime-web';
 import invariant from 'tiny-invariant';
 
 import { FileUtils } from '../FileUtils';

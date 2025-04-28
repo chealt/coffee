@@ -11,9 +11,9 @@ export default defineConfig({
   },
   vite: {
     plugins: [wasm()],
-    assetsInclude: ['**/*.onnx'],
+    assetsInclude: ['**/*.onnx', '**/*.txt'],
     optimizeDeps: {
-      exclude: ['onnxruntime-web/wasm']
+      exclude: ['onnxruntime-web', 'onnxruntime-common']
     },
     build: {
       sourcemap: true
