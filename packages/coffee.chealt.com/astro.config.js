@@ -13,7 +13,7 @@ export default defineConfig({
     plugins: [wasm()],
     assetsInclude: ['**/*.onnx'],
     optimizeDeps: {
-      exclude: ['onnxruntime-web']
+      exclude: ['onnxruntime-web/wasm']
     },
     build: {
       sourcemap: true
