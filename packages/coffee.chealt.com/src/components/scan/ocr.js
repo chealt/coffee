@@ -1,22 +1,15 @@
 import Ocr from '@chealt/coffee-ocr';
 
-let initialized = false;
-let ocr;
+const ocr = await Ocr.create({
+  models: {
+    detectionPath: '/ch_PP-OCRv4_det_infer.onnx',
+    recognitionPath: '/ch_PP-OCRv4_rec_infer.onnx',
+    dictionaryPath: '/ppocr_keys_v1.txt'
+  },
+  onnxOptions: { executionProviders: ['webgpu'] }
+});
 
 const extractText = async (image) => {
-  if (!initialized) {
-    ocr = await Ocr.create({
-      models: {
-        detectionPath: '/ch_PP-OCRv4_det_infer.onnx',
-        recognitionPath: '/ch_PP-OCRv4_rec_infer.onnx',
-        dictionaryPath: '/ppocr_keys_v1.txt'
-      },
-      onnxOptions: { executionProviders: ['webgpu'] }
-    });
-
-    initialized = true;
-  }
-
   performance.mark('ocr-started');
 
   const imageName = image.closest('li').getAttribute('data-name');
