@@ -5,8 +5,7 @@ const ocr = await Ocr.create({
     detectionPath: '/ch_PP-OCRv4_det_infer.onnx',
     recognitionPath: '/ch_PP-OCRv4_rec_infer.onnx',
     dictionaryPath: '/ppocr_keys_v1.txt'
-  },
-  onnxOptions: { executionProviders: ['webgpu'] }
+  }
 });
 
 const extractText = async (image) => {
