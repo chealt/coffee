@@ -64,13 +64,13 @@ class CoffeeGallery extends HTMLElement {
 
           console.log(texts); // eslint-disable-line no-console
 
-          this.querySelector('.text').innerHTML = '';
-          this.querySelector('.text').appendChild(document.createElement('ul'));
+          picture.querySelector('.text').innerHTML = '';
+          picture.querySelector('.text').appendChild(document.createElement('ul'));
           texts.forEach((text) => {
             const li = document.createElement('li');
             li.innerText = text;
 
-            this.querySelector('.text ul').appendChild(li);
+            picture.querySelector('.text ul').appendChild(li);
           });
           recognizeButton.innerText = 'recognize';
         });
