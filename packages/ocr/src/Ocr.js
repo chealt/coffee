@@ -1,9 +1,11 @@
-import { InferenceSession, Tensor } from 'onnxruntime-web';
+import { env, InferenceSession, Tensor } from 'onnxruntime-web';
 
 import dictionary from './dictionary';
 import { imageFromUrl, multipleOfBaseSize, outputToImage } from './imageUtils';
 import { imageToModelInput } from './modelUtils';
 import { splitIntoLineImages } from './splitIntoLineImages';
+
+env.wasm.proxy = true;
 
 const defaultOptions = {
   debug: true,

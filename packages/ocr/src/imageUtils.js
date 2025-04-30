@@ -1,13 +1,13 @@
-const BASE_SIZE = 32;
+const baseSize = 32;
 const multipleOfBaseSize = (image) => {
   const width = image.width || image.naturalWidth;
   const height = image.height || image.naturalHeight;
 
   const newWidth = Math.max(
-    Math.ceil(width / BASE_SIZE) * BASE_SIZE,
-    BASE_SIZE
+    Math.ceil(width / baseSize) * baseSize,
+    baseSize
   );
-  const newHeight = Math.max(Math.ceil(height / BASE_SIZE) * BASE_SIZE, BASE_SIZE);
+  const newHeight = Math.max(Math.ceil(height / baseSize) * baseSize, baseSize);
 
   return { width: newWidth, height: newHeight };
 };

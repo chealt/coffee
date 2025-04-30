@@ -6,10 +6,24 @@ class CoffeeGallery extends HTMLElement {
   async connectedCallback() {
     this.pictures = this.querySelector('#pictures');
 
-    const ocr = await (await import('@chealt/ocr')).default();
-    this.extractText = ocr.extractText;
+    this.initOcr();
     this.render();
     this.addRefreshListener();
+  }
+
+  async initOcr() {
+    this.classList.add('loading-ocr');
+
+    this.ocrPromise = new Promise(async (resolve) => {
+      const ocr = await (await import('@chealt/ocr')).default();
+
+      this.extractText = ocr.extractText;
+      resolve();
+    });
+
+    await this.ocrPromise;
+
+    this.classList.remove('loading-ocr');
   }
 
   async render() {
@@ -44,12 +58,29 @@ class CoffeeGallery extends HTMLElement {
         recognizeButton.innerText = 'recognize';
 
         recognizeButton.addEventListener('click', async () => {
-          const text = await this.extractText(image.src);
+          recognizeButton.innerText = 'loading...';
+          await this.ocrPromise;
+          const texts = await this.extractText(image.src);
 
-          console.log(text); // eslint-disable-line no-console
+          console.log(texts); // eslint-disable-line no-console
+
+          this.querySelector('.text').innerHTML = '';
+          this.querySelector('.text').appendChild(document.createElement('ul'));
+          texts.forEach((text) => {
+            const li = document.createElement('li');
+            li.innerText = text;
+
+            this.querySelector('.text ul').appendChild(li);
+          });
+          recognizeButton.innerText = 'recognize';
         });
 
         picture.appendChild(recognizeButton);
+
+        const text = document.createElement('div');
+        text.classList.add('text');
+
+        picture.appendChild(text);
 
         this.pictures.appendChild(picture);
       }

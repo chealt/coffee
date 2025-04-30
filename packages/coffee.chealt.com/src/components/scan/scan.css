@@ -25,3 +25,11 @@
   content: 'loading';
   width: 100%;
 }
+
+coffee-gallery .loading-ocr {
+  display: none;
+}
+
+coffee-gallery.loading-ocr .loading-ocr{
+  display: block;
+}
