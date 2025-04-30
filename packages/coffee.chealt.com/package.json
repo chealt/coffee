@@ -13,15 +13,15 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro build && astro preview"
   },
   "devDependencies": {
     "@astrojs/cloudflare": "^12.5.1",
+    "vite-plugin-wasm": "^3.4.1",
     "wrangler": "^4.12.1"
   },
   "dependencies": {
-    "@chealt/coffee-ocr": "workspace:^",
-    "astro": "^5.7.5",
-    "vite-plugin-wasm": "^3.4.1"
+    "@chealt/ocr": "workspace:^",
+    "astro": "^5.7.5"
   }
 }

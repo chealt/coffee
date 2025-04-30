@@ -2,8 +2,6 @@
 import cv from '@techstark/opencv-js';
 import clipper from 'js-clipper';
 
-import { ImageRaw } from '../ImageRaw';
-
 const boxPoints = (center, size, angle) => {
   const width = size.width;
   const height = size.height;
@@ -177,7 +175,7 @@ const flatten = (arr) => arr
 
 const cvImread = (image) => cv.matFromImageData(image);
 
-const cvImshow = (mat) => new ImageRaw({ data: mat.data, width: mat.cols, height: mat.rows });
+const cvImshow = (mat) => ({ data: mat.data, width: mat.cols, height: mat.rows });
 
 const getRotateCropImage = (imageRaw, points) => {
   const img_crop_width = int(Math.max(linalgNorm(points[0], points[1]), linalgNorm(points[2], points[3])));

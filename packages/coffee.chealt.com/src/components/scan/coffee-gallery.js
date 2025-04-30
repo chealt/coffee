@@ -1,12 +1,13 @@
-import { extractText } from './ocr';
 import { deleteFile } from '../../utils/file';
 
 class CoffeeGallery extends HTMLElement {
   static refreshEventName = 'coffee-gallery-refresh';
 
-  connectedCallback() {
+  async connectedCallback() {
     this.pictures = this.querySelector('#pictures');
 
+    const ocr = await (await import('@chealt/ocr')).default();
+    this.extractText = ocr.extractText;
     this.render();
     this.addRefreshListener();
   }
@@ -38,6 +39,18 @@ class CoffeeGallery extends HTMLElement {
 
         picture.appendChild(deleteButton);
 
+        // add a delete button
+        const recognizeButton = document.createElement('button');
+        recognizeButton.innerText = 'recognize';
+
+        recognizeButton.addEventListener('click', async () => {
+          const text = await this.extractText(image.src);
+
+          console.log(text); // eslint-disable-line no-console
+        });
+
+        picture.appendChild(recognizeButton);
+
         this.pictures.appendChild(picture);
       }
     }
@@ -53,7 +66,25 @@ class CoffeeGallery extends HTMLElement {
 
   async triggerOcr() {
     for await (const image of this.pictures.querySelectorAll('img')) {
-      await extractText(image);
+      image.classList.add('processing');
+
+      let imageSrc;
+
+      if (image.complete) {
+        imageSrc = image.src;
+      } else {
+        imageSrc = await new Promise((resolve) => {
+          image.addEventListener('load', async () => {
+            resolve(image.src);
+          });
+        });
+      }
+
+      // const text = await extractText(imageSrc);
+
+      // console.log(text); // eslint-disable-line no-console
+
+      image.classList.remove('processing');
     }
   }
 }
