@@ -6,6 +6,7 @@ const photo = document.getElementById('photo');
 const captureButton = document.getElementById('capture-photo');
 
 document.querySelector('#open-camera').addEventListener('click', () => {
+  document.querySelector('#camera').showModal();
   navigator.mediaDevices
     .getUserMedia({
       video: {
@@ -30,14 +31,6 @@ video.addEventListener(
   'canplay',
   () => {
     camera.classList.add('recording');
-
-    const width = camera.clientWidth;
-    const height = (video.videoHeight / video.videoWidth) * width;
-
-    video.setAttribute('width', width);
-    video.setAttribute('height', height);
-    photo.setAttribute('width', width);
-    photo.setAttribute('height', height);
   }
 );
 
@@ -59,6 +52,7 @@ captureButton.addEventListener(
 
         await writeFile(fileData);
 
+        document.querySelector('#camera').close();
         document.querySelector('coffee-gallery').dispatchEvent(new CustomEvent('coffee-gallery-refresh'));
       });
 
