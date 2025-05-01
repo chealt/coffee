@@ -16,12 +16,12 @@
     "preview": "astro build && astro preview"
   },
   "devDependencies": {
-    "@astrojs/cloudflare": "^12.5.1",
+    "@astrojs/cloudflare": "^12.5.2",
     "vite-plugin-wasm": "^3.4.1",
-    "wrangler": "^4.12.1"
+    "wrangler": "^4.13.2"
   },
   "dependencies": {
     "@chealt/ocr": "workspace:^",
-    "astro": "^5.7.5"
+    "astro": "^5.7.10"
   }
 }
