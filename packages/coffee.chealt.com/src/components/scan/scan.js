@@ -9,6 +9,9 @@ document.querySelector('#open-camera').addEventListener('click', () => {
   navigator.mediaDevices
     .getUserMedia({
       video: {
+        // ideally 4K
+        width: { ideal: 4096 },
+        height: { ideal: 2160 },
         facingMode: { ideal: 'environment' }
       },
       audio: false
@@ -41,8 +44,8 @@ video.addEventListener(
 captureButton.addEventListener(
   'click',
   (event) => {
-    const width = camera.clientWidth;
-    const height = (video.videoHeight / video.videoWidth) * width;
+    const width = video.videoWidth;
+    const height = video.videoHeight;
 
     if (width && height) {
       const context = photo.getContext('2d');
