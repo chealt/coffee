@@ -1,0 +1,9 @@
+button {
+  background-color: white;
+  padding: var(--gap);
+  color: black;
+  width: 100%;
+  border: 0px none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}

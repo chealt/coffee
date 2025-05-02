@@ -10,10 +10,12 @@ import "../components/scan/scan.css";
   <coffee-gallery>
     <div class="loading-ocr">Loading OCR</div>
     <ul id="pictures"></ul>
-    <Button id="open-camera">Use the camera</Button>
-    <coffee-image-upload>
-      <Button>Upload an image</Button>
-    </coffee-image-upload>
+    <div id="controls">
+      <Button id="open-camera" class="control">Camera</Button>
+      <coffee-image-upload class="control">
+        <Button>Upload</Button>
+      </coffee-image-upload>
+    </div>
     <dialog id="camera">
       <video id="video">Video stream not available.</video>
       <Button id="capture-photo" aria-label="Take a photo" />
