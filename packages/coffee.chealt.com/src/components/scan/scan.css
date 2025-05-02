@@ -33,6 +33,7 @@ dialog:open {
   border-color: white;
   border-width: 6px;
   border-style: double;
+  width: auto;
 }
 
 #pictures {
