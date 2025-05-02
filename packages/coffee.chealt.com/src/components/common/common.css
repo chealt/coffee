@@ -8,6 +8,11 @@
 html,
 body {
   margin: 0;
+  min-height: 100%;
+}
+
+body {
+  padding-bottom: 60px; /* leave space for bottom controls */
 }
 
 .visually-hidden {

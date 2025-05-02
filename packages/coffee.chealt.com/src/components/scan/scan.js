@@ -1,5 +1,6 @@
 import { writeFile } from '../../utils/file';
 
+let mediaStream = null;
 const video = document.getElementById('video');
 const camera = document.getElementById('camera');
 const photo = document.getElementById('photo');
@@ -20,6 +21,7 @@ document.querySelector('#open-camera').addEventListener('click', () => {
     .then((stream) => {
       video.srcObject = stream;
       video.play();
+      mediaStream = stream;
     })
     .catch((err) => {
       // eslint-disable-next-line no-console
@@ -62,3 +64,9 @@ captureButton.addEventListener(
     event.preventDefault();
   }
 );
+
+camera.addEventListener('close', () => {
+  const videoTrack = mediaStream.getVideoTracks()[0];
+  mediaStream.removeTrack(videoTrack);
+  video.pause();
+});

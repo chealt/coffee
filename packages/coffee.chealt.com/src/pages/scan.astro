@@ -1,6 +1,7 @@
 ---
 import Common from "../components/common/common.astro";
 import Button from "../components/button.astro";
+import Dialog from "../components/dialog.astro";
 
 import "../components/scan/scan.css";
 ---
@@ -16,11 +17,13 @@ import "../components/scan/scan.css";
         <Button>Upload</Button>
       </coffee-image-upload>
     </div>
-    <dialog id="camera">
-      <video id="video">Video stream not available.</video>
-      <Button id="capture-photo" aria-label="Take a photo" />
-      <canvas id="photo" class="visually-hidden"></canvas>
-    </dialog>
+    <Dialog>
+      <dialog id="camera">
+        <video id="video">Video stream not available.</video>
+        <Button id="capture-photo" aria-label="Take a photo" />
+        <canvas id="photo" class="visually-hidden"></canvas>
+      </dialog>
+    </Dialog>
   </coffee-gallery>
 </Common>
 

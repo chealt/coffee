@@ -1,0 +1,21 @@
+dialog {
+  padding: 0;
+  min-width: calc(100% - calc(2 * var(--gap)));
+  min-height: calc(100% - calc(2 * var(--gap)));
+  background-color: var(--color-background);
+  border-radius: 10px;
+  border-width: 6px;
+  flex-direction: column;
+  box-sizing: border-box;
+  margin: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+dialog:open {
+  display: flex;
+}
