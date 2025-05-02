@@ -85,38 +85,12 @@ class CoffeeGallery extends HTMLElement {
         this.pictures.appendChild(picture);
       }
     }
-
-    this.triggerOcr();
   }
 
   addRefreshListener() {
     this.addEventListener(CoffeeGallery.refreshEventName, () => {
       this.render();
     });
-  }
-
-  async triggerOcr() {
-    for await (const image of this.pictures.querySelectorAll('img')) {
-      image.classList.add('processing');
-
-      let imageSrc;
-
-      if (image.complete) {
-        imageSrc = image.src;
-      } else {
-        imageSrc = await new Promise((resolve) => {
-          image.addEventListener('load', async () => {
-            resolve(image.src);
-          });
-        });
-      }
-
-      // const text = await extractText(imageSrc);
-
-      // console.log(text); // eslint-disable-line no-console
-
-      image.classList.remove('processing');
-    }
   }
 }
 

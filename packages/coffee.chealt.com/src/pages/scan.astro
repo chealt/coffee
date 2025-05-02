@@ -11,22 +11,24 @@ import "../components/scan/scan.css";
   <coffee-gallery>
     <div class="loading-ocr">Loading OCR</div>
     <ul id="pictures"></ul>
-    <div id="controls">
-      <Button id="open-camera" class="control">Camera</Button>
-      <coffee-image-upload class="control">
-        <Button>Upload</Button>
-      </coffee-image-upload>
-    </div>
-    <Dialog>
-      <dialog id="camera">
-        <video id="video">Video stream not available.</video>
-        <Button id="capture-photo" aria-label="Take a photo" />
-        <canvas id="photo" class="visually-hidden"></canvas>
-      </dialog>
-    </Dialog>
+    <coffee-scanner>
+      <div id="controls">
+        <Button id="open-camera" class="control">Camera</Button>
+        <coffee-image-upload class="control">
+          <Button>Upload</Button>
+        </coffee-image-upload>
+      </div>
+      <Dialog>
+        <dialog id="camera">
+          <video id="video">Video stream not available.</video>
+          <Button id="capture-photo" aria-label="Take a photo" />
+          <canvas id="photo" class="visually-hidden"></canvas>
+        </dialog>
+      </Dialog>
+    </coffee-scanner>
   </coffee-gallery>
 </Common>
 
 <script src="../components/scan/coffee-image-upload.js"></script>
 <script src="../components/scan/coffee-gallery.js"></script>
-<script src="../components/scan/scan.js"></script>
+<script src="../components/scan/coffee-scanner.js"></script>
