@@ -1,14 +1,15 @@
+/* eslint-disable no-console */
 import { env, InferenceSession, Tensor } from 'onnxruntime-web';
 
 import dictionary from './dictionary';
-import { imageFromUrl, multipleOfBaseSize, outputToImage } from './imageUtils';
+import { appendImage, imageFromUrl, multipleOfBaseSize, outputToImage } from './imageUtils';
 import { imageToModelInput } from './modelUtils';
 import { splitIntoLineImages } from './splitIntoLineImages';
 
 env.wasm.proxy = true;
 
 const defaultOptions = {
-  debug: true,
+  debug: false,
   modelPaths: {
     detectionPath: '/ch_PP-OCRv4_det_infer.onnx',
     recognitionPath: '/ch_PP-OCRv4_rec_infer.onnx',
@@ -25,11 +26,15 @@ const OCR = async ({ debug, modelPaths: { detectionPath, recognitionPath }, onnx
 
   const resizeImage = ({ image, width, height }) => {
     const canvas = document.createElement('canvas');
-    canvas.width = width || image.width;
-    canvas.height = height || image.height;
+    canvas.width = width || Math.round((image.width / image.height) * height);
+    canvas.height = height || Math.round((image.height / image.width) * width);
 
     if (image.data) {
-      canvas.getContext('2d').putImageData(new ImageData(Uint8ClampedArray.from(image.data), image.width, image.height), 0, 0);
+      const oldCanvas = document.createElement('canvas');
+      oldCanvas.width = image.width;
+      oldCanvas.height = image.height;
+      oldCanvas.getContext('2d').putImageData(new ImageData(Uint8ClampedArray.from(image.data), image.width, image.height), 0, 0);
+      canvas.getContext('2d').drawImage(oldCanvas, 0, 0, canvas.width, canvas.height);
     } else {
       canvas.getContext('2d').drawImage(image, 0, 0, width, height);
     }
@@ -70,6 +75,10 @@ const OCR = async ({ debug, modelPaths: { detectionPath, recognitionPath }, onnx
     const modelOutput = await runModel({ model: detectionModel, image });
     const outputImage = outputToImage(modelOutput, 0.03);
     const lineImages = await splitIntoLineImages(outputImage, image);
+
+    if (debug) {
+      console.debug(lineImages);
+    }
 
     return {
       lineImages,
@@ -265,6 +274,10 @@ const OCR = async ({ debug, modelPaths: { detectionPath, recognitionPath }, onnx
     const allLines = [];
 
     for (const { image } of lineImages) {
+      if (debug) {
+        appendImage(image);
+      }
+
       // Resize Image to 48px height
       //  - height must <= 48
       //  - height: 48 is more accurate then 40, but same as 30
@@ -272,6 +285,11 @@ const OCR = async ({ debug, modelPaths: { detectionPath, recognitionPath }, onnx
         image,
         height: 48
       });
+
+      if (debug) {
+        appendImage(resizedImage);
+      }
+
       const output = await runModel({ model: recognitionModel, image: resizedImage });
       const lines = await decodeText(output);
       allLines.unshift(...lines);
@@ -296,7 +314,7 @@ const OCR = async ({ debug, modelPaths: { detectionPath, recognitionPath }, onnx
     });
 
     if (debug) {
-      console.debug(`OCR took ${ocrPerformance.duration / 1000} seconds for ${imageSrc}`); // eslint-disable-line no-console
+      console.debug(`OCR took ${ocrPerformance.duration / 1000} seconds for ${imageSrc}`);
     }
 
     return texts.map(({ text }) => text);

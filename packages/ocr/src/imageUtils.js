@@ -37,4 +37,18 @@ const imageFromUrl = async (url) => {
   return image;
 };
 
-export { imageFromUrl, multipleOfBaseSize, outputToImage };
+const appendImage = (image) => {
+  const imageData = new ImageData(Uint8ClampedArray.from(image.data), image.width, image.height);
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = imageData.width;
+  canvas.height = imageData.height;
+  ctx.putImageData(imageData, 0, 0);
+
+  const newImage = new Image();
+  newImage.src = canvas.toDataURL();
+
+  document.body.appendChild(newImage);
+};
+
+export { imageFromUrl, multipleOfBaseSize, outputToImage, appendImage };
