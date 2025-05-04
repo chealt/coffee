@@ -16,19 +16,28 @@ const openFile = async (options) => {
 };
 
 const writeFile = async (fileData) => {
-  const rootDirectory = await navigator.storage.getDirectory();
-  const fileHandle = await rootDirectory.getFileHandle(fileData.name, { create: true });
-  const writable = await fileHandle.createWritable();
+  const fileWorker = new Worker(new URL('./fileWorker.js', import.meta.url));
 
-  await writable.write(fileData);
-  await writable.close();
+  return new Promise((resolve, reject) => {
+    fileWorker.onmessage = (event) => {
+      if (event.data.success) {
+        resolve();
+      } else {
+        reject(event.data.error);
+      }
+    };
+
+    fileWorker.postMessage({
+      command: 'writeFile',
+      data: fileData
+    });
+  });
 };
 
 const deleteFile = async (name) => {
   const rootDirectory = await navigator.storage.getDirectory();
-  const fileHandle = await rootDirectory.getFileHandle(name);
 
-  return fileHandle.remove();
+  return rootDirectory.removeEntry(name);
 };
 
 export { openFile, writeFile, deleteFile, onlyImagePickerOptions };

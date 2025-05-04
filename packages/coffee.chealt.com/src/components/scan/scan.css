@@ -1,10 +1,16 @@
 #camera #video {
   width: 100%;
+  height: calc(100vh - calc(2 * var(--gap)) - 12px); /* minus the margin and border width twice */
+}
+
+#capture-button-container {
+  position: absolute;
+  text-align: center;
+  bottom: var(--gap);
+  width: 100%;
 }
 
 #capture-photo {
-  position: absolute;
-  bottom: var(--gap);
   padding: var(--gap--l);
   border-radius: 50%;
   background-color: crimson;
@@ -38,7 +44,7 @@ coffee-gallery .loading-ocr {
   display: none;
 }
 
-coffee-gallery.loading-ocr .loading-ocr{
+coffee-gallery.loading-ocr .loading-ocr {
   display: block;
 }
 

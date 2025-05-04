@@ -21,7 +21,9 @@ import "../components/scan/scan.css";
       <Dialog>
         <dialog id="camera">
           <video id="video">Video stream not available.</video>
-          <Button id="capture-photo" aria-label="Take a photo" />
+          <div id="capture-button-container">
+            <Button id="capture-photo" aria-label="Take a photo" />
+          </div>
           <canvas id="photo" class="visually-hidden"></canvas>
         </dialog>
       </Dialog>
