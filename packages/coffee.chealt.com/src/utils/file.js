@@ -1,3 +1,30 @@
+const showOpenFilePickerPolyfill = (options) => new Promise((resolve) => {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.multiple = options.multiple;
+  input.accept = options.types
+    .map((type) => type.accept)
+    .flatMap((inst) => Object.keys(inst).flatMap((key) => inst[key]))
+    .join(',');
+
+  input.addEventListener('change', () => {
+    resolve(
+      [...input.files].map((file) => ({
+        getFile: async () =>
+          new Promise((resolveFile) => {
+            resolveFile(file);
+          })
+      }))
+    );
+  });
+
+  input.click();
+});
+
+if (typeof window.showOpenFilePicker !== 'function') {
+  window.showOpenFilePicker = showOpenFilePickerPolyfill;
+}
+
 const onlyImagePickerOptions = {
   types: [
     {
