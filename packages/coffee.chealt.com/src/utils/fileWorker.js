@@ -38,7 +38,7 @@ onmessage = async ({ data: { data, command } }) => {
     return undefined;
   default:
     // eslint-disable-next-line no-console
-    console.error(`missing command specified: '${event.command}'`);
+    console.error(`missing command specified: '${command}'`);
 
     return undefined;
   }
