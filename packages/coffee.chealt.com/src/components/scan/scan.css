@@ -1,6 +1,8 @@
 #camera #video {
+  display: block;
   width: 100%;
-  height: calc(100vh - calc(2 * var(--gap)) - 12px); /* minus the margin and border width twice */
+  height: 100vh;
+  background-color: black;
 }
 
 #capture-button-container {

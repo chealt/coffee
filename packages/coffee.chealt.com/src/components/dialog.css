@@ -1,12 +1,10 @@
 dialog {
+  margin: 0;
   padding: 0;
-  min-width: calc(100% - calc(2 * var(--gap)));
-  min-height: calc(100% - calc(2 * var(--gap)));
+  min-width: 100%;
+  min-height: 100%;
   background-color: var(--color-background);
-  border-radius: 10px;
-  border-width: 6px;
-  box-sizing: border-box;
-  margin: 1rem;
+  border-width: 0;
 }
 
 dialog::backdrop {
