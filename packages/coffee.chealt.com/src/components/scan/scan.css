@@ -1,8 +1,20 @@
 #camera #video {
+  position: relative;
   display: block;
   width: 100%;
   height: 100dvh;
   background-color: black;
+  z-index: var(--z-index--s);
+  -webkit-transform-style: preserve-3d;
+}
+
+video::-webkit-media-controls {
+  display: none !important;
+}
+
+video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
 }
 
 #capture-button-container {
@@ -10,6 +22,7 @@
   text-align: center;
   bottom: var(--gap);
   width: 100%;
+  z-index: var(--z-index--m); /* above the #video */
 }
 
 #capture-photo {

@@ -3,6 +3,12 @@
   --gap--l: 1.4rem;
 
   --color-background: white;
+
+  --z-index--xs: 10;
+  --z-index--s: 20;
+  --z-index--m: 30;
+  --z-index--l: 40;
+  --z-index--xl: 50;
 }
 
 html,
