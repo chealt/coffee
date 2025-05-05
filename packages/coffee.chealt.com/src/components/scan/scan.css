@@ -35,6 +35,7 @@
 
 #pictures img {
   width: 100%;
+  display: block;
 }
 
 #pictures .processing img::after {
@@ -48,6 +49,12 @@ coffee-gallery .loading-ocr {
 
 coffee-gallery.loading-ocr .loading-ocr {
   display: block;
+}
+
+coffee-gallery .controls {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }
 
 #controls {

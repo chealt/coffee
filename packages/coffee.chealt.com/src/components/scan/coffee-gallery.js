@@ -42,18 +42,11 @@ class CoffeeGallery extends HTMLElement {
         picture.setAttribute('data-name', name);
         picture.appendChild(image);
 
-        // add a delete button
-        const deleteButton = document.createElement('button');
-        deleteButton.innerText = 'delete';
+        // add controls
+        const controls = document.createElement('div');
+        controls.classList.add('controls');
 
-        deleteButton.addEventListener('click', () => {
-          this.pictures.removeChild(picture);
-          deleteFile(name);
-        });
-
-        picture.appendChild(deleteButton);
-
-        // add a delete button
+        // add a recognize button
         const recognizeButton = document.createElement('button');
         recognizeButton.innerText = 'recognize';
 
@@ -75,7 +68,20 @@ class CoffeeGallery extends HTMLElement {
           recognizeButton.innerText = 'recognize';
         });
 
-        picture.appendChild(recognizeButton);
+        controls.appendChild(recognizeButton);
+
+        // add a delete button
+        const deleteButton = document.createElement('button');
+        deleteButton.innerText = 'delete';
+
+        deleteButton.addEventListener('click', () => {
+          this.pictures.removeChild(picture);
+          deleteFile(name);
+        });
+
+        controls.appendChild(deleteButton);
+
+        picture.appendChild(controls);
 
         const text = document.createElement('div');
         text.classList.add('text');
