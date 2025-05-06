@@ -276,5 +276,13 @@ export default defineConfig([
       ],
       'import/no-extraneous-dependencies': ['error', { devDependencies: true }]
     }
+  },
+  {
+    files: ['packages/coffee.chealt.com/data/**/*.js'],
+    languageOptions: {
+      globals: {
+        ...globals.node
+      }
+    }
   }
 ]);

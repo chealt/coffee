@@ -13,10 +13,12 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:scan": "node --env-file=.env data/build.js ",
     "preview": "astro build && astro preview"
   },
   "devDependencies": {
     "@astrojs/cloudflare": "^12.5.2",
+    "@libsql/client": "^0.15.4",
     "vite-plugin-wasm": "^3.4.1",
     "wrangler": "^4.13.2"
   },

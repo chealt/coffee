@@ -21,3 +21,6 @@ dist
 # Astro
 .astro
 node_modules/
+
+# Turso
+packages/coffee.chealt.com/.env

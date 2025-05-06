@@ -1,0 +1,13 @@
+---
+import roasters from "../../../data/roasters.json";
+---
+
+<template id="roasters-template">
+  <select name="roaster">
+    {
+      roasters.map((roaster) => (
+        <option value={`${roaster.id}`}>{roaster.name}</option>
+      ))
+    }
+  </select>
+</template>

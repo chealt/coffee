@@ -1,7 +1,8 @@
 ---
-import Common from "../components/common/common.astro";
 import Button from "../components/button.astro";
+import Common from "../components/common/common.astro";
 import Dialog from "../components/dialog.astro";
+import Roasters from "../components/scan/roasters.astro";
 
 import "../components/scan/scan.css";
 ---
@@ -10,6 +11,7 @@ import "../components/scan/scan.css";
   <h1>Add your coffee</h1>
   <coffee-gallery>
     <div class="loading-ocr">Loading OCR</div>
+    <Roasters />
     <ul id="pictures"></ul>
     <coffee-scanner>
       <div id="controls">
