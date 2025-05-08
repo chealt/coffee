@@ -6,24 +6,8 @@ class CoffeeGallery extends HTMLElement {
   async connectedCallback() {
     this.pictures = this.querySelector('#pictures');
 
-    this.initOcr();
     this.render();
     this.addRefreshListener();
-  }
-
-  async initOcr() {
-    this.classList.add('loading-ocr');
-
-    this.ocrPromise = new Promise(async (resolve) => {
-      const ocr = await (await import('@chealt/ocr')).default();
-
-      this.extractText = ocr.extractText;
-      resolve();
-    });
-
-    await this.ocrPromise;
-
-    this.classList.remove('loading-ocr');
   }
 
   async render() {
@@ -36,39 +20,27 @@ class CoffeeGallery extends HTMLElement {
 
         const image = new Image(this.pictures.clientWidth);
         image.src = URL.createObjectURL(fileData);
+        image.id = `${fileData.name}_${fileData.lastModified}`;
 
         // add a list item
         const picture = document.createElement('li');
         picture.setAttribute('data-name', name);
         picture.appendChild(image);
 
+        // add details
+        const details = document.createElement('coffee-details');
+
+        picture.appendChild(details);
+
         // add controls
         const controls = document.createElement('div');
         controls.classList.add('controls');
 
-        // add a recognize button
-        const recognizeButton = document.createElement('button');
-        recognizeButton.innerText = 'recognize';
+        // add a details button
+        const detailsButton = document.createElement('button');
+        detailsButton.innerText = 'details';
 
-        recognizeButton.addEventListener('click', async () => {
-          recognizeButton.innerText = 'loading...';
-          await this.ocrPromise;
-          const texts = await this.extractText(image.src);
-
-          console.log(texts); // eslint-disable-line no-console
-
-          picture.querySelector('.text').innerHTML = '';
-          picture.querySelector('.text').appendChild(document.createElement('ul'));
-          texts.forEach((text) => {
-            const li = document.createElement('li');
-            li.innerText = text;
-
-            picture.querySelector('.text ul').appendChild(li);
-          });
-          recognizeButton.innerText = 'recognize';
-        });
-
-        controls.appendChild(recognizeButton);
+        controls.appendChild(detailsButton);
 
         // add a delete button
         const deleteButton = document.createElement('button');

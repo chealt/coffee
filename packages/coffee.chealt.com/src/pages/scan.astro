@@ -5,14 +5,16 @@ import Dialog from "../components/dialog.astro";
 import Roasters from "../components/scan/roasters.astro";
 
 import "../components/scan/scan.css";
+import "../components/scan/coffee-gallery.css";
 ---
 
 <Common>
   <h1>Add your coffee</h1>
   <coffee-gallery>
-    <div class="loading-ocr">Loading OCR</div>
     <Roasters />
-    <ul id="pictures"></ul>
+    <chealt-ocr>
+      <ul id="pictures"></ul>
+    </chealt-ocr>
     <coffee-scanner>
       <div id="controls">
         <Button id="open-camera" class="control">Camera</Button>
@@ -34,5 +36,6 @@ import "../components/scan/scan.css";
 </Common>
 
 <script src="../components/scan/coffee-image-upload.js"></script>
+<script src="../components/chealt-ocr.js"></script>
 <script src="../components/scan/coffee-gallery.js"></script>
 <script src="../components/scan/coffee-scanner.js"></script>
