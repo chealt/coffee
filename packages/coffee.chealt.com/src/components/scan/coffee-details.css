@@ -1,0 +1,34 @@
+coffee-details {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+
+coffee-details summary::marker,
+coffee-details summary:is(::-webkit-details-marker) {
+  display: none;
+  content: '';
+}
+
+coffee-details img {
+  transition: opacity 0.8s ease-out;
+  opacity: 1;
+}
+
+coffee-details img:has(+ details[open]) {
+  opacity: 0.8;
+}
+
+coffee-details details {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-background);
+  transform: translateY(calc(100% - 53px));
+  transition: transform 0.8s ease-out;
+}
+
+coffee-details details[open] {
+  transform: translateY(53px);
+}

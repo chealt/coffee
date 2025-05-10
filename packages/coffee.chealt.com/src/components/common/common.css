@@ -3,6 +3,9 @@
   --gap--l: 1.4rem;
 
   --color-background: white;
+  --color-text: black;
+  --color-primary: #e1a76d;
+  --color-secondary: rgb(212 177 165 / 30%);
 
   --z-index--xs: 10;
   --z-index--s: 20;
@@ -15,6 +18,7 @@ html,
 body {
   margin: 0;
   min-height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 body {

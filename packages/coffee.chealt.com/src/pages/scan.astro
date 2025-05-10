@@ -1,5 +1,6 @@
 ---
 import Button from "../components/button.astro";
+import CoffeeDetails from "../components/scan/coffee-details.astro";
 import Common from "../components/common/common.astro";
 import Dialog from "../components/dialog.astro";
 import Roasters from "../components/scan/roasters.astro";
@@ -11,7 +12,7 @@ import "../components/scan/coffee-gallery.css";
 <Common>
   <h1>Add your coffee</h1>
   <coffee-gallery>
-    <Roasters />
+    <CoffeeDetails />
     <chealt-ocr>
       <ul id="pictures"></ul>
     </chealt-ocr>
@@ -37,5 +38,6 @@ import "../components/scan/coffee-gallery.css";
 
 <script src="../components/scan/coffee-image-upload.js"></script>
 <script src="../components/chealt-ocr.js"></script>
+<script src="../components/scan/coffee-details.js"></script>
 <script src="../components/scan/coffee-gallery.js"></script>
 <script src="../components/scan/coffee-scanner.js"></script>

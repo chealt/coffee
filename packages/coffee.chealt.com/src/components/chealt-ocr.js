@@ -1,4 +1,5 @@
 const storageKey = 'ocr-texts';
+const ocrInProgressClass = 'ocr-in-progress';
 
 class ChealtOcr extends HTMLElement {
   connectedCallback() {
@@ -44,16 +45,22 @@ class ChealtOcr extends HTMLElement {
         const imageSrc = image.src;
         const id = image.id;
 
-        if (ChealtOcr.getSavedTexts(id)) {
-          continue;
+        let texts = ChealtOcr.getSavedTexts(id);
+
+        if (!texts) {
+          image.classList.add(ocrInProgressClass);
+
+          texts = await this.triggerTextExtraction(imageSrc);
+
+          ChealtOcr.saveOCR({ id, texts });
+
+          image.classList.remove(ocrInProgressClass);
         }
 
-        const texts = await this.triggerTextExtraction(imageSrc);
-
-        ChealtOcr.saveOCR({ id, texts });
+        image.setAttribute('data-chealt-ocr', texts);
       }
     } catch (error) {
-      console.error(error);
+      console.error(error); // eslint-disable-line no-console
     }
 
     this.isExtracting = false;

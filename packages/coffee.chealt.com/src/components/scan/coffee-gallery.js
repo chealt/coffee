@@ -25,22 +25,17 @@ class CoffeeGallery extends HTMLElement {
         // add a list item
         const picture = document.createElement('li');
         picture.setAttribute('data-name', name);
-        picture.appendChild(image);
 
         // add details
         const details = document.createElement('coffee-details');
+
+        details.appendChild(image);
 
         picture.appendChild(details);
 
         // add controls
         const controls = document.createElement('div');
         controls.classList.add('controls');
-
-        // add a details button
-        const detailsButton = document.createElement('button');
-        detailsButton.innerText = 'details';
-
-        controls.appendChild(detailsButton);
 
         // add a delete button
         const deleteButton = document.createElement('button');

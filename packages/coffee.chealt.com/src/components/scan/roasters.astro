@@ -1,13 +1,15 @@
 ---
 import roasters from "../../../data/roasters.json";
+import Label from "../label.astro";
+import Select from "../select.astro";
 ---
 
-<template id="roasters-template">
-  <select name="roaster">
-    {
-      roasters.map((roaster) => (
-        <option value={`${roaster.id}`}>{roaster.name}</option>
-      ))
-    }
-  </select>
-</template>
+<Label>Roaster</Label>
+<Select name="roaster">
+  <option value="0" selected>unknown</option>
+  {
+    roasters.map((roaster) => (
+      <option value={`${roaster.id}`}>{roaster.name}</option>
+    ))
+  }
+</Select>
