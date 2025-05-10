@@ -11,12 +11,12 @@ coffee-details summary:is(::-webkit-details-marker) {
 }
 
 coffee-details img {
-  transition: opacity 0.8s ease-out;
+  transition: opacity 0.4s ease-out;
   opacity: 1;
 }
 
 coffee-details img:has(+ details[open]) {
-  opacity: 0.8;
+  opacity: 0.4;
 }
 
 coffee-details details {
@@ -26,7 +26,7 @@ coffee-details details {
   inset: 0;
   background-color: var(--color-background);
   transform: translateY(calc(100% - 53px));
-  transition: transform 0.8s ease-out;
+  transition: transform 0.4s ease-out;
 }
 
 coffee-details details[open] {
