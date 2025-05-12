@@ -7,7 +7,7 @@ const turso = createClient({
   authToken: process.env.TURSO_AUTH_TOKEN
 });
 
-const results = await turso.execute('SELECT * FROM roasters');
+const results = await turso.execute('SELECT * FROM roasters ORDER BY name ASC');
 const roasters = results.rows;
 
 await writeFile('./data/roasters.json', JSON.stringify(roasters), { flag: 'w+' });
