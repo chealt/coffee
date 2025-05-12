@@ -1,11 +1,20 @@
 import roasters from '../../../data/roasters.json';
+import { setInputValue } from '../../utils/form';
 
 class CoffeeDetails extends HTMLElement {
   connectedCallback() {
+    this.name = this.getAttribute('data-name'); // unique identifier to use for storage
+
     this.renderInitDetails();
     this.addMutationObserver();
     this.addToggleButtonEvent();
     this.addCloseOnEscEvent();
+
+    this.setDetailsFormName(); // the form name needs to be unique in the document
+  }
+
+  setDetailsFormName() {
+    this.querySelector('form').setAttribute('name', this.name);
   }
 
   renderInitDetails() {
@@ -59,7 +68,12 @@ class CoffeeDetails extends HTMLElement {
 
   render({ roaster }) {
     if (roaster) {
-      this.querySelector('[name=roaster]').value = roaster.id;
+      const roasterInput = this.querySelector('[name=roaster]');
+
+      // don't overwrite values set by the user or loaded from storage
+      if (roasterInput.value === '') {
+        setInputValue({ input: roasterInput, value: roaster.id });
+      }
     }
   }
 

@@ -6,7 +6,7 @@ import Select from "../select.astro";
 
 <Label>Roaster</Label>
 <Select name="roaster">
-  <option value="0" selected>unknown</option>
+  <option value="" selected>unknown</option>
   {
     roasters.map((roaster) => (
       <option value={`${roaster.id}`}>{roaster.name}</option>

@@ -35,6 +35,7 @@ class CoffeeGallery extends HTMLElement {
         // add details
         const details = document.createElement('coffee-details');
 
+        details.setAttribute('data-name', name);
         details.appendChild(imageContainer);
 
         picture.appendChild(details);

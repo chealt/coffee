@@ -1,6 +1,7 @@
 ---
 import Roasters from "./roasters.astro";
 import Button from "../button.astro";
+import Form from "../form.astro";
 
 import "./coffee-details.css";
 ---
@@ -8,6 +9,8 @@ import "./coffee-details.css";
 <template id="coffee-details-template">
   <details>
     <summary><Button class="primary">details</Button></summary>
-    <Roasters />
+    <Form data-storage="localStorage" data-save-on-input>
+      <Roasters />
+    </Form>
   </details>
 </template>
