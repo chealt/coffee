@@ -1,4 +1,6 @@
 ---
+import Nav from "./nav.astro";
+
 import "./common.css";
 ---
 
@@ -11,10 +13,7 @@ import "./common.css";
   </head>
 
   <body>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/scan/">Scan</a>
-    </nav>
+    <Nav />
     <main>
       <slot />
     </main>

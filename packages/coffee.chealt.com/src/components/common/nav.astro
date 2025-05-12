@@ -1,0 +1,11 @@
+---
+import "./nav.css";
+---
+
+<nav>
+  <a href="/" class={Astro.url.pathname.slice(1) === "" ? "active" : ""}>Home</a
+  >
+  <a href="/scan" class={Astro.url.pathname.slice(1) === "scan" ? "active" : ""}
+    >Scan</a
+  >
+</nav>

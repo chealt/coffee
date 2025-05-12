@@ -22,6 +22,12 @@ class CoffeeGallery extends HTMLElement {
         image.src = URL.createObjectURL(fileData);
         image.id = `${fileData.name}_${fileData.lastModified}`;
 
+        // add image container
+        const imageContainer = document.createElement('div');
+        imageContainer.classList.add('image-container');
+
+        imageContainer.appendChild(image);
+
         // add a list item
         const picture = document.createElement('li');
         picture.setAttribute('data-name', name);
@@ -29,7 +35,7 @@ class CoffeeGallery extends HTMLElement {
         // add details
         const details = document.createElement('coffee-details');
 
-        details.appendChild(image);
+        details.appendChild(imageContainer);
 
         picture.appendChild(details);
 
