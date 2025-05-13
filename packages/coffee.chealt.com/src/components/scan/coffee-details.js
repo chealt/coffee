@@ -63,7 +63,7 @@ class CoffeeDetails extends HTMLElement {
   }
 
   static identifyRoaster(ocrTexts) {
-    return roasters.find(({ name }) => ocrTexts.some((text) => text.toLowerCase().includes(name)));
+    return roasters.find(({ name }) => ocrTexts.some((text) => text.toLowerCase().includes(name.toLowerCase())));
   }
 
   render({ roaster }) {
