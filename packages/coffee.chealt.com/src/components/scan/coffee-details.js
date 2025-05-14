@@ -1,5 +1,7 @@
 import roasters from '../../../data/roasters.json';
+import roastingLevels from '../../../data/roastingLevels.json';
 import { setInputValue } from '../../utils/form';
+import { normalize } from '../../utils/string';
 
 class CoffeeDetails extends HTMLElement {
   connectedCallback() {
@@ -28,11 +30,13 @@ class CoffeeDetails extends HTMLElement {
     this.observer = new MutationObserver((mutation) => {
       const element = mutation[0].target;
 
-      const ocrTexts = element.getAttribute('data-chealt-ocr').split(',');
+      const ocrTexts = element.getAttribute('data-chealt-ocr')?.split(',');
 
-      const details = CoffeeDetails.identifyDetails(ocrTexts);
+      if (ocrTexts) {
+        const details = CoffeeDetails.identifyDetails(ocrTexts);
 
-      this.render(details);
+        this.render(details);
+      }
     });
 
     this.observer.observe(this.querySelector('img'), { attributes: true });
@@ -56,17 +60,25 @@ class CoffeeDetails extends HTMLElement {
 
   static identifyDetails(ocrTexts) {
     const roaster = CoffeeDetails.identifyRoaster(ocrTexts);
+    const roastingLevel = CoffeeDetails.identifyRoastingLevel(ocrTexts);
 
     return {
-      roaster
+      roaster,
+      roastingLevel
     };
   }
 
   static identifyRoaster(ocrTexts) {
-    return roasters.find(({ name }) => ocrTexts.some((text) => text.toLowerCase().includes(name.toLowerCase())));
+    return roasters
+      .find(({ name }) => ocrTexts.some((text) => text.toLowerCase().includes(normalize(name.toLowerCase()))));
   }
 
-  render({ roaster }) {
+  static identifyRoastingLevel(ocrTexts) {
+    return roastingLevels
+      .find(({ name }) => ocrTexts.some((text) => text.toLowerCase().includes(normalize(name.toLowerCase()))));
+  }
+
+  render({ roaster, roastingLevel }) {
     if (roaster) {
       const roasterInput = this.querySelector('[name=roaster]');
 
@@ -75,14 +87,23 @@ class CoffeeDetails extends HTMLElement {
         setInputValue({ input: roasterInput, value: roaster.id });
       }
     }
+
+    if (roastingLevel) {
+      const roastingLevelInput = this.querySelector('[name=roastingLevel]');
+
+      // don't overwrite values set by the user or loaded from storage
+      if (roastingLevelInput.value === '') {
+        setInputValue({ input: roastingLevelInput, value: roastingLevel.roasting_level_id });
+      }
+    }
   }
 
   disconnectedCallback() {
     this.observer.disconnect();
 
     // remove event listeners
-    this.removeEventListener(this.closeOnEscEvent);
-    this.querySelector('button').removeEventListener(this.toggleButtonEvent);
+    this.removeEventListener('keyup', this.closeOnEscEvent);
+    this.querySelector('button').removeEventListener('click', this.toggleButtonEvent);
   }
 }
 
