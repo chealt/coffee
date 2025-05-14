@@ -1,0 +1,17 @@
+---
+import Label from "../label.astro";
+import Select from "../select.astro";
+import originCountries from "../../../data/originCountries.json";
+---
+
+<Label>Origin country</Label>
+<Select name="originCountry">
+  <option value="" selected>unknown</option>
+  {
+    originCountries
+      .filter(({ language_code }) => language_code === Astro.currentLocale)
+      .map(({ origin_country_id, name }) => (
+        <option value={origin_country_id}>{name}</option>
+      ))
+  }
+</Select>

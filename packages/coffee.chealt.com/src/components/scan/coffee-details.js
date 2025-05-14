@@ -1,3 +1,4 @@
+import originCountries from '../../../data/originCountries.json';
 import roasters from '../../../data/roasters.json';
 import roastingLevels from '../../../data/roastingLevels.json';
 import { setInputValue } from '../../utils/form';
@@ -59,10 +60,12 @@ class CoffeeDetails extends HTMLElement {
   }
 
   static identifyDetails(ocrTexts) {
+    const originCountry = CoffeeDetails.identifyOriginCountry(ocrTexts);
     const roaster = CoffeeDetails.identifyRoaster(ocrTexts);
     const roastingLevel = CoffeeDetails.identifyRoastingLevel(ocrTexts);
 
     return {
+      originCountry,
       roaster,
       roastingLevel
     };
@@ -78,7 +81,12 @@ class CoffeeDetails extends HTMLElement {
       .find(({ name }) => ocrTexts.some((text) => text.toLowerCase().includes(normalize(name.toLowerCase()))));
   }
 
-  render({ roaster, roastingLevel }) {
+  static identifyOriginCountry(ocrTexts) {
+    return originCountries
+      .find(({ name }) => ocrTexts.some((text) => text.toLowerCase().includes(normalize(name.toLowerCase()))));
+  }
+
+  render({ originCountry, roaster, roastingLevel }) {
     if (roaster) {
       const roasterInput = this.querySelector('[name=roaster]');
 
@@ -94,6 +102,15 @@ class CoffeeDetails extends HTMLElement {
       // don't overwrite values set by the user or loaded from storage
       if (roastingLevelInput.value === '') {
         setInputValue({ input: roastingLevelInput, value: roastingLevel.roasting_level_id });
+      }
+    }
+
+    if (originCountry) {
+      const originCountryInput = this.querySelector('[name=originCountry]');
+
+      // don't overwrite values set by the user or loaded from storage
+      if (originCountryInput.value === '') {
+        setInputValue({ input: originCountryInput, value: originCountry.origin_country_id });
       }
     }
   }

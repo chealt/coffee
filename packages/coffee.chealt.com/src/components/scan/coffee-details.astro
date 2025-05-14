@@ -1,8 +1,9 @@
 ---
-import Roasters from "./roasters.astro";
-import RoastingLevels from "./roasting-levels.astro";
 import Button from "../button.astro";
 import Form from "../form.astro";
+import OriginCountries from "./origin-countries.astro";
+import Roasters from "./roasters.astro";
+import RoastingLevels from "./roasting-levels.astro";
 
 import "./coffee-details.css";
 ---
@@ -13,6 +14,7 @@ import "./coffee-details.css";
     <Form data-storage="localStorage" data-save-on-input>
       <Roasters />
       <RoastingLevels />
+      <OriginCountries />
     </Form>
   </details>
 </template>

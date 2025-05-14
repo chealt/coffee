@@ -40,3 +40,7 @@ coffee-details details[open] {
   transform: translateY(106px);
   box-shadow: 0px -4px 16px var(--color-shadow);
 }
+
+select[name=originCountry] option {
+  text-transform: capitalize;
+}
