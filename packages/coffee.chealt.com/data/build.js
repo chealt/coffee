@@ -7,7 +7,19 @@ const turso = createClient({
   authToken: process.env.TURSO_AUTH_TOKEN
 });
 
-const results = await turso.execute('SELECT * FROM roasters ORDER BY name ASC');
-const roasters = results.rows;
+const saveRoasters = async () => {
+  const results = await turso.execute('SELECT * FROM roasters ORDER BY name ASC');
 
-await writeFile('./data/roasters.json', JSON.stringify(roasters), { flag: 'w+' });
+  return writeFile('./data/roasters.json', JSON.stringify(results.rows), { flag: 'w+' });
+};
+
+const saveRoastingLevels = async () => {
+  const results = await turso.execute('SELECT * FROM roasting_levels_all ORDER BY name ASC');
+
+  return writeFile('./data/roastingLevels.json', JSON.stringify(results.rows), { flag: 'w+' });
+};
+
+await Promise.all([
+  saveRoasters(),
+  saveRoastingLevels()
+]);

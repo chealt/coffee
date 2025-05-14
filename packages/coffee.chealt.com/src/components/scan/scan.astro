@@ -1,0 +1,43 @@
+---
+import Button from "../button.astro";
+import CoffeeDetails from "./coffee-details.astro";
+import Common from "../common/common.astro";
+import Dialog from "../dialog.astro";
+import Roasters from "../roasters.astro";
+
+import "./scan.css";
+import "./coffee-gallery.css";
+---
+
+<Common>
+  <h1>Add your coffee</h1>
+  <coffee-gallery>
+    <CoffeeDetails />
+    <chealt-ocr>
+      <ul id="pictures"></ul>
+    </chealt-ocr>
+    <coffee-scanner>
+      <div id="controls">
+        <Button id="open-camera" class="control">Camera</Button>
+        <coffee-image-upload class="control">
+          <Button>Upload</Button>
+        </coffee-image-upload>
+      </div>
+      <Dialog>
+        <dialog id="camera">
+          <video id="video">Video stream not available.</video>
+          <div id="capture-button-container">
+            <Button id="capture-photo" aria-label="Take a photo" />
+          </div>
+          <canvas id="photo" class="visually-hidden"></canvas>
+        </dialog>
+      </Dialog>
+    </coffee-scanner>
+  </coffee-gallery>
+</Common>
+
+<script src="./coffee-image-upload.js"></script>
+<script src="../chealt-ocr.js"></script>
+<script src="./coffee-details.js"></script>
+<script src="./coffee-gallery.js"></script>
+<script src="./coffee-scanner.js"></script>

@@ -1,0 +1,17 @@
+---
+import Label from "../label.astro";
+import Select from "../select.astro";
+import roastingLevels from "../../../data/roastingLevels.json";
+---
+
+<Label>Roasting level</Label>
+<Select name="roastingLevel">
+  <option value="" selected>unknown</option>
+  {
+    roastingLevels
+      .filter(({ language_code }) => language_code === Astro.currentLocale)
+      .map(({ roasting_level_id, name }) => (
+        <option value={roasting_level_id}>{name}</option>
+      ))
+  }
+</Select>

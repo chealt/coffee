@@ -1,11 +1,24 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
+
 import "./nav.css";
 ---
 
 <nav>
-  <a href="/" class={Astro.url.pathname.slice(1) === "" ? "active" : ""}>Home</a
+  <a
+    href={getRelativeLocaleUrl(Astro.currentLocale, "/")}
+    class={Astro.url.pathname
+      .replace(`${Astro.currentLocale}/`, "")
+      .slice(1) === ""
+      ? "active"
+      : ""}>Home</a
   >
-  <a href="/scan" class={Astro.url.pathname.slice(1) === "scan" ? "active" : ""}
-    >Scan</a
+  <a
+    href={getRelativeLocaleUrl(Astro.currentLocale, "/scan")}
+    class={Astro.url.pathname
+      .replace(`${Astro.currentLocale}/`, "")
+      .slice(1) === "scan/"
+      ? "active"
+      : ""}>Scan</a
   >
 </nav>
