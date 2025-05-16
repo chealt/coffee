@@ -25,8 +25,15 @@ const saveOriginCountries = async () => {
   return writeFile('./data/originCountries.json', JSON.stringify(results.rows), { flag: 'w+' });
 };
 
+const saveProcessingMethods = async () => {
+  const results = await turso.execute('SELECT * FROM processing_methods_all ORDER BY name ASC');
+
+  return writeFile('./data/processingMethods.json', JSON.stringify(results.rows), { flag: 'w+' });
+};
+
 await Promise.all([
   saveRoasters(),
   saveRoastingLevels(),
-  saveOriginCountries()
+  saveOriginCountries(),
+  saveProcessingMethods()
 ]);

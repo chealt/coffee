@@ -1,4 +1,5 @@
 import originCountries from '../../../data/originCountries.json';
+import processingMethods from '../../../data/processingMethods.json';
 import roasters from '../../../data/roasters.json';
 import roastingLevels from '../../../data/roastingLevels.json';
 import { setInputValue } from '../../utils/form';
@@ -61,11 +62,13 @@ class CoffeeDetails extends HTMLElement {
 
   static identifyDetails(ocrTexts) {
     const originCountry = CoffeeDetails.identifyOriginCountry(ocrTexts);
+    const processingMethod = CoffeeDetails.identifyProcessingMethod(ocrTexts);
     const roaster = CoffeeDetails.identifyRoaster(ocrTexts);
     const roastingLevel = CoffeeDetails.identifyRoastingLevel(ocrTexts);
 
     return {
       originCountry,
+      processingMethod,
       roaster,
       roastingLevel
     };
@@ -86,7 +89,12 @@ class CoffeeDetails extends HTMLElement {
       .find(({ name }) => ocrTexts.some((text) => text.toLowerCase().includes(normalize(name.toLowerCase()))));
   }
 
-  render({ originCountry, roaster, roastingLevel }) {
+  static identifyProcessingMethod(ocrTexts) {
+    return processingMethods
+      .find(({ name }) => ocrTexts.some((text) => text.toLowerCase().includes(normalize(name.toLowerCase()))));
+  }
+
+  render({ originCountry, processingMethod, roaster, roastingLevel }) {
     if (roaster) {
       const roasterInput = this.querySelector('[name=roaster]');
 
@@ -111,6 +119,15 @@ class CoffeeDetails extends HTMLElement {
       // don't overwrite values set by the user or loaded from storage
       if (originCountryInput.value === '') {
         setInputValue({ input: originCountryInput, value: originCountry.origin_country_id });
+      }
+    }
+
+    if (processingMethod) {
+      const processingMethodInput = this.querySelector('[name=processingMethod]');
+
+      // don't overwrite values set by the user or loaded from storage
+      if (processingMethodInput.value === '') {
+        setInputValue({ input: processingMethodInput, value: processingMethod.processing_method_id });
       }
     }
   }

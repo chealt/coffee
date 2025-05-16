@@ -1,0 +1,17 @@
+---
+import Label from "../label.astro";
+import Select from "../select.astro";
+import processingMethods from "../../../data/processingMethods.json";
+---
+
+<Label>Processing method</Label>
+<Select name="processingMethod">
+  <option value="" selected>unknown</option>
+  {
+    processingMethods
+      .filter(({ language_code }) => language_code === Astro.currentLocale)
+      .map(({ processing_method_id, name }) => (
+        <option value={processing_method_id}>{name}</option>
+      ))
+  }
+</Select>
