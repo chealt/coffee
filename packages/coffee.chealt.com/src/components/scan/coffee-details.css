@@ -23,7 +23,7 @@ coffee-details img {
   opacity: 1;
 }
 
-coffee-details img:has(+ details[open]) {
+coffee-details .image-container:has(+ details[open]) img {
   opacity: 0.4;
 }
 
