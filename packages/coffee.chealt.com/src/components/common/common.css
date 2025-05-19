@@ -30,6 +30,20 @@ h1, h2, h3, h4, h5 {
   padding: 0 var(--gap);
 }
 
+section {
+  margin: var(--gap) 0;
+  padding: 0 var(--gap);
+}
+
+ul, li {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -42,4 +56,9 @@ h1, h2, h3, h4, h5 {
   clip-path: inset(100%);
   clip: rect(0 0 0 0);
   overflow: hidden;
+}
+
+.emphasized {
+  font-weight: bold;
+  font-size: 1.5rem;
 }

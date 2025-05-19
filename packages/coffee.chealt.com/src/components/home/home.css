@@ -1,0 +1,19 @@
+.roasters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  align-items: center;
+  gap: var(--gap);
+}
+
+.roasters img {
+  width: 100%;
+  height: auto;
+}
+
+.roasters li {
+  transition: transform 0.2s ease-in-out;
+}
+
+.roasters li:hover {
+  transform: scale(110%);
+}

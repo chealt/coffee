@@ -1,7 +1,37 @@
 ---
+import { Image } from "astro:assets";
+import allLocaleTranslations from "../../../locales/home/home.json";
 import Common from "../common/common.astro";
+import roasters from "../../../data/roasters.json";
+
+import "./home.css";
+
+const t = allLocaleTranslations[Astro.currentLocale];
+const roasterCount = roasters.length || 0;
+
+const roasterImages = await import.meta.glob(
+  "/public/roasters/*.{jpeg,jpg,png,gif,svg,webp}",
+  { eager: true },
+);
 ---
 
 <Common>
-  <h1>Chealt Home</h1>
+  <h1>{t["title"]}</h1>
+  <section>
+    <p>
+      More than <span class="emphasized">{roasterCount}</span> roasters.
+    </p>
+    <ul class="roasters">
+      {
+        Object.entries(roasterImages).map(([path, image]) => (
+          <li>
+            <Image
+              src={image.default}
+              alt={path.split("/").pop()?.split(".")[0]}
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
 </Common>
