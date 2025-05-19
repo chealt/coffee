@@ -25,6 +25,12 @@ const saveOriginCountries = async () => {
   return writeFile('./data/originCountries.json', JSON.stringify(results.rows), { flag: 'w+' });
 };
 
+const saveOriginRegions = async () => {
+  const results = await turso.execute('SELECT * FROM origin_regions_all ORDER BY name ASC');
+
+  return writeFile('./data/originRegions.json', JSON.stringify(results.rows), { flag: 'w+' });
+};
+
 const saveProcessingMethods = async () => {
   const results = await turso.execute('SELECT * FROM processing_methods_all ORDER BY name ASC');
 
@@ -35,5 +41,6 @@ await Promise.all([
   saveRoasters(),
   saveRoastingLevels(),
   saveOriginCountries(),
+  saveOriginRegions(),
   saveProcessingMethods()
 ]);

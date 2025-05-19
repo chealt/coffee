@@ -1,9 +1,10 @@
 import originCountries from '../../../data/originCountries.json';
+import originRegions from '../../../data/originRegions.json';
 import processingMethods from '../../../data/processingMethods.json';
 import roasters from '../../../data/roasters.json';
 import roastingLevels from '../../../data/roastingLevels.json';
 import { setInputValue } from '../../utils/form';
-import { normalize } from '../../utils/string';
+import { friendlyIncludes } from '../../utils/string';
 
 class CoffeeDetails extends HTMLElement {
   connectedCallback() {
@@ -61,40 +62,28 @@ class CoffeeDetails extends HTMLElement {
   }
 
   static identifyDetails(ocrTexts) {
-    const originCountry = CoffeeDetails.identifyOriginCountry(ocrTexts);
-    const processingMethod = CoffeeDetails.identifyProcessingMethod(ocrTexts);
-    const roaster = CoffeeDetails.identifyRoaster(ocrTexts);
-    const roastingLevel = CoffeeDetails.identifyRoastingLevel(ocrTexts);
+    const originCountry = CoffeeDetails.findMatch(originCountries, ocrTexts);
+    const originRegion = CoffeeDetails.findMatch(originRegions, ocrTexts);
+    const processingMethod = CoffeeDetails.findMatch(processingMethods, ocrTexts);
+    const roaster = CoffeeDetails.findMatch(roasters, ocrTexts);
+    const roastingLevel = CoffeeDetails.findMatch(roastingLevels, ocrTexts);
 
     return {
       originCountry,
+      originRegion,
       processingMethod,
       roaster,
       roastingLevel
     };
   }
 
-  static identifyRoaster(ocrTexts) {
-    return roasters
-      .find(({ name }) => ocrTexts.some((text) => text.toLowerCase().includes(normalize(name.toLowerCase()))));
+  static findMatch(needles, haystack) {
+    return needles
+      .find(({ name }) => haystack.some((text) => friendlyIncludes(text, name)));
   }
 
-  static identifyRoastingLevel(ocrTexts) {
-    return roastingLevels
-      .find(({ name }) => ocrTexts.some((text) => text.toLowerCase().includes(normalize(name.toLowerCase()))));
-  }
-
-  static identifyOriginCountry(ocrTexts) {
-    return originCountries
-      .find(({ name }) => ocrTexts.some((text) => text.toLowerCase().includes(normalize(name.toLowerCase()))));
-  }
-
-  static identifyProcessingMethod(ocrTexts) {
-    return processingMethods
-      .find(({ name }) => ocrTexts.some((text) => text.toLowerCase().includes(normalize(name.toLowerCase()))));
-  }
-
-  render({ originCountry, processingMethod, roaster, roastingLevel }) {
+  // eslint-disable-next-line complexity
+  render({ originCountry, originRegion, processingMethod, roaster, roastingLevel }) {
     if (roaster) {
       const roasterInput = this.querySelector('[name=roaster]');
 
@@ -119,6 +108,15 @@ class CoffeeDetails extends HTMLElement {
       // don't overwrite values set by the user or loaded from storage
       if (originCountryInput.value === '') {
         setInputValue({ input: originCountryInput, value: originCountry.origin_country_id });
+      }
+    }
+
+    if (originRegion) {
+      const originRegionInput = this.querySelector('[name=originRegion]');
+
+      // don't overwrite values set by the user or loaded from storage
+      if (originRegionInput.value === '') {
+        setInputValue({ input: originRegionInput, value: originRegion.origin_region_id });
       }
     }
 
