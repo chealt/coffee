@@ -11,6 +11,7 @@ coffee-details summary:is(::-webkit-details-marker) {
 }
 
 coffee-details .image-container {
+  min-height: 440px;
   max-height: 60vh;
   display: flex;
   flex-direction: column;
