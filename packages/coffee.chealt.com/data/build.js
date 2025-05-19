@@ -8,7 +8,7 @@ const turso = createClient({
 });
 
 const saveRoasters = async () => {
-  const results = await turso.execute('SELECT * FROM roasters ORDER BY name ASC');
+  const results = await turso.execute('SELECT * FROM roasters ORDER BY name COLLATE nocase ASC');
 
   return writeFile('./data/roasters.json', JSON.stringify(results.rows), { flag: 'w+' });
 };
