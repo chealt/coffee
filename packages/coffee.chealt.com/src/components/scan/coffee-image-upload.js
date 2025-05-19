@@ -7,13 +7,21 @@ class CoffeeImageUpload extends HTMLElement {
 
   addClickListener() {
     this.querySelector('button').addEventListener('click', async () => {
-      const fileData = await openFile({
-        ...onlyImagePickerOptions,
-        excludeAcceptAllOption: true,
-        multiple: false
-      });
+      try {
+        const fileData = await openFile({
+          ...onlyImagePickerOptions,
+          excludeAcceptAllOption: true,
+          multiple: false
+        });
 
-      await writeFile(fileData);
+        await writeFile(fileData);
+      } catch (error) {
+        if (error.name === 'AbortError') {
+          console.log('user abort'); // eslint-disable-line no-console
+        } else {
+          console.error(error); // eslint-disable-line no-console
+        }
+      }
 
       this.dispatchEvent(new CustomEvent('coffee-gallery-refresh', { bubbles: true }));
     });
