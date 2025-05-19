@@ -57,11 +57,6 @@ class CoffeeGallery extends HTMLElement {
 
         picture.appendChild(controls);
 
-        const text = document.createElement('div');
-        text.classList.add('text');
-
-        picture.appendChild(text);
-
         this.pictures.appendChild(picture);
       }
     }
