@@ -14,11 +14,11 @@ import "./nav.css";
       : ""}>Home</a
   >
   <a
-    href={getRelativeLocaleUrl(Astro.currentLocale, "/scan")}
+    href={getRelativeLocaleUrl(Astro.currentLocale, "/collections")}
     class={Astro.url.pathname
       .replace(`${Astro.currentLocale}/`, "")
-      .slice(1) === "scan/"
+      .slice(1) === "collections/"
       ? "active"
-      : ""}>Scan</a
+      : ""}>Collections</a
   >
 </nav>
