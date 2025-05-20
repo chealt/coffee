@@ -1,3 +1,4 @@
+import miscellaneousCoffeeProperties from '../../../data/miscellaneousCoffeeProperties.json';
 import originCountries from '../../../data/originCountries.json';
 import originRegions from '../../../data/originRegions.json';
 import processingMethods from '../../../data/processingMethods.json';
@@ -67,8 +68,10 @@ class CoffeeDetails extends HTMLElement {
     const processingMethod = CoffeeDetails.findMatch(processingMethods, ocrTexts);
     const roaster = CoffeeDetails.findMatch(roasters, ocrTexts);
     const roastingLevel = CoffeeDetails.findMatch(roastingLevels, ocrTexts);
+    const isDecaf = CoffeeDetails.findMatch(miscellaneousCoffeeProperties.filter(({ id }) => id === 1), ocrTexts); // ID: 1 is the decaf property
 
     return {
+      isDecaf,
       originCountry,
       originRegion,
       processingMethod,
@@ -83,7 +86,7 @@ class CoffeeDetails extends HTMLElement {
   }
 
   // eslint-disable-next-line complexity
-  render({ originCountry, originRegion, processingMethod, roaster, roastingLevel }) {
+  render({ isDecaf, originCountry, originRegion, processingMethod, roaster, roastingLevel }) {
     if (roaster) {
       const roasterInput = this.querySelector('[name=roaster]');
 
@@ -127,6 +130,12 @@ class CoffeeDetails extends HTMLElement {
       if (processingMethodInput.value === '') {
         setInputValue({ input: processingMethodInput, value: processingMethod.processing_method_id });
       }
+    }
+
+    if (isDecaf) {
+      const isDecafInput = this.querySelector('[name=isDecaf]');
+
+      setInputValue({ input: isDecafInput, value: 'on' });
     }
   }
 

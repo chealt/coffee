@@ -1,8 +1,10 @@
 {
   "en": {
-    "title": "Chealt Coffee"
+    "title": "Chealt Coffee",
+    "unknown": "unknown"
   },
   "pl": {
-    "title": "Chealt Kawa"
+    "title": "Chealt Kawa",
+    "unknown": "nieznany"
   }
 }

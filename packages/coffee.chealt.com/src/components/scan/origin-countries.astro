@@ -2,11 +2,13 @@
 import Label from "../label.astro";
 import Select from "../select.astro";
 import originCountries from "../../../data/originCountries.json";
+import allLocaleTranslations from "../../../locales/scan/scan.json";
+
+const t = allLocaleTranslations[Astro.currentLocale];
 ---
 
-<Label>Origin country</Label>
-<Select name="originCountry">
-  <option value="" selected>unknown</option>
+<Label>{t["originCountry"]}</Label>
+<Select name="originCountry" showEmpty>
   {
     originCountries
       .filter(({ language_code }) => language_code === Astro.currentLocale)

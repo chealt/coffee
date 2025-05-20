@@ -1,0 +1,9 @@
+---
+import Label from "./label.astro";
+
+import "./checkbox.css";
+---
+
+<Label class="checkbox-container">
+  <input type="checkbox" {...Astro.props} /><span class="label"><slot /></span>
+</Label>

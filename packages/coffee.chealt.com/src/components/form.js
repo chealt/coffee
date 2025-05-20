@@ -50,7 +50,11 @@ const setFormData = ({ form, storage }) => {
 
   if (data) {
     for (const [name, value] of Object.entries(data)) {
-      document.forms[form.name][name].value = value;
+      if (value === 'on') {
+        document.forms[form.name][name].checked = true;
+      } else {
+        document.forms[form.name][name].value = value;
+      }
     }
   }
 };

@@ -1,0 +1,18 @@
+{
+  "en": {
+    "originCountry": "Origin country",
+    "originRegion": "Origin region",
+    "processingMethod": "Processing method",
+    "roastingLevel": "Roasting level",
+    "roaster": "Roaster",
+    "decaf": "Decaf"
+  },
+  "pl": {
+    "originCountry": "Origin country",
+    "originRegion": "Origin region",
+    "processingMethod": "Processing method",
+    "roastingLevel": "Roasting level",
+    "roaster": "Roaster",
+    "decaf": "Bezkofeinowy"
+  }
+}

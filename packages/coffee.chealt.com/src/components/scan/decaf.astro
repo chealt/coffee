@@ -1,0 +1,9 @@
+---
+import Select from "../select.astro";
+import allLocaleTranslations from "../../../locales/scan/scan.json";
+import Checkbox from "../checkbox.astro";
+
+const t = allLocaleTranslations[Astro.currentLocale];
+---
+
+<Checkbox name="isDecaf">{t["decaf"]}</Checkbox>

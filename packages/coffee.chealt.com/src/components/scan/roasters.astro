@@ -2,11 +2,13 @@
 import roasters from "../../../data/roasters.json";
 import Label from "../label.astro";
 import Select from "../select.astro";
+import allLocaleTranslations from "../../../locales/scan/scan.json";
+
+const t = allLocaleTranslations[Astro.currentLocale];
 ---
 
-<Label>Roaster</Label>
-<Select name="roaster">
-  <option value="" selected>unknown</option>
+<Label>{t["roaster"]}</Label>
+<Select name="roaster" showEmpty>
   {
     roasters.map((roaster) => (
       <option value={`${roaster.id}`}>{roaster.name}</option>

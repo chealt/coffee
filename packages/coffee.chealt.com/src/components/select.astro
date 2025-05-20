@@ -1,5 +1,18 @@
 ---
+import allLocaleTranslations from "../../locales/common/common.json";
+
 import "./select.css";
+
+const t = allLocaleTranslations[Astro.currentLocale];
 ---
 
-<select {...Astro.props}><slot /></select>
+<select {...Astro.props}>
+  {
+    Astro.props.showEmpty && (
+      <option value="" selected>
+        {t["unknown"]}
+      </option>
+    )
+  }
+  <slot />
+</select>

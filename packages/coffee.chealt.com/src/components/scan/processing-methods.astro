@@ -2,11 +2,14 @@
 import Label from "../label.astro";
 import Select from "../select.astro";
 import processingMethods from "../../../data/processingMethods.json";
+import originRegions from "../../../data/originRegions.json";
+import allLocaleTranslations from "../../../locales/scan/scan.json";
+
+const t = allLocaleTranslations[Astro.currentLocale];
 ---
 
-<Label>Processing method</Label>
-<Select name="processingMethod">
-  <option value="" selected>unknown</option>
+<Label>{t["processingMethod"]}</Label>
+<Select name="processingMethod" showEmpty>
   {
     processingMethods
       .filter(({ language_code }) => language_code === Astro.currentLocale)
