@@ -1,0 +1,11 @@
+<coffee-image-upload {...Astro.props}>
+  <input
+    type="file"
+    class="visually-hidden"
+    accept="image/*"
+    capture="environment"
+  />
+  <slot />
+</coffee-image-upload>
+
+<script src="./coffee-image-upload.js"></script>

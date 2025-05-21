@@ -1,6 +1,7 @@
 ---
 import Button from "../button.astro";
 import CoffeeDetails from "./coffee-details.astro";
+import CoffeeImageUpload from "./coffee-image-upload.astro";
 import Common from "../common/common.astro";
 import Dialog from "../dialog.astro";
 import Roasters from "../roasters.astro";
@@ -18,10 +19,9 @@ import "./coffee-gallery.css";
     </chealt-ocr>
     <coffee-scanner>
       <div id="controls">
-        <Button id="open-camera" class="control">Camera</Button>
-        <coffee-image-upload class="control">
+        <CoffeeImageUpload>
           <Button>Upload</Button>
-        </coffee-image-upload>
+        </CoffeeImageUpload>
       </div>
       <Dialog>
         <dialog id="camera">
@@ -36,7 +36,6 @@ import "./coffee-gallery.css";
   </coffee-gallery>
 </Common>
 
-<script src="./coffee-image-upload.js"></script>
 <script src="../chealt-ocr.js"></script>
 <script src="./coffee-details.js"></script>
 <script src="./coffee-gallery.js"></script>

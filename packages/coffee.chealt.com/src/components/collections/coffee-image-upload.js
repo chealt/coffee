@@ -1,19 +1,19 @@
-import { onlyImagePickerOptions, openFile, writeFile } from '../../utils/file';
+import { writeFile } from '../../utils/file';
 
 class CoffeeImageUpload extends HTMLElement {
   connectedCallback() {
+    this.triggerButton = this.querySelector('button');
+    this.fileInput = this.querySelector('input[type=file]');
+
     this.addClickListener();
+    this.addFileChangeListener();
   }
 
-  addClickListener() {
-    this.querySelector('button').addEventListener('click', async () => {
-      try {
-        const fileData = await openFile({
-          ...onlyImagePickerOptions,
-          excludeAcceptAllOption: true,
-          multiple: false
-        });
+  addFileChangeListener() {
+    this.fileInput.addEventListener('change', async () => {
+      const fileData = this.fileInput.files[0];
 
+      try {
         await writeFile(fileData);
       } catch (error) {
         if (error.name === 'AbortError') {
@@ -24,6 +24,12 @@ class CoffeeImageUpload extends HTMLElement {
       }
 
       this.dispatchEvent(new CustomEvent('coffee-gallery-refresh', { bubbles: true }));
+    });
+  }
+
+  addClickListener() {
+    this.triggerButton.addEventListener('click', async () => {
+      this.fileInput.click();
     });
   }
 }
