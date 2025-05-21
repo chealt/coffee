@@ -13,11 +13,6 @@ class CoffeeImageUpload extends HTMLElement {
     this.fileInput.addEventListener('change', async () => {
       const fileData = this.fileInput.files[0];
 
-      // TEST
-      const temp = document.createElement('div');
-      temp.innerHTML = fileData.name;
-      document.body.appendChild(temp);
-
       try {
         await writeFile(fileData);
 

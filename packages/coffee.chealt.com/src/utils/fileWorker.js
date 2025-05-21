@@ -1,4 +1,9 @@
 const writeFile = async (file) => {
+  // handle file from iOS image capture from camera and give it a unique name
+  if (file.name.split('.')[0] === 'image') {
+    file.name = `${Date.now()}.jpg`;
+  }
+
   const rootDirectory = await navigator.storage.getDirectory();
   const fileHandle = await rootDirectory.getFileHandle(file.name, { create: true });
   const accessHandle = await fileHandle.createSyncAccessHandle();
