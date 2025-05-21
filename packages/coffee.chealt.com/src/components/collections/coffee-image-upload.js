@@ -15,6 +15,9 @@ class CoffeeImageUpload extends HTMLElement {
 
       try {
         await writeFile(fileData);
+
+        // clear the input to fix issue on iOS
+        this.fileInput.value = null;
       } catch (error) {
         if (error.name === 'AbortError') {
           console.log('user abort'); // eslint-disable-line no-console
