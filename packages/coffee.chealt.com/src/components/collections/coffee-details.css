@@ -45,6 +45,10 @@ coffee-details .summary {
   z-index: var(--z-index--m);
 }
 
+coffee-details dialog {
+  position: relative;
+}
+
 select[name=originCountry] option {
   text-transform: capitalize;
 }
