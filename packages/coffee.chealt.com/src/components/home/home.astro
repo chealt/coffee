@@ -2,12 +2,16 @@
 import { Image } from "astro:assets";
 import allLocaleTranslations from "../../../locales/home/home.json";
 import Common from "../common/common.astro";
+import originCountries from "../../../data/originCountries.json";
 import roasters from "../../../data/roasters.json";
 
 import "./home.css";
 
 const t = allLocaleTranslations[Astro.currentLocale];
 const roasterCount = roasters.length || 0;
+const originCountriesCount = originCountries.filter(
+  ({ language_code }) => language_code === Astro.currentLocale,
+).length;
 
 const roasterImages = await import.meta.glob(
   "/public/roasters/*.{jpeg,jpg,png,gif,svg,webp}",
@@ -19,7 +23,9 @@ const roasterImages = await import.meta.glob(
   <h1>{t["title"]}</h1>
   <section>
     <p>
-      More than <span class="emphasized">{roasterCount}</span> roasters.
+      More than <span class="emphasized">{roasterCount}</span> roasters, from <span
+        class="emphasized">{originCountriesCount}</span
+      > countries.
     </p>
     <ul class="roasters">
       {
