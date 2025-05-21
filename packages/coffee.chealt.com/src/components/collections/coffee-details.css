@@ -4,12 +4,6 @@ coffee-details {
   overflow: hidden;
 }
 
-coffee-details summary::marker,
-coffee-details summary:is(::-webkit-details-marker) {
-  display: none;
-  content: '';
-}
-
 coffee-details .image-container {
   min-height: 440px;
   max-height: 60vh;
@@ -23,11 +17,11 @@ coffee-details img {
   opacity: 1;
 }
 
-coffee-details .image-container:has(+ details[open]) img {
+coffee-details .image-container:has(+ .details dialog[open]) img {
   opacity: 0.4;
 }
 
-coffee-details details {
+coffee-details .details {
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -38,16 +32,17 @@ coffee-details details {
   overflow-y: auto;
 }
 
-coffee-details details[open] {
+coffee-details .details:has(dialog[open]) {
   transform: translateY(106px);
   box-shadow: 0px -4px 16px var(--color-shadow);
   bottom: 106px;
 }
 
-coffee-details summary {
+coffee-details .summary {
   position: sticky;
   top: 0;
   background-color: var(--color-primary);
+  z-index: var(--z-index--m);
 }
 
 select[name=originCountry] option {

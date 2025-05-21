@@ -12,15 +12,19 @@ import Decaf from "./decaf.astro";
 ---
 
 <template id="coffee-details-template">
-  <details>
-    <summary><Button class="primary">details</Button></summary>
-    <Form data-storage="localStorage" data-save-on-input>
-      <Roasters />
-      <RoastingLevels />
-      <OriginCountries />
-      <OriginRegions />
-      <ProcessingMethods />
-      <Decaf />
-    </Form>
-  </details>
+  <div class="details">
+    <div class="summary"><Button class="primary">details</Button></div>
+    <dialog>
+      <Form data-storage="localStorage" data-save-on-input>
+        <Roasters />
+        <RoastingLevels />
+        <OriginCountries />
+        <OriginRegions />
+        <ProcessingMethods />
+        <Decaf />
+      </Form>
+    </dialog>
+  </div>
 </template>
+
+<script src="./coffee-details.js"></script>

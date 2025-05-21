@@ -48,16 +48,16 @@ class CoffeeDetails extends HTMLElement {
 
   addToggleButtonEvent() {
     this.toggleButtonEvent = this.querySelector('button').addEventListener('click', () => {
-      const details = this.querySelector('details');
+      const dialog = this.querySelector('dialog');
 
-      details.open = !details.open;
+      dialog.open = !dialog.open;
     });
   }
 
   addCloseOnEscEvent() {
     this.closeOnEscEvent = this.addEventListener('keyup', (event) => {
       if (event.key === 'Escape') {
-        this.querySelector('details').open = false;
+        this.querySelector('dialog').close();
       }
     });
   }
