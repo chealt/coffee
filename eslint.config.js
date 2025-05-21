@@ -278,7 +278,7 @@ export default defineConfig([
     }
   },
   {
-    files: ['packages/coffee.chealt.com/data/**/*.js'],
+    files: ['packages/coffee.chealt.com/data/**/*.js', 'packages/coffee.chealt.com/astro.config.js'],
     languageOptions: {
       globals: {
         ...globals.node

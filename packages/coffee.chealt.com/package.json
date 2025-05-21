@@ -19,11 +19,13 @@
   "devDependencies": {
     "@astrojs/cloudflare": "^12.5.2",
     "@libsql/client": "^0.15.4",
+    "vite": "^6.3.5",
     "vite-plugin-wasm": "^3.4.1",
     "wrangler": "^4.13.2"
   },
   "dependencies": {
     "@chealt/ocr": "workspace:^",
+    "@sentry/astro": "^9.22.0",
     "astro": "^5.7.10",
     "sharp": "^0.34.1"
   }
