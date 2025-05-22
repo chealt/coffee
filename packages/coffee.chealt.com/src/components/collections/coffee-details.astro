@@ -3,6 +3,7 @@ import Button from "../button.astro";
 import Form from "../form.astro";
 
 import Decaf from "./decaf.astro";
+import Dialog from "../dialog.astro";
 import OriginCountries from "./origin-countries.astro";
 import OriginRegions from "./origin-regions.astro";
 import ProcessingMethods from "./processing-methods.astro";
@@ -18,7 +19,7 @@ const t = allLocaleTranslations[Astro.currentLocale];
 <template id="coffee-details-template">
   <div class="details">
     <div class="summary"><Button class="primary">{t["details"]}</Button></div>
-    <dialog>
+    <Dialog>
       <Form data-storage="localStorage" data-save-on-input>
         <Roasters />
         <RoastingLevels />
@@ -27,7 +28,7 @@ const t = allLocaleTranslations[Astro.currentLocale];
         <ProcessingMethods />
         <Decaf />
       </Form>
-    </dialog>
+    </Dialog>
   </div>
 </template>
 

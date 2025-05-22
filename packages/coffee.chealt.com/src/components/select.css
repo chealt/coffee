@@ -5,4 +5,5 @@ select {
   padding: var(--gap);
   font-size: 1.2rem;
   background-color: var(--color-secondary);
+  color: inherit;
 }
