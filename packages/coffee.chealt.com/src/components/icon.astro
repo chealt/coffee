@@ -1,16 +1,18 @@
 ---
-import { Image } from "astro:assets";
-
-const images = import.meta.glob("/public/icons/*.svg");
+const images = import.meta.glob("/public/icons/*.svg", {
+  eager: true,
+  query: "?raw",
+  import: "default",
+});
 
 const { type } = Astro.props;
-const icon = images[`/public/icons/${type}.svg`];
+const Icon = images[`/public/icons/${type}.svg`];
 
-if (!icon) {
+if (!Icon) {
   throw new Error(`"${type}" does not exist in glob: "/public/icons/*.svg"`);
 }
 ---
 
 <span class={Astro.props.class}>
-  <Image src={icon()} alt={Astro.props.type} />
+  <Fragment set:html={Icon} />
 </span>
