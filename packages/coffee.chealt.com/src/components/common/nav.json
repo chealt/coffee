@@ -2,12 +2,14 @@
   "en": {
     "home": "home",
     "explore": "explore",
+    "capture": "capture",
     "collections": "collections",
     "settings": "settings"
   },
   "pl": {
     "home": "strona główna",
     "explore": "eksploruj",
+    "capture": "zdjecie",
     "collections": "kolekcje",
     "settings": "ustawienia"
   }
