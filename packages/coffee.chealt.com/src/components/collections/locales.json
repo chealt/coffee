@@ -1,18 +1,22 @@
 {
   "en": {
+    "title": "Add your coffee",
     "originCountry": "Origin country",
     "originRegion": "Origin region",
     "processingMethod": "Processing method",
     "roastingLevel": "Roasting level",
     "roaster": "Roaster",
-    "decaf": "Decaf"
+    "decaf": "Decaf",
+    "details": "Details"
   },
   "pl": {
-    "originCountry": "Origin country",
-    "originRegion": "Origin region",
-    "processingMethod": "Processing method",
-    "roastingLevel": "Roasting level",
-    "roaster": "Roaster",
-    "decaf": "Bezkofeinowy"
+    "title": "Dodaj swój kawę",
+    "originCountry": "Kraj pochodzenia",
+    "originRegion": "Region pochodzenia",
+    "processingMethod": "Metoda przetwarzania",
+    "roastingLevel": "Poziom robienia",
+    "roaster": "Wyrobca",
+    "decaf": "Bezkofeinowy",
+    "details": "Szczegóły"
   }
 }

@@ -1,38 +1,22 @@
 ---
 import Button from "../button.astro";
 import CoffeeDetails from "./coffee-details.astro";
-import CoffeeImageUpload from "./coffee-image-upload.astro";
 import Common from "../common/common.astro";
-import Dialog from "../dialog.astro";
-import Roasters from "../roasters.astro";
+import allLocaleTranslations from "./locales.json";
 
 import "./collections.css";
 import "./coffee-gallery.css";
+
+const t = allLocaleTranslations[Astro.currentLocale];
 ---
 
 <Common>
-  <h1>Add your coffee</h1>
+  <h1>{t["title"]}</h1>
   <coffee-gallery>
     <CoffeeDetails />
     <chealt-ocr>
       <ul id="pictures"></ul>
     </chealt-ocr>
-    <coffee-scanner>
-      <div id="controls">
-        <CoffeeImageUpload>
-          <Button>Upload</Button>
-        </CoffeeImageUpload>
-      </div>
-      <Dialog>
-        <dialog id="camera">
-          <video id="video">Video stream not available.</video>
-          <div id="capture-button-container">
-            <Button id="capture-photo" aria-label="Take a photo" />
-          </div>
-          <canvas id="photo" class="visually-hidden"></canvas>
-        </dialog>
-      </Dialog>
-    </coffee-scanner>
   </coffee-gallery>
 </Common>
 

@@ -2,7 +2,7 @@ import { writeFile } from '../../utils/file';
 
 class CoffeeImageUpload extends HTMLElement {
   connectedCallback() {
-    this.triggerButton = this.querySelector('button');
+    this.triggerButton = this.querySelector('a');
     this.fileInput = this.querySelector('input[type=file]');
 
     this.addClickListener();
@@ -15,9 +15,6 @@ class CoffeeImageUpload extends HTMLElement {
 
       try {
         await writeFile(fileData);
-
-        // clear the input to fix issue on iOS
-        this.fileInput.value = null;
       } catch (error) {
         if (error.name === 'AbortError') {
           console.log('user abort'); // eslint-disable-line no-console
@@ -27,12 +24,19 @@ class CoffeeImageUpload extends HTMLElement {
       }
 
       this.dispatchEvent(new CustomEvent('coffee-gallery-refresh', { bubbles: true }));
+
+      // navigate to the collections page if it is not the current page
+      if (window.location.pathname !== this.triggerButton.getAttribute('href')) {
+        window.location.assign(this.triggerButton.getAttribute('href'));
+      }
     });
   }
 
   addClickListener() {
-    this.triggerButton.addEventListener('click', async () => {
+    this.triggerButton.addEventListener('click', async (event) => {
       this.fileInput.click();
+
+      event.preventDefault();
     });
   }
 }

@@ -63,7 +63,7 @@ class CoffeeGallery extends HTMLElement {
   }
 
   addRefreshListener() {
-    this.addEventListener(CoffeeGallery.refreshEventName, () => {
+    document.addEventListener(CoffeeGallery.refreshEventName, () => {
       this.render();
     });
   }

@@ -1,7 +1,8 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
-import allLocaleTranslations from "./nav.json";
+import CoffeeImageUpload from "./coffee-image-upload.astro";
 import Icon from "../icon.astro";
+import allLocaleTranslations from "./nav.json";
 
 import "./nav.css";
 
@@ -26,9 +27,8 @@ const items = [
   },
   {
     name: "capture",
-    href: getRelativeLocaleUrl(Astro.currentLocale, "/capture"),
+    href: getRelativeLocaleUrl(Astro.currentLocale, "/collections"),
     text: t["capture"],
-    isActive: isActivePage("capture"),
   },
   {
     name: "collections",
@@ -47,11 +47,20 @@ const items = [
 
 <nav>
   {
-    items.map(({ name, href, text, isActive }) => (
-      <a href={href} class={isActive ? "active" : ""}>
-        <Icon class="icon" type={name} />
-        <span class="title">{text}</span>
-      </a>
-    ))
+    items.map(({ name, href, text, isActive }) =>
+      name === "capture" ? (
+        <CoffeeImageUpload>
+          <a href={href}>
+            <Icon class="icon" type={name} />
+            <span class="title">{text}</span>
+          </a>
+        </CoffeeImageUpload>
+      ) : (
+        <a href={href} class={isActive ? "active" : ""}>
+          <Icon class="icon" type={name} />
+          <span class="title">{text}</span>
+        </a>
+      ),
+    )
   }
 </nav>

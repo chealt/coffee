@@ -8,13 +8,16 @@ import OriginRegions from "./origin-regions.astro";
 import ProcessingMethods from "./processing-methods.astro";
 import Roasters from "./roasters.astro";
 import RoastingLevels from "./roasting-levels.astro";
+import allLocaleTranslations from "./locales.json";
 
 import "./coffee-details.css";
+
+const t = allLocaleTranslations[Astro.currentLocale];
 ---
 
 <template id="coffee-details-template">
   <div class="details">
-    <div class="summary"><Button class="primary">details</Button></div>
+    <div class="summary"><Button class="primary">{t["details"]}</Button></div>
     <dialog>
       <Form data-storage="localStorage" data-save-on-input>
         <Roasters />
