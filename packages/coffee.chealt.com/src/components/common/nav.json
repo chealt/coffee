@@ -1,0 +1,16 @@
+{
+  "en": {
+    "home": "home",
+    "explore": "explore",
+    "capture": "capture",
+    "collections": "collections",
+    "settings": "settings"
+  },
+  "pl": {
+    "home": "strona główna",
+    "explore": "eksploruj",
+    "capture": "zdjecia",
+    "collections": "kolekcje",
+    "settings": "ustawienia"
+  }
+}

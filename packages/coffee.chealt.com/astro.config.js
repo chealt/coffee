@@ -6,6 +6,9 @@ export default defineConfig({
     locales: ['en', 'pl'],
     defaultLocale: 'en'
   },
+  devToolbar: {
+    enabled: false
+  },
   integrations: [wasm()],
   server: {
     headers: {

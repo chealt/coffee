@@ -1,5 +1,5 @@
 ---
-import allLocaleTranslations from "../../../locales/common/common.json";
+import allLocaleTranslations from "./common.json";
 import Nav from "./nav.astro";
 
 import "./common.css";
@@ -16,9 +16,9 @@ const t = allLocaleTranslations[Astro.currentLocale];
   </head>
 
   <body>
-    <Nav />
     <main>
       <slot />
     </main>
+    <Nav />
   </body>
 </html>

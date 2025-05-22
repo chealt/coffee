@@ -44,6 +44,11 @@ li {
   list-style: none;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;

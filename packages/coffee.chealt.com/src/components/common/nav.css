@@ -1,20 +1,29 @@
 nav {
-  display: flex;
-  flex-direction: row;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: grid;
+  grid-auto-flow: column;
+  box-sizing: border-box;
+  background-color: var(--color-background);
+  box-shadow: 0 -2px 16px 2px lightgray;
+  align-items: center;
 }
 
 nav a {
-  font-size: 1.2rem;
-  font-weight: bold;
-  flex-grow: 1;
-  color: inherit;
-  text-align: center;
-  text-decoration: none;
-  text-transform: uppercase;
   padding: var(--gap);
   border-bottom: 4px solid transparent;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 nav a.active {
   border-bottom-color: var(--color-primary);
+}
+
+nav .title {
+  font-size: 0.8rem;
+  text-transform: capitalize;
 }

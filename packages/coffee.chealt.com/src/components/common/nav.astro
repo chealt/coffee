@@ -1,24 +1,57 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
+import allLocaleTranslations from "./nav.json";
+import Icon from "../icon.astro";
 
 import "./nav.css";
+
+const t = allLocaleTranslations[Astro.currentLocale];
+
+const isActivePage = (pageName) => {
+  const firstPathParam = Astro.url.pathname
+    .replace(`${Astro.currentLocale}`, "")
+    .slice(1);
+
+  return (
+    firstPathParam === `/${pageName}` || firstPathParam === `/${pageName}/`
+  );
+};
+
+const items = [
+  {
+    name: "home",
+    href: getRelativeLocaleUrl(Astro.currentLocale, "/"),
+    text: t["explore"],
+    isActive: isActivePage(""),
+  },
+  {
+    name: "capture",
+    href: getRelativeLocaleUrl(Astro.currentLocale, "/capture"),
+    text: t["capture"],
+    isActive: isActivePage("capture"),
+  },
+  {
+    name: "collections",
+    href: getRelativeLocaleUrl(Astro.currentLocale, "/collections"),
+    text: t["collections"],
+    isActive: isActivePage("collections"),
+  },
+  {
+    name: "settings",
+    href: getRelativeLocaleUrl(Astro.currentLocale, "/settings"),
+    text: t["settings"],
+    isActive: isActivePage("settings"),
+  },
+];
 ---
 
 <nav>
-  <a
-    href={getRelativeLocaleUrl(Astro.currentLocale, "/")}
-    class={Astro.url.pathname
-      .replace(`${Astro.currentLocale}/`, "")
-      .slice(1) === ""
-      ? "active"
-      : ""}>Home</a
-  >
-  <a
-    href={getRelativeLocaleUrl(Astro.currentLocale, "/collections")}
-    class={Astro.url.pathname
-      .replace(`${Astro.currentLocale}/`, "")
-      .slice(1) === "collections/"
-      ? "active"
-      : ""}>Collections</a
-  >
+  {
+    items.map(({ name, href, text, isActive }) => (
+      <a href={href} class={isActive ? "active" : ""}>
+        <Icon class="icon" type={name} />
+        <span class="title">{text}</span>
+      </a>
+    ))
+  }
 </nav>
