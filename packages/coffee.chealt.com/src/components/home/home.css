@@ -14,6 +14,10 @@
 .roasters li {
   transition: transform 0.2s ease-in-out;
   background-color: white; /* works with transparent logos */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .roasters li:hover {
