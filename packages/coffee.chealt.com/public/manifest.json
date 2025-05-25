@@ -14,9 +14,29 @@
       "sizes": "96x96"
     },
     {
+      "src": "/favicons/favicon-128x128.svg",
+      "type": "image/svg+xml",
+      "sizes": "128x128"
+    },
+    {
       "src": "/favicons/favicon-192x192.svg",
       "type": "image/svg+xml",
       "sizes": "192x192"
+    },
+    {
+      "src": "/favicons/favicon-256x256.svg",
+      "type": "image/svg+xml",
+      "sizes": "256x256"
+    },
+    {
+      "src": "/favicons/favicon-512x512.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/favicons/favicon-1024x1024.svg",
+      "type": "image/svg+xml",
+      "sizes": "1024x1024"
     }
   ],
   "screenshots": [
