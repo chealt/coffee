@@ -5,8 +5,14 @@ import dictionary from './dictionary';
 import { appendImage, imageFromUrl, multipleOfBaseSize, outputToImage } from './imageUtils';
 import { imageToModelInput } from './modelUtils';
 import { splitIntoLineImages } from './splitIntoLineImages';
+import { isIOS } from './utils/navigator';
 
 env.wasm.proxy = true;
+
+if (isIOS()) {
+  env.wasm.simd = false;
+  env.wasm.numThreads = 1;
+}
 
 const defaultOptions = {
   debug: false,
