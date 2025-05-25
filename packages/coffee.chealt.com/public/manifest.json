@@ -1,0 +1,30 @@
+{
+  "short_name": "Chealt Coffee",
+  "name": "Chealt Coffee Explorer",
+  "description": "Discover and explore coffee roasters.",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "type": "image/png",
+      "sizes": "32x32",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#000000",
+  "theme_color": "#e1a76d",
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Collections",
+      "url": "/collections"
+    },
+    {
+      "name": "Settings",
+      "url": "/settings"
+    }
+  ]
+}
