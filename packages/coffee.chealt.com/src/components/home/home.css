@@ -18,6 +18,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  box-sizing: border-box;
+  padding: var(--gap);
 }
 
 .roasters li:hover {
