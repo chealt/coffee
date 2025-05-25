@@ -14,7 +14,10 @@ const isActivePage = (pageName) => {
     .slice(1);
 
   return (
-    firstPathParam === `/${pageName}` || firstPathParam === `/${pageName}/`
+    firstPathParam === `/${pageName}` ||
+    firstPathParam === `/${pageName}/` ||
+    firstPathParam === `${pageName}` ||
+    firstPathParam === `${pageName}/`
   );
 };
 
