@@ -1,3 +1,4 @@
+import css from '@eslint/css';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import globals from 'globals';
 
@@ -6,7 +7,15 @@ import importPlugin from 'eslint-plugin-import';
 export default defineConfig([
   globalIgnores(['.yarn/*', '.*', '**/dist/*', '**/.astro/*']),
   importPlugin.flatConfigs.recommended,
+  // lint CSS files
   {
+    files: ['**/*.css'],
+    language: 'css/css',
+    plugins: { css },
+    extends: ['css/recommended']
+  },
+  {
+    files: ['**/*.js'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',

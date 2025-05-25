@@ -644,6 +644,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@eslint/css-tree@npm:^3.3.3":
+  version: 3.5.3
+  resolution: "@eslint/css-tree@npm:3.5.3"
+  dependencies:
+    mdn-data: "npm:2.20.0"
+    source-map-js: "npm:^1.0.1"
+  checksum: 10c0/4afa3e0ec88e27b05b8b7be1cfc5bb022c246b84f3d91fcd2c1478a5daab9950679cce789af4b5cca11f99d17e4ca29f00b8a1520ae857d633a71624f2b72373
+  languageName: node
+  linkType: hard
+
+"@eslint/css@npm:^0.8.1":
+  version: 0.8.1
+  resolution: "@eslint/css@npm:0.8.1"
+  dependencies:
+    "@eslint/core": "npm:^0.14.0"
+    "@eslint/css-tree": "npm:^3.3.3"
+    "@eslint/plugin-kit": "npm:^0.3.1"
+  checksum: 10c0/3b3e03aefea93c5b979c305754c5079eefa9ca893ea32afb1f0d4f4c22c21a63825ecfed892391499e47f37cdd59be570aba410d296239ae27e5e679a04e5217
+  languageName: node
+  linkType: hard
+
 "@eslint/eslintrc@npm:^3.3.1":
   version: 3.3.1
   resolution: "@eslint/eslintrc@npm:3.3.1"
@@ -2282,6 +2303,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "coffee@workspace:."
   dependencies:
+    "@eslint/css": "npm:^0.8.1"
     eslint: "npm:^9.27.0"
     eslint-config-prettier: "npm:^10.1.5"
     eslint-plugin-import: "npm:^2.31.0"
@@ -4608,6 +4630,13 @@ __metadata:
   version: 2.12.2
   resolution: "mdn-data@npm:2.12.2"
   checksum: 10c0/b22443b71d70f72ccc3c6ba1608035431a8fc18c3c8fc53523f06d20e05c2ac10f9b53092759a2ca85cf02f0d37036f310b581ce03e7b99ac74d388ef8152ade
+  languageName: node
+  linkType: hard
+
+"mdn-data@npm:2.20.0":
+  version: 2.20.0
+  resolution: "mdn-data@npm:2.20.0"
+  checksum: 10c0/d029da495d6ded80f1b31891da9deb30450ef5c98c36e0a95409ddd3da6a9afd41443008936eaffcbc4e559356b81626cb179b446bebd3bb9ddb5d9f55e51dd3
   languageName: node
   linkType: hard
 
