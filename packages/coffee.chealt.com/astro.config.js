@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import { visualizer } from 'rollup-plugin-visualizer';
 import wasm from 'vite-plugin-wasm';
 
 export default defineConfig({
@@ -9,7 +10,9 @@ export default defineConfig({
   devToolbar: {
     enabled: false
   },
-  integrations: [wasm()],
+  integrations: [
+    wasm()
+  ],
   server: {
     headers: {
       'Cross-Origin-Opener-Policy': 'same-origin',
@@ -17,7 +20,11 @@ export default defineConfig({
     }
   },
   vite: {
-    plugins: [wasm()],
+    plugins: [
+      visualizer({
+        open: process.env.ANALYZE
+      })
+    ],
     assetsInclude: ['**/*.onnx', '**/*.txt'],
     optimizeDeps: {
       exclude: ['onnxruntime-web', 'onnxruntime-common']

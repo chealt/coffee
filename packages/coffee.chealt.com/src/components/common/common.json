@@ -1,10 +1,12 @@
 {
   "en": {
     "title": "Chealt Coffee",
-    "unknown": "unknown"
+    "unknown": "unknown",
+    "description": "Explore the world of coffee and collect your favorites."
   },
   "pl": {
     "title": "Chealt Kawa",
-    "unknown": "nieznany"
+    "unknown": "nieznany",
+    "description": "Przeglądaj świat kawy i zbieraj swoje ulubione kawy"
   }
 }
