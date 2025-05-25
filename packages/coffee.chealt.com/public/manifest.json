@@ -19,6 +19,21 @@
       "sizes": "192x192"
     }
   ],
+  "screenshots": [
+    {
+      "src": "/screenshots/mobile.png",
+      "sizes": "1442x3202",
+      "type": "image/png",
+      "label": "Home screen showing coffee roasters."
+    },
+    {
+      "src": "/screenshots/desktop.png",
+      "sizes": "2560x1328",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Home screen showing coffee roasters."
+    }
+  ],
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
