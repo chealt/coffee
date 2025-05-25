@@ -1,0 +1,5 @@
+<svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+  <!-- Coffee bean shape -->
+  <ellipse cx="16" cy="16" rx="10" ry="14" fill="#e1a76d"/>
+  <path d="M 15 7 C 20 11, 12 15, 16 16 C 20 17, 12 21, 17 25" fill="none" stroke="#c78c50" stroke-width="2" stroke-linecap="round"/>
+</svg>
