@@ -1,3 +1,4 @@
+import brewingMethods from '../../../data/brewingMethods.json';
 import miscellaneousCoffeeProperties from '../../../data/miscellaneousCoffeeProperties.json';
 import originCountries from '../../../data/originCountries.json';
 import originRegions from '../../../data/originRegions.json';
@@ -68,9 +69,11 @@ class CoffeeDetails extends HTMLElement {
     const processingMethod = CoffeeDetails.findMatch(processingMethods, ocrTexts);
     const roaster = CoffeeDetails.findMatch(roasters, ocrTexts);
     const roastingLevel = CoffeeDetails.findMatch(roastingLevels, ocrTexts);
+    const brewingMethod = CoffeeDetails.findMatch(brewingMethods, ocrTexts);
     const isDecaf = CoffeeDetails.findMatch(miscellaneousCoffeeProperties.filter(({ id }) => id === 1), ocrTexts); // ID: 1 is the decaf property
 
     return {
+      brewingMethod,
       isDecaf,
       originCountry,
       originRegion,
@@ -86,7 +89,7 @@ class CoffeeDetails extends HTMLElement {
   }
 
   // eslint-disable-next-line complexity
-  render({ isDecaf, originCountry, originRegion, processingMethod, roaster, roastingLevel }) {
+  render({ brewingMethod, isDecaf, originCountry, originRegion, processingMethod, roaster, roastingLevel }) {
     if (roaster) {
       const roasterInput = this.querySelector('[name=roaster]');
 
@@ -129,6 +132,15 @@ class CoffeeDetails extends HTMLElement {
       // don't overwrite values set by the user or loaded from storage
       if (processingMethodInput.value === '') {
         setInputValue({ input: processingMethodInput, value: processingMethod.processing_method_id });
+      }
+    }
+
+    if (brewingMethod) {
+      const brewingMethodInput = this.querySelector('[name=brewingMethod]');
+
+      // don't overwrite values set by the user or loaded from storage
+      if (brewingMethodInput.value === '') {
+        setInputValue({ input: brewingMethodInput, value: brewingMethod.brewing_method_id });
       }
     }
 

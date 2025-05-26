@@ -7,7 +7,8 @@
     "roastingLevel": "Roasting level",
     "roaster": "Roaster",
     "decaf": "Decaf",
-    "details": "Details"
+    "details": "Details",
+    "brewingMethod": "Brewing method"
   },
   "pl": {
     "title": "Dodaj swój kawę",
@@ -17,6 +18,7 @@
     "roastingLevel": "Poziom robienia",
     "roaster": "Wyrobca",
     "decaf": "Bezkofeinowy",
-    "details": "Szczegóły"
+    "details": "Szczegóły",
+    "brewingMethod": "Metoda pieczania"
   }
 }

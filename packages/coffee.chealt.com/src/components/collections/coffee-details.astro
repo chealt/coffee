@@ -2,6 +2,7 @@
 import Button from "../button.astro";
 import Form from "../form.astro";
 
+import BrewingMethods from "./brewing-methods.astro";
 import Decaf from "./decaf.astro";
 import Dialog from "../dialog.astro";
 import OriginCountries from "./origin-countries.astro";
@@ -9,6 +10,7 @@ import OriginRegions from "./origin-regions.astro";
 import ProcessingMethods from "./processing-methods.astro";
 import Roasters from "./roasters.astro";
 import RoastingLevels from "./roasting-levels.astro";
+
 import allLocaleTranslations from "./locales.json";
 
 import "./coffee-details.css";
@@ -26,6 +28,7 @@ const t = allLocaleTranslations[Astro.currentLocale];
         <OriginCountries />
         <OriginRegions />
         <ProcessingMethods />
+        <BrewingMethods />
         <Decaf />
       </Form>
     </Dialog>
