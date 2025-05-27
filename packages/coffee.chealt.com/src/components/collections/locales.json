@@ -8,7 +8,8 @@
     "roaster": "Roaster",
     "decaf": "Decaf",
     "details": "Details",
-    "brewingMethod": "Brewing method"
+    "brewingMethod": "Brewing method",
+    "roastingDate": "Roasting date"
   },
   "pl": {
     "title": "Dodaj swój kawę",
@@ -19,6 +20,7 @@
     "roaster": "Wyrobca",
     "decaf": "Bezkofeinowy",
     "details": "Szczegóły",
-    "brewingMethod": "Metoda pieczania"
+    "brewingMethod": "Metoda pieczania",
+    "roastingDate": "Data robienia"
   }
 }

@@ -14,6 +14,7 @@ import RoastingLevels from "./roasting-levels.astro";
 import allLocaleTranslations from "./locales.json";
 
 import "./coffee-details.css";
+import RoastingDate from "./roasting-date.astro";
 
 const t = allLocaleTranslations[Astro.currentLocale];
 ---
@@ -25,6 +26,7 @@ const t = allLocaleTranslations[Astro.currentLocale];
       <Form data-storage="localStorage" data-save-on-input>
         <Roasters />
         <RoastingLevels />
+        <RoastingDate />
         <OriginCountries />
         <OriginRegions />
         <ProcessingMethods />
