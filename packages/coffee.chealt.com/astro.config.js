@@ -33,7 +33,7 @@ export default defineConfig({
       sourcemap: true
     },
     ssr: {
-      noExternal: ['rollup-plugin-visualizer']
+      noExternal: []
     }
   }
 });
