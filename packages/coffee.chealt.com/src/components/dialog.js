@@ -17,4 +17,6 @@ class CoffeeDialog extends HTMLElement {
   }
 }
 
-customElements.define('coffee-dialog', CoffeeDialog);
+if (!customElements.get('coffee-dialog')) {
+  customElements.define('coffee-dialog', CoffeeDialog);
+}

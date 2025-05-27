@@ -5,14 +5,9 @@ import dictionary from './dictionary';
 import { appendImage, imageFromUrl, multipleOfBaseSize, outputToImage } from './imageUtils';
 import { imageToModelInput } from './modelUtils';
 import { splitIntoLineImages } from './splitIntoLineImages';
-import { isIOS } from './utils/navigator';
 
 env.wasm.proxy = true;
-
-if (isIOS()) {
-  env.wasm.simd = false;
-  env.wasm.numThreads = 1;
-}
+env.wasm.simd = false;
 
 const defaultOptions = {
   debug: false,
@@ -37,6 +32,7 @@ const OCR = async ({ debug, modelPaths: { detectionPath, recognitionPath }, onnx
 
     if (image.data) {
       const oldCanvas = document.createElement('canvas');
+
       oldCanvas.width = image.width;
       oldCanvas.height = image.height;
       oldCanvas.getContext('2d').putImageData(new ImageData(Uint8ClampedArray.from(image.data), image.width, image.height), 0, 0);
