@@ -1,5 +1,5 @@
 import { defineConfig } from 'astro/config';
-import { visualizer } from 'rollup-plugin-visualizer';
+// import { visualizer } from 'rollup-plugin-visualizer';
 import wasm from 'vite-plugin-wasm';
 
 export default defineConfig({
@@ -21,9 +21,9 @@ export default defineConfig({
   },
   vite: {
     plugins: [
-      visualizer({
-        open: process.env.ANALYZE
-      })
+      // visualizer({
+      //   open: process.env.ANALYZE
+      // })
     ],
     assetsInclude: ['**/*.onnx', '**/*.txt'],
     optimizeDeps: {
@@ -31,9 +31,6 @@ export default defineConfig({
     },
     build: {
       sourcemap: true
-    },
-    ssr: {
-      noExternal: []
     }
   }
 });
