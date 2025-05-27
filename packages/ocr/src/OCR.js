@@ -7,7 +7,6 @@ import { imageToModelInput } from './modelUtils';
 import { splitIntoLineImages } from './splitIntoLineImages';
 
 env.wasm.proxy = true;
-env.wasm.simd = false;
 
 const defaultOptions = {
   debug: false,
