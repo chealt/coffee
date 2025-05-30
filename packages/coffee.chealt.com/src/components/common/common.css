@@ -97,7 +97,7 @@ svg {
 
 .carousel > *::scroll-marker {
   content: "";
-  border: 2px solid white;
+  border: 2px solid var(--color-primary);
   border-radius: 50%;
   width: 1em;
   height: 1em;
@@ -106,7 +106,7 @@ svg {
 }
 
 .carousel > *::scroll-marker:target-current {
-  background-color: var(--color-primary);
+  background-color: var(--color-background);
 }
 
 @media (prefers-color-scheme: dark) {
