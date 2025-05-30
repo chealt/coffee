@@ -76,6 +76,39 @@ svg {
   font-size: 1.5rem;
 }
 
+.carousel {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-marker-group: before;
+}
+
+.carousel > * {
+  scroll-snap-align: start;
+}
+
+.carousel::scroll-marker-group {
+  display: flex;
+  justify-content: center;
+  gap: var(--gap);
+  position: absolute;
+  top: var(--gap);
+  justify-self: anchor-center;
+}
+
+.carousel > *::scroll-marker {
+  content: "";
+  border: 2px solid white;
+  border-radius: 50%;
+  width: 1em;
+  height: 1em;
+  background-color: transparent;
+  transition: background-color 0.8s ease-out;
+}
+
+.carousel > *::scroll-marker:target-current {
+  background-color: var(--color-primary);
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --color-background: #121212;

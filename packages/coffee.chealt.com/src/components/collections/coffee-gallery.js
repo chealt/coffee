@@ -48,6 +48,7 @@ class CoffeeGallery extends HTMLElement {
 
         // add images
         const imagesContainer = document.createElement('div');
+        imagesContainer.classList.add('carousel');
         imagesContainer.classList.add('images-container');
 
         await Promise.all(collection.map(async ({ name }) => {
