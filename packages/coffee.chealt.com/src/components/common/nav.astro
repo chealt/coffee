@@ -53,7 +53,7 @@ const items = [
     items.map(({ name, href, text, isActive }) =>
       name === "capture" ? (
         <CoffeeImageUpload>
-          <a href={href}>
+          <a href={href} class="triggerButton">
             <Icon class="icon" type={name} />
             <span class="title">{text}</span>
           </a>

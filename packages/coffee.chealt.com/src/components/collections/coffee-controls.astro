@@ -1,0 +1,32 @@
+---
+import Button from "../button.astro";
+import CoffeeImageUpload from "../common/coffee-image-upload.astro";
+import Icon from "../icon.astro";
+
+import allLocaleTranslations from "./locales.json";
+
+import "./coffee-controls.css";
+
+const t = allLocaleTranslations[Astro.currentLocale];
+---
+
+<template id="coffee-controls-template">
+  <coffee-controls>
+    <div class="controls">
+      <CoffeeImageUpload>
+        <Button class="add triggerButton">
+          <Icon type="add" />
+          <span>{t["add"]}</span>
+        </Button>
+      </CoffeeImageUpload>
+      <Button class="delete">
+        <Icon type="delete" />
+        <span>{t["delete"]}</span>
+      </Button>
+    </div>
+  </coffee-controls>
+</template>
+
+<script src="./coffee-controls.js"></script>
+<!-- add CoffeeImageUpload script, without this import it won't work -->
+<script src="../common/coffee-image-upload.js"></script>

@@ -1,6 +1,7 @@
 import { formDataToObject } from '../utils/form';
 
 const storageKey = 'chealt-forms';
+const supportedStorageTypes = ['localStorage'];
 
 const addChangeEvent = ({ form, callback }) => {
   form.querySelectorAll('input,select').forEach((element) => {
@@ -18,7 +19,7 @@ const getFormData = ({ form, storage }) => {
 
     return data[form.name];
   default:
-    throw new Error(`Storage method: '${storage}', not implemented.`);
+    return undefined;
   }
 };
 
@@ -30,7 +31,22 @@ const getAllFormsData = (storage) => {
 
     return data;
   default:
-    throw new Error(`Storage method: '${storage}', not implemented.`);
+    return undefined;
+  }
+};
+
+const removeFormData = ({ storage, formName }) => {
+  switch (storage) {
+  case 'localStorage':
+    const allData = getAllFormsData(storage);
+
+    delete allData[formName];
+
+    localStorage.setItem(storageKey, JSON.stringify(allData));
+
+    return allData;
+  default:
+    return undefined;
   }
 };
 
@@ -59,6 +75,20 @@ const setFormData = ({ form, storage }) => {
   }
 };
 
+const removeDeletedFormData = (storage) => (mutationsList) => {
+  mutationsList.forEach(({ removedNodes }) => {
+    if (removedNodes) {
+      removedNodes.forEach((node) => {
+        node.querySelectorAll('chealt-form form').forEach((form) => {
+          removeFormData({ storage, formName: form.name });
+        });
+      });
+    }
+  });
+};
+
+let isNodeDeletionObserved = false;
+
 class ChealtForm extends HTMLElement {
   connectedCallback() {
     this.form = this.querySelector('form');
@@ -67,11 +97,36 @@ class ChealtForm extends HTMLElement {
     this.saveOnInput = this.form.getAttribute('data-save-on-input') || false;
 
     if (this.storage) {
+      if (!ChealtForm.isStorageTypeImplemented(this.storage)) {
+        throw new Error(`Storage type: ${this.storage} is not implemented, use one of the following: ${supportedStorageTypes.join(', ')}`);
+      }
+
       setFormData({ form: this.form, storage: this.storage });
 
       if (this.saveOnInput) {
         addChangeEvent({ form: this.form, callback: saveFormData(this.storage) });
       }
+
+      ChealtForm.observeNodeDeletion(this.storage);
+    }
+  }
+
+  static isStorageTypeImplemented(storage) {
+    switch (storage) {
+    case 'localStorage':
+      return true;
+    default:
+      return false;
+    }
+  }
+
+  static observeNodeDeletion(storage) {
+    if (!isNodeDeletionObserved) {
+      const observer = new MutationObserver(removeDeletedFormData(storage));
+
+      observer.observe(document.body, { childList: true, subtree: true });
+
+      isNodeDeletionObserved = true;
     }
   }
 }

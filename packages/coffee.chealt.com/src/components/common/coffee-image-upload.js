@@ -1,8 +1,10 @@
 import { writeFile } from '../../utils/file';
+import { save } from '../collections/storage';
 
 class CoffeeImageUpload extends HTMLElement {
   connectedCallback() {
-    this.triggerButton = this.querySelector('a');
+    this.triggerButton = this.querySelector('.triggerButton');
+    this.navigateTo = this.triggerButton.getAttribute('href');
     this.fileInput = this.querySelector('input[type=file]');
 
     this.addClickListener();
@@ -11,10 +13,13 @@ class CoffeeImageUpload extends HTMLElement {
 
   addFileChangeListener() {
     this.fileInput.addEventListener('change', async () => {
+      const collectionID = this.closest('[data-collection-id]')?.getAttribute('data-collection-id') || crypto.randomUUID();
       const fileData = this.fileInput.files[0];
 
       try {
-        await writeFile(fileData);
+        const fileName = await writeFile(fileData);
+
+        await save({ collectionID, name: fileName });
       } catch (error) {
         if (error.name === 'AbortError') {
           console.log('user abort'); // eslint-disable-line no-console
@@ -26,8 +31,8 @@ class CoffeeImageUpload extends HTMLElement {
       this.dispatchEvent(new CustomEvent('coffee-gallery-refresh', { bubbles: true }));
 
       // navigate to the collections page if it is not the current page
-      if (window.location.pathname !== this.triggerButton.getAttribute('href')) {
-        window.location.assign(this.triggerButton.getAttribute('href'));
+      if (this.navigateTo && window.location.pathname !== this.navigateTo) {
+        window.location.assign(this.navigateTo);
       }
     });
   }
@@ -41,4 +46,6 @@ class CoffeeImageUpload extends HTMLElement {
   }
 }
 
-customElements.define('coffee-image-upload', CoffeeImageUpload);
+if (!customElements.get('coffee-image-upload')) {
+  customElements.define('coffee-image-upload', CoffeeImageUpload);
+}

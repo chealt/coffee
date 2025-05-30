@@ -1,6 +1,7 @@
 ---
 import Button from "../button.astro";
 import CoffeeDetails from "./coffee-details.astro";
+import CoffeeControls from "./coffee-controls.astro";
 import Common from "../common/common.astro";
 import allLocaleTranslations from "./locales.json";
 
@@ -14,6 +15,7 @@ const t = allLocaleTranslations[Astro.currentLocale];
   <h1>{t["title"]}</h1>
   <coffee-gallery>
     <CoffeeDetails />
+    <CoffeeControls />
     <chealt-ocr>
       <ul id="pictures"></ul>
     </chealt-ocr>

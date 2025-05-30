@@ -16,7 +16,7 @@ const writeFile = async (file) => {
         reject(error);
       }
 
-      resolve();
+      resolve(fileName);
     };
 
     reader.onerror = (error) => {
@@ -29,9 +29,9 @@ onmessage = async ({ data: { data, command } }) => {
   switch (command) {
   case 'writeFile':
     try {
-      await writeFile(data);
+      const fileName = await writeFile(data);
 
-      postMessage({ success: true });
+      postMessage({ success: true, fileName });
     } catch (error) {
       postMessage({ error });
     }

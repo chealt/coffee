@@ -9,18 +9,22 @@
     "decaf": "Decaf",
     "details": "Details",
     "brewingMethod": "Brewing method",
-    "roastingDate": "Roasting date"
+    "roastingDate": "Roasting date",
+    "delete": "delete",
+    "add": "add"
   },
   "pl": {
-    "title": "Dodaj swój kawę",
+    "title": "Dodaj swoją kawę",
     "originCountry": "Kraj pochodzenia",
     "originRegion": "Region pochodzenia",
-    "processingMethod": "Metoda przetwarzania",
-    "roastingLevel": "Poziom robienia",
-    "roaster": "Wyrobca",
+    "processingMethod": "Obróbka",
+    "roastingLevel": "Stopień palenia",
+    "roaster": "Palarnia",
     "decaf": "Bezkofeinowy",
     "details": "Szczegóły",
-    "brewingMethod": "Metoda pieczania",
-    "roastingDate": "Data robienia"
+    "brewingMethod": "Sposób zaparzania",
+    "roastingDate": "Data palenia",
+    "delete": "usuń",
+    "add": "dodaj"
   }
 }

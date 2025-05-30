@@ -1,4 +1,4 @@
-import { deleteFile } from '../../utils/file';
+import { getAllCollections } from './storage';
 
 class CoffeeGallery extends HTMLElement {
   static refreshEventName = 'coffee-gallery-refresh';
@@ -12,54 +12,68 @@ class CoffeeGallery extends HTMLElement {
 
   async render() {
     const rootDirectory = await navigator.storage.getDirectory();
+    const collections = getAllCollections();
 
-    for await (const name of rootDirectory.keys()) {
-      if (!this.pictures.querySelector(`[data-name="${name}"]`)) {
-        const fileHandle = await rootDirectory.getFileHandle(name);
-        const fileData = await fileHandle.getFile();
+    Object.entries(collections).forEach(async ([id, collection]) => {
+      // skip collection that already exists and has all the images
+      const existingCollection = this.pictures.querySelector(`[data-collection-id="${id}"]`);
 
-        const image = new Image(this.pictures.clientWidth);
-        image.src = URL.createObjectURL(fileData);
-        image.id = `${fileData.name}_${fileData.lastModified}`;
+      if (existingCollection && !collection.some(({ name }) => !this.pictures.querySelector(`[data-name="${name}"]`))) {
+        return;
+      }
 
-        // add image container
-        const imageContainer = document.createElement('div');
-        imageContainer.classList.add('image-container');
+      if (existingCollection) {
+        const images = existingCollection.querySelector('.images-container');
+        const missingImages = collection.filter(({ name }) => !this.pictures.querySelector(`[data-name="${name}"]`));
 
-        imageContainer.appendChild(image);
+        await Promise.all(missingImages.map(async ({ name }) => {
+          const fileHandle = await rootDirectory.getFileHandle(name);
+          const fileData = await fileHandle.getFile();
 
+          const image = new Image(this.pictures.clientWidth);
+          image.src = URL.createObjectURL(fileData);
+          image.setAttribute('data-name', name);
+          image.id = `${fileData.name}_${fileData.lastModified}`;
+
+          images.appendChild(image);
+        }));
+      } else {
         // add a list item
-        const picture = document.createElement('li');
-        picture.setAttribute('data-name', name);
+        const pictureCollection = document.createElement('li');
+        pictureCollection.setAttribute('data-collection-id', id);
+        pictureCollection.classList.add('picture-collection');
 
-        // add details
         const details = document.createElement('coffee-details');
+        details.setAttribute('data-collection-id', id);
 
-        details.setAttribute('data-name', name);
-        details.appendChild(imageContainer);
+        // add images
+        const imagesContainer = document.createElement('div');
+        imagesContainer.classList.add('images-container');
 
-        picture.appendChild(details);
+        await Promise.all(collection.map(async ({ name }) => {
+          const fileHandle = await rootDirectory.getFileHandle(name);
+          const fileData = await fileHandle.getFile();
+
+          const image = new Image(this.pictures.clientWidth);
+          image.src = URL.createObjectURL(fileData);
+          image.setAttribute('data-name', name);
+          image.id = `${fileData.name}_${fileData.lastModified}`;
+
+          imagesContainer.appendChild(image);
+        }));
+
+        details.appendChild(imagesContainer);
+        pictureCollection.appendChild(details);
 
         // add controls
-        const controls = document.createElement('div');
-        controls.classList.add('controls');
+        const template = document.getElementById('coffee-controls-template');
+        const templateContent = template.content;
 
-        // add a delete button
-        const deleteButton = document.createElement('button');
-        deleteButton.innerText = 'delete';
+        pictureCollection.appendChild(templateContent.cloneNode(true));
 
-        deleteButton.addEventListener('click', () => {
-          this.pictures.removeChild(picture);
-          deleteFile(name);
-        });
-
-        controls.appendChild(deleteButton);
-
-        picture.appendChild(controls);
-
-        this.pictures.appendChild(picture);
+        this.pictures.appendChild(pictureCollection);
       }
-    }
+    });
   }
 
   addRefreshListener() {

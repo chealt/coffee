@@ -4,20 +4,35 @@ coffee-details {
   overflow: hidden;
 }
 
-coffee-details .image-container {
+coffee-details .images-container {
   min-height: 440px;
   max-height: 60vh;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  overflow-y: hidden;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
 }
 
 coffee-details img {
+  scroll-snap-align: start;
   transition: opacity 0.4s ease-out;
   opacity: 1;
 }
 
-coffee-details .image-container:has(+ .details dialog[open]) img {
+/* coffee-details .images-container::scroll-marker-group {
+  display: grid;
+}
+
+coffee-details img::scroll-marker {
+  content: "";
+  border: 1px solid red;
+  height: 1em;
+  width: 1em;
+} */
+
+coffee-details .images-container:has(+ .details dialog[open]) img {
   opacity: 0.4;
 }
 

@@ -10,7 +10,7 @@ import { friendlyIncludes } from '../../utils/string';
 
 class CoffeeDetails extends HTMLElement {
   connectedCallback() {
-    this.name = this.getAttribute('data-name'); // unique identifier to use for storage
+    this.collectionID = this.getAttribute('data-collection-id'); // unique identifier to use for storage
 
     this.renderInitDetails();
     this.addMutationObserver();
@@ -21,7 +21,7 @@ class CoffeeDetails extends HTMLElement {
   }
 
   setDetailsFormName() {
-    this.querySelector('form').setAttribute('name', this.name);
+    this.querySelector('form').setAttribute('name', this.collectionID);
   }
 
   renderInitDetails() {
