@@ -30,20 +30,14 @@ const items = [
   },
   {
     name: "capture",
-    href: getRelativeLocaleUrl(Astro.currentLocale, "/collections"),
+    href: getRelativeLocaleUrl(Astro.currentLocale, "/you"),
     text: t["capture"],
   },
   {
-    name: "collections",
-    href: getRelativeLocaleUrl(Astro.currentLocale, "/collections"),
-    text: t["collections"],
-    isActive: isActivePage("collections"),
-  },
-  {
-    name: "settings",
-    href: getRelativeLocaleUrl(Astro.currentLocale, "/settings"),
-    text: t["settings"],
-    isActive: isActivePage("settings"),
+    name: "you",
+    href: getRelativeLocaleUrl(Astro.currentLocale, "/you"),
+    text: t["you"],
+    isActive: isActivePage("you"),
   },
 ];
 ---

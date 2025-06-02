@@ -3,14 +3,13 @@
     "home": "home",
     "explore": "explore",
     "capture": "capture",
-    "collections": "collections",
-    "settings": "settings"
+    "you": "you"
   },
   "pl": {
     "home": "strona główna",
     "explore": "eksploruj",
     "capture": "zdjecie",
-    "collections": "kolekcje",
+    "you": "ty",
     "settings": "ustawienia"
   }
 }
