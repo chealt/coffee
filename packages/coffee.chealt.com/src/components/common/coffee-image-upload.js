@@ -1,5 +1,5 @@
 import { writeFile } from '../../utils/file';
-import { save } from '../collections/storage';
+import { save } from '../you/storage';
 
 class CoffeeImageUpload extends HTMLElement {
   connectedCallback() {
