@@ -1,9 +1,48 @@
 import { deleteFile } from '../../../utils/file';
-import { getCollectionItems, deleteCollectionItem } from '../../common/storage.js';
+import { getCollectionItems, deleteCollectionItem, save } from '../../common/storage.js';
 
 class CoffeeControls extends HTMLElement {
   connectedCallback() {
+    this.observeFavoriteStatus();
+    this.setFavoriteStatus();
     this.addDeleteEventListener();
+    this.addFavoriteEventListener();
+  }
+
+  observeFavoriteStatus() {
+    const observer = new MutationObserver(() => {
+      this.setFavoriteStatus();
+    });
+
+    observer.observe(this.closest('[data-item-id]'), { attributes: true });
+  }
+
+  setFavoriteStatus() {
+    let isFavorite = false;
+    const collectionElement = this.closest('[data-collection-id]');
+
+    if (!collectionElement) {
+      return;
+    }
+
+    const collectionID = collectionElement.getAttribute('data-collection-id');
+
+    if (collectionID === 'favorites') {
+      isFavorite = true;
+    } else {
+      const itemsElement = this.closest('[data-item-id]');
+      const itemID = itemsElement.getAttribute('data-item-id');
+
+      isFavorite = Boolean(getCollectionItems({ collectionID: 'favorites', itemID }));
+    }
+
+    const favoriteIcon = this.querySelector('.favorite .icon');
+
+    if (isFavorite) {
+      favoriteIcon.classList.add('active');
+    } else {
+      favoriteIcon.classList.remove('active');
+    }
   }
 
   addDeleteEventListener() {
@@ -19,8 +58,47 @@ class CoffeeControls extends HTMLElement {
         }));
       }
 
-      deleteCollectionItem({ collectionID, itemID });
-      this.closest('[data-type=items]').removeChild(itemsElement);
+      deleteCollectionItem({ itemID });
+
+      // delete all occurrences of the item, e.g. if it is deleted in a built in collection like favorites
+      document.querySelectorAll(`[data-item-id="${itemID}"]`).forEach((element) => {
+        element.remove();
+      });
+    });
+  }
+
+  addFavoriteEventListener() {
+    this.querySelector('.favorite').addEventListener('click', () => {
+      const collectionID = this.closest('[data-collection-id]').getAttribute('data-collection-id');
+      const itemElement = this.closest('[data-item-id]');
+      const itemID = itemElement.getAttribute('data-item-id');
+      const isFavorite = itemElement.getAttribute('data-is-favorite') !== null;
+
+      if (collectionID === 'favorites') {
+        deleteCollectionItem({ collectionID, itemID });
+        this.closest('[data-type=items]').removeChild(itemElement);
+        document.querySelectorAll(`[data-item-id="${itemID}"]`).forEach((element) => {
+          element.removeAttribute('data-is-favorite');
+        });
+      } else {
+        if (!isFavorite) {
+          const item = getCollectionItems({
+            collectionID,
+            itemID
+          });
+
+          item.images.forEach(async ({ fileName }) => {
+            await save({ collectionID: 'favorites', isBuiltIn: true, itemID, fileName });
+          });
+
+          itemElement.setAttribute('data-is-favorite', '');
+        } else {
+          deleteCollectionItem({ collectionID: 'favorites', itemID });
+          itemElement.removeAttribute('data-is-favorite');
+        }
+      }
+
+      this.dispatchEvent(new CustomEvent('coffee-gallery-refresh', { bubbles: true }));
     });
   }
 }

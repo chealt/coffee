@@ -13,9 +13,23 @@ class CoffeeGallery extends HTMLElement {
   async render() {
     const rootDirectory = await navigator.storage.getDirectory();
     const collections = getAllCollections();
+    const collectionsToRemove = collections.length > 0
+      ? this.collections.querySelectorAll(`[data-collection-id]:not(${collections.map(({ id }) => `[data-collection-id="${id}"]`).join(',')}):not([data-is-built-in])`)
+      : undefined;
+
+    collectionsToRemove?.forEach((collection) => {
+      collection.remove();
+    });
 
     collections.forEach(async ({ id, items }) => {
       const existingCollection = this.collections.querySelector(`[data-collection-id="${id}"]`);
+      const itemsToRemove = items
+        ? existingCollection?.querySelectorAll(`[data-item-id]:not(${items.map(({ id: itemID }) => `[data-item-id="${itemID}"]`).join(',')})`)
+        : existingCollection?.querySelectorAll('[data-item-id]');
+
+      itemsToRemove?.forEach((item) => {
+        item.remove();
+      });
 
       if (
         existingCollection &&
@@ -29,6 +43,9 @@ class CoffeeGallery extends HTMLElement {
       if (existingCollection) {
         items.forEach(async ({ id: itemID, images }) => {
           const itemElement = existingCollection.querySelector(`[data-item-id="${itemID}"]`);
+          const isFavorite =
+            id === 'favorites' ||
+            collections.find(({ id: existingCollectionID }) => existingCollectionID === 'favorites')?.items?.some(({ id: existingItemID }) => itemID === existingItemID);
 
           if (itemElement) {
             const imagesContainer = itemElement.querySelector('.images-container');
@@ -53,6 +70,10 @@ class CoffeeGallery extends HTMLElement {
             const newItem = document.createElement('li');
             newItem.setAttribute('data-item-id', itemID);
             newItem.classList.add('picture-collection');
+
+            if (isFavorite) {
+              newItem.setAttribute('data-is-favorite', '');
+            }
 
             const details = document.createElement('coffee-details');
 
@@ -98,8 +119,15 @@ class CoffeeGallery extends HTMLElement {
         items?.forEach(async ({ id: itemID, images }) => {
           // add a list item
           const itemElement = document.createElement('li');
-          itemElement.setAttribute('data-item-id', itemID);
           itemElement.classList.add('picture-collection');
+          itemElement.setAttribute('data-item-id', itemID);
+          const isFavorite =
+            id === 'favorites' ||
+            collections.find(({ id: existingCollectionID }) => existingCollectionID === 'favorites')?.items?.some(({ id: existingItemID }) => itemID === existingItemID);
+
+          if (isFavorite) {
+            itemElement.setAttribute('data-is-favorite', '');
+          }
 
           const details = document.createElement('coffee-details');
 

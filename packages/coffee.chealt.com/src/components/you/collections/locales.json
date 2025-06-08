@@ -13,7 +13,8 @@
     "delete": "delete",
     "add": "add",
     "wishList": "Wish list",
-    "favorites": "Favorites"
+    "favorites": "Favorites",
+    "favorite": "favorite"
   },
   "pl": {
     "title": "Kolekcje",
@@ -29,6 +30,7 @@
     "delete": "usuń",
     "add": "dodaj",
     "wishList": "Lista życzeń",
-    "favorites": "Ulubione"
+    "favorites": "Ulubione",
+    "favorite": "ulubiony"
   }
 }

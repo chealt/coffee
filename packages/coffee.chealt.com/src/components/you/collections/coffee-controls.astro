@@ -13,6 +13,10 @@ const t = allLocaleTranslations[Astro.currentLocale];
 <template id="coffee-controls-template">
   <coffee-controls>
     <div class="controls">
+      <Button class="favorite">
+        <Icon type="favorite" />
+        <span>{t["favorite"]}</span>
+      </Button>
       <CoffeeImageUpload>
         <Button class="add triggerButton">
           <Icon type="add" />

@@ -8,9 +8,11 @@ const save = async ({ collectionID, isBuiltIn, itemID, fileName }) => {
   if (!collection) {
     collections.push({ id: collectionID, isBuiltIn, items: [{ id: itemID, images: [{ fileName }] }] });
   } else {
-    if (!items) {
+    if (!collection.items) {
       collection.items = [{ id: itemID, images: [{ fileName }] }];
-    } else {
+    } else if (!collection.items.some(({ id: existingItemID }) => existingItemID === itemID)) {
+      collection.items.push({ id: itemID, images: [{ fileName }] });
+    } else if (!items.images.some(({ fileName: existingFileName }) => existingFileName === fileName)) {
       items.images.push({ fileName });
     }
   }
@@ -34,7 +36,7 @@ const getCollection = (collectionID) => {
 const getCollectionItems = ({ collectionID, itemID }) => {
   const collections = getAllCollections();
 
-  return collections.find(({ id }) => id === collectionID).items.find(({ id }) => id === itemID);
+  return collections.find(({ id }) => id === collectionID).items?.find(({ id }) => id === itemID);
 };
 
 const deleteCollection = (collectionID) => {
@@ -46,19 +48,22 @@ const deleteCollection = (collectionID) => {
   );
 };
 
-const deleteCollectionItem = ({ collectionID, itemID }) => {
+const deleteCollectionItem = ({ itemID }) => {
   const collections = getAllCollections();
-  const collection = collections.find(({ id }) => id === collectionID);
 
-  collection.items = collection.items.filter(({ id }) => id !== itemID);
+  const newCollections = collections.map((collection) => {
+    collection.items = collection.items.filter(({ id }) => id !== itemID);
 
-  if (collection.items.length === 0) {
-    delete collection.items;
-  }
+    if (collection.items.length === 0) {
+      delete collection.items;
+    }
+
+    return collection;
+  });
 
   localStorage.setItem(
     collectionsKey,
-    JSON.stringify(collections)
+    JSON.stringify(newCollections)
   );
 };
 
