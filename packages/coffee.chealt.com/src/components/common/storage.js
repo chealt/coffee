@@ -3,7 +3,7 @@ const save = async ({ collectionID, isBuiltIn, itemID, fileName }) => {
   const collectionsRaw = localStorage.getItem(collectionsKey);
   const collections = JSON.parse(collectionsRaw) || [];
   const collection = collections.find(({ id }) => id === collectionID);
-  const items = collection?.items?.find(({ id }) => id === itemID);
+  const item = collection?.items?.find(({ id }) => id === itemID);
 
   if (!collection) {
     collections.push({ id: collectionID, isBuiltIn, items: [{ id: itemID, images: [{ fileName }] }] });
@@ -12,10 +12,19 @@ const save = async ({ collectionID, isBuiltIn, itemID, fileName }) => {
       collection.items = [{ id: itemID, images: [{ fileName }] }];
     } else if (!collection.items.some(({ id: existingItemID }) => existingItemID === itemID)) {
       collection.items.push({ id: itemID, images: [{ fileName }] });
-    } else if (!items.images.some(({ fileName: existingFileName }) => existingFileName === fileName)) {
-      items.images.push({ fileName });
+    } else if (!item.images.some(({ fileName: existingFileName }) => existingFileName === fileName)) {
+      item.images.push({ fileName });
     }
   }
+
+  // make sure that copies get updated as well
+  collections
+    .filter(({ id, items: copyItems }) =>
+      id !== collectionID &&
+      copyItems?.some(({ id: existingItemID }) => existingItemID === itemID))
+    .forEach((c) => {
+      c.items = collection.items;
+    });
 
   localStorage.setItem(collectionsKey, JSON.stringify(collections));
 };
@@ -51,15 +60,17 @@ const deleteCollection = (collectionID) => {
 const deleteCollectionItem = ({ itemID }) => {
   const collections = getAllCollections();
 
-  const newCollections = collections.map((collection) => {
-    collection.items = collection.items.filter(({ id }) => id !== itemID);
+  const newCollections = collections
+    .map((collection) => {
+      collection.items = collection.items.filter(({ id }) => id !== itemID);
 
-    if (collection.items.length === 0) {
-      delete collection.items;
-    }
+      if (collection.items.length === 0) {
+        delete collection.items;
+      }
 
-    return collection;
-  });
+      return collection;
+    })
+    .filter((collection) => collection.items || collection.isBuiltIn);
 
   localStorage.setItem(
     collectionsKey,
