@@ -1,0 +1,14 @@
+---
+import Button from "../../button.astro";
+
+import allLocaleTranslations from "./locales.json";
+
+const t = allLocaleTranslations[Astro.currentLocale];
+---
+
+<p>
+  {t["description"]}
+</p>
+<Button class="sign-in primary">
+  {t["signIn"]}
+</Button>

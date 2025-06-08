@@ -1,0 +1,10 @@
+{
+  "en": {
+    "description": "Sign in to get access to all the features of the app, like using multiple devices and sharing files.",
+    "signIn": "Sign In"
+  },
+  "pl": {
+    "description": "Zaloguj się, aby uzyskać dostęp do wszystkich funkcji aplikacji, takich jak korzystanie z wielu urządzeń i udostępnianie plików.",
+    "signIn": "Zaloguj się"
+  }
+}

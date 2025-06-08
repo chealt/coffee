@@ -1,0 +1,34 @@
+---
+import CoffeeDetails from "./coffee-details.astro";
+import CoffeeControls from "./coffee-controls.astro";
+import Empty from "./empty.astro";
+
+import "./coffee-gallery.css";
+
+import allLocaleTranslations from "./locales.json";
+
+const t = allLocaleTranslations[Astro.currentLocale];
+---
+
+<h2>
+  {t["title"]}
+</h2>
+<coffee-gallery>
+  <CoffeeDetails />
+  <CoffeeControls />
+  <chealt-ocr>
+    <ul data-type="collections">
+      <li data-collection-id="whishList" data-is-built-in>
+        <h3>{t["wishList"]}</h3>
+        <Empty />
+      </li>
+      <li data-collection-id="favorites" data-is-built-in>
+        <h3>{t["favorites"]}</h3>
+        <Empty />
+      </li>
+    </ul>
+  </chealt-ocr>
+</coffee-gallery>
+
+<script src="../../chealt-ocr.js"></script>
+<script src="./coffee-gallery.js"></script>

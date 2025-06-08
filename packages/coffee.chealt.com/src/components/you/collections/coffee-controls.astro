@@ -1,7 +1,7 @@
 ---
-import Button from "../button.astro";
-import CoffeeImageUpload from "../common/coffee-image-upload.astro";
-import Icon from "../icon.astro";
+import Button from "../../button.astro";
+import CoffeeImageUpload from "../../common/coffee-image-upload.astro";
+import Icon from "../../icon.astro";
 
 import allLocaleTranslations from "./locales.json";
 
@@ -29,4 +29,4 @@ const t = allLocaleTranslations[Astro.currentLocale];
 
 <script src="./coffee-controls.js"></script>
 <!-- add CoffeeImageUpload script, without this import it won't work -->
-<script src="../common/coffee-image-upload.js"></script>
+<script src="../../common/coffee-image-upload.js"></script>

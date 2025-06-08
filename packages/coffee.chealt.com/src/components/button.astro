@@ -2,4 +2,14 @@
 import "./button.css";
 ---
 
-<button {...Astro.props}><slot /></button>
+{
+  (Astro.props.href && (
+    <a class="button" {...Astro.props}>
+      <slot />
+    </a>
+  )) || (
+    <button {...Astro.props}>
+      <slot />
+    </button>
+  )
+}

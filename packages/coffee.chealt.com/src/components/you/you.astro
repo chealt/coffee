@@ -1,26 +1,11 @@
 ---
+import Collections from "./collections/collections.astro";
 import Button from "../button.astro";
-import CoffeeDetails from "./coffee-details.astro";
-import CoffeeControls from "./coffee-controls.astro";
 import Common from "../common/common.astro";
-import allLocaleTranslations from "./locales.json";
 
 import "./you.css";
-import "./coffee-gallery.css";
-
-const t = allLocaleTranslations[Astro.currentLocale];
 ---
 
 <Common>
-  <h1>{t["title"]}</h1>
-  <coffee-gallery>
-    <CoffeeDetails />
-    <CoffeeControls />
-    <chealt-ocr>
-      <ul id="pictures"></ul>
-    </chealt-ocr>
-  </coffee-gallery>
+  <Collections />
 </Common>
-
-<script src="../chealt-ocr.js"></script>
-<script src="./coffee-gallery.js"></script>

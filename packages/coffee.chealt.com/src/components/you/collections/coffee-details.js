@@ -1,16 +1,16 @@
-import brewingMethods from '../../../data/brewingMethods.json';
-import miscellaneousCoffeeProperties from '../../../data/miscellaneousCoffeeProperties.json';
-import originCountries from '../../../data/originCountries.json';
-import originRegions from '../../../data/originRegions.json';
-import processingMethods from '../../../data/processingMethods.json';
-import roasters from '../../../data/roasters.json';
-import roastingLevels from '../../../data/roastingLevels.json';
-import { setInputValue } from '../../utils/form';
-import { friendlyIncludes } from '../../utils/string';
+import brewingMethods from '../../../../data/brewingMethods.json';
+import miscellaneousCoffeeProperties from '../../../../data/miscellaneousCoffeeProperties.json';
+import originCountries from '../../../../data/originCountries.json';
+import originRegions from '../../../../data/originRegions.json';
+import processingMethods from '../../../../data/processingMethods.json';
+import roasters from '../../../../data/roasters.json';
+import roastingLevels from '../../../../data/roastingLevels.json';
+import { setInputValue } from '../../../utils/form';
+import { friendlyIncludes } from '../../../utils/string';
 
 class CoffeeDetails extends HTMLElement {
   connectedCallback() {
-    this.collectionID = this.getAttribute('data-collection-id'); // unique identifier to use for storage
+    this.id = this.closest('[data-item-id]')?.getAttribute('data-item-id'); // unique identifier to use for storage
 
     this.renderInitDetails();
     this.addMutationObserver();
@@ -21,7 +21,7 @@ class CoffeeDetails extends HTMLElement {
   }
 
   setDetailsFormName() {
-    this.querySelector('form').setAttribute('name', this.collectionID);
+    this.querySelector('form').setAttribute('name', this.id);
   }
 
   renderInitDetails() {

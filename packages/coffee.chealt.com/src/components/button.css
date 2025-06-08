@@ -1,16 +1,21 @@
-button {
+button,
+a.button {
+  display: block;
   background-color: var(--color-background);
   padding: var(--gap);
   color: var(--color-text);
   width: 100%;
-  border: 0px none;
+  border: 1px solid var(--color-text);
   font-size: 1.2rem;
   cursor: pointer;
   text-transform: uppercase;
   user-select: none;
+  box-sizing: border-box;
+  text-align: center;
 }
 
 button.primary {
   background-color: var(--color-primary);
   color: var(--color-text--primary);
+  border-color: var(--color-primary);
 }

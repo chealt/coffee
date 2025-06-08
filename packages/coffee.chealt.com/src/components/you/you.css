@@ -1,15 +1,9 @@
-#pictures {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-#pictures li {
+.picture-collection {
   margin: var(--gap) 0;
   padding: 0;
 }
 
-#pictures img {
+.picture-collection img {
   width: 100%;
   display: block;
 }

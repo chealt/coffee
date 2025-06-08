@@ -1,6 +1,6 @@
 {
   "en": {
-    "title": "Add your coffee",
+    "title": "Collections",
     "originCountry": "Origin country",
     "originRegion": "Origin region",
     "processingMethod": "Processing method",
@@ -11,10 +11,12 @@
     "brewingMethod": "Brewing method",
     "roastingDate": "Roasting date",
     "delete": "delete",
-    "add": "add"
+    "add": "add",
+    "wishList": "Wish list",
+    "favorites": "Favorites"
   },
   "pl": {
-    "title": "Dodaj swoją kawę",
+    "title": "Kolekcje",
     "originCountry": "Kraj pochodzenia",
     "originRegion": "Region pochodzenia",
     "processingMethod": "Obróbka",
@@ -25,6 +27,8 @@
     "brewingMethod": "Sposób zaparzania",
     "roastingDate": "Data palenia",
     "delete": "usuń",
-    "add": "dodaj"
+    "add": "dodaj",
+    "wishList": "Lista życzeń",
+    "favorites": "Ulubione"
   }
 }

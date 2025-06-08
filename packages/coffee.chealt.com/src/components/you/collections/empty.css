@@ -1,0 +1,7 @@
+.empty {
+  padding: var(--gap--l);
+}
+
+.empty button {
+  padding: var(--gap--l);
+}
