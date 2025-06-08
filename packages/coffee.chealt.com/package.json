@@ -17,16 +17,16 @@
     "preview": "astro build && astro preview"
   },
   "devDependencies": {
-    "@astrojs/cloudflare": "^12.5.3",
-    "@libsql/client": "^0.15.7",
-    "rollup-plugin-visualizer": "^6.0.0",
+    "@astrojs/cloudflare": "^12.5.4",
+    "@libsql/client": "^0.15.8",
+    "rollup-plugin-visualizer": "^6.0.3",
     "vite": "^6.3.5",
     "vite-plugin-wasm": "^3.4.1",
-    "wrangler": "^4.16.1"
+    "wrangler": "^4.19.1"
   },
   "dependencies": {
     "@chealt/ocr": "workspace:^",
-    "astro": "^5.8.0",
+    "astro": "^5.9.1",
     "sharp": "^0.34.2"
   }
 }

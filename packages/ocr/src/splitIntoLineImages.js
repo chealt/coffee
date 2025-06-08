@@ -1,6 +1,8 @@
 /* eslint-disable camelcase, new-cap */
-import cv from '@techstark/opencv-js';
+import cvPromise from '@techstark/opencv-js';
 import clipper from 'js-clipper';
+
+const cv = await cvPromise;
 
 const boxPoints = (center, size, angle) => {
   const width = size.width;

@@ -5,9 +5,9 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@astrojs/cloudflare@npm:^12.5.3":
-  version: 12.5.3
-  resolution: "@astrojs/cloudflare@npm:12.5.3"
+"@astrojs/cloudflare@npm:^12.5.4":
+  version: 12.5.4
+  resolution: "@astrojs/cloudflare@npm:12.5.4"
   dependencies:
     "@astrojs/internal-helpers": "npm:0.6.1"
     "@astrojs/underscore-redirects": "npm:0.6.1"
@@ -17,14 +17,14 @@ __metadata:
     wrangler: "npm:^4.14.1"
   peerDependencies:
     astro: ^5.0.0
-  checksum: 10c0/9b1c7214cf84d8823542e0ea84698c76f468fac90f85c4017370e1b7f792c8beb97eebacbca6e505aca67b2eb9ae6feba91656b52d44799042c2cbc8d2beefdb
+  checksum: 10c0/4a50dafd86b50ec3b09d30ba3d38ece2110aea0394d4e7415e28fc40edfea8a44af4196264d73eed7544ac032ed3ba3e1012165d527c5849b38fc3c59a4fbec0
   languageName: node
   linkType: hard
 
-"@astrojs/compiler@npm:^2.11.0":
-  version: 2.11.0
-  resolution: "@astrojs/compiler@npm:2.11.0"
-  checksum: 10c0/33e95ad37f062757eeac26a2d00277196de888074d5b43eb7ef2f5548bfe7000384d934a750723af55946fef77408fd4712b23c9472350d44ebb51e3b47f63d9
+"@astrojs/compiler@npm:^2.12.1":
+  version: 2.12.1
+  resolution: "@astrojs/compiler@npm:2.12.1"
+  checksum: 10c0/722ab975d900b51ccbd86c0835f14f10166477b946bd31dbbf6fb4d959934e75a03f130a0f23889caf946ad831f458a8a7fc21c1c3a223439991e24fabf81e15
   languageName: node
   linkType: hard
 
@@ -145,15 +145,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@chealt/coffee@workspace:packages/coffee.chealt.com"
   dependencies:
-    "@astrojs/cloudflare": "npm:^12.5.3"
+    "@astrojs/cloudflare": "npm:^12.5.4"
     "@chealt/ocr": "workspace:^"
-    "@libsql/client": "npm:^0.15.7"
-    astro: "npm:^5.8.0"
-    rollup-plugin-visualizer: "npm:^6.0.0"
+    "@libsql/client": "npm:^0.15.8"
+    astro: "npm:^5.9.1"
+    rollup-plugin-visualizer: "npm:^6.0.3"
     sharp: "npm:^0.34.2"
     vite: "npm:^6.3.5"
     vite-plugin-wasm: "npm:^3.4.1"
-    wrangler: "npm:^4.16.1"
+    wrangler: "npm:^4.19.1"
   languageName: unknown
   linkType: soft
 
@@ -161,7 +161,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@chealt/ocr@workspace:packages/ocr"
   dependencies:
-    "@techstark/opencv-js": "npm:^4.10.0-release.1"
+    "@techstark/opencv-js": "npm:^4.11.0-release.1"
     js-clipper: "npm:^1.0.1"
     onnxruntime-web: "npm:^1.22.0"
     tiny-invariant: "npm:^1.3.3"
@@ -197,9 +197,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cloudflare/workerd-darwin-64@npm:1.20250525.0":
+  version: 1.20250525.0
+  resolution: "@cloudflare/workerd-darwin-64@npm:1.20250525.0"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
 "@cloudflare/workerd-darwin-arm64@npm:1.20250508.0":
   version: 1.20250508.0
   resolution: "@cloudflare/workerd-darwin-arm64@npm:1.20250508.0"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@cloudflare/workerd-darwin-arm64@npm:1.20250525.0":
+  version: 1.20250525.0
+  resolution: "@cloudflare/workerd-darwin-arm64@npm:1.20250525.0"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
@@ -211,6 +225,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cloudflare/workerd-linux-64@npm:1.20250525.0":
+  version: 1.20250525.0
+  resolution: "@cloudflare/workerd-linux-64@npm:1.20250525.0"
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
 "@cloudflare/workerd-linux-arm64@npm:1.20250508.0":
   version: 1.20250508.0
   resolution: "@cloudflare/workerd-linux-arm64@npm:1.20250508.0"
@@ -218,9 +239,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cloudflare/workerd-linux-arm64@npm:1.20250525.0":
+  version: 1.20250525.0
+  resolution: "@cloudflare/workerd-linux-arm64@npm:1.20250525.0"
+  conditions: os=linux & cpu=arm64
+  languageName: node
+  linkType: hard
+
 "@cloudflare/workerd-windows-64@npm:1.20250508.0":
   version: 1.20250508.0
   resolution: "@cloudflare/workerd-windows-64@npm:1.20250508.0"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@cloudflare/workerd-windows-64@npm:1.20250525.0":
+  version: 1.20250525.0
+  resolution: "@cloudflare/workerd-windows-64@npm:1.20250525.0"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -683,10 +718,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/js@npm:9.27.0":
-  version: 9.27.0
-  resolution: "@eslint/js@npm:9.27.0"
-  checksum: 10c0/79b219ceda79182732954b52f7a494f49995a9a6419c7ae0316866e324d3706afeb857e1306bb6f35a4caaf176a5174d00228fc93d36781a570d32c587736564
+"@eslint/js@npm:9.28.0":
+  version: 9.28.0
+  resolution: "@eslint/js@npm:9.28.0"
+  checksum: 10c0/5a6759542490dd9f778993edfbc8d2f55168fd0f7336ceed20fe3870c65499d72fc0bca8d1ae00ea246b0923ea4cba2e0758a8a5507a3506ddcf41c92282abb8
   languageName: node
   linkType: hard
 
@@ -1163,38 +1198,38 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@libsql/client@npm:^0.15.7":
-  version: 0.15.7
-  resolution: "@libsql/client@npm:0.15.7"
+"@libsql/client@npm:^0.15.8":
+  version: 0.15.8
+  resolution: "@libsql/client@npm:0.15.8"
   dependencies:
-    "@libsql/core": "npm:^0.15.7"
+    "@libsql/core": "npm:^0.15.8"
     "@libsql/hrana-client": "npm:^0.7.0"
     js-base64: "npm:^3.7.5"
-    libsql: "npm:^0.5.11"
+    libsql: "npm:^0.5.12"
     promise-limit: "npm:^2.7.0"
-  checksum: 10c0/07d5acb77410651e784edb7463ec0ceab99b614d17540ba3a462a810364253b54b4f8d93be659aab8a3351f15d78fe607c8d3359f250f043f50375e4b312ac69
+  checksum: 10c0/c3c292ba771e236528c799f53b50f65ce57eb3cb81ff0a7c2a5daa8f478934160d47eba41cb36cfbbc7adf29efaad194f1b6056ff385043bbaf771a6f79cfb2e
   languageName: node
   linkType: hard
 
-"@libsql/core@npm:^0.15.7":
-  version: 0.15.7
-  resolution: "@libsql/core@npm:0.15.7"
+"@libsql/core@npm:^0.15.8":
+  version: 0.15.8
+  resolution: "@libsql/core@npm:0.15.8"
   dependencies:
     js-base64: "npm:^3.7.5"
-  checksum: 10c0/b6c91467509b2c36bbae1562a6ebbec548a4564223b6315f629ee5665c763f5ad2e347d7d05a002d3b9bfc5f21bd31de04ec26fffa0eb4aff1f7fb67453a726e
+  checksum: 10c0/04623fc106bd4c08c91cec8937c795ee8b9658a0ab5c56702e30f1892d9100af7ff485edc981b7dfa2dafdef32c357ba588d24a08e8462ac78f50681834b2cb5
   languageName: node
   linkType: hard
 
-"@libsql/darwin-arm64@npm:0.5.11":
-  version: 0.5.11
-  resolution: "@libsql/darwin-arm64@npm:0.5.11"
+"@libsql/darwin-arm64@npm:0.5.12":
+  version: 0.5.12
+  resolution: "@libsql/darwin-arm64@npm:0.5.12"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@libsql/darwin-x64@npm:0.5.11":
-  version: 0.5.11
-  resolution: "@libsql/darwin-x64@npm:0.5.11"
+"@libsql/darwin-x64@npm:0.5.12":
+  version: 0.5.12
+  resolution: "@libsql/darwin-x64@npm:0.5.12"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
@@ -1228,51 +1263,51 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@libsql/linux-arm-gnueabihf@npm:0.5.11":
-  version: 0.5.11
-  resolution: "@libsql/linux-arm-gnueabihf@npm:0.5.11"
+"@libsql/linux-arm-gnueabihf@npm:0.5.12":
+  version: 0.5.12
+  resolution: "@libsql/linux-arm-gnueabihf@npm:0.5.12"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
-"@libsql/linux-arm-musleabihf@npm:0.5.11":
-  version: 0.5.11
-  resolution: "@libsql/linux-arm-musleabihf@npm:0.5.11"
+"@libsql/linux-arm-musleabihf@npm:0.5.12":
+  version: 0.5.12
+  resolution: "@libsql/linux-arm-musleabihf@npm:0.5.12"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
-"@libsql/linux-arm64-gnu@npm:0.5.11":
-  version: 0.5.11
-  resolution: "@libsql/linux-arm64-gnu@npm:0.5.11"
+"@libsql/linux-arm64-gnu@npm:0.5.12":
+  version: 0.5.12
+  resolution: "@libsql/linux-arm64-gnu@npm:0.5.12"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"@libsql/linux-arm64-musl@npm:0.5.11":
-  version: 0.5.11
-  resolution: "@libsql/linux-arm64-musl@npm:0.5.11"
+"@libsql/linux-arm64-musl@npm:0.5.12":
+  version: 0.5.12
+  resolution: "@libsql/linux-arm64-musl@npm:0.5.12"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"@libsql/linux-x64-gnu@npm:0.5.11":
-  version: 0.5.11
-  resolution: "@libsql/linux-x64-gnu@npm:0.5.11"
+"@libsql/linux-x64-gnu@npm:0.5.12":
+  version: 0.5.12
+  resolution: "@libsql/linux-x64-gnu@npm:0.5.12"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"@libsql/linux-x64-musl@npm:0.5.11":
-  version: 0.5.11
-  resolution: "@libsql/linux-x64-musl@npm:0.5.11"
+"@libsql/linux-x64-musl@npm:0.5.12":
+  version: 0.5.12
+  resolution: "@libsql/linux-x64-musl@npm:0.5.12"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"@libsql/win32-x64-msvc@npm:0.5.11":
-  version: 0.5.11
-  resolution: "@libsql/win32-x64-msvc@npm:0.5.11"
+"@libsql/win32-x64-msvc@npm:0.5.12":
+  version: 0.5.12
+  resolution: "@libsql/win32-x64-msvc@npm:0.5.12"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -1633,10 +1668,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@techstark/opencv-js@npm:^4.10.0-release.1":
-  version: 4.10.0-release.1
-  resolution: "@techstark/opencv-js@npm:4.10.0-release.1"
-  checksum: 10c0/62d2c9cd7f0e2c418a5215076df1594a828a53384b9393ccafe503f97838de6eeb1dbb2af4d9206d4e93cef4d153251c4f0a432bac7797b4e8c0dd74a7121612
+"@techstark/opencv-js@npm:^4.11.0-release.1":
+  version: 4.11.0-release.1
+  resolution: "@techstark/opencv-js@npm:4.11.0-release.1"
+  checksum: 10c0/b8ec9dde02237142f003a48e8661132cd821881e04c721be9485df13cdffda03503524421052848548194a70aa3f41e92876132c3619abc18ebc8a676db94650
   languageName: node
   linkType: hard
 
@@ -1962,11 +1997,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"astro@npm:^5.8.0":
-  version: 5.8.0
-  resolution: "astro@npm:5.8.0"
+"astro@npm:^5.9.1":
+  version: 5.9.1
+  resolution: "astro@npm:5.9.1"
   dependencies:
-    "@astrojs/compiler": "npm:^2.11.0"
+    "@astrojs/compiler": "npm:^2.12.1"
     "@astrojs/internal-helpers": "npm:0.6.1"
     "@astrojs/markdown-remark": "npm:6.3.2"
     "@astrojs/telemetry": "npm:3.3.0"
@@ -2033,7 +2068,7 @@ __metadata:
       optional: true
   bin:
     astro: astro.js
-  checksum: 10c0/124d40e023d3126ecb307ccdc17f7a195ddac8d22a8ef826f5915ef2c41f38e63976a10738705afc1b60119dcd32f26a9e3a3799b297df611dfe75e2124273f5
+  checksum: 10c0/aa17f6d972009c457b23fddc2c120a3da78692bd39b23b32e3f784d9140337aaff3d67aed47d29d23e607cb05e2f2ba3731cb3262cc7f572152ff4c133ac0c07
   languageName: node
   linkType: hard
 
@@ -2143,15 +2178,6 @@ __metadata:
   dependencies:
     base64-js: "npm:^1.1.2"
   checksum: 10c0/9d24e24f8b7eabf44af034ed5f7d5530008b835f09a107a84ac060723e86dd43c6aa68958691fe5df524f59473b35f5ce2e0854aa1152c0a254d1010f51bcf22
-  languageName: node
-  linkType: hard
-
-"bundle-name@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "bundle-name@npm:4.1.0"
-  dependencies:
-    run-applescript: "npm:^7.0.0"
-  checksum: 10c0/8e575981e79c2bcf14d8b1c027a3775c095d362d1382312f444a7c861b0e21513c0bd8db5bd2b16e50ba0709fa622d4eab6b53192d222120305e68359daece29
   languageName: node
   linkType: hard
 
@@ -2326,7 +2352,7 @@ __metadata:
   resolution: "coffee@workspace:."
   dependencies:
     "@eslint/css": "npm:^0.8.1"
-    eslint: "npm:^9.27.0"
+    eslint: "npm:^9.28.0"
     eslint-config-prettier: "npm:^10.1.5"
     eslint-plugin-import: "npm:^2.31.0"
     globals: "npm:^16.2.0"
@@ -2543,23 +2569,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"default-browser-id@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "default-browser-id@npm:5.0.0"
-  checksum: 10c0/957fb886502594c8e645e812dfe93dba30ed82e8460d20ce39c53c5b0f3e2afb6ceaec2249083b90bdfbb4cb0f34e1f73fde3d68cac00becdbcfd894156b5ead
-  languageName: node
-  linkType: hard
-
-"default-browser@npm:^5.2.1":
-  version: 5.2.1
-  resolution: "default-browser@npm:5.2.1"
-  dependencies:
-    bundle-name: "npm:^4.1.0"
-    default-browser-id: "npm:^5.0.0"
-  checksum: 10c0/73f17dc3c58026c55bb5538749597db31f9561c0193cd98604144b704a981c95a466f8ecc3c2db63d8bfd04fb0d426904834cfc91ae510c6aeb97e13c5167c4d
-  languageName: node
-  linkType: hard
-
 "define-data-property@npm:^1.0.1, define-data-property@npm:^1.1.4":
   version: 1.1.4
   resolution: "define-data-property@npm:1.1.4"
@@ -2571,10 +2580,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"define-lazy-prop@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "define-lazy-prop@npm:3.0.0"
-  checksum: 10c0/5ab0b2bf3fa58b3a443140bbd4cd3db1f91b985cc8a246d330b9ac3fc0b6a325a6d82bddc0b055123d745b3f9931afeea74a5ec545439a1630b9c8512b0eeb49
+"define-lazy-prop@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "define-lazy-prop@npm:2.0.0"
+  checksum: 10c0/db6c63864a9d3b7dc9def55d52764968a5af296de87c1b2cc71d8be8142e445208071953649e0386a8cc37cfcf9a2067a47207f1eb9ff250c2a269658fdae422
   languageName: node
   linkType: hard
 
@@ -3170,9 +3179,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^9.27.0":
-  version: 9.27.0
-  resolution: "eslint@npm:9.27.0"
+"eslint@npm:^9.28.0":
+  version: 9.28.0
+  resolution: "eslint@npm:9.28.0"
   dependencies:
     "@eslint-community/eslint-utils": "npm:^4.2.0"
     "@eslint-community/regexpp": "npm:^4.12.1"
@@ -3180,7 +3189,7 @@ __metadata:
     "@eslint/config-helpers": "npm:^0.2.1"
     "@eslint/core": "npm:^0.14.0"
     "@eslint/eslintrc": "npm:^3.3.1"
-    "@eslint/js": "npm:9.27.0"
+    "@eslint/js": "npm:9.28.0"
     "@eslint/plugin-kit": "npm:^0.3.1"
     "@humanfs/node": "npm:^0.16.6"
     "@humanwhocodes/module-importer": "npm:^1.0.1"
@@ -3216,7 +3225,7 @@ __metadata:
       optional: true
   bin:
     eslint: bin/eslint.js
-  checksum: 10c0/135d301e37cd961000a9c1d3f0e1863bed29a61435dfddedba3db295973193024382190fd8790a8de83777d10f450082a29eaee8bc9ce0fb1bc1f2b0bb882280
+  checksum: 10c0/513ea7e69d88a0905d4ed35cef3a8f31ebce7ca9f2cdbda3474495c63ad6831d52357aad65094be7a144d6e51850980ced7d25efb807e8ab06a427241f7cd730
   languageName: node
   linkType: hard
 
@@ -4072,6 +4081,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-docker@npm:^2.0.0, is-docker@npm:^2.1.1":
+  version: 2.2.1
+  resolution: "is-docker@npm:2.2.1"
+  bin:
+    is-docker: cli.js
+  checksum: 10c0/e828365958d155f90c409cdbe958f64051d99e8aedc2c8c4cd7c89dcf35329daed42f7b99346f7828df013e27deb8f721cf9408ba878c76eb9e8290235fbcdcc
+  languageName: node
+  linkType: hard
+
 "is-docker@npm:^3.0.0":
   version: 3.0.0
   resolution: "is-docker@npm:3.0.0"
@@ -4244,6 +4262,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-wsl@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "is-wsl@npm:2.2.0"
+  dependencies:
+    is-docker: "npm:^2.0.0"
+  checksum: 10c0/a6fa2d370d21be487c0165c7a440d567274fbba1a817f2f0bfa41cc5e3af25041d84267baa22df66696956038a43973e72fca117918c91431920bdef490fa25e
+  languageName: node
+  linkType: hard
+
 "is-wsl@npm:^3.1.0":
   version: 3.1.0
   resolution: "is-wsl@npm:3.1.0"
@@ -4384,19 +4411,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"libsql@npm:^0.5.11":
-  version: 0.5.11
-  resolution: "libsql@npm:0.5.11"
+"libsql@npm:^0.5.12":
+  version: 0.5.12
+  resolution: "libsql@npm:0.5.12"
   dependencies:
-    "@libsql/darwin-arm64": "npm:0.5.11"
-    "@libsql/darwin-x64": "npm:0.5.11"
-    "@libsql/linux-arm-gnueabihf": "npm:0.5.11"
-    "@libsql/linux-arm-musleabihf": "npm:0.5.11"
-    "@libsql/linux-arm64-gnu": "npm:0.5.11"
-    "@libsql/linux-arm64-musl": "npm:0.5.11"
-    "@libsql/linux-x64-gnu": "npm:0.5.11"
-    "@libsql/linux-x64-musl": "npm:0.5.11"
-    "@libsql/win32-x64-msvc": "npm:0.5.11"
+    "@libsql/darwin-arm64": "npm:0.5.12"
+    "@libsql/darwin-x64": "npm:0.5.12"
+    "@libsql/linux-arm-gnueabihf": "npm:0.5.12"
+    "@libsql/linux-arm-musleabihf": "npm:0.5.12"
+    "@libsql/linux-arm64-gnu": "npm:0.5.12"
+    "@libsql/linux-arm64-musl": "npm:0.5.12"
+    "@libsql/linux-x64-gnu": "npm:0.5.12"
+    "@libsql/linux-x64-musl": "npm:0.5.12"
+    "@libsql/win32-x64-msvc": "npm:0.5.12"
     "@neon-rs/load": "npm:^0.0.4"
     detect-libc: "npm:2.0.2"
   dependenciesMeta:
@@ -4418,7 +4445,7 @@ __metadata:
       optional: true
     "@libsql/win32-x64-msvc":
       optional: true
-  checksum: 10c0/94a0b2032ca587dd4442df46dd66ec0e6071fd3289af0bd3a9914472c083f0b6944ba1502aaaa854aac7a0a549d0dcf0e15696d35b0267d8edd09c6fd06c1385
+  checksum: 10c0/3054421e2d78483019e79850ddf0b246d6181271e6ee99d2ee8a3a7ac20975843907e19dd082d20117e31490410a0348fef4d6b3a1f33856fffeb643d1c4570f
   conditions: (os=darwin | os=linux | os=win32) & (cpu=x64 | cpu=arm64 | cpu=wasm32 | cpu=arm)
   languageName: node
   linkType: hard
@@ -5060,6 +5087,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"miniflare@npm:4.20250525.1":
+  version: 4.20250525.1
+  resolution: "miniflare@npm:4.20250525.1"
+  dependencies:
+    "@cspotcode/source-map-support": "npm:0.8.1"
+    acorn: "npm:8.14.0"
+    acorn-walk: "npm:8.3.2"
+    exit-hook: "npm:2.2.1"
+    glob-to-regexp: "npm:0.4.1"
+    sharp: "npm:^0.33.5"
+    stoppable: "npm:1.1.0"
+    undici: "npm:^5.28.5"
+    workerd: "npm:1.20250525.0"
+    ws: "npm:8.18.0"
+    youch: "npm:3.3.4"
+    zod: "npm:3.22.3"
+  bin:
+    miniflare: bootstrap.js
+  checksum: 10c0/898baa0aa2992364f90cb6878b5e1251e6152852dd90d6362c7c1782828f486c795138449fbfcc75438dd43d1c20df5efea07e498a5e9dd1f4a608ae8c5fe021
+  languageName: node
+  linkType: hard
+
 "minimatch@npm:^3.1.2":
   version: 3.1.2
   resolution: "minimatch@npm:3.1.2"
@@ -5437,15 +5486,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"open@npm:^10.1.2":
-  version: 10.1.2
-  resolution: "open@npm:10.1.2"
+"open@npm:^8.0.0":
+  version: 8.4.2
+  resolution: "open@npm:8.4.2"
   dependencies:
-    default-browser: "npm:^5.2.1"
-    define-lazy-prop: "npm:^3.0.0"
-    is-inside-container: "npm:^1.0.0"
-    is-wsl: "npm:^3.1.0"
-  checksum: 10c0/1bee796f06e549ce764f693272100323fbc04da8fa3c5b0402d6c2d11b3d76fa0aac0be7535e710015ff035326638e3b9a563f3b0e7ac3266473ed5663caae6d
+    define-lazy-prop: "npm:^2.0.0"
+    is-docker: "npm:^2.1.1"
+    is-wsl: "npm:^2.2.0"
+  checksum: 10c0/bb6b3a58401dacdb0aad14360626faf3fb7fba4b77816b373495988b724fb48941cad80c1b65d62bb31a17609b2cd91c41a181602caea597ca80dfbcc27e84c9
   languageName: node
   linkType: hard
 
@@ -6040,16 +6088,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-visualizer@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "rollup-plugin-visualizer@npm:6.0.0"
+"rollup-plugin-visualizer@npm:^6.0.3":
+  version: 6.0.3
+  resolution: "rollup-plugin-visualizer@npm:6.0.3"
   dependencies:
-    open: "npm:^10.1.2"
+    open: "npm:^8.0.0"
     picomatch: "npm:^4.0.2"
     source-map: "npm:^0.7.4"
     yargs: "npm:^17.5.1"
   peerDependencies:
-    rolldown: 1.x
+    rolldown: 1.x || ^1.0.0-beta
     rollup: 2.x || 3.x || 4.x
   peerDependenciesMeta:
     rolldown:
@@ -6058,7 +6106,7 @@ __metadata:
       optional: true
   bin:
     rollup-plugin-visualizer: dist/bin/cli.js
-  checksum: 10c0/803b7a93692824c31c4eb6595367717591123dbdc6be3402403bba633bb81ccfdbd16827e852af9da03fd7e8211a974717492e4032d14897c37c130f0cb86222
+  checksum: 10c0/595d68936a6338744e8facd165fceedf7f2ebedc44863e640e725198001ed62948cc4a5d8403aa74e679de92957e4def3b1dffc4a9f8de71e4245929566553a3
   languageName: node
   linkType: hard
 
@@ -6134,13 +6182,6 @@ __metadata:
   bin:
     rollup: dist/bin/rollup
   checksum: 10c0/90aa57487d4a9a7de1a47bf42a6091f83f1cb7fe1814650dfec278ab8ddae5736b86535d4c766493517720f334dfd4aa0635405ca8f4f36ed8d3c0f875f2a801
-  languageName: node
-  linkType: hard
-
-"run-applescript@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "run-applescript@npm:7.0.0"
-  checksum: 10c0/bd821bbf154b8e6c8ecffeaf0c33cebbb78eb2987476c3f6b420d67ab4c5301faa905dec99ded76ebb3a7042b4e440189ae6d85bbbd3fc6e8d493347ecda8bfe
   languageName: node
   linkType: hard
 
@@ -7458,6 +7499,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"workerd@npm:1.20250525.0":
+  version: 1.20250525.0
+  resolution: "workerd@npm:1.20250525.0"
+  dependencies:
+    "@cloudflare/workerd-darwin-64": "npm:1.20250525.0"
+    "@cloudflare/workerd-darwin-arm64": "npm:1.20250525.0"
+    "@cloudflare/workerd-linux-64": "npm:1.20250525.0"
+    "@cloudflare/workerd-linux-arm64": "npm:1.20250525.0"
+    "@cloudflare/workerd-windows-64": "npm:1.20250525.0"
+  dependenciesMeta:
+    "@cloudflare/workerd-darwin-64":
+      optional: true
+    "@cloudflare/workerd-darwin-arm64":
+      optional: true
+    "@cloudflare/workerd-linux-64":
+      optional: true
+    "@cloudflare/workerd-linux-arm64":
+      optional: true
+    "@cloudflare/workerd-windows-64":
+      optional: true
+  bin:
+    workerd: bin/workerd
+  checksum: 10c0/09856a4b4865969402d3890fb4e80387d5f8e9018f2c234c9703b5eecac30317a5d573671869b7d7348c4074dba206977c11bb13139f91c55f4054f23045d7e1
+  languageName: node
+  linkType: hard
+
 "wrangler@npm:^4.14.1":
   version: 4.16.0
   resolution: "wrangler@npm:4.16.0"
@@ -7489,26 +7556,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wrangler@npm:^4.16.1":
-  version: 4.16.1
-  resolution: "wrangler@npm:4.16.1"
+"wrangler@npm:^4.19.1":
+  version: 4.19.1
+  resolution: "wrangler@npm:4.19.1"
   dependencies:
     "@cloudflare/kv-asset-handler": "npm:0.4.0"
     "@cloudflare/unenv-preset": "npm:2.3.2"
     blake3-wasm: "npm:2.1.5"
     esbuild: "npm:0.25.4"
     fsevents: "npm:~2.3.2"
-    miniflare: "npm:4.20250508.3"
+    miniflare: "npm:4.20250525.1"
     path-to-regexp: "npm:6.3.0"
-    sharp: "npm:^0.33.5"
     unenv: "npm:2.0.0-rc.17"
-    workerd: "npm:1.20250508.0"
+    workerd: "npm:1.20250525.0"
   peerDependencies:
-    "@cloudflare/workers-types": ^4.20250508.0
+    "@cloudflare/workers-types": ^4.20250525.0
   dependenciesMeta:
     fsevents:
-      optional: true
-    sharp:
       optional: true
   peerDependenciesMeta:
     "@cloudflare/workers-types":
@@ -7516,7 +7580,7 @@ __metadata:
   bin:
     wrangler: bin/wrangler.js
     wrangler2: bin/wrangler.js
-  checksum: 10c0/74fdd871fd7bc82ca331aca0af4d4bbc9155645041ce4bba7014286970a5077e796cb27161043b55e97bbba72c00a54454f75065c5e02a247f898516b8b478c7
+  checksum: 10c0/ab1162a7afd69b2bff88802245c5f6a33129b3932b13742d9150e9ce2bc450661f8af4356af19efead64d93dcd67524ca9be2eb9e1685bd5fa04998c566b7ea4
   languageName: node
   linkType: hard
 
