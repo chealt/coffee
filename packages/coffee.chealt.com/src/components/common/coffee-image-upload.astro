@@ -1,5 +1,10 @@
 <coffee-image-upload {...Astro.props}>
-  <input type="file" class="visually-hidden" accept="image/*;capture=camera" />
+  <input
+    type="file"
+    class="visually-hidden"
+    accept="image/*;capture=camera"
+    inert
+  />
   <slot />
 </coffee-image-upload>
 
