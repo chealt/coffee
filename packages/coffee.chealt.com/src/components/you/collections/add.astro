@@ -2,14 +2,14 @@
 import Button from "../../button.astro";
 import CoffeeImageUpload from "../../common/coffee-image-upload.astro";
 
-import "./empty.css";
+import "./add.css";
 
 import allLocaleTranslations from "./locales.json";
 
 const t = allLocaleTranslations[Astro.currentLocale];
 ---
 
-<div class="empty">
+<div class="add">
   <CoffeeImageUpload>
     <Button class="triggerButton">{t["add"]}</Button>
   </CoffeeImageUpload>

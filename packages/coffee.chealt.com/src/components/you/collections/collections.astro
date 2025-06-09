@@ -1,7 +1,7 @@
 ---
 import CoffeeDetails from "./coffee-details.astro";
 import CoffeeControls from "./coffee-controls.astro";
-import Empty from "./empty.astro";
+import Add from "./add.astro";
 
 import "./coffee-gallery.css";
 
@@ -19,12 +19,12 @@ const t = allLocaleTranslations[Astro.currentLocale];
   <chealt-ocr>
     <ul data-type="collections">
       <li data-collection-id="whishList" data-is-built-in>
-        <h3>{t["wishList"]}</h3>
-        <Empty />
+        <h3 data-name>{t["wishList"]}</h3>
+        <Add />
       </li>
       <li data-collection-id="favorites" data-is-built-in>
-        <h3>{t["favorites"]}</h3>
-        <Empty />
+        <h3 data-name>{t["favorites"]}</h3>
+        <Add />
       </li>
     </ul>
   </chealt-ocr>

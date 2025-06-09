@@ -1,12 +1,18 @@
 const collectionsKey = 'chealt-collections';
-const save = async ({ collectionID, isBuiltIn, itemID, fileName }) => {
+// eslint-disable-next-line complexity
+const save = async ({ collectionID, collectionName, isBuiltIn, itemID, fileName }) => {
   const collectionsRaw = localStorage.getItem(collectionsKey);
   const collections = JSON.parse(collectionsRaw) || [];
   const collection = collections.find(({ id }) => id === collectionID);
   const item = collection?.items?.find(({ id }) => id === itemID);
 
+  if (collectionName && collection) {
+    collection.name = collectionName;
+  }
+
   if (!collection) {
-    collections.push({ id: collectionID, isBuiltIn, items: [{ id: itemID, images: [{ fileName }] }] });
+    collections
+      .push({ id: collectionID, name: collectionName, isBuiltIn, items: [{ id: itemID, images: [{ fileName }] }] });
   } else {
     if (!collection.items) {
       collection.items = [{ id: itemID, images: [{ fileName }] }];

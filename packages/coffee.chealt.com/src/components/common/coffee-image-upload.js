@@ -18,13 +18,14 @@ class CoffeeImageUpload extends HTMLElement {
       const isBuiltIn = collectionElement?.getAttribute('data-is-built-in') === '' || false;
       const collectionID = collectionElement?.getAttribute('data-collection-id') || crypto.randomUUID();
       const itemID = this.closest('[data-item-id]')?.getAttribute('data-item-id') || crypto.randomUUID();
+      const collectionName = collectionElement?.querySelector('[data-name]')?.textContent;
 
       const fileData = this.fileInput.files[0];
 
       try {
         const fileName = await writeFile(fileData);
 
-        await save({ collectionID, itemID, fileName, isBuiltIn });
+        await save({ collectionID, collectionName, itemID, fileName, isBuiltIn });
       } catch (error) {
         if (error.name === 'AbortError') {
           console.log('user abort'); // eslint-disable-line no-console
