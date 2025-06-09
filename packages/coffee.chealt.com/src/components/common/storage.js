@@ -11,8 +11,12 @@ const save = async ({ collectionID, collectionName, isBuiltIn, itemID, fileName 
   }
 
   if (!collection) {
-    collections
-      .push({ id: collectionID, name: collectionName, isBuiltIn, items: [{ id: itemID, images: [{ fileName }] }] });
+    if (itemID && fileName) {
+      collections
+        .push({ id: collectionID, name: collectionName, isBuiltIn, items: [{ id: itemID, images: [{ fileName }] }] });
+    } else {
+      collections.push({ id: collectionID, name: collectionName, isBuiltIn });
+    }
   } else {
     if (!collection.items) {
       collection.items = [{ id: itemID, images: [{ fileName }] }];

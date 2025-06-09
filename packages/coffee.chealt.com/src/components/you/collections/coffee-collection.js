@@ -1,4 +1,4 @@
-import { getCollection, getAllCollections, updateCollectionName } from '../../common/storage.js';
+import { getCollection, getAllCollections, updateCollectionName, save } from '../../common/storage.js';
 
 class CoffeeCollection extends HTMLElement {
   static refreshEventName = 'coffee-collection-refresh';
@@ -16,6 +16,21 @@ class CoffeeCollection extends HTMLElement {
     }
 
     this.render();
+    this.addMissingCollection();
+  }
+
+  async addMissingCollection() {
+    const { collectionID, isBuiltIn } = this;
+    const collection = getCollection(this.collectionID);
+    const collectionName = this.nameElement.textContent;
+
+    if (!collection) {
+      await save({
+        collectionID,
+        collectionName,
+        isBuiltIn
+      });
+    }
   }
 
   renderName() {
