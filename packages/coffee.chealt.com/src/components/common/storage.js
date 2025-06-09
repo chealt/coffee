@@ -74,7 +74,7 @@ const deleteCollectionItem = ({ collectionID, itemID }) => {
         (!collectionID ? id !== itemID : collection.id !== collectionID || id !== itemID)
       );
 
-      if (collection?.items.length === 0) {
+      if (collection?.items?.length === 0) {
         delete collection.items;
       }
 
