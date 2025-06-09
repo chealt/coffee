@@ -15,7 +15,8 @@
     "wishList": "Wish list",
     "favorites": "Favorites",
     "favorite": "favorite",
-    "unnamed": "Untitled Collection"
+    "unnamed": "Untitled Collection",
+    "review": "Review"
   },
   "pl": {
     "title": "Kolekcje",
@@ -33,6 +34,7 @@
     "wishList": "Lista życzeń",
     "favorites": "Ulubione",
     "favorite": "ulubiony",
-    "unnamed": "Niezidentyfikowana kolekcja"
+    "unnamed": "Niezidentyfikowana kolekcja",
+    "review": "Opinia"
   }
 }
