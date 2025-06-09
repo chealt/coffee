@@ -100,6 +100,7 @@ class CoffeeControls extends HTMLElement {
         }
       }
 
+      this.dispatchEvent(new CustomEvent('coffee-collection-refresh', { bubbles: true }));
       this.dispatchEvent(new CustomEvent('coffee-gallery-refresh', { bubbles: true }));
     });
   }

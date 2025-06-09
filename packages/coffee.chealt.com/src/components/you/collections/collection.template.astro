@@ -1,0 +1,11 @@
+---
+import Collection from "./collection.astro";
+
+import allLocaleTranslations from "./locales.json";
+
+const t = allLocaleTranslations[Astro.currentLocale];
+---
+
+<template id="collection-item-template">
+  <Collection name={t["unnamed"]} />
+</template>

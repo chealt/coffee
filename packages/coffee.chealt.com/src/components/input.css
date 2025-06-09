@@ -1,8 +1,10 @@
-input {
+input,
+[contenteditable] {
   display: block;
   width: 100%;
   border: 0 none;
   padding: var(--gap);
+  margin: 0;
   font-size: 1.2rem;
   background-color: var(--color-secondary);
   color: inherit;

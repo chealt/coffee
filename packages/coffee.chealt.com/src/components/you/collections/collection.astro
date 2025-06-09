@@ -1,0 +1,16 @@
+---
+import Add from "./add.astro";
+
+const { id, name, ...props } = Astro.props;
+
+const contentEditable = props.isBuiltIn ? "contenteditable" : undefined;
+---
+
+<li data-collection-id={id || ""} {...props}>
+  <coffee-collection>
+    <h3 data-name {contentEditable}>{name}</h3>
+    <Add />
+  </coffee-collection>
+</li>
+
+<script src="./coffee-collection.js"></script>

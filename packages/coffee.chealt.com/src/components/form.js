@@ -78,11 +78,14 @@ const setFormData = ({ form, storage }) => {
 const removeDeletedFormData = (storage) => (mutationsList) => {
   mutationsList.forEach(({ removedNodes }) => {
     if (removedNodes) {
-      removedNodes.forEach((node) => {
-        node.querySelectorAll('chealt-form form').forEach((form) => {
-          removeFormData({ storage, formName: form.name });
+      removedNodes
+        .forEach((node) => {
+          if (node.nodeType !== Node.TEXT_NODE) {
+            node.querySelectorAll('chealt-form form').forEach((form) => {
+              removeFormData({ storage, formName: form.name });
+            });
+          }
         });
-      });
     }
   });
 };

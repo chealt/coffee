@@ -87,4 +87,24 @@ const deleteCollectionItem = ({ collectionID, itemID }) => {
   );
 };
 
-export { getAllCollections, getCollection, save, deleteCollection, getCollectionItems, deleteCollectionItem };
+const updateCollectionName = ({ collectionID, collectionName }) => {
+  const collections = getAllCollections();
+  const collection = collections.find(({ id }) => id === collectionID);
+
+  collection.name = collectionName;
+
+  localStorage.setItem(
+    collectionsKey,
+    JSON.stringify(collections)
+  );
+};
+
+export {
+  deleteCollection,
+  deleteCollectionItem,
+  getAllCollections,
+  getCollection,
+  getCollectionItems,
+  updateCollectionName,
+  save
+};
