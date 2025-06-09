@@ -70,16 +70,16 @@ const deleteCollectionItem = ({ collectionID, itemID }) => {
 
   const newCollections = collections
     .map((collection) => {
-      collection.items = collection.items
-        .filter(({ id }) => (!collectionID ? id !== itemID : collection.id !== collectionID || id !== itemID));
+      collection.items = collection?.items?.filter(({ id }) =>
+        (!collectionID ? id !== itemID : collection.id !== collectionID || id !== itemID)
+      );
 
-      if (collection.items.length === 0) {
+      if (collection?.items.length === 0) {
         delete collection.items;
       }
 
       return collection;
-    })
-    .filter((collection) => collection.items || collection.isBuiltIn);
+    });
 
   localStorage.setItem(
     collectionsKey,

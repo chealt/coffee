@@ -34,8 +34,11 @@ class CoffeeImageUpload extends HTMLElement {
         }
       }
 
-      this.dispatchEvent(new CustomEvent('coffee-gallery-refresh', { bubbles: true }));
-      this.dispatchEvent(new CustomEvent('coffee-collection-refresh', { bubbles: true }));
+      if (!collectionElement) {
+        this.dispatchEvent(new CustomEvent('coffee-gallery-refresh', { bubbles: true }));
+      } else {
+        this.dispatchEvent(new CustomEvent('coffee-collection-refresh', { bubbles: true }));
+      }
 
       // navigate to the collections page if it is not the current page
       if (this.navigateTo && window.location.pathname !== this.navigateTo) {

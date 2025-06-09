@@ -71,7 +71,6 @@ class CoffeeControls extends HTMLElement {
     this.querySelector('.favorite').addEventListener('click', () => {
       const collectionElement = this.closest('[data-collection-id]');
       const collectionID = collectionElement.getAttribute('data-collection-id');
-      const collectionName = collectionElement.querySelector('[data-name]')?.textContent;
       const itemElement = this.closest('[data-item-id]');
       const itemID = itemElement.getAttribute('data-item-id');
       const isFavorite = itemElement.getAttribute('data-is-favorite') !== null;
@@ -90,7 +89,7 @@ class CoffeeControls extends HTMLElement {
           });
 
           item.images.forEach(async ({ fileName }) => {
-            await save({ collectionID: 'favorites', collectionName, isBuiltIn: true, itemID, fileName });
+            await save({ collectionID: 'favorites', isBuiltIn: true, itemID, fileName });
           });
 
           itemElement.setAttribute('data-is-favorite', '');
@@ -101,7 +100,6 @@ class CoffeeControls extends HTMLElement {
       }
 
       this.dispatchEvent(new CustomEvent('coffee-collection-refresh', { bubbles: true }));
-      this.dispatchEvent(new CustomEvent('coffee-gallery-refresh', { bubbles: true }));
     });
   }
 }

@@ -43,6 +43,7 @@ class CoffeeCollection extends HTMLElement {
     });
   }
 
+  // eslint-disable-next-line complexity
   async render() {
     const collections = getAllCollections();
     const collection = getCollection(this.collectionID);
@@ -65,8 +66,11 @@ class CoffeeCollection extends HTMLElement {
       itemsElement.setAttribute('data-type', 'items');
     }
 
-    // eslint-disable-next-line complexity
-    collection?.items?.forEach(async ({ id: itemID, images }) => {
+    if (!collection?.items) {
+      return;
+    }
+
+    for await (const { id: itemID, images } of collection.items) {
       const existingItemElement = this.collectionElement.querySelector(`[data-item-id="${itemID}"]`);
       let itemElement = existingItemElement;
 
@@ -78,8 +82,8 @@ class CoffeeCollection extends HTMLElement {
       }
 
       const isFavorite =
-            this.collectionID === 'favorites' ||
-            collections.find(({ id: existingCollectionID }) => existingCollectionID === 'favorites')?.items?.some(({ id: existingItemID }) => itemID === existingItemID);
+        this.collectionID === 'favorites' ||
+        collections.find(({ id: existingCollectionID }) => existingCollectionID === 'favorites')?.items?.some(({ id: existingItemID }) => itemID === existingItemID);
 
       if (isFavorite) {
         itemElement.setAttribute('data-is-favorite', '');
@@ -102,9 +106,9 @@ class CoffeeCollection extends HTMLElement {
         imagesContainer.classList.add('images-container');
       }
 
-      await Promise.all(images.map(async ({ fileName }) => {
+      for (const { fileName } of images) {
         if (imagesContainer.querySelector(`[data-file-name="${fileName}"]`)) {
-          return;
+          continue;
         }
 
         const fileHandle = await rootDirectory.getFileHandle(fileName);
@@ -116,7 +120,7 @@ class CoffeeCollection extends HTMLElement {
         image.id = `${fileData.name}_${fileData.lastModified}`;
 
         imagesContainer.appendChild(image);
-      }));
+      }
 
       if (!existingImagesContainer) {
         itemElement.appendChild(imagesContainer);
@@ -137,7 +141,7 @@ class CoffeeCollection extends HTMLElement {
       if (!existingItemElement) {
         itemsElement.appendChild(itemElement);
       }
-    });
+    }
 
     if (!existingItemsElement) {
       this.collectionElement.appendChild(itemsElement);
