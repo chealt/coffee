@@ -1,8 +1,12 @@
 {
   "en": {
-    "title": "Coffee Explorer"
+    "title": "Coffee Explorer",
+    "filters": "Filters",
+    "clearFilters": "Clear"
   },
   "pl": {
-    "title": "Kawa Explorer"
+    "title": "Kawa Explorer",
+    "filters": "Filtry",
+    "clearFilters": "Wyczyść"
   }
 }

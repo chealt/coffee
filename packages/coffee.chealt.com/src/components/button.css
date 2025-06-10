@@ -19,3 +19,7 @@ button.primary {
   color: var(--color-text--primary);
   border-color: var(--color-primary);
 }
+
+button.primary .icon svg {
+  fill: var(--color-text--primary);
+}
