@@ -29,14 +29,16 @@ const roasterImages = await import.meta.glob(
     </p>
     <ul class="roasters">
       {
-        Object.entries(roasterImages).map(([path, image]) => (
-          <li>
-            <Image
-              src={image.default}
-              alt={path.split("/").pop()?.split(".")[0]}
-            />
-          </li>
-        ))
+        roasters
+          .filter(({ logo }) => Boolean(logo))
+          .map(({ name, logo }) => (
+            <li>
+              <Image
+                src={roasterImages[`/public/roasters/${logo}`].default}
+                alt={name}
+              />
+            </li>
+          ))
       }
     </ul>
   </section>
