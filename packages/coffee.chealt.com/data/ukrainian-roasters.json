@@ -1,0 +1,754 @@
+[
+  {
+    "name": "212 Coffee Roasters",
+    "instagram": "212kava.kyiv",
+    "country_id": 15
+  },
+  {
+    "name": "3 Champs Roastery",
+    "website": "https://3champsroastery.com.ua",
+    "instagram": "3champsroastery",
+    "country_id": 15
+  },
+  {
+    "name": "400mg Coffee Roastery",
+    "website": "https://400mg.coffee",
+    "instagram": "coffeeroastery400mg",
+    "country_id": 15
+  },
+  {
+    "name": "ALL IN COFFEE",
+    "instagram": "all.in.coffee.roasters",
+    "country_id": 15
+  },
+  {
+    "name": "Black Cup",
+    "website": "https://blackcup.coffee",
+    "instagram": "blackcup.coffee",
+    "country_id": 15
+  },
+  {
+    "name": "Buck Coffee",
+    "website": "https://www.buckcoffee.store",
+    "instagram": "buckcoffee",
+    "country_id": 15
+  },
+  {
+    "name": "Buno",
+    "website": "https://buno.com.ua/ua",
+    "instagram": "buno.coffee.ua",
+    "country_id": 15
+  },
+  {
+    "name": "BWTC",
+    "website": "https://www.bwtc.coffee",
+    "instagram": "bwtc_roasting",
+    "country_id": 15
+  },
+  {
+    "name": "CafeBoutique",
+    "website": "https://cafeboutique.ua",
+    "instagram": "cafeboutique.ua",
+    "country_id": 15
+  },
+  {
+    "name": "Coffee Craft",
+    "website": "https://coffee-craft.com.ua",
+    "instagram": "coffeecraftua",
+    "country_id": 15
+  },
+  {
+    "name": "Coffee Group",
+    "instagram": "coffeegroupua",
+    "country_id": 15
+  },
+  {
+    "name": "Coffee Lover",
+    "website": "https://coffeelover.com.ua/",
+    "instagram": "coffee_lover_ua",
+    "country_id": 15
+  },
+  {
+    "name": "Double",
+    "website": "https://doppio.ua",
+    "instagram": "doppio_ua",
+    "country_id": 15
+  },
+  {
+    "name": "Escobar",
+    "website": "https://escobar-coffee.com.ua",
+    "instagram": "coffee_escobar",
+    "country_id": 15
+  },
+  {
+    "name": "Espako",
+    "website": "https://espako.store",
+    "instagram": "espako_coffee",
+    "country_id": 15
+  },
+  {
+    "name": "Fair Finch",
+    "instagram": "finch_coffeecentre",
+    "country_id": 15
+  },
+  {
+    "name": "Finca Coffee",
+    "website": "https://www.finca-coffee.ua",
+    "instagram": "fincacoffee",
+    "country_id": 15
+  },
+  {
+    "name": "Flames",
+    "website": "https://flames.com.ua/",
+    "instagram": "flames.coffee",
+    "country_id": 15
+  },
+  {
+    "name": "Folks",
+    "website": "https://folks.com.ua",
+    "instagram": "folks.kyiv",
+    "country_id": 15
+  },
+  {
+    "name": "Fresh Black",
+    "website": "https://fresh.black",
+    "instagram": "fresh.black.okay",
+    "country_id": 15
+  },
+  {
+    "name": "Gemini",
+    "website": "https://store.gemini.ua",
+    "instagram": "geminiespresso",
+    "country_id": 15
+  },
+  {
+    "name": "GIDNA",
+    "instagram": "gidna_ua",
+    "country_id": 15
+  },
+  {
+    "name": "HEAT",
+    "instagram": "heatroasters",
+    "country_id": 15
+  },
+  {
+    "name": "Idealist Coffee",
+    "website": "https://idealistcoffee.com/ua/",
+    "instagram": "idealistcoffee",
+    "country_id": 15
+  },
+  {
+    "name": "Jamero",
+    "website": "https://jamero.ua",
+    "instagram": "jamero_coffee",
+    "country_id": 15
+  },
+  {
+    "name": "kolo coffee",
+    "website": "https://kolocoffee.com/",
+    "instagram": "kolo.coffee",
+    "country_id": 15
+  },
+  {
+    "name": "MadHeads",
+    "website": "https://madheadscoffee.com",
+    "instagram": "madheadscoffeeroasters",
+    "country_id": 15
+  },
+  {
+    "name": "My Coffee Factory",
+    "website": "https://mcf.com.ua",
+    "instagram": "mycoffeefactory",
+    "country_id": 15
+  },
+  {
+    "name": "MyKava",
+    "website": "https://mykava.ua/coffee",
+    "instagram": "mykava_official",
+    "country_id": 15
+  },
+  {
+    "name": "NeroKava",
+    "instagram": "nero.kava",
+    "country_id": 15
+  },
+  {
+    "name": "ONE LOVE",
+    "website": "https://onelove.ua",
+    "instagram": "onelovecoffee",
+    "country_id": 15
+  },
+  {
+    "name": "Penyora Specialty Coffee",
+    "website": "https://specialtycoffee.com.ua",
+    "instagram": "penyora_ivan",
+    "country_id": 15
+  },
+  {
+    "name": "Radiokava",
+    "website": "https://www.radiokava.com.ua",
+    "instagram": "radio_kava",
+    "country_id": 15
+  },
+  {
+    "name": "Roasted by Petrushko",
+    "website": "https://rbp.coffee",
+    "instagram": "roastedbypetrushko",
+    "country_id": 15
+  },
+  {
+    "name": "Roli",
+    "website": "https://roli.in.ua",
+    "instagram": "roli.ua",
+    "country_id": 15
+  },
+  {
+    "name": "Rosental",
+    "instagram": "rozental_coffee",
+    "country_id": 15
+  },
+  {
+    "name": "Slurp",
+    "website": "https://slurpcoffeeroasters.com.ua/",
+    "instagram": "slurpcoffeeroasters",
+    "country_id": 15
+  },
+  {
+    "name": "Spark Coffee",
+    "instagram": "spark.coffee.roasters",
+    "country_id": 15
+  },
+  {
+    "name": "Sunrise Coffee",
+    "website": "https://sunrisecoffee.ua",
+    "instagram": "sunrisecoffee.ua",
+    "country_id": 15
+  },
+  {
+    "name": "Tabir Coffee",
+    "website": "https://tabircoffee.com/",
+    "instagram": "tabircoffee",
+    "country_id": 15
+  },
+  {
+    "name": "TAKAVA",
+    "website": "https://www.takava.com.ua/",
+    "instagram": "takava_coffeebuffet",
+    "country_id": 15
+  },
+  {
+    "name": "Taste Band",
+    "website": "https://tasteband.ua",
+    "instagram": "tasteband.coffee",
+    "country_id": 15
+  },
+  {
+    "name": "Yellow Place",
+    "website": "https://goodwinehome.com.ua/uk/brands/143-yellow-place.html",
+    "instagram": "yellowplacecoffee",
+    "country_id": 15
+  },
+  {
+    "name": "YoCo",
+    "website": "https://yoco.com.ua",
+    "instagram": "yoco_story",
+    "country_id": 15
+  },
+  {
+    "name": "High Coffee",
+    "instagram": "vysokakava",
+    "country_id": 15
+  },
+  {
+    "name": "Kyiv City Roastery",
+    "website": "https://kyivcityroast.com.ua",
+    "instagram": "kyiv_city_roast",
+    "country_id": 15
+  },
+  {
+    "name": "Three Mississippis",
+    "website": "https://threemississippiworld.notion.site/b9c65cf57a194fa0a391f947be0bc915",
+    "instagram": "three.mississippi",
+    "country_id": 15
+  },
+  {
+    "name": "25 Coffee Roasters",
+    "website": "https://25coffeeroasters.ua",
+    "instagram": "25coffeeroasters.ua",
+    "country_id": 15
+  },
+  {
+    "name": "7sevenheaven",
+    "instagram": "7sevenheaven_coffee",
+    "country_id": 15
+  },
+  {
+    "name": "Black Honey",
+    "instagram": "blackhoney.lviv",
+    "country_id": 15
+  },
+  {
+    "name": "Black&Brown",
+    "instagram": "blackandbrown_ua",
+    "country_id": 15
+  },
+  {
+    "name": "DRIPFULL",
+    "instagram": "dripfull.coffee",
+    "country_id": 15
+  },
+  {
+    "name": "Credentials",
+    "website": "https://www.kredens.com.ua/shop#coffeebeans",
+    "instagram": "kredenscafe",
+    "country_id": 15
+  },
+  {
+    "name": "Culture",
+    "website": "https://kulturrra.coffee/kulturrra/filter/parent=1082/",
+    "instagram": "kulturrra.coffee",
+    "country_id": 15
+  },
+  {
+    "name": "Leo Coffee",
+    "website": "https://leocoffee.com.ua",
+    "instagram": "kava.leo.coffee",
+    "country_id": 15
+  },
+  {
+    "name": "Phoenix",
+    "instagram": "phoenix.coffeeworld",
+    "country_id": 15
+  },
+  {
+    "name": "Saturdays Coffee",
+    "website": "https://saturdays.store/",
+    "instagram": "saturdayscoffeelviv",
+    "country_id": 15
+  },
+  {
+    "name": "Sinatra Coffee",
+    "website": "https://sinatracoffee.com",
+    "instagram": "sinatracoffee",
+    "country_id": 15
+  },
+  {
+    "name": "SOVA",
+    "website": "https://sovacoffee.com/",
+    "instagram": "sova.coffee.lviv",
+    "country_id": 15
+  },
+  {
+    "name": "coffee shop",
+    "instagram": "tamdekava",
+    "country_id": 15
+  },
+  {
+    "name": "Alternative Coffee",
+    "website": "https://altkava.com.ua/",
+    "instagram": "alterkava",
+    "country_id": 15
+  },
+  {
+    "name": "Chekhovych Distillery",
+    "website": "https://chehovych.com",
+    "instagram": "chehovych",
+    "country_id": 15
+  },
+  {
+    "name": "World of Coffee",
+    "website": "https://svitkavy.com/uk/",
+    "instagram": "svitkavy.roastery",
+    "country_id": 15
+  },
+  {
+    "name": "Tuk-Tuk coffee",
+    "instagram": "tuktuk_kava",
+    "country_id": 15
+  },
+  {
+    "name": "Bedoin",
+    "website": "https://bedoin.com.ua",
+    "instagram": "bedoincoffee",
+    "country_id": 15
+  },
+  {
+    "name": "Black Bug",
+    "instagram": "blackbug.coffee.roasters",
+    "country_id": 15
+  },
+  {
+    "name": "Dam Coffee Roasters",
+    "website": "https://damcoffee.com.ua",
+    "instagram": "damcoffeeroasters",
+    "country_id": 15
+  },
+  {
+    "name": "Empathic",
+    "website": "https://empathic.store",
+    "instagram": "empathic.coffee",
+    "country_id": 15
+  },
+  {
+    "name": "Endorphin Coffee Roasting",
+    "website": "https://coffee-endorphin.com.ua/",
+    "instagram": "endorphin.coffee.roasting",
+    "country_id": 15
+  },
+  {
+    "name": "Epos Coffee Roasters",
+    "instagram": "epos_coffee",
+    "country_id": 15
+  },
+  {
+    "name": "High Hill",
+    "website": "https://highhillcoffee.com",
+    "instagram": "highhill.coffee.roasters",
+    "country_id": 15
+  },
+  {
+    "name": "Illusion",
+    "website": "https://illusion.ua",
+    "instagram": "illusion.coffee.roasters",
+    "country_id": 15
+  },
+  {
+    "name": "One Man's Roasting",
+    "instagram": "550onemansroasting",
+    "country_id": 15
+  },
+  {
+    "name": "Perea",
+    "instagram": "perea_coffee",
+    "country_id": 15
+  },
+  {
+    "name": "wild grains",
+    "instagram": "wild_coffee_beans",
+    "country_id": 15
+  },
+  {
+    "name": "Pound of Coffee",
+    "website": "https://funt.coffee/",
+    "instagram": "funtcoffee",
+    "country_id": 15
+  },
+  {
+    "name": "Interesting coffee",
+    "website": "https://www.cikava-kava.com.ua",
+    "instagram": "cikava_kava",
+    "country_id": 15
+  },
+  {
+    "name": "Barista",
+    "website": "https://barista.ua",
+    "instagram": "baristaua",
+    "country_id": 15
+  },
+  {
+    "name": "Caffissimo",
+    "website": "https://caffissimo.com.ua/uk/",
+    "instagram": "caffissimo.coffee",
+    "country_id": 15
+  },
+  {
+    "name": "Coffee Together",
+    "website": "https://coffeetogether.com.ua",
+    "instagram": "coffee_together_ua",
+    "country_id": 15
+  },
+  {
+    "name": "Diaspora",
+    "website": "https://diasporacoffee.com",
+    "instagram": "diaspora_coffee_roasting",
+    "country_id": 15
+  },
+  {
+    "name": "Double-Bit Axe",
+    "website": "https://doublebitaxe.ua",
+    "instagram": "double.bit.axe",
+    "country_id": 15
+  },
+  {
+    "name": "Future Coffee",
+    "website": "https://www.futurecoffee.com.ua",
+    "instagram": "future.coffee.roasters",
+    "country_id": 15
+  },
+  {
+    "name": "Hipsters",
+    "website": "https://hipsters.ua",
+    "instagram": "hipsters_coffee_roastery_",
+    "country_id": 15
+  },
+  {
+    "name": "Caffeine",
+    "instagram": "kofein.ua",
+    "country_id": 15
+  },
+  {
+    "name": "Peppy Coffee",
+    "instagram": "peppycoffee_",
+    "country_id": 15
+  },
+  {
+    "name": "Rabbit Coffee",
+    "website": "https://rabbitroasters.com",
+    "instagram": "rabbit_coffee_roasters",
+    "country_id": 15
+  },
+  {
+    "name": "Valeo",
+    "website": "https://valeocoffee.shop",
+    "instagram": "valeo_coffee",
+    "country_id": 15
+  },
+  {
+    "name": "Coffee Lab Roasters",
+    "website": "https://coffeelab.com.ua",
+    "instagram": "coffee.lab",
+    "country_id": 15
+  },
+  {
+    "name": "Cofium",
+    "instagram": "cofium.roastery",
+    "country_id": 15
+  },
+  {
+    "name": "Gora Coffee",
+    "website": "https://goracoffee.com",
+    "instagram": "goracoffee.roasters",
+    "country_id": 15
+  },
+  {
+    "name": "IMAGINE COFFEE ROASTERS",
+    "instagram": "imagine_coffee",
+    "country_id": 15
+  },
+  {
+    "name": "Coffee Culture",
+    "website": "https://www.kulturakavy.com.ua/",
+    "instagram": "kultura_kavy_if",
+    "country_id": 15
+  },
+  {
+    "name": "Coffee Roastery",
+    "instagram": "rosteria.kavy",
+    "country_id": 15
+  },
+  {
+    "name": "Coffee Factory",
+    "website": "https://fabrykakavy.com",
+    "instagram": "fabryka_kavy",
+    "country_id": 15
+  },
+  {
+    "name": "Cafeier Coffee",
+    "website": "https://cafeier.com.ua/",
+    "instagram": "cafeier.coffee",
+    "country_id": 15
+  },
+  {
+    "name": "Foundation Coffee Roasters",
+    "website": "https://foundation.ua",
+    "instagram": "foundation.coffee.roasters",
+    "country_id": 15
+  },
+  {
+    "name": "Hands & Hearts",
+    "instagram": "h2.coffeeroasters",
+    "country_id": 15
+  },
+  {
+    "name": "MENDES",
+    "instagram": "mendes.coffee",
+    "country_id": 15
+  },
+  {
+    "name": "Odessa Coffee Roasters",
+    "website": "https://barista-box.com/katalog/ocr/",
+    "instagram": "odesa.coffee.roasters",
+    "country_id": 15
+  },
+  {
+    "name": "Apriori Coffee",
+    "website": "https://apriori-coffee.com.ua",
+    "instagram": "apriori_coffee",
+    "country_id": 15
+  },
+  {
+    "name": "Baccarat",
+    "website": "https://bacara.com.ua",
+    "instagram": "bacara.roastery",
+    "country_id": 15
+  },
+  {
+    "name": "Carpathian",
+    "website": "https://carpat.com.ua",
+    "instagram": "carpat.coffee",
+    "country_id": 15
+  },
+  {
+    "name": "Essco",
+    "website": "https://essco.com.ua",
+    "instagram": "essco_coffee",
+    "country_id": 15
+  },
+  {
+    "name": "Club Kavy",
+    "website": "https://clubkavy.com.ua",
+    "instagram": "clubkavy",
+    "country_id": 15
+  },
+  {
+    "name": "Rona",
+    "website": "https://rona-coffee.com",
+    "instagram": "rona.kava",
+    "country_id": 15
+  },
+  {
+    "name": "ROOF",
+    "instagram": "roof.specialty.coffee",
+    "country_id": 15
+  },
+  {
+    "name": "WONDER&FULL",
+    "instagram": "wonderfull.coffee",
+    "country_id": 15
+  },
+  {
+    "name": "About Coffee",
+    "website": "http://aboutcoffee.com.ua",
+    "instagram": "about.coffee.ua",
+    "country_id": 15
+  },
+  {
+    "name": "Coffee Factory",
+    "website": "https://fabrykakavyrosterija.ua",
+    "instagram": "fabryka_kavy_ck",
+    "country_id": 15
+  },
+  {
+    "name": "Coffeelab",
+    "website": "https://www.coffeelabroasters.ua/",
+    "instagram": "coffeelabua",
+    "country_id": 15
+  },
+  {
+    "name": "ISLA",
+    "website": "https://shop.isla.ua",
+    "instagram": "isla.ua",
+    "country_id": 15
+  },
+  {
+    "name": "Discovery",
+    "instagram": "discovery.roasters",
+    "country_id": 15
+  },
+  {
+    "name": "OurCoffee",
+    "website": "https://x.com/NashaKava",
+    "instagram": "nashakava_myk",
+    "country_id": 15
+  },
+  {
+    "name": "Equilibrium",
+    "instagram": "equilibrium_coffee_roasters",
+    "country_id": 15
+  },
+  {
+    "name": "Fine Cup",
+    "website": "https://fine-cup.com.ua",
+    "instagram": "_fine_cup_",
+    "country_id": 15
+  },
+  {
+    "name": "Very good",
+    "website": "https://fortissimo.coffee",
+    "instagram": "fortissimostreetbar",
+    "country_id": 15
+  },
+  {
+    "name": "Santorini",
+    "website": "https://santorino.com.ua",
+    "instagram": "santorino.coffee",
+    "country_id": 15
+  },
+  {
+    "name": "Fresh Coffee",
+    "instagram": "freshcoffeeroastery",
+    "country_id": 15
+  },
+  {
+    "name": "JustKava",
+    "website": "https://justkava.com.ua",
+    "instagram": "justkavaua",
+    "country_id": 15
+  },
+  {
+    "name": "Coffee lion",
+    "website": "https://leonedicaffe.com.ua",
+    "instagram": "leonedicaffe",
+    "country_id": 15
+  },
+  {
+    "name": "Medellin",
+    "website": "https://medelin.com",
+    "instagram": "medelin_uzh",
+    "country_id": 15
+  },
+  {
+    "name": "Riverside",
+    "instagram": "riverside_coffee_shop",
+    "country_id": 15
+  },
+  {
+    "name": "Revolta",
+    "instagram": "rivolta.roastery",
+    "country_id": 15
+  },
+  {
+    "name": "SoloWay",
+    "website": "https://solowaycoffee.com",
+    "instagram": "solowayroastery",
+    "country_id": 15
+  },
+  {
+    "name": "ROCK KAVYA",
+    "instagram": "rockkava_roasters",
+    "country_id": 15
+  },
+  {
+    "name": "SHO3A",
+    "website": "https://sho3acoffee.com",
+    "instagram": "sho3a.coffee.roaster",
+    "country_id": 15
+  },
+  {
+    "name": "Sibs Coffee",
+    "instagram": "sibscoffee",
+    "country_id": 15
+  },
+  {
+    "name": "Twinkle",
+    "instagram": "twinkle_coffee_roasters",
+    "country_id": 15
+  },
+  {
+    "name": "Yakava",
+    "website": "https://yakava.com/store/",
+    "instagram": "yakava.coffee",
+    "country_id": 15
+  },
+  {
+    "name": "Chernihiv Coffee Factory",
+    "website": "https://kava108.prom.ua/ua/",
+    "instagram": "kava108",
+    "country_id": 15
+  },
+  {
+    "name": "Coffee Center",
+    "instagram": "tsentr.kavy",
+    "country_id": 15
+  }
+]

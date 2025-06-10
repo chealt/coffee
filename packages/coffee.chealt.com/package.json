@@ -13,7 +13,9 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "build:scan": "node --env-file=.env data/build.js ",
+    "build:scan": "node --env-file=.env data/build.js",
+    "import": "node --env-file=.env data/importData.js",
+    "import:logos": "node data/importLogos.js",
     "preview": "astro build && astro preview"
   },
   "devDependencies": {
