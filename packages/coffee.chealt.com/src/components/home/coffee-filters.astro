@@ -5,6 +5,8 @@ import Icon from "../icon.astro";
 
 import countries from "../../../data/countries.json";
 
+import "./coffee-filters.css";
+
 import allLocaleTranslations from "./locales.json";
 
 const t = allLocaleTranslations[Astro.currentLocale];
@@ -36,3 +38,5 @@ const t = allLocaleTranslations[Astro.currentLocale];
     </Button>
   </div>
 </coffee-filters>
+
+<script src="./coffee-filters.js"></script>

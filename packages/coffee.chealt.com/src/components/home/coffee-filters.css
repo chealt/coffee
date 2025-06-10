@@ -1,0 +1,53 @@
+.countries {
+  display: none;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--gap);
+}
+
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.filters.active .toggle-button {
+  border-color: var(--color-primary);
+}
+
+.filters.active .countries {
+  display: grid;
+}
+
+.filters button {
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 1.2rem;
+  gap: var(--gap);
+  user-select: none;
+}
+
+.filters .clear-button {
+  display: none;
+}
+
+.filters:has(input[type=checkbox]:checked) .clear-button {
+  display: flex;
+}
+
+.filters:has(input[type=checkbox]:checked) button {
+  border-color: var(--color-primary);
+}
+
+.filters:has(input[type=checkbox]:checked) svg {
+  fill: var(--color-primary);
+}
+
+.countries .label {
+  text-transform: capitalize;
+}
+
+.filters {
+  margin: var(--gap) 0;
+}
