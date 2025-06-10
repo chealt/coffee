@@ -1,0 +1,38 @@
+---
+import Button from "../button.astro";
+import Checkbox from "../checkbox.astro";
+import Icon from "../icon.astro";
+
+import countries from "../../../data/countries.json";
+
+import allLocaleTranslations from "./locales.json";
+
+const t = allLocaleTranslations[Astro.currentLocale];
+---
+
+<coffee-filters>
+  <div class="filters">
+    <Button class="toggle-button">
+      <Icon type="filter" />
+      <span>{t["filters"]}</span>
+    </Button>
+    <ul class="countries">
+      {
+        countries.map(({ country_id, name }) => (
+          <li>
+            <Checkbox
+              type="button"
+              name={`countryId-${country_id}`}
+              value={country_id}
+            >
+              {name}
+            </Checkbox>
+          </li>
+        ))
+      }
+    </ul>
+    <Button class="clear-button">
+      <span>{t["clearFilters"]}</span>
+    </Button>
+  </div>
+</coffee-filters>

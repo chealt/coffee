@@ -1,10 +1,8 @@
 ---
 import { Image } from "astro:assets";
 
-import Button from "../button.astro";
+import Filters from "./coffee-filters.astro";
 import Common from "../common/common.astro";
-import Checkbox from "../checkbox.astro";
-import Icon from "../icon.astro";
 
 import roasters from "../../../data/roasters.json";
 import countries from "../../../data/countries.json";
@@ -14,6 +12,7 @@ import "./home.css";
 import allLocaleTranslations from "./locales.json";
 
 const t = allLocaleTranslations[Astro.currentLocale];
+
 const roasterCount = roasters.length || 0;
 const roasterCountryCount = countries.filter(
   ({ language_code }) => language_code === Astro.currentLocale,
@@ -33,32 +32,7 @@ const roasterImages = await import.meta.glob(
         class="emphasized">{roasterCountryCount}</span
       > countries.
     </p>
-    <coffee-filters>
-      <div class="filters">
-        <Button class="toggle-button">
-          <Icon type="filter" />
-          <span>{t["filters"]}</span>
-        </Button>
-        <ul class="countries">
-          {
-            countries.map(({ country_id, name }) => (
-              <li>
-                <Checkbox
-                  type="button"
-                  name={`countryId-${country_id}`}
-                  value={country_id}
-                >
-                  {name}
-                </Checkbox>
-              </li>
-            ))
-          }
-        </ul>
-        <Button class="clear-button">
-          <span>{t["clearFilters"]}</span>
-        </Button>
-      </div>
-    </coffee-filters>
+    <Filters />
     <ul class="roasters">
       {
         roasters
