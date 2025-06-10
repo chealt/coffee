@@ -20,6 +20,18 @@
   justify-content: center;
   box-sizing: border-box;
   padding: var(--gap);
+  align-items: center;
+}
+
+.roasters .image {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+
+.roasters .name {
+  padding: var(--gap) 0;
+  color: var(--color-background);
 }
 
 .roasters li:hover {
