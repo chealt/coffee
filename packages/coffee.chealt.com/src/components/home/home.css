@@ -114,10 +114,6 @@
   fill: var(--color-primary);
 }
 
-.countries li {
-
-}
-
 .countries .label {
   text-transform: capitalize;
 }
