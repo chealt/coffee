@@ -2,6 +2,8 @@
   display: none;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: var(--gap);
+  max-height: 40vh;
+  overflow-y: auto;
 }
 
 .filters {
@@ -25,6 +27,9 @@
   align-items: center;
   font-size: 1.2rem;
   gap: var(--gap);
+}
+
+.filters .label {
   user-select: none;
 }
 
@@ -50,4 +55,8 @@
 
 .filters {
   margin: var(--gap) 0;
+}
+
+.filters sup.hidden {
+  visibility: hidden;
 }

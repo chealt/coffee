@@ -13,14 +13,14 @@
 
 .roaster {
   display: none;
-  transition: transform 0.2s ease-in-out;
+  opacity: 0;
+  translate: 0 40px;
+  transition-property: display opacity;
+  transition-duration: 0.4s;
+  transition-behavior: allow-discrete;
   background-color: white; /* works with transparent logos */
   flex-direction: column;
   height: 100%;
-}
-
-.roaster:hover {
-  transform: scale(102%);
 }
 
 .roaster a {
@@ -66,4 +66,11 @@
 .roasters-container:has([name=countryId-19]:checked) .roaster[data-country-id="19"],
 .roasters-container:not(:has([name^=countryId]:checked)) .roaster {
   display: flex;
+  opacity: 1;
+  translate: 0 0px;
+
+  @starting-style {
+    opacity: 0;
+    translate: 0 -40px;
+  }
 }
