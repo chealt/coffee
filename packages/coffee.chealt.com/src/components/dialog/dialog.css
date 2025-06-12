@@ -45,3 +45,7 @@ dialog [data-close-button] {
   border-color: transparent;
   background-color: transparent;
 }
+
+body:has(dialog[open]) {
+  overflow: hidden;
+}
