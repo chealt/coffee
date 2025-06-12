@@ -1,6 +1,13 @@
 class CoffeeDialog extends HTMLElement {
   connectedCallback() {
+    this.dialog = this.querySelector('dialog');
+    this.triggerButton = this.dialog.id && document.querySelector(`[data-dialog-id=${this.dialog.id}]`);
+
     this.addBackdropClickListener();
+
+    if (this.triggerButton) {
+      this.openOnClick();
+    }
   }
 
   addBackdropClickListener() {
@@ -13,6 +20,12 @@ class CoffeeDialog extends HTMLElement {
       if (!isInDialog) {
         dialog.close();
       }
+    });
+  }
+
+  openOnClick() {
+    this.triggerButton.addEventListener('click', () => {
+      this.dialog.showModal();
     });
   }
 }

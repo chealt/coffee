@@ -3,6 +3,7 @@
   --gap--l: 1.4rem;
 
   --color-background: white;
+  --color-background--alternative: #d4d4d4;
   --color-text: black;
   --color-text--primary: black;
   --color-primary: #e1a76d;
@@ -118,6 +119,7 @@ svg {
 @media (prefers-color-scheme: dark) {
   :root {
     --color-background: #121212;
+    --color-background--alternative: #2f2f2f;
     --color-text: #e0e0e0;
     --color-text--primary: #272727;
     --color-secondary: rgba(255, 255, 255, 0.1);
