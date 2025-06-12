@@ -30,6 +30,11 @@ body {
   padding-bottom: 100px; /* leave space for bottom controls */
 }
 
+main {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
 h1, h2, h3, h4, h5 {
   margin: var(--gap);
   padding: 0;
