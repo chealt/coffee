@@ -1,0 +1,26 @@
+---
+import Button from "../button.astro";
+import Icon from "../icon.astro";
+
+import "./dialog.css";
+
+import allLocaleTranslations from "./locales.json";
+
+const t = allLocaleTranslations[Astro.currentLocale];
+---
+
+<coffee-dialog>
+  <dialog {...Astro.props}>
+    {
+      Astro.props.showClose && (
+        <Button data-close-button>
+          <Icon type="close" />
+          <span>{t["close"]}</span>
+        </Button>
+      )
+    }
+    <slot />
+  </dialog>
+</coffee-dialog>
+
+<script src="./dialog.js"></script>
