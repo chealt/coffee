@@ -1,4 +1,4 @@
-import { formDataToObject } from '../utils/form';
+import { formDataToObject } from '../../utils/form.js';
 
 const storageKey = 'chealt-forms';
 const supportedStorageTypes = ['localStorage'];

@@ -1,7 +1,9 @@
 ---
-import Label from "../../label.astro";
-import Select from "../../select.astro";
+import Label from "../../form/label/label.astro";
+import Select from "../../form/select/select.astro";
+
 import originCountries from "../../../../data/originCountries.json";
+
 import allLocaleTranslations from "./locales.json";
 
 const t = allLocaleTranslations[Astro.currentLocale];
