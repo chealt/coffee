@@ -1,6 +1,6 @@
 ---
-import CoffeeDetails from "./coffee-details.astro";
-import CoffeeControls from "./coffee-controls.astro";
+import CoffeeDetailsTemplate from "./coffee-details.template.astro";
+import CoffeeControlsTemplate from "./coffee-controls.template.astro";
 import Collection from "./collection.astro";
 import CollectionTemplate from "./collection.template.astro";
 
@@ -15,8 +15,8 @@ const t = allLocaleTranslations[Astro.currentLocale];
   {t["title"]}
 </h2>
 <coffee-gallery>
-  <CoffeeDetails />
-  <CoffeeControls />
+  <CoffeeDetailsTemplate />
+  <CoffeeControlsTemplate />
   <CollectionTemplate />
   <chealt-ocr>
     <ul data-type="collections">
