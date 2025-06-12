@@ -6,15 +6,18 @@
     "bitter": "bitter",
     "acidic": "acidic",
     "sour": "sour",
-    "sweet": "sweet"
+    "sweet": "sweet",
+    "weak": "weak",
+    "strong": "strong"
   },
   "pl": {
     "review": "Opinia",
     "like": "lubię",
     "dislike": "nie lubię",
-    "bitter": "bitter",
-    "acidic": "acidic",
-    "sour": "sour",
-    "sweet": "sweet"
+    "bitter": "gorzki",
+    "acidic": "kwasowy",
+    "sour": "kwašny",
+    "weak": "słaby",
+    "strong": "silny"
   }
 }

@@ -21,7 +21,7 @@ class CoffeeDetails extends HTMLElement {
   }
 
   setDetailsFormName() {
-    this.querySelector('form').setAttribute('name', this.id);
+    this.querySelector('form').setAttribute('name', `${this.id}.details`);
   }
 
   renderInitDetails() {
