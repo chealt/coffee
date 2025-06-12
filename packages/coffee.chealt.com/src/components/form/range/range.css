@@ -1,0 +1,29 @@
+input[type=range] {
+  padding: 0;
+  margin: var(--gap) 0;
+  box-sizing: border-box;
+}
+
+.labels-container {
+  display: flex;
+}
+
+.labels-container > * {
+  flex-grow: 1;
+  text-transform: uppercase;
+}
+
+.labels-container > *:first-child {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.labels-container > *:nth-child(2) {
+  display: flex;
+  justify-content: center;
+}
+
+.labels-container > *:nth-child(3) {
+  display: flex;
+  justify-content: flex-end;
+}

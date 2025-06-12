@@ -1,13 +1,14 @@
 ---
-import Dialog from "../../dialog/dialog.astro";
-import Icon from "../../icon/icon.astro";
-import Form from "../../form/form.astro";
-import RadioList from "../../form/radio/radio-list.astro";
-import Radio from "../../form/radio/radio.astro";
+import Dialog from "../../../dialog/dialog.astro";
+import Icon from "../../../icon/icon.astro";
+import Form from "../../../form/form.astro";
+import RadioList from "../../../form/radio/radio-list.astro";
+import Radio from "../../../form/radio/radio.astro";
 
 import "./review.css";
 
 import allLocaleTranslations from "./locales.json";
+import Range from "../../../form/range/range.astro";
 
 const t = allLocaleTranslations[Astro.currentLocale];
 ---
@@ -27,6 +28,14 @@ const t = allLocaleTranslations[Astro.currentLocale];
             {t["dislike"]}
           </Radio>
         </RadioList>
+        <Range name="acidity">
+          <span slot="min">{t["bitter"]}</span>
+          <span slot="max">{t["acidic"]}</span>
+        </Range>
+        <Range name="sweetness">
+          <span slot="min">{t["sour"]}</span>
+          <span slot="max">{t["sweet"]}</span>
+        </Range>
       </Form>
     </div>
   </Dialog>

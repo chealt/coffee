@@ -1,0 +1,20 @@
+{
+  "en": {
+    "review": "Review",
+    "like": "like",
+    "dislike": "dislike",
+    "bitter": "bitter",
+    "acidic": "acidic",
+    "sour": "sour",
+    "sweet": "sweet"
+  },
+  "pl": {
+    "review": "Opinia",
+    "like": "lubię",
+    "dislike": "nie lubię",
+    "bitter": "bitter",
+    "acidic": "acidic",
+    "sour": "sour",
+    "sweet": "sweet"
+  }
+}

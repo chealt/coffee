@@ -16,9 +16,7 @@
     "favorites": "Favorites",
     "favorite": "favorite",
     "unnamed": "Untitled Collection",
-    "review": "Review",
-    "like": "like",
-    "dislike": "dislike"
+    "review": "Review"
   },
   "pl": {
     "title": "Kolekcje",
@@ -37,8 +35,6 @@
     "favorites": "Ulubione",
     "favorite": "ulubiony",
     "unnamed": "Niezidentyfikowana kolekcja",
-    "review": "Opinia",
-    "like": "lubię",
-    "dislike": "nie lubię"
+    "review": "Opinia"
   }
 }
