@@ -8,6 +8,7 @@ dialog {
   background-color: var(--color-background--alternative);
   border-width: 0;
   color: inherit;
+  box-sizing: border-box;
 }
 
 dialog::backdrop {
@@ -39,6 +40,8 @@ dialog [data-close-button] {
   flex-direction: column;
   width: auto;
   position: absolute;
-  top: var(--gap);
-  right: var(--gap);
+  top: 0;
+  right: 0;
+  border-color: transparent;
+  background-color: transparent;
 }

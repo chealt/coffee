@@ -104,7 +104,7 @@ class ChealtForm extends HTMLElement {
         throw new Error(`Storage type: ${this.storage} is not implemented, use one of the following: ${supportedStorageTypes.join(', ')}`);
       }
 
-      setFormData({ form: this.form, storage: this.storage });
+      this.changeFormDataOnNameChange();
 
       if (this.saveOnInput) {
         addChangeEvent({ form: this.form, callback: saveFormData(this.storage) });
@@ -112,6 +112,16 @@ class ChealtForm extends HTMLElement {
 
       ChealtForm.observeNodeDeletion(this.storage);
     }
+  }
+
+  changeFormDataOnNameChange() {
+    const observer = new MutationObserver(() => {
+      setFormData({ form: this.form, storage: this.storage });
+    });
+
+    observer.observe(this.form, { attributes: true, attributeFilter: ['name'] });
+
+    setFormData({ form: this.form, storage: this.storage });
   }
 
   static isStorageTypeImplemented(storage) {

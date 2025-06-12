@@ -1,7 +1,35 @@
 ---
 import Dialog from "../../dialog/dialog.astro";
+import Icon from "../../icon.astro";
+import Form from "../../form.astro";
+import RadioList from "../../radio-list.astro";
+import Radio from "../../radio.astro";
+
+import "./review.css";
+
+import allLocaleTranslations from "./locales.json";
+
+const t = allLocaleTranslations[Astro.currentLocale];
 ---
 
-<Dialog id="review" class="fading" showClose>
-  <h1>Review</h1>
-</Dialog>
+<coffee-review>
+  <Dialog id="review" class="fading" showClose>
+    <h1>{t["review"]}</h1>
+    <div class="review-form-container">
+      <Form data-storage="localStorage" data-save-on-input>
+        <RadioList>
+          <Radio name="like" value="like">
+            <Icon type="thumbs-up--filled" />
+            {t["like"]}
+          </Radio>
+          <Radio name="like" value="dislike">
+            <Icon type="thumbs-down--filled" />
+            {t["dislike"]}
+          </Radio>
+        </RadioList>
+      </Form>
+    </div>
+  </Dialog>
+</coffee-review>
+
+<script src="./review.js"></script>

@@ -1,0 +1,15 @@
+.radio-list {
+  display: flex;
+  flex-direction: row;
+}
+
+.radio-list label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.radio-list input[type=radio]:checked + .icon svg {
+  fill: var(--color-primary);
+}

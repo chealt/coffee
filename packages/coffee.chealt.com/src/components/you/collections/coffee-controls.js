@@ -7,6 +7,7 @@ class CoffeeControls extends HTMLElement {
     this.setFavoriteStatus();
     this.addDeleteEventListener();
     this.addFavoriteEventListener();
+    this.addReviewEventListener();
   }
 
   observeFavoriteStatus() {
@@ -100,6 +101,14 @@ class CoffeeControls extends HTMLElement {
       }
 
       this.dispatchEvent(new CustomEvent('coffee-collection-refresh', { bubbles: true }));
+    });
+  }
+
+  addReviewEventListener() {
+    this.querySelector('.review').addEventListener('click', () => {
+      const itemID = this.closest('[data-item-id]').dataset.itemId;
+
+      document.querySelector('dialog[id=review]').closest('coffee-review').setAttribute('data-name', `review-${itemID}`);
     });
   }
 }
