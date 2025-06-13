@@ -1,4 +1,5 @@
 ---
+import ChealtOCR from "../../chealt-ocr.astro";
 import CoffeeDetailsTemplate from "./coffee-details.template.astro";
 import CoffeeControlsTemplate from "./coffee-controls.template.astro";
 import Collection from "./collection.astro";
@@ -28,5 +29,5 @@ const t = allLocaleTranslations[Astro.currentLocale];
   </chealt-ocr>
 </coffee-gallery>
 
-{Astro.locals.clientSideOCR && <script src="../../chealt-ocr.js" />}
+{Astro.locals.clientSideOCR && <ChealtOCR />}
 <script src="./coffee-gallery.js"></script>
