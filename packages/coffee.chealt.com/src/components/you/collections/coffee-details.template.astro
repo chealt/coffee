@@ -22,7 +22,7 @@ const t = allLocaleTranslations[Astro.currentLocale];
 <template id="coffee-details-template">
   <div class="details">
     <div class="summary"><Button class="primary">{t["details"]}</Button></div>
-    <Dialog>
+    <Dialog class="inline">
       <Form data-storage="localStorage" data-save-on-input>
         <Roasters />
         <RoastingLevels />

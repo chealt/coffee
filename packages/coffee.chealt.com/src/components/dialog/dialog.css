@@ -46,6 +46,6 @@ dialog [data-close-button] {
   background-color: transparent;
 }
 
-body:has(dialog[open]) {
+body:has(dialog[open]:not(.inline)) {
   overflow: hidden;
 }
