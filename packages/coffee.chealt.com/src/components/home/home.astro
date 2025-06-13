@@ -19,7 +19,7 @@ const roasterCountryCount = countries.filter(
 ).length;
 
 const roasterImages = await import.meta.glob(
-  "./roasters/*.{jpeg,jpg,png,gif,svg,webp}",
+  "/public/roasters/*.{jpeg,jpg,png,gif,svg,webp}",
   { eager: true },
 );
 ---
@@ -42,7 +42,7 @@ const roasterImages = await import.meta.glob(
               <a href={website} target="_blank" rel="noopener noreferrer">
                 <div class="image">
                   <Image
-                    src={roasterImages[`./roasters/${logo}`].default}
+                    src={roasterImages[`/public/roasters/${logo}`].default}
                     alt={name}
                   />
                 </div>

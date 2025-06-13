@@ -37,7 +37,6 @@ export default defineConfig({
     }
   },
   adapter: cloudflare({
-    imageService: 'passthrough',
-    assets: 'assets'
+    imageService: 'passthrough'
   })
 });
