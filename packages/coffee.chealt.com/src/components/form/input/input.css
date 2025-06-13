@@ -12,11 +12,11 @@ input,
   box-sizing: border-box;
 }
 
-/* iOS bugfix for date input's overflow-x */
-input::-webkit-datetime-edit,
-input::-webkit-date-and-time-value {
-  display: block;
-  padding: 0;
+input[type=date] {
+  /* iOS bugfix for date input's overflow-x */
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+  /* end of fix */
 }
 
 @media (prefers-color-scheme: dark) {
