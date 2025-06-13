@@ -1,8 +1,10 @@
 ---
-import allLocaleTranslations from "./common.json";
 import Nav from "./nav.astro";
+import IosPolyfills from "./ios-polyfills.astro";
 
 import "./common.css";
+
+import allLocaleTranslations from "./common.json";
 
 const t = allLocaleTranslations[Astro.currentLocale];
 ---
@@ -19,7 +21,7 @@ const t = allLocaleTranslations[Astro.currentLocale];
     <link rel="apple-touch-icon" href="/favicons/favicon-192x192.svg" />
     <title>{t.title}</title>
   </head>
-
+  {Astro.locals.isIOS && <IosPolyfills />}
   <body>
     <main>
       <slot />
