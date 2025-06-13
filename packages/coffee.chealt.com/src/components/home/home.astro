@@ -41,10 +41,7 @@ const roasterImages = await import.meta.glob(
             <li data-country-id={country_id} class="roaster">
               <a href={website} target="_blank" rel="noopener noreferrer">
                 <div class="image">
-                  <Image
-                    src={roasterImages[`/public/roasters/${logo}`].default}
-                    alt={name}
-                  />
+                  <img src={`/roasters/${logo}`} alt={name} />
                 </div>
                 <div class="name">{name}</div>
               </a>

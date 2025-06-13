@@ -4,8 +4,6 @@ const onRequest = async (context, next) => {
 
   context.locals.clientSideOCR = !isIOS;
 
-  console.log(`context.locals.clientSideOCR: ${context.locals.clientSideOCR}`); // eslint-disable-line no-console
-
   return next();
 };
 
