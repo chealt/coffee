@@ -27,15 +27,17 @@ export default defineConfig({
       //   open: process.env.ANALYZE
       // })
     ],
-    assetsInclude: ['**/*.onnx', '**/*.txt'],
+    assetsInclude: ['**/*.onnx', '**/*.txt', '**/*.{jpeg,jpg,png,gif,svg,webp}'],
     optimizeDeps: {
       exclude: ['onnxruntime-web', 'onnxruntime-common']
     },
     build: {
-      sourcemap: true
+      sourcemap: true,
+      assetsInlineLimit: 0
     }
   },
   adapter: cloudflare({
-    imageService: 'passthrough'
+    imageService: 'passthrough',
+    assets: 'assets'
   })
 });
