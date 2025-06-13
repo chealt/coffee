@@ -20,8 +20,8 @@ const t = allLocaleTranslations[Astro.currentLocale];
     <link rel="manifest" href="/manifest.json" />
     <link rel="apple-touch-icon" href="/favicons/favicon-192x192.svg" />
     <title>{t.title}</title>
+    {Astro.locals.isIOS && <IosPolyfills />}
   </head>
-  {Astro.locals.isIOS && <IosPolyfills />}
   <body>
     <main>
       <slot />
