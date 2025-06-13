@@ -12,8 +12,17 @@ input,
   box-sizing: border-box;
 }
 
-input:not([type=checkbox]) {
-  appearance: initial;
+input:not([type=checkbox]),
+select {
+  appearance: none;
+}
+
+input[type=date],
+select {
+  /* iOS hack because of lack of padding support */
+  text-indent: 16px;
+  line-height: 21px;
+  /* end of iOS hack */
 }
 
 input[type=date] {
