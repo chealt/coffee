@@ -2,13 +2,20 @@ input,
 [contenteditable] {
   display: block;
   width: 100%;
-  border: 0 none;
+  border-width: 0;
+  border-radius: 0;
   padding: var(--gap);
   margin: 0;
   font-size: 1.2rem;
   background-color: var(--color-secondary);
   color: inherit;
   box-sizing: border-box;
+}
+
+/* iOS bugfix for date input's overflow-x */
+input::-webkit-datetime-edit {
+  display: block;
+  padding: 0;
 }
 
 @media (prefers-color-scheme: dark) {
