@@ -1,3 +1,4 @@
+import cloudflare from '@astrojs/cloudflare';
 import { defineConfig } from 'astro/config';
 // import { visualizer } from 'rollup-plugin-visualizer';
 import wasm from 'vite-plugin-wasm';
@@ -32,5 +33,6 @@ export default defineConfig({
     build: {
       sourcemap: true
     }
-  }
+  },
+  adapter: cloudflare()
 });
