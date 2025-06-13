@@ -1,13 +1,10 @@
 const onRequest = async (context, next) => {
-  const isIOS = true;
-  const response = await next(); // eslint-disable-line callback-return
-  const html = await response.text();
-  const extendedHTML = html.replace('{{isIOS}}', isIOS);
+  const userAgent = context.request.headers.get('user-agent');
+  const isIOS = /iPad|iPhone|iPod/u.test(userAgent);
 
-  return new Response(extendedHTML, {
-    status: response.status,
-    headers: response.headers
-  });
+  context.locals.clientSideOCR = !isIOS;
+
+  return next();
 };
 
 export { onRequest };

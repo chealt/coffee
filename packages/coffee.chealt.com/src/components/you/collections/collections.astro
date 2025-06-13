@@ -28,5 +28,5 @@ const t = allLocaleTranslations[Astro.currentLocale];
   </chealt-ocr>
 </coffee-gallery>
 
-<script src="../../chealt-ocr.js"></script>
+{Astro.locals.clientSideOCR && <script src="../../chealt-ocr.js" />}
 <script src="./coffee-gallery.js"></script>
