@@ -35,5 +35,7 @@ export default defineConfig({
       sourcemap: true
     }
   },
-  adapter: cloudflare()
+  adapter: cloudflare({
+    imageService: 'cloudflare'
+  })
 });
