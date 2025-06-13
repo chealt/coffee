@@ -4,6 +4,7 @@ import { defineConfig } from 'astro/config';
 import wasm from 'vite-plugin-wasm';
 
 export default defineConfig({
+  output: 'server',
   i18n: {
     locales: ['en', 'pl'],
     defaultLocale: 'en'
