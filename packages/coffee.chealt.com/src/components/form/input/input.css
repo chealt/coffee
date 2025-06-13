@@ -10,6 +10,9 @@ input,
   background-color: var(--color-secondary);
   color: inherit;
   box-sizing: border-box;
+}
+
+input:not([type=checkbox]) {
   appearance: initial;
 }
 
