@@ -25,13 +25,6 @@ select {
   /* end of iOS hack */
 }
 
-input[type=date] {
-  /* iOS bugfix for date input's overflow-x */
-  -webkit-appearance: textfield;
-  -moz-appearance: textfield;
-  /* end of fix */
-}
-
 @media (prefers-color-scheme: dark) {
   ::-webkit-calendar-picker-indicator {
     filter: invert(1);
