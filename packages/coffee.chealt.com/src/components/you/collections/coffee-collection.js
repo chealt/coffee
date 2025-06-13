@@ -44,6 +44,7 @@ class CoffeeCollection extends HTMLElement {
     }
 
     this.nameElement.addEventListener('input', this.updateName.bind(this));
+    this.nameElement.addEventListener('blur', this.updateName.bind(this)); // input is not triggered on iOS
   }
 
   updateName(event) {
@@ -175,6 +176,7 @@ class CoffeeCollection extends HTMLElement {
     }
 
     this.nameElement.removeEventListener('input', this.updateName);
+    this.nameElement.removeEventListener('blur', this.updateName);
   }
 }
 
