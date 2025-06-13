@@ -8,4 +8,5 @@ select {
   background-color: var(--color-secondary);
   color: inherit;
   box-sizing: border-box;
+  appearance: initial;
 }
