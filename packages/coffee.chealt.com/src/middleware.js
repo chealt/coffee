@@ -3,9 +3,10 @@ const onRequest = async (context, next) => {
   const isIOS = /iPad|iPhone|iPod/u.test(userAgent);
 
   console.log(userAgent);
-  console.log(isIOS);
 
   context.locals.clientSideOCR = !isIOS;
+
+  console.log(context.locals.clientSideOCR);
 
   return next();
 };
