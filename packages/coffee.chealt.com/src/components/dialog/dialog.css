@@ -37,6 +37,7 @@ dialog[open] {
 dialog [data-close-button] {
   display: inline-flex;
   flex-direction: column;
+  align-items: center;
   width: auto;
   position: absolute;
   top: 0;
