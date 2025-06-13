@@ -2,3 +2,6 @@ name = "coffee"
 compatibility_date = "2025-04-08"
 assets = { directory = "./dist" }
 upload_source_maps = true
+
+[observability.logs]
+enabled = true
