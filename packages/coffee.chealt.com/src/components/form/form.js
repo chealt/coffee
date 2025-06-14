@@ -72,6 +72,8 @@ const setFormData = ({ form, storage }) => {
         document.forms[form.name][name].value = value;
       }
     }
+  } else {
+    form.reset();
   }
 };
 
