@@ -1,0 +1,16 @@
+---
+import Button from "../form/button/button.astro";
+import Icon from "../icon/icon.astro";
+
+import "./toggle.css";
+---
+
+<chealt-toggle>
+  <Button class="column" data-trigger>
+    <Icon type="down" />
+    <slot name="trigger" />
+  </Button>
+  <slot name="content" />
+</chealt-toggle>
+
+<script src="./toggle.js"></script>

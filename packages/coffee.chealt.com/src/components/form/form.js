@@ -2,6 +2,49 @@ import { formDataToObject } from '../../utils/form.js';
 
 const storageKey = 'chealt-forms';
 const supportedStorageTypes = ['localStorage'];
+const sumInputSelector =
+  'input:not([data-exclude-from-sum])[type="number"],input:not([data-exclude-from-sum])[type="range"]';
+
+const calculateSum = (sumGroup) => {
+  const multiplierInputNames = Array.from(sumGroup.querySelectorAll('[data-multiplier]')).map(
+    (input) => input.dataset.multiplier
+  );
+  const sumElement = sumGroup.querySelector(`[data-sum="${sumGroup.dataset.sumGroupName}"]`);
+  const sum = Array.from(sumGroup.querySelectorAll(sumInputSelector)).reduce((acc, curr) => {
+    // exclude inputs that are multipliers
+    if (multiplierInputNames.includes(curr.name)) {
+      return acc;
+    }
+
+    const multiplier = curr.dataset.multiplier;
+    const negative = curr.dataset.negative;
+    let value = negative ? -1 * Number(curr.value) : Number(curr.value);
+
+    if (multiplier) {
+      const multiplierElement = curr.form.querySelector(`[name="${multiplier}"]`);
+      const multiplierValue = multiplierElement.dataset.negative
+        ? -1 * Number(multiplierElement.value)
+        : Number(multiplierElement.value);
+
+      value *= multiplierValue;
+    }
+
+    return acc + value;
+  }, 0);
+
+  sumElement.textContent = sum;
+};
+
+const calculateSumOnInput = (sumGroup) => {
+  // calculate sum on load
+  calculateSum(sumGroup);
+
+  sumGroup.querySelectorAll(sumInputSelector).forEach((input) => {
+    input.addEventListener('input', () => {
+      calculateSum(sumGroup);
+    });
+  });
+};
 
 const addChangeEvent = ({ form, callback }) => {
   form.querySelectorAll('input,select').forEach((element) => {
@@ -75,6 +118,10 @@ const setFormData = ({ form, storage }) => {
         document.forms[form.name][name].value = value;
       }
     }
+
+    if (form.dataset.sumGroupName) {
+      calculateSum(form);
+    }
   } else {
     form.reset();
   }
@@ -102,6 +149,8 @@ class ChealtForm extends HTMLElement {
     this.name = this.form.getAttribute('name');
     this.storage = this.form.getAttribute('data-storage');
     this.saveOnInput = this.form.getAttribute('data-save-on-input') || false;
+    this.sumGroupName = this.form.getAttribute('data-sum-group-name');
+    this.sumGroups = this.form.querySelectorAll('[data-sum-group-name]');
 
     if (this.storage) {
       if (!ChealtForm.isStorageTypeImplemented(this.storage)) {
@@ -117,6 +166,16 @@ class ChealtForm extends HTMLElement {
       }
 
       ChealtForm.observeNodeDeletion(this.storage);
+    }
+
+    if (this.sumGroups.length > 0) {
+      this.sumGroups.forEach((sumGroup) => {
+        calculateSumOnInput(sumGroup);
+      });
+    }
+
+    if (this.sumGroupName) {
+      calculateSumOnInput(this.form);
     }
   }
 

@@ -1,0 +1,15 @@
+chealt-toggle [data-trigger] svg {
+  transition: transform 0.4s ease-out;
+}
+
+chealt-toggle:has([data-content].visible) [data-trigger] svg {
+  transform: rotate(180deg);
+}
+
+chealt-toggle [data-content] {
+  display: none;
+}
+
+chealt-toggle [data-content].visible {
+  display: block;
+}

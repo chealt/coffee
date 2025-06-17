@@ -8,6 +8,7 @@ import "./range.css";
   <slot name="title" />
   <input
     type="range"
+    data-exclude-from-sum={Astro.props.excludeFromSum ? 'true' : undefined}
     name={Astro.props.name}
     min={Astro.props.min || 1}
     max={Astro.props.max || 10}
