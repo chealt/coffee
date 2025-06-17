@@ -12,7 +12,11 @@ export default defineConfig([
     files: ['**/*.css'],
     language: 'css/css',
     plugins: { css },
-    extends: ['css/recommended']
+    extends: ['css/recommended'],
+    rules: {
+      'css/no-invalid-at-rules': 'off',
+      'css/no-invalid-properties': 'off'
+    }
   },
   {
     files: ['**/*.js'],
@@ -24,111 +28,28 @@ export default defineConfig([
       }
     },
     rules: {
-      'array-bracket-spacing': ['error'],
       'arrow-body-style': ['error'],
-      'arrow-parens': ['error'],
-      'comma-dangle': ['error', 'never'],
-      'comma-spacing': [
-        'error',
-        {
-          before: false,
-          after: true
-        }
-      ],
       complexity: ['error', 10],
-      'eol-last': ['error', 'always'],
       eqeqeq: ['error'],
       'func-style': ['error'],
-      indent: ['error', 2],
-      'import/newline-after-import': ['error'],
-      'no-multiple-empty-lines': [
-        'error',
-        {
-          max: 1
-        }
-      ],
-      'no-trailing-spaces': ['error'],
       'no-undefined': 'off',
-      'object-curly-spacing': ['error', 'always'],
-      'padded-blocks': ['error', 'never'],
-      'padding-line-between-statements': [
-        'error',
-        {
-          blankLine: 'always',
-          prev: '*',
-          next: 'return'
-        },
-        {
-          blankLine: 'always',
-          prev: '*',
-          next: 'break'
-        },
-        {
-          blankLine: 'always',
-          prev: '*',
-          next: 'if'
-        },
-        {
-          blankLine: 'always',
-          prev: 'if',
-          next: '*'
-        },
-        {
-          blankLine: 'always',
-          prev: '*',
-          next: 'for'
-        },
-        {
-          blankLine: 'always',
-          prev: 'for',
-          next: '*'
-        }
-      ],
-      quotes: ['error', 'single', { avoidEscape: true }],
-      semi: ['error', 'always'],
-      'space-in-parens': ['error', 'never'],
-      'space-infix-ops': ['error'],
-
       // recommended
       'array-callback-return': 'error',
       'arrow-spacing': 'error',
       'block-spacing': 'error',
-      'brace-style': ['error', '1tbs'],
       camelcase: 'error',
       'callback-return': ['error', ['cb', 'callback', 'next']],
       'class-methods-use-this': 'error',
-      'comma-style': ['error', 'last'],
-      'computed-property-spacing': 'error',
       'consistent-return': 'error',
-      curly: ['error', 'all'],
       'default-case': 'error',
-      'dot-location': ['error', 'property'],
       'dot-notation': ['error', { allowKeywords: true }],
-      'func-call-spacing': 'error',
-      'generator-star-spacing': 'error',
       'guard-for-in': 'error',
       'handle-callback-err': ['error', 'err'],
-      'key-spacing': ['error', { beforeColon: false, afterColon: true }],
-      'keyword-spacing': 'error',
-      'max-len': [
-        'error',
-        120,
-        {
-          ignoreComments: true,
-          ignoreUrls: true,
-          ignoreStrings: true,
-          ignoreTemplateLiterals: true,
-          ignoreRegExpLiterals: true
-        }
-      ],
-      'max-statements-per-line': 'error',
       'new-cap': 'error',
-      'new-parens': 'error',
       'no-alert': 'error',
       'no-array-constructor': 'error',
       'no-buffer-constructor': 'error',
       'no-caller': 'error',
-      'no-confusing-arrow': 'error',
       'no-console': 'error',
       'no-delete-var': 'error',
       'no-else-return': ['error', { allowElseIf: false }],
@@ -146,8 +67,6 @@ export default defineConfig([
       'no-lone-blocks': 'error',
       'no-loop-func': 'error',
       'no-mixed-requires': 'error',
-      'no-mixed-spaces-and-tabs': ['error', false],
-      'no-multi-spaces': 'error',
       'no-multi-str': 'error',
       'no-nested-ternary': 'error',
       'no-new': 'error',
@@ -193,7 +112,6 @@ export default defineConfig([
       'no-self-compare': 'error',
       'no-sequences': 'error',
       'no-shadow': 'error',
-      'no-tabs': 'error',
       'no-throw-literal': 'error',
       'no-undef': ['error', { typeof: true }],
       'no-undef-init': 'error',
@@ -205,7 +123,6 @@ export default defineConfig([
         }
       ],
       'no-unmodified-loop-condition': 'error',
-      'no-unneeded-ternary': 'error',
       'no-unused-expressions': 'error',
       'no-unused-vars': ['error', { vars: 'all', args: 'after-used' }],
       'no-use-before-define': 'error',
@@ -216,15 +133,10 @@ export default defineConfig([
       'no-useless-escape': 'error',
       'no-useless-rename': 'error',
       'no-useless-return': 'error',
-      'no-whitespace-before-property': 'error',
       'no-var': 'error',
-      'object-curly-spacing': ['error', 'always'],
-      'object-curly-newline': ['error', { consistent: true, multiline: true }],
-      'object-property-newline': ['error', { allowAllPropertiesOnSameLine: true }],
       'object-shorthand': 'error',
       'one-var-declaration-per-line': 'error',
       'operator-assignment': 'error',
-      'operator-linebreak': 'error',
       'prefer-arrow-callback': 'error',
       'prefer-const': 'error',
       'prefer-numeric-literals': 'error',
@@ -232,28 +144,12 @@ export default defineConfig([
       'prefer-rest-params': 'error',
       'prefer-spread': 'error',
       'prefer-template': 'error',
-      'quote-props': ['error', 'as-needed'],
       radix: 'error',
       'require-unicode-regexp': 'error',
-      'rest-spread-spacing': 'error',
-      'semi-spacing': ['error', { before: false, after: true }],
-      'semi-style': 'error',
-      'space-before-blocks': 'error',
-      'space-before-function-paren': ['error', {
-        anonymous: 'never',
-        named: 'never',
-        asyncArrow: 'always'
-      }],
-      'space-unary-ops': ['error', { words: true, nonwords: false }],
-      'spaced-comment': ['error', 'always', { exceptions: ['-'] }],
       strict: ['error', 'global'],
-      'switch-colon-spacing': 'error',
       'symbol-description': 'error',
-      'template-curly-spacing': ['error', 'never'],
-      'template-tag-spacing': 'error',
       'unicode-bom': 'error',
       'wrap-iife': 'error',
-      'yield-star-spacing': 'error',
       yoda: ['error', 'never'],
       // import
       'import/default': ['error'],

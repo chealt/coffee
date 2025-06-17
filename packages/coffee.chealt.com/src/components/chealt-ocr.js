@@ -83,10 +83,13 @@ class ChealtOcr extends HTMLElement {
   static saveOCR({ id, texts }) {
     const savedTexts = JSON.parse(localStorage.getItem(storageKey)) || {};
 
-    localStorage.setItem(storageKey, JSON.stringify({
-      ...savedTexts,
-      [id]: texts
-    }));
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify({
+        ...savedTexts,
+        [id]: texts
+      })
+    );
   }
 
   static removeDeletedOCR(existingImages) {

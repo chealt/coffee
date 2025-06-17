@@ -54,9 +54,11 @@ class CoffeeControls extends HTMLElement {
       const items = getCollectionItems({ collectionID, itemID });
 
       if (items.images) {
-        await Promise.all(items.images.map(async ({ fileName }) => {
-          deleteFile(fileName);
-        }));
+        await Promise.all(
+          items.images.map(async ({ fileName }) => {
+            deleteFile(fileName);
+          })
+        );
       }
 
       deleteCollectionItem({ itemID });
@@ -108,7 +110,10 @@ class CoffeeControls extends HTMLElement {
     this.querySelector('.review').addEventListener('click', () => {
       const itemID = this.closest('[data-item-id]').dataset.itemId;
 
-      document.querySelector('dialog[id=review]').closest('coffee-review').setAttribute('data-name', `${itemID}.review`);
+      document
+        .querySelector('dialog[id=review]')
+        .closest('coffee-review')
+        .setAttribute('data-name', `${itemID}.review`);
     });
   }
 }

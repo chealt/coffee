@@ -12,9 +12,12 @@ class CoffeeGallery extends HTMLElement {
 
   async render() {
     const collections = getAllCollections();
-    const collectionsToRemove = collections.length > 0
-      ? this.collections.querySelectorAll(`[data-collection-id]:not(${collections.map(({ id }) => `[data-collection-id="${id}"]`).join(',')}):not([data-is-built-in])`)
-      : undefined;
+    const collectionsToRemove =
+      collections.length > 0
+        ? this.collections.querySelectorAll(
+            `[data-collection-id]:not(${collections.map(({ id }) => `[data-collection-id="${id}"]`).join(',')}):not([data-is-built-in])`
+          )
+        : undefined;
 
     collectionsToRemove?.forEach((collection) => {
       collection.remove();

@@ -50,6 +50,6 @@ coffee-details dialog {
   position: relative;
 }
 
-select[name=originCountry] option {
+select[name='originCountry'] option {
   text-transform: capitalize;
 }

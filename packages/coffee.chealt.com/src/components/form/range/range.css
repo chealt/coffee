@@ -1,7 +1,11 @@
-input[type=range] {
+input[type='range'] {
   padding: 0;
   margin: var(--gap) 0;
   box-sizing: border-box;
+}
+
+.vertical input[type='range'] {
+  writing-mode: vertical-lr;
 }
 
 .labels-container {

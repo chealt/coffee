@@ -3,10 +3,7 @@ const multipleOfBaseSize = (image) => {
   const width = image.width || image.naturalWidth;
   const height = image.height || image.naturalHeight;
 
-  const newWidth = Math.max(
-    Math.ceil(width / baseSize) * baseSize,
-    baseSize
-  );
+  const newWidth = Math.max(Math.ceil(width / baseSize) * baseSize, baseSize);
   const newHeight = Math.max(Math.ceil(height / baseSize) * baseSize, baseSize);
 
   return { width: newWidth, height: newHeight };

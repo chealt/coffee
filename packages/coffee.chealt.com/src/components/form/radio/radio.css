@@ -10,6 +10,6 @@
   flex-grow: 1;
 }
 
-.radio-list input[type=radio]:checked + .icon svg {
+.radio-list input[type='radio']:checked + .icon svg {
   fill: var(--color-primary);
 }

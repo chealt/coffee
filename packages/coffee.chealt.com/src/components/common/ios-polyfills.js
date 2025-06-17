@@ -5,7 +5,7 @@
  * https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback#browser_compatibility
  */
 if (!window.requestIdleCallback) {
-  window.requestIdleCallback = function(callback, _options) {
+  window.requestIdleCallback = function (callback, _options) {
     const options = _options || {};
     const relaxation = 1;
     const timeout = options.timeout || relaxation;
@@ -14,7 +14,7 @@ if (!window.requestIdleCallback) {
     return setTimeout(() => {
       callback({
         get didTimeout() {
-          return options.timeout ? false : (performance.now() - start) - relaxation > timeout;
+          return options.timeout ? false : performance.now() - start - relaxation > timeout;
         },
         timeRemaining() {
           return Math.max(0, relaxation + (performance.now() - start));
@@ -25,25 +25,25 @@ if (!window.requestIdleCallback) {
 }
 
 /**
-* window.cancelIdleCallback()
-* version 0.0.0
-* Browser Compatibility:
-* https://developer.mozilla.org/en-US/docs/Web/API/Window/cancelIdleCallback#browser_compatibility
-*/
+ * window.cancelIdleCallback()
+ * version 0.0.0
+ * Browser Compatibility:
+ * https://developer.mozilla.org/en-US/docs/Web/API/Window/cancelIdleCallback#browser_compatibility
+ */
 if (!window.cancelIdleCallback) {
-  window.cancelIdleCallback = function(id) {
+  window.cancelIdleCallback = function (id) {
     clearTimeout(id);
   };
 }
 
 /**
-* window.requestAnimationFrame()
-* version 0.0.0
-* Browser Compatibility:
-* https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame#browser_compatibility
-*/
+ * window.requestAnimationFrame()
+ * version 0.0.0
+ * Browser Compatibility:
+ * https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame#browser_compatibility
+ */
 if (!window.requestAnimationFrame) {
-  window.requestAnimationFrame = function(callback) {
+  window.requestAnimationFrame = function (callback) {
     return window.setTimeout(() => {
       callback(Date.now());
     }, 1000 / 60);
@@ -51,13 +51,13 @@ if (!window.requestAnimationFrame) {
 }
 
 /**
-* window.cancelAnimationFrame()
-* version 0.0.0
-* Browser Compatibility:
-* https://developer.mozilla.org/en-US/docs/Web/API/Window/cancelAnimationFrame#browser_compatibility
-*/
+ * window.cancelAnimationFrame()
+ * version 0.0.0
+ * Browser Compatibility:
+ * https://developer.mozilla.org/en-US/docs/Web/API/Window/cancelAnimationFrame#browser_compatibility
+ */
 if (!window.cancelAnimationFrame) {
-  window.cancelAnimationFrame = function(id) {
+  window.cancelAnimationFrame = function (id) {
     clearTimeout(id);
   };
 }

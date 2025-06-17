@@ -12,12 +12,12 @@ input,
   box-sizing: border-box;
 }
 
-input:not([type=checkbox]),
+input:not([type='checkbox']):not([type='range']),
 select {
   appearance: none;
 }
 
-input[type=date],
+input[type='date'],
 select {
   /* iOS hack because of lack of padding support */
   text-indent: 16px;

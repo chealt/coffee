@@ -12,9 +12,7 @@ export default defineConfig({
   devToolbar: {
     enabled: false
   },
-  integrations: [
-    wasm()
-  ],
+  integrations: [wasm()],
   server: {
     headers: {
       'Cross-Origin-Opener-Policy': 'same-origin',

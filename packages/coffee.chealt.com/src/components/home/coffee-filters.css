@@ -37,15 +37,15 @@
   display: none;
 }
 
-.filters:has(input[type=checkbox]:checked) .clear-button {
+.filters:has(input[type='checkbox']:checked) .clear-button {
   display: flex;
 }
 
-.filters:has(input[type=checkbox]:checked) button {
+.filters:has(input[type='checkbox']:checked) button {
   border-color: var(--color-primary);
 }
 
-.filters:has(input[type=checkbox]:checked) svg {
+.filters:has(input[type='checkbox']:checked) svg {
   fill: var(--color-primary);
 }
 

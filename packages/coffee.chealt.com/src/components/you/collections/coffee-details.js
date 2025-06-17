@@ -70,7 +70,10 @@ class CoffeeDetails extends HTMLElement {
     const roaster = CoffeeDetails.findMatch(roasters, ocrTexts);
     const roastingLevel = CoffeeDetails.findMatch(roastingLevels, ocrTexts);
     const brewingMethod = CoffeeDetails.findMatch(brewingMethods, ocrTexts);
-    const isDecaf = CoffeeDetails.findMatch(miscellaneousCoffeeProperties.filter(({ id }) => id === 1), ocrTexts); // ID: 1 is the decaf property
+    const isDecaf = CoffeeDetails.findMatch(
+      miscellaneousCoffeeProperties.filter(({ id }) => id === 1),
+      ocrTexts
+    ); // ID: 1 is the decaf property
 
     return {
       brewingMethod,
@@ -84,8 +87,7 @@ class CoffeeDetails extends HTMLElement {
   }
 
   static findMatch(needles, haystack) {
-    return needles
-      .find(({ name }) => haystack.some((text) => friendlyIncludes(text, name)));
+    return needles.find(({ name }) => haystack.some((text) => friendlyIncludes(text, name)));
   }
 
   // eslint-disable-next-line complexity

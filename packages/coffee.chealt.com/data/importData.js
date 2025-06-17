@@ -17,14 +17,10 @@ if (!fileName) {
 const data = JSON.parse(await readFile(`./data/${fileName}.json`, 'utf-8'));
 
 const result = await turso.batch(
-  data.map(({ name, website, instagram, country_id }) =>
-    (
-      {
-        sql: 'insert into roasters (name, website, instagram, country_id) values (?, ?, ?, ?)',
-        args: [name, website ? website : 'NULL', instagram ? instagram : 'NULL', country_id]
-      }
-    )
-  ),
+  data.map(({ name, website, instagram, country_id }) => ({
+    sql: 'insert into roasters (name, website, instagram, country_id) values (?, ?, ?, ?)',
+    args: [name, website ? website : 'NULL', instagram ? instagram : 'NULL', country_id]
+  })),
   'write'
 );
 

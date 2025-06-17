@@ -1,0 +1,14 @@
+.astro
+.lsp
+.prettierignore
+.vscode
+.yarn
+.wrangler
+dist
+node_modules
+**/*.onnx
+**/*.png
+**/*.webp
+**/*.jpg
+**/*.jpeg
+**/*.astro

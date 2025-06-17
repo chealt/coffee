@@ -17,14 +17,10 @@ const data = await readFile(`./data/${fileName}.txt`, 'utf-8');
 const logos = data.split('\n').filter(Boolean);
 
 const result = await turso.batch(
-  logos.map((logoFileName) =>
-    (
-      {
-        sql: 'UPDATE roasters SET logo = ? WHERE replace(lower(name), " ", "") = replace(replace(replace(replace(replace(lower(?)," ",""), ".jpg", ""),".png",""),".webp",""),".svg","");',
-        args: [logoFileName, logoFileName]
-      }
-    )
-  ),
+  logos.map((logoFileName) => ({
+    sql: 'UPDATE roasters SET logo = ? WHERE replace(lower(name), " ", "") = replace(replace(replace(replace(replace(lower(?)," ",""), ".jpg", ""),".png",""),".webp",""),".svg","");',
+    args: [logoFileName, logoFileName]
+  })),
   'write'
 );
 

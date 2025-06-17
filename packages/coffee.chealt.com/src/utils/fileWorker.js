@@ -27,20 +27,20 @@ const writeFile = async (file) => {
 
 onmessage = async ({ data: { data, command } }) => {
   switch (command) {
-  case 'writeFile':
-    try {
-      const fileName = await writeFile(data);
+    case 'writeFile':
+      try {
+        const fileName = await writeFile(data);
 
-      postMessage({ success: true, fileName });
-    } catch (error) {
-      postMessage({ error });
-    }
+        postMessage({ success: true, fileName });
+      } catch (error) {
+        postMessage({ error });
+      }
 
-    return undefined;
-  default:
-    // eslint-disable-next-line no-console
-    console.error(`missing command specified: '${command}'`);
+      return undefined;
+    default:
+      // eslint-disable-next-line no-console
+      console.error(`missing command specified: '${command}'`);
 
-    return undefined;
+      return undefined;
   }
 };

@@ -8,7 +8,8 @@
     "sour": "sour",
     "sweet": "sweet",
     "weak": "weak",
-    "strong": "strong"
+    "strong": "strong",
+    "geek-zone": "Geek Zone"
   },
   "pl": {
     "review": "Opinia",
@@ -18,6 +19,7 @@
     "acidic": "kwasowy",
     "sour": "kwašny",
     "weak": "słaby",
-    "strong": "silny"
+    "strong": "silny",
+    "geek-zone": "Geek Zone"
   }
 }

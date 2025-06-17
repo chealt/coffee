@@ -1,8 +1,9 @@
-const formDataToObject = (formData) => formData.entries().reduce((object, [key, value]) => {
-  object[key] = value;
+const formDataToObject = (formData) =>
+  formData.entries().reduce((object, [key, value]) => {
+    object[key] = value;
 
-  return object;
-}, {});
+    return object;
+  }, {});
 
 const setInputValue = ({ input, value }) => {
   if (value === 'on') {

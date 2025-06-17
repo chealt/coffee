@@ -34,7 +34,9 @@ const OCR = async ({ debug, modelPaths: { detectionPath, recognitionPath }, onnx
 
       oldCanvas.width = image.width;
       oldCanvas.height = image.height;
-      oldCanvas.getContext('2d').putImageData(new ImageData(Uint8ClampedArray.from(image.data), image.width, image.height), 0, 0);
+      oldCanvas
+        .getContext('2d')
+        .putImageData(new ImageData(Uint8ClampedArray.from(image.data), image.width, image.height), 0, 0);
       canvas.getContext('2d').drawImage(oldCanvas, 0, 0, canvas.width, canvas.height);
     } else {
       canvas.getContext('2d').drawImage(image, 0, 0, width, height);
@@ -180,10 +182,7 @@ const OCR = async ({ debug, modelPaths: { detectionPath, recognitionPath }, onnx
     return outputLines;
   };
 
-  const calculateBox = ({
-    lines,
-    lineImages
-  }) => {
+  const calculateBox = ({ lines, lineImages }) => {
     let mainLine = lines;
     const box = lineImages;
 

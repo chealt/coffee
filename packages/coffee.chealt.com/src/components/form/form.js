@@ -13,40 +13,40 @@ const addChangeEvent = ({ form, callback }) => {
 
 const getFormData = ({ form, storage }) => {
   switch (storage) {
-  case 'localStorage':
-    const dataInStorage = localStorage.getItem(storageKey);
-    const data = dataInStorage ? JSON.parse(dataInStorage) : {};
+    case 'localStorage':
+      const dataInStorage = localStorage.getItem(storageKey);
+      const data = dataInStorage ? JSON.parse(dataInStorage) : {};
 
-    return data[form.name];
-  default:
-    return undefined;
+      return data[form.name];
+    default:
+      return undefined;
   }
 };
 
 const getAllFormsData = (storage) => {
   switch (storage) {
-  case 'localStorage':
-    const dataInStorage = localStorage.getItem(storageKey);
-    const data = dataInStorage ? JSON.parse(dataInStorage) : {};
+    case 'localStorage':
+      const dataInStorage = localStorage.getItem(storageKey);
+      const data = dataInStorage ? JSON.parse(dataInStorage) : {};
 
-    return data;
-  default:
-    return undefined;
+      return data;
+    default:
+      return undefined;
   }
 };
 
 const removeFormData = ({ storage, formName }) => {
   switch (storage) {
-  case 'localStorage':
-    const allData = getAllFormsData(storage);
+    case 'localStorage':
+      const allData = getAllFormsData(storage);
 
-    delete allData[formName];
+      delete allData[formName];
 
-    localStorage.setItem(storageKey, JSON.stringify(allData));
+      localStorage.setItem(storageKey, JSON.stringify(allData));
 
-    return allData;
-  default:
-    return undefined;
+      return allData;
+    default:
+      return undefined;
   }
 };
 
@@ -55,10 +55,13 @@ const saveFormData = (storage) => (form) => {
   const data = formDataToObject(formData);
   const savedFormData = getAllFormsData(storage);
 
-  localStorage.setItem(storageKey, JSON.stringify({
-    ...savedFormData, // this is to keep the data of other forms' on the page
-    [form.name]: data
-  }));
+  localStorage.setItem(
+    storageKey,
+    JSON.stringify({
+      ...savedFormData, // this is to keep the data of other forms' on the page
+      [form.name]: data
+    })
+  );
 };
 
 const setFormData = ({ form, storage }) => {
@@ -80,14 +83,13 @@ const setFormData = ({ form, storage }) => {
 const removeDeletedFormData = (storage) => (mutationsList) => {
   mutationsList.forEach(({ removedNodes }) => {
     if (removedNodes) {
-      removedNodes
-        .forEach((node) => {
-          if (node.nodeType !== Node.TEXT_NODE) {
-            node.querySelectorAll('chealt-form form').forEach((form) => {
-              removeFormData({ storage, formName: form.name });
-            });
-          }
-        });
+      removedNodes.forEach((node) => {
+        if (node.nodeType !== Node.TEXT_NODE) {
+          node.querySelectorAll('chealt-form form').forEach((form) => {
+            removeFormData({ storage, formName: form.name });
+          });
+        }
+      });
     }
   });
 };
@@ -103,7 +105,9 @@ class ChealtForm extends HTMLElement {
 
     if (this.storage) {
       if (!ChealtForm.isStorageTypeImplemented(this.storage)) {
-        throw new Error(`Storage type: ${this.storage} is not implemented, use one of the following: ${supportedStorageTypes.join(', ')}`);
+        throw new Error(
+          `Storage type: ${this.storage} is not implemented, use one of the following: ${supportedStorageTypes.join(', ')}`
+        );
       }
 
       this.changeFormDataOnNameChange();
@@ -128,10 +132,10 @@ class ChealtForm extends HTMLElement {
 
   static isStorageTypeImplemented(storage) {
     switch (storage) {
-    case 'localStorage':
-      return true;
-    default:
-      return false;
+      case 'localStorage':
+        return true;
+      default:
+        return false;
     }
   }
 

@@ -23,3 +23,11 @@ button.primary {
 button.primary .icon svg {
   fill: var(--color-text--primary);
 }
+
+button.column {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap);
+}

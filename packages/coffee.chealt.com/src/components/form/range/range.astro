@@ -4,8 +4,14 @@ import Label from "../label/label.astro";
 import "./range.css";
 ---
 
-<Label>
-  <input type="range" name={Astro.props.name} min="1" max="10" />
+<Label class={Astro.props.vertical ? "vertical" : undefined}>
+  <slot name="title" />
+  <input
+    type="range"
+    name={Astro.props.name}
+    min={Astro.props.min || 1}
+    max={Astro.props.max || 10}
+  />
   <div class="labels-container">
     <span><slot name="min" /></span>
     <span>-</span>

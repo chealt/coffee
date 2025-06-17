@@ -1,1 +1,8 @@
-[{"processing_method_id":3,"language_code":"en","name":"anaerobic"},{"processing_method_id":3,"language_code":"pl","name":"anaerobic"},{"processing_method_id":2,"language_code":"pl","name":"mieszana"},{"processing_method_id":1,"language_code":"en","name":"natural"},{"processing_method_id":1,"language_code":"pl","name":"natural"},{"processing_method_id":2,"language_code":"en","name":"washed"}]
+[
+  { "processing_method_id": 3, "language_code": "en", "name": "anaerobic" },
+  { "processing_method_id": 3, "language_code": "pl", "name": "anaerobic" },
+  { "processing_method_id": 2, "language_code": "pl", "name": "mieszana" },
+  { "processing_method_id": 1, "language_code": "en", "name": "natural" },
+  { "processing_method_id": 1, "language_code": "pl", "name": "natural" },
+  { "processing_method_id": 2, "language_code": "en", "name": "washed" }
+]

@@ -170,10 +170,11 @@ const linalgNorm = (p0, p1) => Math.sqrt(Math.pow(p0[0] - p1[0], 2) + Math.pow(p
 
 const int = (num) => (num > 0 ? Math.floor(num) : Math.ceil(num));
 
-const flatten = (arr) => arr
-  .toString()
-  .split(',')
-  .map((item) => +item);
+const flatten = (arr) =>
+  arr
+    .toString()
+    .split(',')
+    .map((item) => +item);
 
 const cvImread = (image) => cv.matFromImageData(image);
 

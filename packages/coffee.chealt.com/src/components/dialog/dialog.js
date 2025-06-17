@@ -13,8 +13,11 @@ class CoffeeDialog extends HTMLElement {
     this.querySelector('dialog').addEventListener('click', (event) => {
       const dialog = event.currentTarget;
       const rect = dialog.getBoundingClientRect();
-      const isInDialog = (rect.top <= event.clientY && event.clientY <= rect.top + rect.height &&
-          rect.left <= event.clientX && event.clientX <= rect.left + rect.width);
+      const isInDialog =
+        rect.top <= event.clientY &&
+        event.clientY <= rect.top + rect.height &&
+        rect.left <= event.clientX &&
+        event.clientX <= rect.left + rect.width;
 
       if (!isInDialog) {
         dialog.close();
@@ -24,7 +27,9 @@ class CoffeeDialog extends HTMLElement {
 
   openOnClick() {
     this.triggerButton?.forEach((button) => {
-      button.addEventListener('click', () => {
+      button.addEventListener('click', (event) => {
+        event.preventDefault();
+
         this.dialog.showModal();
       });
     });

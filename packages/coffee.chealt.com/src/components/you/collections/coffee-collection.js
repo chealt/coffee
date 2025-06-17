@@ -65,7 +65,9 @@ class CoffeeCollection extends HTMLElement {
     const rootDirectory = await navigator.storage.getDirectory();
 
     const itemsToRemove = collection?.items
-      ? this.collectionElement.querySelectorAll(`[data-item-id]:not(${collection.items.map(({ id: itemID }) => `[data-item-id="${itemID}"]`).join(',')})`)
+      ? this.collectionElement.querySelectorAll(
+          `[data-item-id]:not(${collection.items.map(({ id: itemID }) => `[data-item-id="${itemID}"]`).join(',')})`
+        )
       : this.collectionElement.querySelectorAll('[data-item-id]');
 
     itemsToRemove?.forEach((item) => {
@@ -98,7 +100,9 @@ class CoffeeCollection extends HTMLElement {
 
       const isFavorite =
         this.collectionID === 'favorites' ||
-        collections.find(({ id: existingCollectionID }) => existingCollectionID === 'favorites')?.items?.some(({ id: existingItemID }) => itemID === existingItemID);
+        collections
+          .find(({ id: existingCollectionID }) => existingCollectionID === 'favorites')
+          ?.items?.some(({ id: existingItemID }) => itemID === existingItemID);
 
       if (isFavorite) {
         itemElement.setAttribute('data-is-favorite', '');

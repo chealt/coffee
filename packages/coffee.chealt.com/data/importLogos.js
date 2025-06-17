@@ -22,4 +22,3 @@ for (const logoUrl of data) {
     });
   });
 }
-
