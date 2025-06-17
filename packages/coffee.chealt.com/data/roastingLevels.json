@@ -1,10 +1,1 @@
-[
-  { "roasting_level_id": 3, "language_code": "pl", "name": "ciemny" },
-  { "roasting_level_id": 3, "language_code": "en", "name": "dark" },
-  { "roasting_level_id": 5, "language_code": "en", "name": "darker" },
-  { "roasting_level_id": 2, "language_code": "pl", "name": "jasny" },
-  { "roasting_level_id": 2, "language_code": "en", "name": "light" },
-  { "roasting_level_id": 4, "language_code": "en", "name": "lighter" },
-  { "roasting_level_id": 1, "language_code": "en", "name": "medium" },
-  { "roasting_level_id": 1, "language_code": "pl", "name": "średni" }
-]
+[{"roasting_level_id":3,"language_code":"pl","name":"ciemny"},{"roasting_level_id":3,"language_code":"en","name":"dark"},{"roasting_level_id":5,"language_code":"en","name":"darker"},{"roasting_level_id":2,"language_code":"pl","name":"jasny"},{"roasting_level_id":2,"language_code":"en","name":"light"},{"roasting_level_id":4,"language_code":"en","name":"lighter"},{"roasting_level_id":1,"language_code":"en","name":"medium"},{"roasting_level_id":1,"language_code":"pl","name":"średni"}]
