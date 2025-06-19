@@ -20,17 +20,19 @@ const t = allLocaleTranslations[Astro.currentLocale];
     </Button>
     <ul class="countries">
       {
-        countries.map(({ country_id, name }) => (
-          <li>
-            <Checkbox
-              type="button"
-              name={`countryId-${country_id}`}
-              value={country_id}
-            >
-              {name}
-            </Checkbox>
-          </li>
-        ))
+        countries
+          .filter(({ language_code }) => language_code === Astro.currentLocale)
+          .map(({ country_id, name }) => (
+            <li>
+              <Checkbox
+                type="button"
+                name={`countryId-${country_id}`}
+                value={country_id}
+              >
+                {name}
+              </Checkbox>
+            </li>
+          ))
       }
     </ul>
     <Button class="clear-button">
