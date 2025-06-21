@@ -1,0 +1,11 @@
+---
+import Common from '../common/common.astro';
+
+import allLocaleTranslations from "./locales.json";
+
+const t = allLocaleTranslations[Astro.currentLocale];
+---
+
+<Common>
+  <h1>{t['error.title']}</h1>
+</Common>

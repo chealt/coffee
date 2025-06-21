@@ -1,0 +1,13 @@
+[data-registration-success],
+.error {
+  padding: var(--gap);
+  font-size: 1.25rem;
+}
+
+[data-registration-success] {
+  color: var(--color-success);
+}
+
+.error-message {
+  color: var(--color-error);
+}

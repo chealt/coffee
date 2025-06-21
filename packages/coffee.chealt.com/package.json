@@ -17,20 +17,24 @@
     "import": "node --env-file=.env data/importData.js",
     "import:logos": "node data/importLogos.js",
     "add:logos": "node --env-file=.env data/addLogos.js",
+    "add:user": "node --env-file=.env src/server/add-user.js",
     "preview": "astro build && astro preview"
   },
   "devDependencies": {
-    "@astrojs/cloudflare": "^12.5.4",
+    "@astrojs/cloudflare": "^12.6.0",
     "@libsql/client": "^0.15.9",
     "prettier": "3.5.3",
     "rollup-plugin-visualizer": "^6.0.3",
     "vite": "^6.3.5",
     "vite-plugin-wasm": "^3.4.1",
-    "wrangler": "^4.20.0"
+    "wrangler": "^4.20.5"
   },
   "dependencies": {
     "@chealt/ocr": "workspace:^",
-    "astro": "^5.9.3",
+    "@simplewebauthn/browser": "^13.1.0",
+    "@simplewebauthn/server": "^13.1.1",
+    "astro": "^5.10.0",
+    "jsonwebtoken": "^9.0.2",
     "sharp": "^0.34.2"
   }
 }

@@ -1,0 +1,22 @@
+{
+  "en": {
+    "title": "Registration",
+    "username": "Username",
+    "register": "Register",
+    "registrationSuccess": "Registration successful",
+    "registrationError": "Registration failed",
+    "registrationErrorAuthenticatorPreviouslyRegistered": "Authenticator previously registered.",
+    "login": "Click here to login",
+    "error.title": "Registration error"
+  },
+  "pl": {
+    "title": "Rejestracja",
+    "username": "Nazwa użytkownika",
+    "register": "Zarejestruj",
+    "registrationSuccess": "Rejestracja zakończona pomyślnie",
+    "registrationError": "Rejestracja nie powiodła się",
+    "registrationErrorAuthenticatorPreviouslyRegistered": "Uwierzytelnienie już zarejestrowane.",
+    "login": "Kliknij tutaj, aby zalogować się",
+    "error.title": "Błąd rejestracji"
+  }
+}

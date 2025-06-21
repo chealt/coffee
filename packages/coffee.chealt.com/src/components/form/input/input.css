@@ -37,6 +37,11 @@ select {
   /* end of iOS hack */
 }
 
+input[readonly],
+input[disabled] {
+  opacity: 0.5;
+}
+
 @media (prefers-color-scheme: dark) {
   ::-webkit-calendar-picker-indicator {
     filter: invert(1);
