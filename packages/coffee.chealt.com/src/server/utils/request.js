@@ -9,7 +9,7 @@ const parseCookie = (request) => {
       const cookieName = key.trim();
 
       if (!reservedCookieWords.includes(cookieName.toLowerCase())) {
-        acc[cookieName] = value.slice(0, value.indexOf(';'));
+        acc[cookieName] = value.slice(0, value.indexOf(';') + 1);
       }
     }
 
