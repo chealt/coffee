@@ -7,7 +7,15 @@
     "registrationError": "Registration failed",
     "registrationErrorAuthenticatorPreviouslyRegistered": "Authenticator previously registered.",
     "login": "Click here to login",
-    "error.title": "Registration error"
+    "error": {
+      "title": "Registration error",
+      "message": {
+        "JsonWebTokenError": "Invalid registration code",
+        "TokenExpiredError": "Registration code expired",
+        "NotBeforeError": "Registration failed",
+        "default": "Registration failed"
+      }
+    }
   },
   "pl": {
     "title": "Rejestracja",
@@ -17,6 +25,14 @@
     "registrationError": "Rejestracja nie powiodła się",
     "registrationErrorAuthenticatorPreviouslyRegistered": "Uwierzytelnienie już zarejestrowane.",
     "login": "Kliknij tutaj, aby zalogować się",
-    "error.title": "Błąd rejestracji"
+    "error": {
+      "title": "Błąd rejestracji",
+      "message": {
+        "JsonWebTokenError": "Nieprawidłowy kod rejestracji",
+        "TokenExpiredError": "Kod rejestracji wygasł",
+        "NotBeforeError": "Rejestracja nie powiodła się",
+        "default": "Rejestracja nie powiodła się"
+      }
+    }
   }
 }

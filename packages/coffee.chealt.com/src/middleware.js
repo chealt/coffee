@@ -69,15 +69,15 @@ const onRequest = async (context, next) => {
         const decoded = jwt.verify(registrationCode, sessionSecret);
 
         if (decoded.username !== username) {
-          return redirect('/registration/error');
+          return redirect('/registration/error?name=JsonWebTokenError');
         }
       } catch (error) {
         console.error(error); // eslint-disable-line no-console
 
-        return redirect('/registration/error');
+        return redirect(`/registration/error?name=${error.name}`);
       }
     } else {
-      return redirect('/registration/error');
+      return redirect('/registration/error?name=JsonWebTokenError');
     }
 
     if (username) {
