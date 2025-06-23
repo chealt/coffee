@@ -30,6 +30,8 @@
     "wrangler": "^4.20.5"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.832.0",
+    "@aws-sdk/s3-request-presigner": "^3.832.0",
     "@chealt/ocr": "workspace:^",
     "@simplewebauthn/browser": "^13.1.0",
     "@simplewebauthn/server": "^13.1.1",
