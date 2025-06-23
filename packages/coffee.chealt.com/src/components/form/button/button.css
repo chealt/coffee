@@ -31,3 +31,7 @@ button.column {
   justify-content: center;
   gap: var(--gap);
 }
+
+button.ghost {
+  border-color: transparent;
+}

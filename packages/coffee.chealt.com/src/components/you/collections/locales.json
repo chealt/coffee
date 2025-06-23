@@ -16,7 +16,11 @@
     "favorites": "Favorites",
     "favorite": "favorite",
     "unnamed": "Untitled Collection",
-    "review": "Review"
+    "review": "Review",
+    "deleteCollection": {
+      "buttonLabel": "Delete collection",
+      "confirm": "Are you sure you want to delete this collection?"
+    }
   },
   "pl": {
     "title": "Kolekcje",
@@ -35,6 +39,10 @@
     "favorites": "Ulubione",
     "favorite": "ulubiony",
     "unnamed": "Niezidentyfikowana kolekcja",
-    "review": "Opinia"
+    "review": "Opinia",
+    "deleteCollection": {
+      "buttonLabel": "Usuń kolekcję",
+      "confirm": "Czy na pewno chcesz usunąć tę kolekcję?"
+    }
   }
 }

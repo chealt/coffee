@@ -1,0 +1,14 @@
+coffee-collection header {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+coffee-collection header .name {
+  flex-grow: 1;
+  align-content: center;
+}
+
+coffee-collection header .button {
+  width: auto;
+}

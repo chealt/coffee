@@ -1,4 +1,10 @@
-import { getCollection, getAllCollections, updateCollectionName, save } from '../../common/storage.js';
+import {
+  getCollection,
+  getAllCollections,
+  updateCollectionName,
+  save,
+  deleteCollection
+} from '../../common/storage.js';
 
 class CoffeeCollection extends HTMLElement {
   static refreshEventName = 'coffee-collection-refresh';
@@ -13,6 +19,7 @@ class CoffeeCollection extends HTMLElement {
 
     if (!this.isBuiltIn) {
       this.renderName();
+      this.deleteOnClick();
     }
 
     this.render();
@@ -58,6 +65,20 @@ class CoffeeCollection extends HTMLElement {
     });
   }
 
+  deleteOnClick() {
+    const deleteTrigger = this.collectionElement.querySelector('[data-delete-trigger]');
+    const confirmText = deleteTrigger.dataset.confirmText;
+
+    deleteTrigger.addEventListener('click', () => {
+      // eslint-disable-next-line no-alert
+      if (confirm(confirmText)) {
+        deleteCollection(this.collectionID);
+
+        this.collectionElement.remove();
+      }
+    });
+  }
+
   // eslint-disable-next-line complexity
   async render() {
     const collections = getAllCollections();
@@ -73,6 +94,11 @@ class CoffeeCollection extends HTMLElement {
     itemsToRemove?.forEach((item) => {
       item.remove();
     });
+
+    // remove delete trigger of a built-in collection
+    if (this.isBuiltIn) {
+      this.collectionElement.querySelector('[data-delete-trigger]').remove();
+    }
 
     // add items
     const existingItemsElement = this.collectionElement.querySelector('[data-type=items]');

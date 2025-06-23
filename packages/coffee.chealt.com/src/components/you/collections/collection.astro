@@ -1,14 +1,32 @@
 ---
 import Add from "./add.astro";
+import Button from "../../form/button/button.astro";
+import Icon from "../../icon/icon.astro";
+
+import './collection.css';
+
+import allLocaleTranslations from "./locales.json";
+
+const t = allLocaleTranslations[Astro.currentLocale];
 
 const { id, name, ...props } = Astro.props;
 
 const contentEditable = props.isBuiltIn ? "contenteditable" : undefined;
+
+const isBuiltIn = Astro.props.isBuiltIn;
 ---
 
 <li data-collection-id={id || ""} {...props}>
   <coffee-collection>
-    <h3 data-name {contentEditable}>{name}</h3>
+    <header>
+      <h3 data-name {contentEditable} class="name">{name}</h3>
+      {!isBuiltIn && (
+        <Button data-delete-trigger class="button ghost" data-confirm-text={t.deleteCollection.confirm}>
+          <Icon type="delete" />
+          <span class="visually-hidden">{t.deleteCollection.buttonLabel}</span>
+        </Button>
+      )}
+    </header>
     <Add />
   </coffee-collection>
 </li>
