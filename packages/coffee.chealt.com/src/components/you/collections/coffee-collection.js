@@ -10,10 +10,10 @@ class CoffeeCollection extends HTMLElement {
   static refreshEventName = 'coffee-collection-refresh';
 
   connectedCallback() {
-    this.collectionElement = this.closest('[data-collection-id]');
+    this.collectionElement = this.closest('[data-db-id]');
     this.nameElement = this.collectionElement.querySelector('[data-name]');
-    this.collectionID = this.collectionElement.dataset.collectionId;
-    this.isBuiltIn = this.collectionElement.dataset.isBuiltIn === 'true';
+    this.collectionID = this.collectionElement.dataset.dbId;
+    this.isBuiltIn = this.collectionElement.dataset.dbIsBuiltIn === 'true';
 
     this.addRefreshListener();
 
@@ -96,17 +96,17 @@ class CoffeeCollection extends HTMLElement {
     });
 
     // remove delete trigger of a built-in collection
-    if (this.isBuiltIn) {
+    if (this.isBuiltIn && this.collectionElement.querySelector('[data-delete-trigger]')) {
       this.collectionElement.querySelector('[data-delete-trigger]').remove();
     }
 
     // add items
-    const existingItemsElement = this.collectionElement.querySelector('[data-type=items]');
+    const existingItemsElement = this.collectionElement.querySelector('[data-db-type=items]');
     let itemsElement = existingItemsElement;
 
     if (!itemsElement) {
       itemsElement = document.createElement('ul');
-      itemsElement.setAttribute('data-type', 'items');
+      itemsElement.setAttribute('data-db-type', 'items');
     }
 
     if (!collection?.items) {

@@ -14,9 +14,9 @@ class CoffeeImageUpload extends HTMLElement {
   addFileChangeListener() {
     // eslint-disable-next-line complexity
     this.fileInput.addEventListener('change', async () => {
-      const collectionElement = this.closest('[data-collection-id]');
-      const isBuiltIn = collectionElement?.getAttribute('data-is-built-in') === '' || false;
-      const collectionID = collectionElement?.getAttribute('data-collection-id') || crypto.randomUUID();
+      const collectionElement = this.closest('[data-db-id]');
+      const isBuiltIn = collectionElement?.getAttribute('data-db-is-built-in') === '' || false;
+      const collectionID = collectionElement?.getAttribute('data-db-id') || crypto.randomUUID();
       const itemID = this.closest('[data-item-id]')?.getAttribute('data-item-id') || crypto.randomUUID();
       const collectionName = collectionElement?.querySelector('[data-name]')?.textContent;
 

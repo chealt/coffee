@@ -4,7 +4,7 @@ class CoffeeGallery extends HTMLElement {
   static refreshEventName = 'coffee-gallery-refresh';
 
   async connectedCallback() {
-    this.collections = this.querySelector('[data-type=collections]');
+    this.collections = this.querySelector('[data-db-type=collections]');
 
     this.render();
     this.addRefreshListener();
@@ -15,7 +15,7 @@ class CoffeeGallery extends HTMLElement {
     const collectionsToRemove =
       collections.length > 0
         ? this.collections.querySelectorAll(
-            `[data-collection-id]:not(${collections.map(({ id }) => `[data-collection-id="${id}"]`).join(',')}):not([data-is-built-in])`
+            `[data-db-id]:not(${collections.map(({ id }) => `[data-db-id="${id}"]`).join(',')}):not([data-db-is-built-in])`
           )
         : undefined;
 
@@ -24,12 +24,12 @@ class CoffeeGallery extends HTMLElement {
     });
 
     collections.forEach(async ({ id }) => {
-      const existingCollection = this.collections.querySelector(`[data-collection-id="${id}"]`);
+      const existingCollection = this.collections.querySelector(`[data-db-id="${id}"]`);
 
       if (!existingCollection) {
         const collectionElementTemplate = document.getElementById('collection-item-template');
         const collectionElementTemplateContent = collectionElementTemplate.content;
-        collectionElementTemplateContent.querySelector('[data-collection-id]').setAttribute('data-collection-id', id);
+        collectionElementTemplateContent.querySelector('[data-db-id]').setAttribute('data-db-id', id);
 
         this.collections.appendChild(collectionElementTemplateContent.cloneNode(true));
       }

@@ -9,14 +9,14 @@ import allLocaleTranslations from "./locales.json";
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
-const { id, name, ...props } = Astro.props;
+const { name, ...props } = Astro.props;
 
 const contentEditable = props.isBuiltIn ? "contenteditable" : undefined;
 
 const isBuiltIn = Astro.props.isBuiltIn;
 ---
 
-<li data-collection-id={id || ""} {...props}>
+<li {...props}>
   <coffee-collection>
     <header>
       <h3 data-name {contentEditable} class="name">{name}</h3>
