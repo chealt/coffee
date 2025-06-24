@@ -22,9 +22,9 @@ const t = allLocaleTranslations[Astro.currentLocale];
   <CollectionTemplate />
   <Review />
   <chealt-ocr>
-    <ul data-db-list data-db-type="collections">
-      <Collection data-db-id="favorites" name={t["favorites"]} data-db-is-built-in data-db-item />
-      <Collection data-db-id="wishList" name={t["wishList"]} data-db-is-built-in data-db-item />
+    <ul data-db-type="collections">
+      <Collection data-db-attr-id="favorites" name={t["favorites"]} data-db-attr-is-built-in />
+      <Collection data-db-attr-id="wishList" name={t["wishList"]} data-db-attr-is-built-in />
     </ul>
   </chealt-ocr>
 </coffee-gallery>

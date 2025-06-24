@@ -10,10 +10,10 @@ class CoffeeCollection extends HTMLElement {
   static refreshEventName = 'coffee-collection-refresh';
 
   connectedCallback() {
-    this.collectionElement = this.closest('[data-db-id]');
-    this.nameElement = this.collectionElement.querySelector('[data-name]');
-    this.collectionID = this.collectionElement.dataset.dbId;
-    this.isBuiltIn = this.collectionElement.dataset.dbIsBuiltIn === 'true';
+    this.collectionElement = this.closest('[data-db-attr-id]');
+    this.nameElement = this.collectionElement.querySelector('[data-db-attr-name]');
+    this.collectionID = this.collectionElement.dataset.dbAttrId;
+    this.isBuiltIn = this.collectionElement.dataset.dbAttrIsBuiltIn === 'true';
 
     this.addRefreshListener();
 

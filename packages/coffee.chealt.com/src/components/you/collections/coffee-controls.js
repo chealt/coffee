@@ -20,13 +20,13 @@ class CoffeeControls extends HTMLElement {
 
   setFavoriteStatus() {
     let isFavorite = false;
-    const collectionElement = this.closest('[data-db-id]');
+    const collectionElement = this.closest('[data-db-attr-id]');
 
     if (!collectionElement) {
       return;
     }
 
-    const collectionID = collectionElement.getAttribute('data-db-id');
+    const collectionID = collectionElement.getAttribute('data-db-attr-id');
 
     if (collectionID === 'favorites') {
       isFavorite = true;
@@ -48,7 +48,7 @@ class CoffeeControls extends HTMLElement {
 
   addDeleteEventListener() {
     this.querySelector('.delete').addEventListener('click', async () => {
-      const collectionID = this.closest('[data-db-id]')?.getAttribute('data-db-id');
+      const collectionID = this.closest('[data-db-attr-id]')?.getAttribute('data-db-attr-id');
       const itemsElement = this.closest('[data-item-id]');
       const itemID = itemsElement.getAttribute('data-item-id');
       const items = getCollectionItems({ collectionID, itemID });
@@ -72,8 +72,8 @@ class CoffeeControls extends HTMLElement {
 
   addFavoriteEventListener() {
     this.querySelector('.favorite').addEventListener('click', () => {
-      const collectionElement = this.closest('[data-db-id]');
-      const collectionID = collectionElement.getAttribute('data-db-id');
+      const collectionElement = this.closest('[data-db-attr-id]');
+      const collectionID = collectionElement.getAttribute('data-db-attr-id');
       const itemElement = this.closest('[data-item-id]');
       const itemID = itemElement.getAttribute('data-item-id');
       const isFavorite = itemElement.getAttribute('data-is-favorite') !== null;
@@ -114,7 +114,7 @@ class CoffeeControls extends HTMLElement {
       document
         .querySelector('dialog[id=review]')
         .closest('coffee-review')
-        .setAttribute('data-name', `${itemID}.review`);
+        .setAttribute('data-db-attr-name', `${itemID}.review`);
     });
   }
 }

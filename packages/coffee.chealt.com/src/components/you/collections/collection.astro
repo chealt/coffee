@@ -9,17 +9,15 @@ import allLocaleTranslations from "./locales.json";
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
-const { name, ...props } = Astro.props;
+const { name, isBuiltIn, ...props } = Astro.props;
 
-const contentEditable = props.isBuiltIn ? "contenteditable" : undefined;
-
-const isBuiltIn = Astro.props.isBuiltIn;
+const contentEditable = isBuiltIn ? "contenteditable" : undefined;
 ---
 
 <li {...props}>
   <coffee-collection>
     <header>
-      <h3 data-name {contentEditable} class="name">{name}</h3>
+      <h3 data-db-attr-name {contentEditable} class="name">{name}</h3>
       {!isBuiltIn && (
         <Button data-delete-trigger class="button ghost" data-confirm-text={t.deleteCollection.confirm}>
           <Icon type="delete" />

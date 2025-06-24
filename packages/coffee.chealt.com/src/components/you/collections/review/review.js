@@ -8,15 +8,15 @@ class CoffeeReview extends HTMLElement {
   }
 
   setFormName() {
-    if (this.dataset.name) {
-      this.form.setAttribute('name', this.dataset.name);
+    if (this.dataset.dbAttrName) {
+      this.form.setAttribute('name', this.dataset.dbAttrName);
     }
   }
 
   observeNameChange() {
     const observer = new MutationObserver(this.setFormName.bind(this));
 
-    observer.observe(this, { attributes: true, attributeFilter: ['data-name'] });
+    observer.observe(this, { attributes: true, attributeFilter: ['data-db-attr-name'] });
   }
 }
 

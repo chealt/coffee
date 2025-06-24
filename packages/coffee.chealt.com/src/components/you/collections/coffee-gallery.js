@@ -15,7 +15,7 @@ class CoffeeGallery extends HTMLElement {
     const collectionsToRemove =
       collections.length > 0
         ? this.collections.querySelectorAll(
-            `[data-db-id]:not(${collections.map(({ id }) => `[data-db-id="${id}"]`).join(',')}):not([data-db-is-built-in])`
+            `[data-db-attr-id]:not(${collections.map(({ id }) => `[data-db-attr-id="${id}"]`).join(',')}):not([data-db-attr-is-built-in])`
           )
         : undefined;
 
@@ -24,12 +24,12 @@ class CoffeeGallery extends HTMLElement {
     });
 
     collections.forEach(async ({ id }) => {
-      const existingCollection = this.collections.querySelector(`[data-db-id="${id}"]`);
+      const existingCollection = this.collections.querySelector(`[data-db-attr-id="${id}"]`);
 
       if (!existingCollection) {
         const collectionElementTemplate = document.getElementById('collection-item-template');
         const collectionElementTemplateContent = collectionElementTemplate.content;
-        collectionElementTemplateContent.querySelector('[data-db-id]').setAttribute('data-db-id', id);
+        collectionElementTemplateContent.querySelector('[data-db-attr-id]').setAttribute('data-db-attr-id', id);
 
         this.collections.appendChild(collectionElementTemplateContent.cloneNode(true));
       }
