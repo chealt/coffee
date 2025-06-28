@@ -1,4 +1,4 @@
-import { getAuthenticationOptions } from '../../../../server/database/database.js';
+import { getAuthenticationOptions } from '../../../../server/database/user.js';
 
 const POST = async ({ request }) => {
   const { username } = await request.json();
