@@ -105,8 +105,6 @@ const onRequest = async (context, next) => {
 
     if (username) {
       try {
-        console.log('process.env.TURSO_DATABASE_URL_ATTILABARTHA: ', process.env.TURSO_DATABASE_URL_ATTILABARTHA);
-
         const authenticationOptions = await getAuthenticationOptions(username);
 
         context.locals.authenticationOptions = JSON.stringify(authenticationOptions);

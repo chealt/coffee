@@ -1,6 +1,11 @@
 import { createClient } from '@libsql/client';
 
-const env = import.meta.env || process.env;
+const env = {
+  TURSO_DATABASE_URL_ATTILABARTHA:
+    import.meta.env.TURSO_DATABASE_URL_ATTILABARTHA || process.env.TURSO_DATABASE_URL_ATTILABARTHA,
+  TURSO_AUTH_TOKEN_ATTILABARTHA:
+    import.meta.env.TURSO_AUTH_TOKEN_ATTILABARTHA || process.env.TURSO_AUTH_TOKEN_ATTILABARTHA
+};
 
 const clients = {};
 
