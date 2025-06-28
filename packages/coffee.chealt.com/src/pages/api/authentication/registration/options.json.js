@@ -1,4 +1,4 @@
-import { getRegistrationOptions } from '../../../../server/database/database.js';
+import { getRegistrationOptions } from '../../../../server/database/user.js';
 
 const POST = async ({ request }) => {
   const { username } = await request.json();

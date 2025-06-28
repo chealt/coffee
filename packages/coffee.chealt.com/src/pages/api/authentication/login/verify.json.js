@@ -7,7 +7,7 @@ import {
   getAuthenticationOptions,
   getPasskey,
   updatePasskeyCounter
-} from '../../../../server/database/database.js';
+} from '../../../../server/database/user.js';
 
 const POST = async ({ request }) => {
   const { username, ...body } = await request.json();

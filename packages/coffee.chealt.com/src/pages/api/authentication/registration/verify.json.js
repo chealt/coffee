@@ -7,7 +7,7 @@ import {
   cookieNameSession
 } from '../../../../server/authentication/config.js';
 import { getSessionJWT } from '../../../../server/authentication/session.js';
-import { getUser, getRegistrationOptions, storeRegistration } from '../../../../server/database/database.js';
+import { getUser, getRegistrationOptions, storeRegistration } from '../../../../server/database/user.js';
 
 const POST = async ({ request }) => {
   const { username, ...registration } = await request.json();
