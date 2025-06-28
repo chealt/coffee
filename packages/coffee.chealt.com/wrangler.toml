@@ -10,3 +10,7 @@ directory = "./dist"
 
 [observability]
 enabled = true
+
+[vars]
+ORIGIN=https://coffee.chealt.com
+RELYING_PARTY_ID=coffee.chealt
