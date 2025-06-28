@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 import { sessionSecret } from './authentication/config.js';
-import { getUser, recordUser } from './database/database.js';
+import { getUser, recordUser } from './database/user.js';
 
 if (!sessionSecret) {
   throw new Error('sessionSecret is not set');

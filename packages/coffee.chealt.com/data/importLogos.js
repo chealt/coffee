@@ -2,13 +2,13 @@ import { createWriteStream } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { get } from 'node:https';
 
-const fileName = process.argv[2]?.replace('--fileName=', '');
+const filename = process.argv[2]?.replace('--filename=', '');
 
-if (!fileName) {
-  throw new Error('No file name provided, please use --fileName=<file-name>');
+if (!filename) {
+  throw new Error('No file name provided, please use --filename=<file-name>');
 }
 
-const data = JSON.parse(await readFile(`./data/${fileName}.json`, 'utf-8'));
+const data = JSON.parse(await readFile(`./data/${filename}.json`, 'utf-8'));
 
 for (const logoUrl of data) {
   const logoFileName = logoUrl.split('/').pop().toLowerCase();

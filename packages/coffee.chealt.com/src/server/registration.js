@@ -1,7 +1,7 @@
 import { generateRegistrationOptions } from '@simplewebauthn/server';
 
 import { relyingPartyName, relyingPartyID } from './authentication/config.js';
-import { getUser, getPasskeys, recordRegistrationOptions } from './database/database.js';
+import { getUser, getPasskeys, recordRegistrationOptions } from './database/user.js';
 
 const validateUserId = (userId) => {
   if (!userId) {

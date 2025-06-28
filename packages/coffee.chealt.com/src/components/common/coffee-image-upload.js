@@ -1,4 +1,4 @@
-import { save } from './storage';
+import { getCollectionByName, save } from './storage';
 import { writeFile } from '../../utils/file';
 
 class CoffeeImageUpload extends HTMLElement {
@@ -6,6 +6,7 @@ class CoffeeImageUpload extends HTMLElement {
     this.triggerButton = this.querySelector('.triggerButton');
     this.navigateTo = this.triggerButton.getAttribute('href');
     this.fileInput = this.querySelector('input[type=file]');
+    this.shouldSync = this.dataset.shouldSync;
 
     this.addClickListener();
     this.addFileChangeListener();
@@ -16,16 +17,21 @@ class CoffeeImageUpload extends HTMLElement {
     this.fileInput.addEventListener('change', async () => {
       const collectionElement = this.closest('[data-db-attr-id]');
       const isBuiltIn = collectionElement?.getAttribute('data-db-attr-is-built-in') === '' || false;
-      const collectionID = collectionElement?.getAttribute('data-db-attr-id') || crypto.randomUUID();
+      const unnamedCollection = getCollectionByName(this.dataset.unnamedTitle);
+      const collectionID =
+        collectionElement?.getAttribute('data-db-attr-id') || unnamedCollection?.id || crypto.randomUUID();
       const itemID = this.closest('[data-item-id]')?.getAttribute('data-item-id') || crypto.randomUUID();
-      const collectionName = collectionElement?.querySelector('[data-db-attr-name]')?.textContent;
+      const collectionName =
+        collectionElement?.querySelector('[data-db-attr-name]')?.textContent ||
+        unnamedCollection?.title ||
+        this.dataset.unnamedTitle;
 
       const fileData = this.fileInput.files[0];
 
       try {
-        const fileName = await writeFile(fileData);
+        const filename = await writeFile(fileData);
 
-        await save({ collectionID, collectionName, itemID, fileName, isBuiltIn });
+        await save({ collectionID, collectionName, itemID, filename, isBuiltIn, shouldSync: this.shouldSync });
       } catch (error) {
         if (error.name === 'AbortError') {
           console.log('user abort'); // eslint-disable-line no-console
@@ -34,7 +40,7 @@ class CoffeeImageUpload extends HTMLElement {
         }
       }
 
-      if (!collectionElement) {
+      if (!collectionElement && !unnamedCollection) {
         this.dispatchEvent(new CustomEvent('coffee-gallery-refresh', { bubbles: true }));
       } else {
         this.dispatchEvent(new CustomEvent('coffee-collection-refresh', { bubbles: true }));

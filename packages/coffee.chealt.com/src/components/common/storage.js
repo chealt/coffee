@@ -1,6 +1,9 @@
+import { deleteItem, setItem } from '../../utils/storage';
+
 const collectionsKey = 'chealt-collections';
+const collectionItemsKey = 'chealt-collection-item';
 // eslint-disable-next-line complexity
-const save = async ({ collectionID, collectionName, isBuiltIn, itemID, fileName }) => {
+const save = async ({ collectionID, collectionName, isBuiltIn, itemID, filename, shouldSync }) => {
   const collectionsRaw = localStorage.getItem(collectionsKey);
   const collections = JSON.parse(collectionsRaw) || [];
   const collection = collections.find(({ id }) => id === collectionID);
@@ -11,23 +14,23 @@ const save = async ({ collectionID, collectionName, isBuiltIn, itemID, fileName 
   }
 
   if (!collection) {
-    if (itemID && fileName) {
+    if (itemID && filename) {
       collections.push({
         id: collectionID,
         name: collectionName,
         isBuiltIn,
-        items: [{ id: itemID, images: [{ fileName }] }]
+        items: [{ id: itemID, images: [{ filename }] }]
       });
     } else {
       collections.push({ id: collectionID, name: collectionName, isBuiltIn });
     }
   } else {
     if (!collection.items) {
-      collection.items = [{ id: itemID, images: [{ fileName }] }];
+      collection.items = [{ id: itemID, images: [{ filename }] }];
     } else if (!collection.items.some(({ id: existingItemID }) => existingItemID === itemID)) {
-      collection.items.push({ id: itemID, images: [{ fileName }] });
-    } else if (!item.images.some(({ fileName: existingFileName }) => existingFileName === fileName)) {
-      item.images.push({ fileName });
+      collection.items.push({ id: itemID, images: [{ filename }] });
+    } else if (!item.images.some(({ filename: existingFileName }) => existingFileName === filename)) {
+      item.images.push({ filename });
     }
   }
 
@@ -44,6 +47,10 @@ const save = async ({ collectionID, collectionName, isBuiltIn, itemID, fileName 
   }
 
   localStorage.setItem(collectionsKey, JSON.stringify(collections));
+
+  if (shouldSync) {
+    setItem(collectionsKey, collections);
+  }
 };
 
 const getAllCollections = () => {
@@ -59,19 +66,29 @@ const getCollection = (collectionID) => {
   return collections.find(({ id }) => id === collectionID);
 };
 
+const getCollectionByName = (name) => {
+  const collections = getAllCollections();
+
+  return collections.find((collection) => collection.name === name);
+};
+
 const getCollectionItems = ({ collectionID, itemID }) => {
   const collections = getAllCollections();
 
   return collections.find(({ id }) => id === collectionID)?.items?.find(({ id }) => id === itemID);
 };
 
-const deleteCollection = (collectionID) => {
+const deleteCollection = ({ collectionID, shouldSync }) => {
   const collections = getAllCollections();
 
   localStorage.setItem(collectionsKey, JSON.stringify(collections.filter(({ id }) => id !== collectionID)));
+
+  if (shouldSync) {
+    deleteItem(collectionsKey, collectionID);
+  }
 };
 
-const deleteCollectionItem = ({ collectionID, itemID }) => {
+const deleteCollectionItem = ({ collectionID, itemID, shouldSync }) => {
   const collections = getAllCollections();
 
   const newCollections = collections.map((collection) => {
@@ -87,15 +104,23 @@ const deleteCollectionItem = ({ collectionID, itemID }) => {
   });
 
   localStorage.setItem(collectionsKey, JSON.stringify(newCollections));
+
+  if (shouldSync) {
+    deleteItem(collectionItemsKey, itemID);
+  }
 };
 
-const updateCollectionName = ({ collectionID, collectionName }) => {
+const updateCollectionName = ({ collectionID, collectionName, shouldSync }) => {
   const collections = getAllCollections();
   const collection = collections.find(({ id }) => id === collectionID);
 
   collection.name = collectionName;
 
   localStorage.setItem(collectionsKey, JSON.stringify(collections));
+
+  if (shouldSync) {
+    setItem(collectionsKey, collections);
+  }
 };
 
 export {
@@ -103,6 +128,7 @@ export {
   deleteCollectionItem,
   getAllCollections,
   getCollection,
+  getCollectionByName,
   getCollectionItems,
   updateCollectionName,
   save

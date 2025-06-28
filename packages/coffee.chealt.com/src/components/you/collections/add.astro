@@ -7,10 +7,12 @@ import "./add.css";
 import allLocaleTranslations from "./locales.json";
 
 const t = allLocaleTranslations[Astro.currentLocale];
+
+const shouldSync = Boolean(Astro.locals.loggedInUser);
 ---
 
 <div class="add-collection">
-  <CoffeeImageUpload>
+  <CoffeeImageUpload data-should-sync={shouldSync}>
     <Button class="triggerButton">{t["add"]}</Button>
   </CoffeeImageUpload>
 </div>

@@ -4,7 +4,7 @@ const writeFile = async (fileData) => {
   return new Promise((resolve, reject) => {
     fileWorker.onmessage = (event) => {
       if (event.data.success) {
-        resolve(event.data.fileName);
+        resolve(event.data.filename);
       } else {
         reject(event.data.error);
       }

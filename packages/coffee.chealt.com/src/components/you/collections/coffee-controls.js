@@ -48,20 +48,22 @@ class CoffeeControls extends HTMLElement {
 
   addDeleteEventListener() {
     this.querySelector('.delete').addEventListener('click', async () => {
-      const collectionID = this.closest('[data-db-attr-id]')?.getAttribute('data-db-attr-id');
+      const collectionElement = this.closest('[data-db-attr-id]');
+      const shouldSync = collectionElement.dataset.shouldSync;
+      const collectionID = collectionElement?.getAttribute('data-db-attr-id');
       const itemsElement = this.closest('[data-item-id]');
       const itemID = itemsElement.getAttribute('data-item-id');
       const items = getCollectionItems({ collectionID, itemID });
 
       if (items.images) {
         await Promise.all(
-          items.images.map(async ({ fileName }) => {
-            deleteFile(fileName);
+          items.images.map(async ({ filename }) => {
+            deleteFile(filename);
           })
         );
       }
 
-      deleteCollectionItem({ itemID });
+      deleteCollectionItem({ itemID, shouldSync });
 
       // delete all occurrences of the item, e.g. if it is deleted in a built in collection like favorites
       document.querySelectorAll(`[data-item-id="${itemID}"]`).forEach((element) => {
@@ -73,13 +75,15 @@ class CoffeeControls extends HTMLElement {
   addFavoriteEventListener() {
     this.querySelector('.favorite').addEventListener('click', () => {
       const collectionElement = this.closest('[data-db-attr-id]');
+      const shouldSync = collectionElement.dataset.shouldSync;
       const collectionID = collectionElement.getAttribute('data-db-attr-id');
       const itemElement = this.closest('[data-item-id]');
       const itemID = itemElement.getAttribute('data-item-id');
       const isFavorite = itemElement.getAttribute('data-is-favorite') !== null;
 
       if (collectionID === 'favorites') {
-        deleteCollectionItem({ collectionID, itemID });
+        deleteCollectionItem({ collectionID, itemID, shouldSync });
+
         this.closest('[data-db-type=items]').removeChild(itemElement);
 
         document.querySelectorAll(`[data-item-id="${itemID}"]`).forEach((element) => {
@@ -92,13 +96,20 @@ class CoffeeControls extends HTMLElement {
             itemID
           });
 
-          item.images.forEach(async ({ fileName }) => {
-            await save({ collectionID: 'favorites', isBuiltIn: true, itemID, fileName });
+          item.images.forEach(async ({ filename }) => {
+            await save({
+              collectionID: 'favorites',
+              isBuiltIn: true,
+              itemID,
+              filename,
+              shouldSync: collectionElement.dataset.shouldSync
+            });
           });
 
           itemElement.setAttribute('data-is-favorite', '');
         } else {
-          deleteCollectionItem({ collectionID: 'favorites', itemID });
+          deleteCollectionItem({ collectionID: 'favorites', itemID, shouldSync });
+
           itemElement.removeAttribute('data-is-favorite');
         }
       }

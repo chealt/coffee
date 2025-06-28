@@ -49,16 +49,27 @@ const redirect = (url) =>
 
 // eslint-disable-next-line complexity
 const onRequest = async (context, next) => {
-  setClientSideOCR(context);
-  setIsIOS(context);
+  const { page, params } = parsePath(context.url.pathname);
+
+  if (page === 'api') {
+    const loggedInUser = getSessionUser(context.request);
+
+    if (!loggedInUser && params[1] !== 'login') {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+    }
+  }
 
   try {
-    context.locals.loggedInUser = getSessionUser(context.request);
+    const loggedInUser = getSessionUser(context.request);
+
+    context.locals.loggedInUser = loggedInUser;
+
+    if (loggedInUser) {
+      context.locals.getSignedUrl = '/api/storage/get-signed-url.json';
+    }
   } catch (error) {
     console.error(error); // eslint-disable-line no-console
   }
-
-  const { page, params } = parsePath(context.url.pathname);
 
   if (page === 'registration' && params[0] !== 'error') {
     const registrationCode = context.url.searchParams.get('code');
@@ -102,6 +113,9 @@ const onRequest = async (context, next) => {
       }
     }
   }
+
+  setClientSideOCR(context);
+  setIsIOS(context);
 
   return next();
 };

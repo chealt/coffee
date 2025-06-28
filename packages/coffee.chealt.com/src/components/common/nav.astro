@@ -40,13 +40,15 @@ const items = [
     isActive: isActivePage("you"),
   },
 ];
+
+const shouldSync = Boolean(Astro.locals.loggedInUser);
 ---
 
 <nav>
   {
     items.map(({ name, href, text, isActive }) =>
       name === "capture" ? (
-        <CoffeeImageUpload>
+        <CoffeeImageUpload data-should-sync={shouldSync} data-unnamed-title={t.unnamedTitle}>
           <a href={href} class="triggerButton">
             <Icon class="icon" type={name} />
             <span class="title">{text}</span>

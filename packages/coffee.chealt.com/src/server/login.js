@@ -1,7 +1,7 @@
 import { generateAuthenticationOptions } from '@simplewebauthn/server';
 
 import { relyingPartyID } from './authentication/config.js';
-import { getUser, getPasskeys, recordAuthenticationOptions } from './database/database.js';
+import { getUser, getPasskeys, recordAuthenticationOptions } from './database/user.js';
 
 const getAuthenticationOptions = async (username) => {
   const user = await getUser(username);

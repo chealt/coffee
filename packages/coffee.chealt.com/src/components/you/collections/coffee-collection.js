@@ -14,6 +14,7 @@ class CoffeeCollection extends HTMLElement {
     this.nameElement = this.collectionElement.querySelector('[data-db-attr-name]');
     this.collectionID = this.collectionElement.dataset.dbAttrId;
     this.isBuiltIn = this.collectionElement.dataset.dbAttrIsBuiltIn === 'true';
+    this.shouldSync = this.collectionElement.dataset.shouldSync;
 
     this.addRefreshListener();
 
@@ -35,7 +36,8 @@ class CoffeeCollection extends HTMLElement {
       await save({
         collectionID,
         collectionName,
-        isBuiltIn
+        isBuiltIn,
+        shouldSync: this.shouldSync
       });
     }
   }
@@ -61,7 +63,7 @@ class CoffeeCollection extends HTMLElement {
     const collectionName = event.target.textContent;
 
     this.callbackID = requestIdleCallback(() => {
-      updateCollectionName({ collectionID: this.collectionID, collectionName });
+      updateCollectionName({ collectionID: this.collectionID, collectionName, shouldSync: this.shouldSync });
     });
   }
 
@@ -72,7 +74,7 @@ class CoffeeCollection extends HTMLElement {
     deleteTrigger.addEventListener('click', () => {
       // eslint-disable-next-line no-alert
       if (confirm(confirmText)) {
-        deleteCollection(this.collectionID);
+        deleteCollection({ collectionID: this.collectionID, shouldSync: this.shouldSync });
 
         this.collectionElement.remove();
       }
@@ -151,17 +153,17 @@ class CoffeeCollection extends HTMLElement {
         imagesContainer.classList.add('images-container');
       }
 
-      for (const { fileName } of images) {
-        if (imagesContainer.querySelector(`[data-file-name="${fileName}"]`)) {
+      for (const { filename } of images) {
+        if (imagesContainer.querySelector(`[data-file-name="${filename}"]`)) {
           continue;
         }
 
-        const fileHandle = await rootDirectory.getFileHandle(fileName);
+        const fileHandle = await rootDirectory.getFileHandle(filename);
         const fileData = await fileHandle.getFile();
 
         const image = new Image(this.collectionElement.clientWidth);
         image.src = URL.createObjectURL(fileData);
-        image.setAttribute('data-file-name', fileName);
+        image.setAttribute('data-file-name', filename);
         image.id = `${fileData.name}_${fileData.lastModified}`;
 
         imagesContainer.appendChild(image);

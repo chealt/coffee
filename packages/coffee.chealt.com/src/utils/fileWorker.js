@@ -1,7 +1,7 @@
 const writeFile = async (file) => {
-  const fileName = Date.now();
+  const filename = Date.now();
   const rootDirectory = await navigator.storage.getDirectory();
-  const fileHandle = await rootDirectory.getFileHandle(fileName, { create: true });
+  const fileHandle = await rootDirectory.getFileHandle(filename, { create: true });
   const accessHandle = await fileHandle.createSyncAccessHandle();
   const reader = new FileReader();
 
@@ -16,7 +16,7 @@ const writeFile = async (file) => {
         reject(error);
       }
 
-      resolve(fileName);
+      resolve(filename);
     };
 
     reader.onerror = (error) => {
@@ -29,9 +29,9 @@ onmessage = async ({ data: { data, command } }) => {
   switch (command) {
     case 'writeFile':
       try {
-        const fileName = await writeFile(data);
+        const filename = await writeFile(data);
 
-        postMessage({ success: true, fileName });
+        postMessage({ success: true, filename });
       } catch (error) {
         postMessage({ error });
       }

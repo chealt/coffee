@@ -3,13 +3,15 @@
     "home": "home",
     "explore": "explore",
     "capture": "capture",
-    "you": "you"
+    "you": "you",
+    "unnamedTitle": "Untitled Collection"
   },
   "pl": {
     "home": "strona główna",
     "explore": "eksploruj",
     "capture": "zdjecie",
     "you": "ty",
-    "settings": "ustawienia"
+    "settings": "ustawienia",
+    "unnamedTitle": "Niezidentyfikowana kolekcja"
   }
 }

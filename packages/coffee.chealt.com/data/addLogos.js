@@ -7,13 +7,13 @@ const turso = createClient({
   authToken: process.env.TURSO_AUTH_TOKEN
 });
 
-const fileName = process.argv[2]?.replace('--fileName=', '');
+const filename = process.argv[2]?.replace('--filename=', '');
 
-if (!fileName) {
-  throw new Error('No file name provided, please use --fileName=<file-name>');
+if (!filename) {
+  throw new Error('No file name provided, please use --filename=<file-name>');
 }
 
-const data = await readFile(`./data/${fileName}.txt`, 'utf-8');
+const data = await readFile(`./data/${filename}.txt`, 'utf-8');
 const logos = data.split('\n').filter(Boolean);
 
 const result = await turso.batch(
