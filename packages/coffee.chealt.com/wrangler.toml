@@ -12,5 +12,5 @@ directory = "./dist"
 enabled = true
 
 [vars]
-ORIGIN=https://coffee.chealt.com
-RELYING_PARTY_ID=coffee.chealt
+ORIGIN = "https://coffee.chealt.com"
+RELYING_PARTY_ID = "coffee.chealt"
