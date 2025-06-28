@@ -13,7 +13,7 @@ const recordUser = async ({ username, registrationCode, email }) => {
   const client = getClient(username);
 
   return client.execute({
-    sql: 'INSERT INTO users (name, registration_code, email) VALUES (:name, :registration_code, :email)',
+    sql: 'INSERT INTO users (name, registration_code, email) VALUES (:name, :registration_code, :email) ON CONFLICT (name) DO UPDATE SET registration_code = :registration_code',
     args: { name: username, registration_code: registrationCode, email }
   });
 };

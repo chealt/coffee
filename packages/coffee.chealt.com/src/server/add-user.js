@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 import { sessionSecret } from './authentication/config.js';
-import { getUser, recordUser } from './database/user.js';
+import { recordUser } from './database/user.js';
 
 if (!sessionSecret) {
   throw new Error('sessionSecret is not set');
@@ -19,12 +19,6 @@ if (!email) {
 }
 
 const addUser = async () => {
-  const user = await getUser(username);
-
-  if (user) {
-    throw new Error('User already exists');
-  }
-
   const registrationCode = jwt.sign({ username }, sessionSecret, { expiresIn: '24h' });
 
   try {
@@ -36,7 +30,7 @@ const addUser = async () => {
   } catch (error) {
     console.error(error); // eslint-disable-line no-console
 
-    throw new Error('Failed to add user');
+    throw new Error('Failed to add / update user');
   }
 };
 
