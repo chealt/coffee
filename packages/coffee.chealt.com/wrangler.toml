@@ -13,4 +13,4 @@ enabled = true
 
 [vars]
 ORIGIN = "https://coffee.chealt.com"
-RELYING_PARTY_ID = "coffee.chealt"
+RELYING_PARTY_ID = "coffee.chealt.com"
