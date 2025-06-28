@@ -54,7 +54,7 @@ const onRequest = async (context, next) => {
   if (page === 'api') {
     const loggedInUser = getSessionUser(context.request);
 
-    if (!loggedInUser && params[1] !== 'login') {
+    if (!loggedInUser && params[1] !== 'login' && params[1] !== 'registration') {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
     }
   }
