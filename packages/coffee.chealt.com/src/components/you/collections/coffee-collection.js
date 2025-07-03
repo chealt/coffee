@@ -87,16 +87,6 @@ class CoffeeCollection extends HTMLElement {
     const collection = getCollection(this.collectionID);
     const rootDirectory = await navigator.storage.getDirectory();
 
-    const itemsToRemove = collection?.items
-      ? this.collectionElement.querySelectorAll(
-          `[data-item-id]:not(${collection.items.map(({ id: itemID }) => `[data-item-id="${itemID}"]`).join(',')})`
-        )
-      : this.collectionElement.querySelectorAll('[data-item-id]');
-
-    itemsToRemove?.forEach((item) => {
-      item.remove();
-    });
-
     // remove delete trigger of a built-in collection
     if (this.isBuiltIn && this.collectionElement.querySelector('[data-delete-trigger]')) {
       this.collectionElement.querySelector('[data-delete-trigger]').remove();
@@ -112,6 +102,20 @@ class CoffeeCollection extends HTMLElement {
     }
 
     if (!collection?.items) {
+      // item doesn't exist in local storage, but exists on the server
+      if (itemsElement) {
+        itemsElement.querySelectorAll('[data-item-id]').forEach((item) => {
+          item.querySelectorAll('[data-file-name]').forEach((image) => {
+            save({
+              collectionID: this.collectionID,
+              itemID: item.dataset.itemId,
+              filename: image.dataset.fileName,
+              uploaded: true
+            });
+          });
+        });
+      }
+
       return;
     }
 
