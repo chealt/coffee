@@ -46,9 +46,13 @@ class CoffeeCollection extends HTMLElement {
     const collection = getCollection(this.collectionID);
     const name = collection?.name;
 
+    if (name !== this.nameElement.textContent) {
+      updateCollectionName({ collectionID: collection.id, collectionName: this.nameElement.textContent });
+    }
+
     this.nameElement.setAttribute('contenteditable', '');
 
-    if (name) {
+    if (name && name === this.nameElement.textContent) {
       this.nameElement.textContent = name;
     }
 
@@ -91,6 +95,9 @@ class CoffeeCollection extends HTMLElement {
     if (this.isBuiltIn && this.collectionElement.querySelector('[data-delete-trigger]')) {
       this.collectionElement.querySelector('[data-delete-trigger]').remove();
     }
+
+    // override collection name from server
+    const renderedName = this.collectionElement.querySelector('[data-db-attr-name]')?.textContent;
 
     // add items
     const existingItemsElement = this.collectionElement.querySelector('[data-db-type=items]');
