@@ -1,6 +1,6 @@
 import { verifyAuthenticationResponse } from '@simplewebauthn/server';
 
-import { relyingPartyID, origin } from '../../../../server/authentication/config.js';
+import { cookieNameSession, relyingPartyID, origin } from '../../../../server/authentication/config.js';
 import { getSessionJWT } from '../../../../server/authentication/session.js';
 import {
   getUser,
@@ -59,7 +59,7 @@ const POST = async ({ request }) => {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Set-Cookie': `coffee-chealt-session=${getSessionJWT({ user })}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${60 * 60 * 24};`
+        'Set-Cookie': `${cookieNameSession}=${getSessionJWT({ user })}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${60 * 60 * 24 * 7};`
       }
     });
   } catch (error) {
