@@ -20,7 +20,7 @@ const POST = async ({ request }) => {
         break;
     }
   } catch (error) {
-    console.error(error);
+    console.error(error); // eslint-disable-line no-console
 
     return new Response(
       JSON.stringify({ success: false, error: `Could not save changes to ${key}. Please try again!` }),

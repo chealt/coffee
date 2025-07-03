@@ -1,6 +1,8 @@
 ---
 import Add from "./add.astro";
 import Button from "../../form/button/button.astro";
+import CoffeeDetails from "./coffee-details.astro";
+import CoffeeControls from "./coffee-controls.astro";
 import Icon from "../../icon/icon.astro";
 
 import './collection.css';
@@ -9,7 +11,7 @@ import allLocaleTranslations from "./locales.json";
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
-const { name, isBuiltIn, ...props } = Astro.props;
+const { name, isBuiltIn, items, ...props } = Astro.props;
 
 const contentEditable = isBuiltIn ? "contenteditable" : undefined;
 ---
@@ -27,6 +29,25 @@ const contentEditable = isBuiltIn ? "contenteditable" : undefined;
     </header>
     <Add />
   </coffee-collection>
+  {items?.length && (
+    <ul data-db-type="items">
+      {items.map(({ id, images }) => (
+        <li class="picture-collection" data-item-id={id}>
+          <coffee-details id={id}>
+            {images.length && (
+              <div class="carousel images-container">
+                {images.map(({ src, filename }) => (
+                  <img src={src} data-file-name={filename} />
+                ))}
+              </div>
+            ) || undefined}
+            <CoffeeDetails />
+          </coffee-details>
+          <CoffeeControls />
+        </li>
+      ))}
+    </ul>
+  ) || undefined}
 </li>
 
 <script src="./coffee-collection.js"></script>

@@ -2,6 +2,7 @@ import css from '@eslint/css';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import globals from 'globals';
 
+import { configs as astroConfigs } from 'eslint-plugin-astro';
 import importPlugin from 'eslint-plugin-import';
 
 export default defineConfig([
@@ -154,6 +155,7 @@ export default defineConfig([
       // import
       'import/default': ['error'],
       'import/export': ['error'],
+      'import/extensions': ['error', 'ignorePackages'],
       'import/group-exports': ['error'],
       'import/named': ['error'],
       'import/namespace': ['error'],
@@ -161,7 +163,12 @@ export default defineConfig([
       'import/no-duplicates': ['error'],
       'import/no-named-as-default-member': ['error'],
       'import/no-named-as-default': ['error'],
-      'import/no-unresolved': ['off'],
+      'import/no-unresolved': [
+        'error',
+        {
+          ignore: ['^astro', '^@astrojs/', '^eslint/']
+        }
+      ],
       'import/order': [
         'error',
         {
@@ -194,5 +201,22 @@ export default defineConfig([
         ...globals.node
       }
     }
-  }
+  },
+  ...astroConfigs['flat/recommended'].map((cfg) => ({
+    ...cfg,
+    files: ['**/*.astro'],
+    languageOptions: {
+      ...cfg.languageOptions,
+      ecmaVersion: 'latest'
+    },
+    rules: {
+      'import/no-unresolved': [
+        'error',
+        {
+          ignore: ['^astro:']
+        }
+      ],
+      'no-console': 'error'
+    }
+  }))
 ]);

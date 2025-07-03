@@ -1,1 +1,1 @@
-export { default } from './OCR';
+export { default } from './OCR.js';

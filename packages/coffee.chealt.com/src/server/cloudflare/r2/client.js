@@ -1,6 +1,11 @@
-import { S3Client } from '@aws-sdk/client-s3';
+import { AwsClient as AWSClient } from 'aws4fetch';
 
-const env = import.meta.env || process.env;
+const env = {
+  CLOUDFLARE_R2_ACCESS_KEY_ID_ATTILABARTHA:
+    import.meta.env?.CLOUDFLARE_R2_ACCESS_KEY_ID_ATTILABARTHA || process.env.CLOUDFLARE_R2_ACCESS_KEY_ID_ATTILABARTHA,
+  CLOUDFLARE_R2_ACCESS_SECRET_ATTILABARTHA:
+    import.meta.env?.CLOUDFLARE_R2_ACCESS_SECRET_ATTILABARTHA || process.env.CLOUDFLARE_R2_ACCESS_SECRET_ATTILABARTHA
+};
 
 const clients = {};
 
@@ -10,19 +15,17 @@ const getClient = (username) => {
   }
 
   const accessKeyId = env[`CLOUDFLARE_R2_ACCESS_KEY_ID_${username.toUpperCase()}`];
-  const secretAccessKey = env[`CLOUDFLARE_R2_SECRET_ACCESS_SECRET_${username.toUpperCase()}`];
+  const secretAccessKey = env[`CLOUDFLARE_R2_ACCESS_SECRET_${username.toUpperCase()}`];
 
   if (!accessKeyId || !secretAccessKey) {
     throw new Error(`No R2 credentials found for ${username}`);
   }
 
-  const client = new S3Client({
+  const client = new AWSClient({
+    accessKeyId,
     region: 'auto',
-    endpoint: `https://${username}.${env.CLOUDFLARE_R2_STORAGE_ENDPOINT}`,
-    credentials: {
-      accessKeyId,
-      secretAccessKey
-    }
+    secretAccessKey,
+    service: 's3'
   });
 
   clients[username] = client;

@@ -5,8 +5,8 @@ import originRegions from '../../../../data/originRegions.json';
 import processingMethods from '../../../../data/processingMethods.json';
 import roasters from '../../../../data/roasters.json';
 import roastingLevels from '../../../../data/roastingLevels.json';
-import { setInputValue } from '../../../utils/form';
-import { friendlyIncludes } from '../../../utils/string';
+import { setInputValue } from '../../../utils/form.js';
+import { friendlyIncludes } from '../../../utils/string.js';
 
 class CoffeeDetails extends HTMLElement {
   connectedCallback() {

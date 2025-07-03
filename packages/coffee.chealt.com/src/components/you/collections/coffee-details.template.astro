@@ -1,40 +1,9 @@
 ---
-import Button from "../../form/button/button.astro";
-import Dialog from "../../dialog/dialog.astro";
-import Form from "../../form/form.astro";
-
-import BrewingMethods from "./brewing-methods.astro";
-import Decaf from "./decaf.astro";
-import OriginCountries from "./origin-countries.astro";
-import OriginRegions from "./origin-regions.astro";
-import ProcessingMethods from "./processing-methods.astro";
-import Roasters from "./roasters.astro";
-import RoastingDate from "./roasting-date.astro";
-import RoastingLevels from "./roasting-levels.astro";
-
-import "./coffee-details.css";
-
-import allLocaleTranslations from "./locales.json";
-
-const t = allLocaleTranslations[Astro.currentLocale];
+import CoffeeDetails from "./coffee-details.astro";
 ---
 
 <template id="coffee-details-template">
-  <div class="details">
-    <div class="summary"><Button class="primary">{t["details"]}</Button></div>
-    <Dialog class="inline">
-      <Form data-storage="localStorage" data-save-on-input>
-        <Roasters />
-        <RoastingLevels />
-        <RoastingDate />
-        <OriginCountries />
-        <OriginRegions />
-        <ProcessingMethods />
-        <BrewingMethods />
-        <Decaf />
-      </Form>
-    </Dialog>
-  </div>
+  <CoffeeDetails />
 </template>
 
 <script src="./coffee-details.js"></script>

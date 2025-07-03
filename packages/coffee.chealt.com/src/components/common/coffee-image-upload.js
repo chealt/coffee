@@ -1,5 +1,5 @@
-import { getCollectionByName, save } from './storage';
-import { writeFile } from '../../utils/file';
+import { getCollectionByName, save } from './storage.js';
+import { uploadFile, writeFile } from '../../utils/file.js';
 
 class CoffeeImageUpload extends HTMLElement {
   connectedCallback() {
@@ -7,6 +7,7 @@ class CoffeeImageUpload extends HTMLElement {
     this.navigateTo = this.triggerButton.getAttribute('href');
     this.fileInput = this.querySelector('input[type=file]');
     this.shouldSync = this.dataset.shouldSync;
+    this.getSignedUrl = this.dataset.getSignedUrl;
 
     this.addClickListener();
     this.addFileChangeListener();
@@ -31,7 +32,25 @@ class CoffeeImageUpload extends HTMLElement {
       try {
         const filename = await writeFile(fileData);
 
-        await save({ collectionID, collectionName, itemID, filename, isBuiltIn, shouldSync: this.shouldSync });
+        let uploaded = false;
+
+        if (this.shouldSync) {
+          try {
+            uploaded = await uploadFile({ filename, fileData, getSignedUrl: this.getSignedUrl });
+          } catch (error) {
+            console.error(error); // eslint-disable-line no-console
+          }
+        }
+
+        await save({
+          collectionID,
+          collectionName,
+          itemID,
+          filename,
+          isBuiltIn,
+          shouldSync: this.shouldSync,
+          uploaded
+        });
       } catch (error) {
         if (error.name === 'AbortError') {
           console.log('user abort'); // eslint-disable-line no-console

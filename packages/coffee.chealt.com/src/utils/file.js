@@ -17,10 +17,54 @@ const writeFile = async (fileData) => {
   });
 };
 
-const deleteFile = async (name) => {
+const deleteFile = async (filename) => {
   const rootDirectory = await navigator.storage.getDirectory();
 
-  return rootDirectory.removeEntry(name);
+  return rootDirectory.removeEntry(filename);
 };
 
-export { writeFile, deleteFile };
+const deleteFileRemote = async ({ filename, getSignedUrl }) => {
+  const response = await fetch(getSignedUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'same-origin',
+    body: JSON.stringify({ filename, method: 'DELETE' })
+  });
+
+  const { url } = await response.json();
+
+  const deleteResponse = await fetch(url, {
+    method: 'DELETE'
+  });
+
+  return deleteResponse.ok;
+};
+
+const uploadFile = async ({ filename, fileData, getSignedUrl }) => {
+  const response = await fetch(getSignedUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'same-origin',
+    body: JSON.stringify({ filename, contentType: fileData.type })
+  });
+
+  const { url } = await response.json();
+
+  const renamedFile = new File([fileData], filename, { type: fileData.type });
+
+  const uploadResponse = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': renamedFile.type
+    },
+    body: renamedFile
+  });
+
+  return uploadResponse.ok;
+};
+
+export { deleteFile, deleteFileRemote, uploadFile, writeFile };

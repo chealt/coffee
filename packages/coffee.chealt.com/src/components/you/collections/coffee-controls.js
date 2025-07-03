@@ -1,4 +1,4 @@
-import { deleteFile } from '../../../utils/file';
+import { deleteFile, deleteFileRemote } from '../../../utils/file.js';
 import { getCollectionItems, deleteCollectionItem, save } from '../../common/storage.js';
 
 class CoffeeControls extends HTMLElement {
@@ -50,6 +50,7 @@ class CoffeeControls extends HTMLElement {
     this.querySelector('.delete').addEventListener('click', async () => {
       const collectionElement = this.closest('[data-db-attr-id]');
       const shouldSync = collectionElement.dataset.shouldSync;
+      const getSignedUrl = this.closest('coffee-gallery').dataset.getSignedUrl;
       const collectionID = collectionElement?.getAttribute('data-db-attr-id');
       const itemsElement = this.closest('[data-item-id]');
       const itemID = itemsElement.getAttribute('data-item-id');
@@ -59,6 +60,10 @@ class CoffeeControls extends HTMLElement {
         await Promise.all(
           items.images.map(async ({ filename }) => {
             deleteFile(filename);
+
+            if (shouldSync) {
+              deleteFileRemote({ filename, getSignedUrl });
+            }
           })
         );
       }

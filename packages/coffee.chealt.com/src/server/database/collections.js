@@ -1,5 +1,58 @@
 /* eslint-disable camelcase */
 import { getClient } from './client.js';
+import { getImageUrl } from '../cloudflare/r2/storage.js';
+
+const queryCollections = async (user) => {
+  const client = getClient(user.name);
+
+  const results = await client.execute({
+    sql: 'SELECT id, name, is_built_in FROM collections'
+  });
+
+  return results.rows;
+};
+
+const queryCollectionItems = async (user) => {
+  const client = getClient(user.name);
+
+  const results = await client.execute({
+    sql: 'SELECT id, collection_id FROM collection_items'
+  });
+
+  return results.rows;
+};
+
+const queryCollectionItemImages = async (user) => {
+  const client = getClient(user.name);
+
+  const results = await client.execute({
+    sql: 'SELECT filename, collection_item_id FROM collection_item_images'
+  });
+
+  return results.rows;
+};
+
+const getCollections = async (user) => {
+  const collections = await queryCollections(user);
+  const collectionItems = await queryCollectionItems(user);
+  const collectionItemImages = await queryCollectionItemImages(user);
+
+  return collections.map(({ id: collectionId, name, is_built_in: isBuiltIn }) => ({
+    id: collectionId,
+    name,
+    isBuiltIn: Boolean(isBuiltIn),
+    items:
+      collectionItems
+        .filter((item) => item.collection_id === collectionId)
+        ?.map(({ id: itemId }) => ({
+          id: itemId,
+          images:
+            collectionItemImages
+              .filter((image) => image.collection_item_id === itemId)
+              ?.map(({ filename }) => ({ filename, src: getImageUrl({ username: user.name, filename }) })) || []
+        })) || []
+  }));
+};
 
 const saveCollections = async ({ user, collections }) => {
   const client = getClient(user.name);
@@ -56,4 +109,4 @@ const deleteCollectionItem = async ({ user, id }) => {
   });
 };
 
-export { deleteCollection, deleteCollectionItem, saveCollections };
+export { deleteCollection, deleteCollectionItem, getCollections, saveCollections };

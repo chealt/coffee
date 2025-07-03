@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 import { env, InferenceSession, Tensor } from 'onnxruntime-web';
 
-import dictionary from './dictionary';
-import { appendImage, imageFromUrl, multipleOfBaseSize, outputToImage } from './imageUtils';
-import { imageToModelInput } from './modelUtils';
-import { splitIntoLineImages } from './splitIntoLineImages';
+import dictionary from './dictionary.js';
+import { appendImage, imageFromUrl, multipleOfBaseSize, outputToImage } from './imageUtils.js';
+import { imageToModelInput } from './modelUtils.js';
+import { splitIntoLineImages } from './splitIntoLineImages.js';
 
 env.wasm.proxy = true;
 

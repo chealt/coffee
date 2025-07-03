@@ -1,10 +1,12 @@
-import { generateUploadUrl } from '../../../server/cloudflare/r2/storage';
+import { getSessionUser } from '../../../server/authentication/session.js';
+import { generateUploadUrl } from '../../../server/cloudflare/r2/storage.js';
 
-const GET = async ({ request }) => {
-  const { username, filename, contentType } = await request.json();
+const POST = async ({ request }) => {
+  const { username } = getSessionUser(request);
+  const { filename, contentType, method } = await request.json();
 
   try {
-    const url = await generateUploadUrl({ username, filename, contentType });
+    const url = await generateUploadUrl({ username, filename, contentType, method });
 
     return new Response(JSON.stringify({ url }), { status: 200 });
   } catch (error) {
@@ -17,4 +19,4 @@ const GET = async ({ request }) => {
   }
 };
 
-export { GET };
+export { POST };

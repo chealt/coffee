@@ -154,7 +154,13 @@ class CoffeeCollection extends HTMLElement {
       }
 
       for (const { filename } of images) {
-        if (imagesContainer.querySelector(`[data-file-name="${filename}"]`)) {
+        const existingImage = imagesContainer.querySelector(`[data-file-name="${filename}"]`);
+
+        if (existingImage) {
+          if (!existingImage.id) {
+            existingImage.id = filename;
+          }
+
           continue;
         }
 
@@ -164,7 +170,7 @@ class CoffeeCollection extends HTMLElement {
         const image = new Image(this.collectionElement.clientWidth);
         image.src = URL.createObjectURL(fileData);
         image.setAttribute('data-file-name', filename);
-        image.id = `${fileData.name}_${fileData.lastModified}`;
+        image.id = filename;
 
         imagesContainer.appendChild(image);
       }

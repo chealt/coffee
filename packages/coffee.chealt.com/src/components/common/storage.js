@@ -1,9 +1,9 @@
-import { deleteItem, setItem } from '../../utils/storage';
+import { deleteItem, setItem } from '../../utils/storage.js';
 
 const collectionsKey = 'chealt-collections';
 const collectionItemsKey = 'chealt-collection-item';
 // eslint-disable-next-line complexity
-const save = async ({ collectionID, collectionName, isBuiltIn, itemID, filename, shouldSync }) => {
+const save = async ({ collectionID, collectionName, isBuiltIn, itemID, filename, shouldSync, uploaded }) => {
   const collectionsRaw = localStorage.getItem(collectionsKey);
   const collections = JSON.parse(collectionsRaw) || [];
   const collection = collections.find(({ id }) => id === collectionID);
@@ -19,18 +19,18 @@ const save = async ({ collectionID, collectionName, isBuiltIn, itemID, filename,
         id: collectionID,
         name: collectionName,
         isBuiltIn,
-        items: [{ id: itemID, images: [{ filename }] }]
+        items: [{ id: itemID, images: [{ filename, uploaded }] }]
       });
     } else {
       collections.push({ id: collectionID, name: collectionName, isBuiltIn });
     }
   } else {
     if (!collection.items) {
-      collection.items = [{ id: itemID, images: [{ filename }] }];
+      collection.items = [{ id: itemID, images: [{ filename, uploaded }] }];
     } else if (!collection.items.some(({ id: existingItemID }) => existingItemID === itemID)) {
-      collection.items.push({ id: itemID, images: [{ filename }] });
+      collection.items.push({ id: itemID, images: [{ filename, uploaded }] });
     } else if (!item.images.some(({ filename: existingFileName }) => existingFileName === filename)) {
-      item.images.push({ filename });
+      item.images.push({ filename, uploaded });
     }
   }
 

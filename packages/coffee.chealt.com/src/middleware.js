@@ -4,6 +4,7 @@ import { sessionSecret } from './server/authentication/config.js';
 import { getSessionUser } from './server/authentication/session.js';
 import { getAuthenticationOptions } from './server/login.js';
 import { createRegistrationOptions } from './server/registration.js';
+import { setCollections } from './server/you/collections.js';
 
 const isIOS = (userAgent) => /iPad|iPhone|iPod/u.test(userAgent);
 
@@ -112,6 +113,10 @@ const onRequest = async (context, next) => {
         console.error(error); // eslint-disable-line no-console
       }
     }
+  }
+
+  if (page === 'you') {
+    await setCollections(context);
   }
 
   setClientSideOCR(context);

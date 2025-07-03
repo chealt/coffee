@@ -11,20 +11,28 @@ import "./coffee-gallery.css";
 import allLocaleTranslations from "./locales.json";
 
 const t = allLocaleTranslations[Astro.currentLocale];
+
+const { collections, getSignedUrl } = Astro.locals;
+
+console.log(JSON.stringify(collections, ' ', 4));
 ---
 
 <h2>
   {t["title"]}
 </h2>
-<coffee-gallery>
+<coffee-gallery data-get-signed-url={getSignedUrl}>
   <CoffeeDetailsTemplate />
   <CoffeeControlsTemplate />
   <CollectionTemplate />
   <Review />
   <chealt-ocr>
     <ul data-db-type="collections">
-      <Collection data-db-attr-id="favorites" name={t["favorites"]} data-db-attr-is-built-in data-should-sync />
-      <Collection data-db-attr-id="wishList" name={t["wishList"]} data-db-attr-is-built-in data-should-sync />
+      {collections?.map(({ id, name, isBuiltIn, items }) => (
+        <Collection data-db-attr-id={id} name={name} data-db-attr-is-built-in={isBuiltIn} data-should-sync items={items} />
+      )) || (
+        <Collection data-db-attr-id="favorites" name={t["favorites"]} data-db-attr-is-built-in data-should-sync />
+        <Collection data-db-attr-id="wishList" name={t["wishList"]} data-db-attr-is-built-in data-should-sync />
+      )}
     </ul>
   </chealt-ocr>
 </coffee-gallery>

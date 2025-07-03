@@ -28,7 +28,10 @@ const outputToImage = (output, threshold) => {
 
 const imageFromUrl = async (url) => {
   const image = new Image();
+
+  image.crossOrigin = 'anonymous';
   image.src = url;
+
   await image.decode();
 
   return image;
