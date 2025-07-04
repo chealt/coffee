@@ -13,7 +13,7 @@ const generateUploadUrl = async ({ username, filename, contentType, method }) =>
 
   const result = await client.sign(
     new Request(
-      `https://${env.CLOUDFLARE_R2_STORAGE_ENDPOINT}/chealt-coffee-${username}/collection-images/${filename}`,
+      `https://${env.CLOUDFLARE_R2_STORAGE_ENDPOINT}/chealt-coffee-${username}/${env.CLOUDFLARE_R2_COLLECTION_FOLDER}/${filename}`,
       {
         method: method || 'PUT',
         headers: { 'Content-Type': contentType }

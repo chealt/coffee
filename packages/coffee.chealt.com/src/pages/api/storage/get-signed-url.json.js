@@ -12,8 +12,7 @@ const POST = async ({ request }) => {
   } catch (error) {
     console.error(error); // eslint-disable-line no-console
 
-    // return new Response(JSON.stringify({ error: 'Failed to generate upload URL' }), {
-    return new Response(JSON.stringify({ error }), {
+    return new Response(JSON.stringify({ error: 'Failed to generate upload URL' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
