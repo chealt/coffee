@@ -105,6 +105,7 @@ class CoffeeCollection extends HTMLElement {
       itemsElement.setAttribute('data-db-type', 'items');
     }
 
+    // TODO: also check for missing items or files
     if (!collection?.items) {
       // item doesn't exist in local storage, but exists on the server
       if (itemsElement) {
