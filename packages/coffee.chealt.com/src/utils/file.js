@@ -54,6 +54,10 @@ const uploadFile = async ({ filename, fileData, getSignedUrl }) => {
     body: JSON.stringify({ filename, contentType: fileData.type })
   });
 
+  if (!response.ok) {
+    throw new Error('Could not get signed URL');
+  }
+
   const { url } = await response.json();
 
   const renamedFile = new File([fileData], filename, { type: fileData.type });
