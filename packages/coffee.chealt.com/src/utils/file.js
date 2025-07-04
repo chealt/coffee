@@ -1,3 +1,5 @@
+import { setImageUploaded } from '../components/common/storage.js';
+
 const writeFile = async (fileData) => {
   const fileWorker = new Worker(new URL('./fileWorker.js', import.meta.url));
 
@@ -64,7 +66,11 @@ const uploadFile = async ({ filename, fileData, getSignedUrl }) => {
     body: renamedFile
   });
 
-  return uploadResponse.ok;
+  if (uploadResponse.ok) {
+    setImageUploaded(filename);
+  }
+
+  return uploadResponse;
 };
 
 export { deleteFile, deleteFileRemote, uploadFile, writeFile };

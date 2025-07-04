@@ -32,25 +32,22 @@ class CoffeeImageUpload extends HTMLElement {
       try {
         const filename = await writeFile(fileData);
 
-        let uploaded = false;
-
-        if (this.shouldSync) {
-          try {
-            uploaded = await uploadFile({ filename, fileData, getSignedUrl: this.getSignedUrl });
-          } catch (error) {
-            console.error(error); // eslint-disable-line no-console
-          }
-        }
-
         await save({
           collectionID,
           collectionName,
           itemID,
           filename,
           isBuiltIn,
-          shouldSync: this.shouldSync,
-          uploaded
+          shouldSync: this.shouldSync
         });
+
+        if (this.shouldSync) {
+          try {
+            uploadFile({ filename, fileData, getSignedUrl: this.getSignedUrl });
+          } catch (error) {
+            console.error(error); // eslint-disable-line no-console
+          }
+        }
       } catch (error) {
         if (error.name === 'AbortError') {
           console.log('user abort'); // eslint-disable-line no-console

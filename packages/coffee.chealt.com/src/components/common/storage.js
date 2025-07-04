@@ -60,6 +60,24 @@ const getAllCollections = () => {
   return collections;
 };
 
+const setImageUploaded = (filename) => {
+  const collections = getAllCollections();
+
+  collections.some(({ items }) =>
+    items?.some(({ images }) =>
+      images?.some((image) => {
+        if (image.filename === filename) {
+          image.uploaded = true;
+        }
+
+        return image.filename === filename;
+      })
+    )
+  );
+
+  localStorage.setItem(collectionsKey, JSON.stringify(collections));
+};
+
 const getCollection = (collectionID) => {
   const collections = getAllCollections();
 
@@ -131,5 +149,6 @@ export {
   getCollectionByName,
   getCollectionItems,
   updateCollectionName,
-  save
+  save,
+  setImageUploaded
 };
