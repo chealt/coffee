@@ -16,6 +16,7 @@ class CoffeeCollection extends HTMLElement {
     this.isBuiltIn = this.collectionElement.dataset.dbAttrIsBuiltIn === 'true';
     this.shouldSync = this.collectionElement.dataset.shouldSync;
 
+    this.addMissingCollection();
     this.addRefreshListener();
 
     if (!this.isBuiltIn) {
@@ -24,7 +25,6 @@ class CoffeeCollection extends HTMLElement {
     }
 
     this.render();
-    this.addMissingCollection();
   }
 
   async addMissingCollection() {
@@ -95,9 +95,6 @@ class CoffeeCollection extends HTMLElement {
     if (this.isBuiltIn && this.collectionElement.querySelector('[data-delete-trigger]')) {
       this.collectionElement.querySelector('[data-delete-trigger]').remove();
     }
-
-    // override collection name from server
-    const renderedName = this.collectionElement.querySelector('[data-db-attr-name]')?.textContent;
 
     // add items
     const existingItemsElement = this.collectionElement.querySelector('[data-db-type=items]');
