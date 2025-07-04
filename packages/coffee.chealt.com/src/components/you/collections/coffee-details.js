@@ -12,7 +12,10 @@ class CoffeeDetails extends HTMLElement {
   connectedCallback() {
     this.id = this.closest('[data-item-id]')?.getAttribute('data-item-id'); // unique identifier to use for storage
 
-    this.renderInitDetails();
+    if (!this.querySelector('.details')) {
+      this.renderInitDetails();
+    }
+
     this.addMutationObserver();
     this.addToggleButtonEvent();
     this.addCloseOnEscEvent();
