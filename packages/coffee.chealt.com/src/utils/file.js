@@ -1,12 +1,24 @@
 import { setImageUploaded } from '../components/common/storage.js';
 
+const convertToHex = (arrayBuffer) =>
+  Array.from(new Uint8Array(arrayBuffer))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+
+const getContentHash = async ({ arrayBuffer, algorithm = 'SHA-256' }) => {
+  const hashBuffer = await crypto.subtle.digest(algorithm, arrayBuffer);
+
+  return convertToHex(hashBuffer);
+};
+
 const writeFile = async (fileData) => {
   const fileWorker = new Worker(new URL('./fileWorker.js', import.meta.url));
+  const filename = await getContentHash({ arrayBuffer: await fileData.arrayBuffer() });
 
   return new Promise((resolve, reject) => {
     fileWorker.onmessage = (event) => {
       if (event.data.success) {
-        resolve(event.data.filename);
+        resolve(filename);
       } else {
         reject(event.data.error);
       }
@@ -14,7 +26,10 @@ const writeFile = async (fileData) => {
 
     fileWorker.postMessage({
       command: 'writeFile',
-      data: fileData
+      data: {
+        fileData,
+        filename
+      }
     });
   });
 };

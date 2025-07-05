@@ -2,6 +2,7 @@ import { deleteItem, setItem } from '../../utils/storage.js';
 
 const collectionsKey = 'chealt-collections';
 const collectionItemsKey = 'chealt-collection-item';
+
 // eslint-disable-next-line complexity
 const save = async ({ collectionID, collectionName, isBuiltIn, itemID, filename, shouldSync, uploaded }) => {
   const collectionsRaw = localStorage.getItem(collectionsKey);

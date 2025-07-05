@@ -1,3 +1,5 @@
+import { writeFile } from '../../../utils/file.js';
+import { getFiledata } from '../../../utils/image.js';
 import {
   getCollection,
   getAllCollections,
@@ -16,7 +18,7 @@ class CoffeeCollection extends HTMLElement {
     this.isBuiltIn = this.collectionElement.dataset.dbAttrIsBuiltIn === 'true';
     this.shouldSync = this.collectionElement.dataset.shouldSync;
 
-    this.addMissingCollection();
+    this.addMissingCollectionItems();
     this.addRefreshListener();
 
     if (!this.isBuiltIn) {
@@ -27,19 +29,37 @@ class CoffeeCollection extends HTMLElement {
     this.render();
   }
 
-  async addMissingCollection() {
+  async addMissingCollectionItems() {
     const { collectionID, isBuiltIn } = this;
     const collection = getCollection(this.collectionID);
     const collectionName = this.nameElement.textContent;
 
     if (!collection) {
-      await save({
+      this.missingCollectionPromise = save({
         collectionID,
         collectionName,
         isBuiltIn,
         shouldSync: this.shouldSync
       });
+
+      await this.missingCollectionPromise;
     }
+
+    this.missingItemsSavePromises = Promise.all(
+      Array.from(this.collectionElement.querySelectorAll('[data-item-id]'))
+        .map((item) =>
+          Array.from(item.querySelectorAll('[data-file-name]')).map(
+            async (image) =>
+              await save({
+                collectionID: this.collectionID,
+                itemID: item.dataset.itemId,
+                filename: image.dataset.fileName,
+                uploaded: true
+              })
+          )
+        )
+        .flat()
+    );
   }
 
   renderName() {
@@ -87,6 +107,11 @@ class CoffeeCollection extends HTMLElement {
 
   // eslint-disable-next-line complexity
   async render() {
+    // wait until the missing items are saved
+    if (this.missingItemsSavePromises || this.missingCollectionPromise) {
+      await Promise.all([this.missingCollectionPromise, this.missingItemsSavePromises]);
+    }
+
     const collections = getAllCollections();
     const collection = getCollection(this.collectionID);
     const rootDirectory = await navigator.storage.getDirectory();
@@ -105,103 +130,97 @@ class CoffeeCollection extends HTMLElement {
       itemsElement.setAttribute('data-db-type', 'items');
     }
 
-    // TODO: also check for missing items or files
-    if (!collection?.items) {
-      // item doesn't exist in local storage, but exists on the server
-      if (itemsElement) {
-        itemsElement.querySelectorAll('[data-item-id]').forEach((item) => {
-          item.querySelectorAll('[data-file-name]').forEach((image) => {
-            save({
-              collectionID: this.collectionID,
-              itemID: item.dataset.itemId,
-              filename: image.dataset.fileName,
-              uploaded: true
-            });
-          });
-        });
-      }
+    if (collection.items) {
+      for await (const { id: itemID, images } of collection.items) {
+        const existingItemElement = this.collectionElement.querySelector(`[data-item-id="${itemID}"]`);
+        let itemElement = existingItemElement;
 
-      return;
-    }
-
-    for await (const { id: itemID, images } of collection.items) {
-      const existingItemElement = this.collectionElement.querySelector(`[data-item-id="${itemID}"]`);
-      let itemElement = existingItemElement;
-
-      if (!existingItemElement) {
-        // add a list item
-        itemElement = document.createElement('li');
-        itemElement.classList.add('picture-collection');
-        itemElement.setAttribute('data-item-id', itemID);
-      }
-
-      const isFavorite =
-        this.collectionID === 'favorites' ||
-        collections
-          .find(({ id: existingCollectionID }) => existingCollectionID === 'favorites')
-          ?.items?.some(({ id: existingItemID }) => itemID === existingItemID);
-
-      if (isFavorite) {
-        itemElement.setAttribute('data-is-favorite', '');
-      }
-
-      const existingDetailsElement = itemElement.querySelector('coffee-details');
-      let details = existingDetailsElement;
-
-      if (!existingDetailsElement) {
-        details = document.createElement('coffee-details');
-      }
-
-      // add images
-      const existingImagesContainer = itemElement.querySelector('.images-container');
-      let imagesContainer = existingImagesContainer;
-
-      if (!existingImagesContainer) {
-        imagesContainer = document.createElement('div');
-        imagesContainer.classList.add('carousel');
-        imagesContainer.classList.add('images-container');
-      }
-
-      for (const { filename } of images) {
-        const existingImage = imagesContainer.querySelector(`[data-file-name="${filename}"]`);
-
-        if (existingImage) {
-          if (!existingImage.id) {
-            existingImage.id = filename;
-          }
-
-          continue;
+        if (!existingItemElement) {
+          // add a list item
+          itemElement = document.createElement('li');
+          itemElement.classList.add('picture-collection');
+          itemElement.setAttribute('data-item-id', itemID);
         }
 
-        const fileHandle = await rootDirectory.getFileHandle(filename);
-        const fileData = await fileHandle.getFile();
+        const isFavorite =
+          this.collectionID === 'favorites' ||
+          collections
+            .find(({ id: existingCollectionID }) => existingCollectionID === 'favorites')
+            ?.items?.some(({ id: existingItemID }) => itemID === existingItemID);
 
-        const image = new Image(this.collectionElement.clientWidth);
-        image.src = URL.createObjectURL(fileData);
-        image.setAttribute('data-file-name', filename);
-        image.id = filename;
+        if (isFavorite) {
+          itemElement.setAttribute('data-is-favorite', '');
+        }
 
-        imagesContainer.appendChild(image);
-      }
+        const existingDetailsElement = itemElement.querySelector('coffee-details');
+        let details = existingDetailsElement;
 
-      if (!existingImagesContainer) {
-        itemElement.appendChild(imagesContainer);
-      }
+        if (!existingDetailsElement) {
+          details = document.createElement('coffee-details');
+        }
 
-      if (!existingDetailsElement) {
-        // add details
-        details.appendChild(imagesContainer);
-        itemElement.appendChild(details);
+        // add images
+        const existingImagesContainer = itemElement.querySelector('.images-container');
+        let imagesContainer = existingImagesContainer;
 
-        // add controls
-        const template = document.getElementById('coffee-controls-template');
-        const templateContent = template.content;
+        if (!existingImagesContainer) {
+          imagesContainer = document.createElement('div');
+          imagesContainer.classList.add('carousel');
+          imagesContainer.classList.add('images-container');
+        }
 
-        itemElement.appendChild(templateContent.cloneNode(true));
-      }
+        for (const { filename } of images) {
+          const existingImage = imagesContainer.querySelector(`[data-file-name="${filename}"]`);
 
-      if (!existingItemElement) {
-        itemsElement.appendChild(itemElement);
+          if (existingImage) {
+            if (!existingImage.id) {
+              existingImage.id = filename;
+            }
+
+            try {
+              const fileHandle = await rootDirectory.getFileHandle(filename);
+              await fileHandle.getFile();
+            } catch (error) {
+              if (error.name === 'NotFoundError') {
+                existingImage.onload = async () => {
+                  await writeFile(await getFiledata({ imageElement: existingImage, filename }));
+                };
+              }
+            }
+
+            continue;
+          }
+
+          const fileHandle = await rootDirectory.getFileHandle(filename);
+          const fileData = await fileHandle.getFile();
+
+          const image = new Image(this.collectionElement.clientWidth);
+          image.src = URL.createObjectURL(fileData);
+          image.setAttribute('data-file-name', filename);
+          image.id = filename;
+
+          imagesContainer.appendChild(image);
+        }
+
+        if (!existingImagesContainer) {
+          itemElement.appendChild(imagesContainer);
+        }
+
+        if (!existingDetailsElement) {
+          // add details
+          details.appendChild(imagesContainer);
+          itemElement.appendChild(details);
+
+          // add controls
+          const template = document.getElementById('coffee-controls-template');
+          const templateContent = template.content;
+
+          itemElement.appendChild(templateContent.cloneNode(true));
+        }
+
+        if (!existingItemElement) {
+          itemsElement.appendChild(itemElement);
+        }
       }
     }
 
