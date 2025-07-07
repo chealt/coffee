@@ -13,8 +13,6 @@ import allLocaleTranslations from "./locales.json";
 const t = allLocaleTranslations[Astro.currentLocale];
 
 const { collections, getSignedUrl } = Astro.locals;
-
-console.log(JSON.stringify(collections, ' ', 4));
 ---
 
 <h2>
@@ -28,10 +26,10 @@ console.log(JSON.stringify(collections, ' ', 4));
   <chealt-ocr>
     <ul data-db-type="collections">
       {collections?.map(({ id, name, isBuiltIn, items }) => (
-        <Collection data-db-attr-id={id} name={name} data-db-attr-is-built-in={isBuiltIn} data-should-sync items={items} />
+        <Collection data-db-attr-id={id} name={name} data-db-attr-is-built-in={isBuiltIn} data-should-sync items={items} isBuiltIn={isBuiltIn} />
       )) || (
-        <Collection data-db-attr-id="favorites" name={t["favorites"]} data-db-attr-is-built-in data-should-sync />
-        <Collection data-db-attr-id="wishList" name={t["wishList"]} data-db-attr-is-built-in data-should-sync />
+        <Collection data-db-attr-id="favorites" name={t["favorites"]} data-db-attr-is-built-in data-should-sync isBuiltIn />
+        <Collection data-db-attr-id="wishList" name={t["wishList"]} data-db-attr-is-built-in data-should-sync isBuiltIn />
       )}
     </ul>
   </chealt-ocr>

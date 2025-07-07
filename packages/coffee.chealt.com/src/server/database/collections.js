@@ -16,7 +16,7 @@ const queryCollectionItems = async (user) => {
   const client = getClient(user.name);
 
   const results = await client.execute({
-    sql: 'SELECT id, collection_id FROM collection_items'
+    sql: 'SELECT id FROM collection_items'
   });
 
   return results.rows;
@@ -32,9 +32,20 @@ const queryCollectionItemImages = async (user) => {
   return results.rows;
 };
 
+const queryCollectionItemLinks = async (user) => {
+  const client = getClient(user.name);
+
+  const results = await client.execute({
+    sql: 'SELECT collection_item_id, collection_id FROM collection_item_links'
+  });
+
+  return results.rows;
+};
+
 const getCollections = async (user) => {
   const collections = await queryCollections(user);
   const collectionItems = await queryCollectionItems(user);
+  const collectionItemLinks = await queryCollectionItemLinks(user);
   const collectionItemImages = await queryCollectionItemImages(user);
 
   return collections.map(({ id: collectionId, name, is_built_in: isBuiltIn }) => ({
@@ -43,7 +54,9 @@ const getCollections = async (user) => {
     isBuiltIn: Boolean(isBuiltIn),
     items:
       collectionItems
-        .filter((item) => item.collection_id === collectionId)
+        .filter((item) =>
+          collectionItemLinks.some((link) => link.collection_item_id === item.id && link.collection_id === collectionId)
+        )
         ?.map(({ id: itemId }) => ({
           id: itemId,
           images:
@@ -63,10 +76,28 @@ const saveCollections = async ({ user, collections }) => {
   }));
   const collection_items_batch_commands = collections
     .map(
-      ({ id: collection_id, items }) =>
+      ({ items }) =>
         items?.map(({ id }) => ({
-          sql: 'INSERT INTO collection_items (id, collection_id) VALUES (:id, :collection_id) ON CONFLICT(id) DO UPDATE SET collection_id = :collection_id',
-          args: { id, collection_id }
+          sql: 'INSERT INTO collection_items (id) VALUES (:id) ON CONFLICT(id) DO NOTHING',
+          args: { id }
+        })) || []
+    )
+    .flat();
+  const collection_item_links_batch_delete_commands = collections
+    .map(
+      ({ items }) =>
+        items?.map(({ id: collectionItemId }) => ({
+          sql: 'DELETE FROM collection_item_links WHERE collection_item_id = :collection_item_id',
+          args: { collection_item_id: collectionItemId }
+        })) || []
+    )
+    .flat();
+  const collection_item_links_batch_commands = collections
+    .map(
+      ({ id: collectionId, items }) =>
+        items?.map(({ id: collectionItemId }) => ({
+          sql: 'INSERT INTO collection_item_links (collection_item_id, collection_id) VALUES (:collection_item_id, :collection_id)',
+          args: { collection_item_id: collectionItemId, collection_id: collectionId }
         })) || []
     )
     .flat();
@@ -85,9 +116,9 @@ const saveCollections = async ({ user, collections }) => {
     .flat();
 
   await client.batch(collections_batch_commands, 'write');
-
   await client.batch(collection_items_batch_commands, 'write');
-
+  await client.batch(collection_item_links_batch_delete_commands, 'write');
+  await client.batch(collection_item_links_batch_commands, 'write');
   await client.batch(collection_item_images_batch_commands, 'write');
 };
 

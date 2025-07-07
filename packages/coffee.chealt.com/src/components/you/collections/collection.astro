@@ -13,7 +13,7 @@ const t = allLocaleTranslations[Astro.currentLocale];
 
 const { name, isBuiltIn, items, ...props } = Astro.props;
 
-const contentEditable = isBuiltIn ? "contenteditable" : undefined;
+const contentEditable = !isBuiltIn ? "contenteditable" : undefined;
 ---
 
 <li {...props}>
