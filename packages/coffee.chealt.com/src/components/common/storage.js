@@ -1,6 +1,7 @@
 import { deleteItem, setItem } from '../../utils/storage.js';
 
 const collectionsKey = 'chealt-collections';
+const collectionNameKey = 'chealt-collection-name';
 const collectionItemsKey = 'chealt-collection-item';
 
 // eslint-disable-next-line complexity
@@ -138,7 +139,7 @@ const updateCollectionName = ({ collectionID, collectionName, shouldSync }) => {
   localStorage.setItem(collectionsKey, JSON.stringify(collections));
 
   if (shouldSync) {
-    setItem(collectionsKey, collections);
+    setItem(collectionNameKey, { id: collectionID, name: collectionName });
   }
 };
 

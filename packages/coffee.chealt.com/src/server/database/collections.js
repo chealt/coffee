@@ -154,4 +154,13 @@ const deleteCollectionItem = async ({ user, id }) => {
   });
 };
 
-export { deleteCollection, deleteCollectionItem, getCollections, saveCollections };
+const updateCollectionName = async ({ user, id, name }) => {
+  const client = getClient(user.name);
+
+  return await client.execute({
+    sql: 'UPDATE collections SET name = :name WHERE id = :id',
+    args: { id, name }
+  });
+};
+
+export { deleteCollection, deleteCollectionItem, getCollections, updateCollectionName, saveCollections };

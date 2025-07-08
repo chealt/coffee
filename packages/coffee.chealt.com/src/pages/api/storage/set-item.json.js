@@ -1,5 +1,5 @@
 import { getSessionUser } from '../../../server/authentication/session.js';
-import { saveCollections } from '../../../server/database/collections.js';
+import { updateCollectionName, saveCollections } from '../../../server/database/collections.js';
 
 const POST = async ({ request }) => {
   const loggedInUser = getSessionUser(request);
@@ -8,12 +8,17 @@ const POST = async ({ request }) => {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }
 
-  const { key, value: collections } = await request.json();
+  const { key, value } = await request.json();
+  const user = { name: loggedInUser.username, id: loggedInUser.userID };
 
   try {
     switch (key) {
       case 'chealt-collections':
-        await saveCollections({ user: { name: loggedInUser.username, id: loggedInUser.userID }, collections });
+        await saveCollections({ user, collections: value });
+
+        break;
+      case 'chealt-collection-name':
+        await updateCollectionName({ user, ...value });
 
         break;
       default:
