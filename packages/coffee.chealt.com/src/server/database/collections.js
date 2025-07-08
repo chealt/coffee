@@ -134,6 +134,11 @@ const deleteCollection = async ({ user, id }) => {
 const deleteCollectionItem = async ({ user, id }) => {
   const client = getClient(user.name);
 
+  await client.execute({
+    sql: 'DELETE FROM collection_item_links WHERE collection_item_id = :id',
+    args: { id }
+  });
+
   return await client.execute({
     sql: 'DELETE FROM collection_items WHERE id = :id',
     args: { id }
