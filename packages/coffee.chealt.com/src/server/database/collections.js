@@ -125,9 +125,18 @@ const saveCollections = async ({ user, collections }) => {
 const deleteCollection = async ({ user, id }) => {
   const client = getClient(user.name);
 
-  return await client.execute({
+  await client.execute({
     sql: 'DELETE FROM collections WHERE id = :id',
     args: { id }
+  });
+
+  const { rows } = await client.execute({
+    sql: 'SELECT ci.id FROM collection_items ci LEFT JOIN collection_item_links cil ON cil.collection_item_id = ci.id WHERE cil.id IS NULL'
+  });
+  const orphanedItemIDs = rows.map((row) => `'${row.id}'`);
+
+  return await client.execute({
+    sql: `DELETE FROM collection_items WHERE id IN (${orphanedItemIDs.join(',')})`
   });
 };
 
