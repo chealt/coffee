@@ -39,7 +39,7 @@ class CoffeeCollection extends HTMLElement {
         collectionID,
         collectionName,
         isBuiltIn,
-        shouldSync: this.shouldSync
+        shouldSync: false // these came from the server, so no need to sync
       });
 
       await this.missingCollectionPromise;
