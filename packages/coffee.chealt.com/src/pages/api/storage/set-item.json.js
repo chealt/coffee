@@ -1,5 +1,11 @@
 import { getSessionUser } from '../../../server/authentication/session.js';
-import { updateCollectionName, saveCollections } from '../../../server/database/collections.js';
+import {
+  addCollection,
+  addCollectionItems,
+  addCollectionItemImages,
+  updateCollectionName,
+  saveCollections
+} from '../../../server/database/collections.js';
 
 const POST = async ({ request }) => {
   const loggedInUser = getSessionUser(request);
@@ -19,6 +25,23 @@ const POST = async ({ request }) => {
         break;
       case 'chealt-collection-name':
         await updateCollectionName({ user, ...value });
+
+        break;
+      case 'chealt-collection-add':
+        await addCollection({ user, ...value });
+
+        break;
+      case 'chealt-collection-add-with-item':
+        await addCollection({ user, id: value.id, name: value.name, isBuiltIn: value.isBuiltIn });
+        await addCollectionItems({ user, id: value.id, items: value.items });
+
+        break;
+      case 'chealt-collection-item-add':
+        await addCollectionItems({ user, id: value.id, items: value.items });
+
+        break;
+      case 'chealt-collection-item-images-add':
+        await addCollectionItemImages({ user, ...value });
 
         break;
       default:

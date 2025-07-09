@@ -1,8 +1,12 @@
 import { deleteItem, setItem } from '../../utils/storage.js';
 
 const collectionsKey = 'chealt-collections';
+const collectionAddKey = 'chealt-collection-add';
+const collectionAddWithItemKey = 'chealt-collection-add-with-item';
 const collectionNameKey = 'chealt-collection-name';
 const collectionItemsKey = 'chealt-collection-item';
+const collectionItemsAddKey = 'chealt-collection-item-add';
+const collectionItemImagesAddKey = 'chealt-collection-item-images-add';
 
 // eslint-disable-next-line complexity
 const save = async ({ collectionID, collectionName, isBuiltIn, itemID, filename, shouldSync, uploaded }) => {
@@ -23,16 +27,41 @@ const save = async ({ collectionID, collectionName, isBuiltIn, itemID, filename,
         isBuiltIn,
         items: [{ id: itemID, images: [{ filename, uploaded }] }]
       });
+
+      if (shouldSync) {
+        setItem(collectionAddWithItemKey, {
+          id: collectionID,
+          name: collectionName,
+          isBuiltIn,
+          items: [{ id: itemID, images: [{ filename }] }]
+        });
+      }
     } else {
       collections.push({ id: collectionID, name: collectionName, isBuiltIn });
+
+      if (shouldSync) {
+        setItem(collectionAddKey, { id: collectionID, name: collectionName, isBuiltIn });
+      }
     }
   } else {
     if (!collection.items) {
       collection.items = [{ id: itemID, images: [{ filename, uploaded }] }];
+
+      if (shouldSync) {
+        setItem(collectionItemsAddKey, { id: collectionID, items: [{ id: itemID, images: [{ filename }] }] });
+      }
     } else if (!collection.items.some(({ id: existingItemID }) => existingItemID === itemID)) {
       collection.items.push({ id: itemID, images: [{ filename, uploaded }] });
+
+      if (shouldSync) {
+        setItem(collectionItemsAddKey, { id: collectionID, items: [{ id: itemID, images: [{ filename }] }] });
+      }
     } else if (!item.images.some(({ filename: existingFileName }) => existingFileName === filename)) {
       item.images.push({ filename, uploaded });
+
+      if (shouldSync) {
+        setItem(collectionItemImagesAddKey, { collectionItemID: itemID, filename });
+      }
     }
   }
 
@@ -49,10 +78,6 @@ const save = async ({ collectionID, collectionName, isBuiltIn, itemID, filename,
   }
 
   localStorage.setItem(collectionsKey, JSON.stringify(collections));
-
-  if (shouldSync) {
-    setItem(collectionsKey, collections);
-  }
 };
 
 const getAllCollections = () => {
@@ -126,7 +151,7 @@ const deleteCollectionItem = ({ collectionID, itemID, shouldSync }) => {
   localStorage.setItem(collectionsKey, JSON.stringify(newCollections));
 
   if (shouldSync) {
-    deleteItem(collectionItemsKey, itemID);
+    deleteItem(collectionItemsKey, { collectionID, itemID });
   }
 };
 

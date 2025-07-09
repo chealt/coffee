@@ -140,17 +140,19 @@ const deleteCollection = async ({ user, id }) => {
   });
 };
 
-const deleteCollectionItem = async ({ user, id }) => {
+const deleteCollectionItem = async ({ user, collectionID, itemID }) => {
   const client = getClient(user.name);
 
-  await client.execute({
-    sql: 'DELETE FROM collection_item_links WHERE collection_item_id = :id',
-    args: { id }
-  });
+  if (!collectionID) {
+    return await client.execute({
+      sql: 'DELETE FROM collection_items WHERE id = :itemID',
+      args: { itemID }
+    });
+  }
 
   return await client.execute({
-    sql: 'DELETE FROM collection_items WHERE id = :id',
-    args: { id }
+    sql: 'DELETE FROM collection_item_links WHERE collection_item_id = :itemID AND collection_id = :collectionID',
+    args: { itemID, collectionID }
   });
 };
 
@@ -163,4 +165,60 @@ const updateCollectionName = async ({ user, id, name }) => {
   });
 };
 
-export { deleteCollection, deleteCollectionItem, getCollections, updateCollectionName, saveCollections };
+const addCollection = async ({ user, id, name, isBuiltIn }) => {
+  const client = getClient(user.name);
+
+  return await client.execute({
+    sql: 'INSERT INTO collections (id, name, is_built_in) VALUES (:id, :name, :isBuiltIn)',
+    args: { id, name, isBuiltIn }
+  });
+};
+
+const addCollectionItems = async ({ user, id, items }) => {
+  const client = getClient(user.name);
+
+  const collection_items_batch_commands = items.map((item) => ({
+    sql: 'INSERT INTO collection_items (id) VALUES (:id) ON CONFLICT(id) DO NOTHING',
+    args: { id: item.id }
+  }));
+
+  await client.batch(collection_items_batch_commands);
+
+  const collection_item_links_batch_commands = items.map((item) => ({
+    sql: 'INSERT INTO collection_item_links (collection_id, collection_item_id) VALUES (:collectionID, :collectionItemID)',
+    args: { collectionID: id, collectionItemID: item.id }
+  }));
+
+  await client.batch(collection_item_links_batch_commands);
+
+  const collection_item_images_batch_commands = items
+    .map((item) =>
+      item.images.map((image) => ({
+        sql: 'INSERT INTO collection_item_images (filename, collection_item_id) VALUES (:filename, :collectionItemID) ON CONFLICT(filename, collection_item_id) DO NOTHING',
+        args: { filename: image.filename, collectionItemID: item.id }
+      }))
+    )
+    .flat();
+
+  return await client.batch(collection_item_images_batch_commands);
+};
+
+const addCollectionItemImages = async ({ user, collectionItemID, filename }) => {
+  const client = getClient(user.name);
+
+  return await client.execute({
+    sql: 'INSERT INTO collection_item_images (filename, collection_item_id) VALUES (:filename, :collectionItemID)',
+    args: { filename, collectionItemID }
+  });
+};
+
+export {
+  addCollection,
+  addCollectionItems,
+  addCollectionItemImages,
+  deleteCollection,
+  deleteCollectionItem,
+  getCollections,
+  updateCollectionName,
+  saveCollections
+};

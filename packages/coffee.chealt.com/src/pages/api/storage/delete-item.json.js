@@ -8,16 +8,20 @@ const DELETE = async ({ request }) => {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }
 
-  const { key, value: id } = await request.json();
+  const { key, value } = await request.json();
 
   try {
     switch (key) {
       case 'chealt-collections':
-        await deleteCollection({ user: { name: loggedInUser.username, id: loggedInUser.userID }, id });
+        await deleteCollection({ user: { name: loggedInUser.username, id: loggedInUser.userID }, id: value });
 
         break;
       case 'chealt-collection-item':
-        await deleteCollectionItem({ user: { name: loggedInUser.username, id: loggedInUser.userID }, id });
+        await deleteCollectionItem({
+          user: { name: loggedInUser.username, id: loggedInUser.userID },
+          collectionID: value.collectionID,
+          itemID: value.itemID
+        });
 
         break;
       default:
