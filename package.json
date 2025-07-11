@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "build": "yarn workspace @chealt/coffee build",
+    "dev": "yarn workspace @chealt/coffee dev",
     "lint": "eslint . --quiet",
     "format": "prettier --write ."
   },
