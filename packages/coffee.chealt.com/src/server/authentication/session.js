@@ -18,7 +18,7 @@ const getSessionUser = (request) => {
   const sessionID = getSessionID(request);
 
   if (!sessionID) {
-    return undefined;
+    throw new Error('Session ID not found');
   }
 
   const { userID, username } = verifySessionID(sessionID);
