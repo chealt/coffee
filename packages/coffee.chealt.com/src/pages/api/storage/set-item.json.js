@@ -25,6 +25,10 @@ const POST = async ({ request }) => {
         await updateCollectionName({ user, ...value });
 
         break;
+      case 'chealt-add-collection':
+        await addCollection({ user, id: value.id, name: value.name, isBuiltIn: false });
+
+        break;
       case 'chealt-collection-add-with-item':
         await addCollection({ user, id: value.id, name: value.name, isBuiltIn: value.isBuiltIn });
         await addCollectionItems({ user, id: value.id, items: value.items });

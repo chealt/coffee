@@ -1,0 +1,25 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+import Button from '../../form/button/button.astro';
+import Icon from '../../icon/icon.astro';
+
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+---
+
+<section>
+  <coffee-collection-controls>
+    <Button
+      class="triggerButton column bordered dashed"
+      href={getRelativeLocaleUrl(Astro.currentLocale, '/you/collections')}
+      data-name={t.unnamed}
+    >
+      <Icon type="add" />
+      {t.addCollection}
+    </Button>
+  </coffee-collection-controls>
+</section>
+
+<script src="./collection-controls.js"></script>

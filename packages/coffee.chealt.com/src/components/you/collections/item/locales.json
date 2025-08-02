@@ -1,10 +1,14 @@
 {
   "en": {
     "back": "back",
-    "deleteItemConfirmMessage": "Are you sure you want to remove this item from all collections?"
+    "deleteItemConfirmMessage": "Are you sure you want to remove this item from all collections?",
+    "delete": "delete",
+    "dangerZone": "Danger zone"
   },
   "pl": {
     "back": "nazad",
-    "deleteItemConfirmMessage": "Czy na pewno chcesz usunąć ten element ze wszystkich kolekcji?"
+    "deleteItemConfirmMessage": "Czy na pewno chcesz usunąć ten element ze wszystkich kolekcji?",
+    "delete": "usuń",
+    "dangerZone": "Strefa zagrożenia"
   }
 }

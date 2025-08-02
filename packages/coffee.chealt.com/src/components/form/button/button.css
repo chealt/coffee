@@ -17,6 +17,10 @@ a.button {
     border-width: 2px;
     border-color: var(--color-border);
   }
+
+  &.dashed {
+    border-style: dashed;
+  }
 }
 
 button[disabled],

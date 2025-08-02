@@ -3,6 +3,7 @@ import { getRelativeLocaleUrl } from 'astro:i18n';
 
 import Common from '../../common/common.astro';
 import Header from './header/header.astro';
+import NewCollection from './new-collection.astro';
 import NewItem from './new-item.astro';
 
 import './collections.css';
@@ -47,4 +48,5 @@ const { collections, shouldAuthenticate } = Astro.locals;
       ))
     }
   </ul>
+  <NewCollection />
 </Common>

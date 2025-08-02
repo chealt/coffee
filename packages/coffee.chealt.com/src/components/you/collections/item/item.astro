@@ -58,6 +58,19 @@ const { collectionItem, shouldAuthenticate } = Astro.locals;
     <Controls collectionId={collectionId} itemId={itemId} isFavorite={collectionItem?.isFavorite} />
     <Details id={collectionItem?.id} />
     <Review id={collectionItem?.id} />
+    <section>
+      <h1>{t.dangerZone}</h1>
+      <Button
+        class="column danger"
+        data-delete-trigger
+        for={itemId}
+        data-redirect-url={getRelativeLocaleUrl(Astro.currentLocale, '/you/collections')}
+        data-dont-remove-element
+      >
+        <Icon type="delete" />
+        {t.delete}
+      </Button>
+    </section>
   </coffee-details>
 </Common>
 
