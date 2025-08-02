@@ -1,8 +1,10 @@
 {
   "en": {
-    "back": "back"
+    "back": "back",
+    "deleteItemConfirmMessage": "Are you sure you want to remove this item from all collections?"
   },
   "pl": {
-    "back": "nazad"
+    "back": "nazad",
+    "deleteItemConfirmMessage": "Czy na pewno chcesz usunąć ten element ze wszystkich kolekcji?"
   }
 }

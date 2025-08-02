@@ -31,7 +31,11 @@ const { collectionItem, shouldAuthenticate } = Astro.locals;
   >
     <Icon type="back" />
   </Button>
-  <coffee-details id={collectionItem?.id}>
+  <coffee-details
+    id={collectionItem?.id}
+    data-type="chealt-collection-item"
+    data-delete-confirm-message={t.deleteItemConfirmMessage}
+  >
     <chealt-ocr>
       <ul>
         <li class="picture-collection">

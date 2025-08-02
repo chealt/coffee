@@ -17,9 +17,4 @@
 
 .collections-list .items-list {
   padding: var(--gap);
-
-  & a,
-  & img {
-    border-radius: var(--border-radius);
-  }
 }

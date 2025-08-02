@@ -1,48 +1,14 @@
 {
   "en": {
-    "title": "Collections",
-    "originCountry": "Origin country",
-    "originRegion": "Origin region",
-    "processingMethod": "Processing method",
-    "roastingLevel": "Roasting level",
-    "roaster": "Roaster",
-    "decaf": "Decaf",
-    "details": "Details",
-    "brewingMethod": "Brewing method",
-    "roastingDate": "Roasting date",
-    "delete": "delete",
     "add": "add",
-    "wishList": "Wish list",
-    "favorites": "Favorites",
     "favorite": "favorite",
-    "unnamed": "Untitled Collection",
-    "review": "Review",
-    "deleteCollection": {
-      "buttonLabel": "Delete collection",
-      "confirm": "Are you sure you want to delete this collection?"
-    }
+    "more": "more",
+    "delete": "delete"
   },
   "pl": {
-    "title": "Kolekcje",
-    "originCountry": "Kraj pochodzenia",
-    "originRegion": "Region pochodzenia",
-    "processingMethod": "Obróbka",
-    "roastingLevel": "Stopień palenia",
-    "roaster": "Palarnia",
-    "decaf": "Bezkofeinowy",
-    "details": "Szczegóły",
-    "brewingMethod": "Sposób zaparzania",
-    "roastingDate": "Data palenia",
-    "delete": "usuń",
     "add": "dodaj",
-    "wishList": "Lista życzeń",
-    "favorites": "Ulubione",
     "favorite": "ulubiony",
-    "unnamed": "Niezidentyfikowana kolekcja",
-    "review": "Opinia",
-    "deleteCollection": {
-      "buttonLabel": "Usuń kolekcję",
-      "confirm": "Czy na pewno chcesz usunąć tę kolekcję?"
-    }
+    "more": "więcej",
+    "delete": "usuń"
   }
 }

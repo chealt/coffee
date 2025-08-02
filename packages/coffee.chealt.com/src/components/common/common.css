@@ -115,14 +115,17 @@ a[href],
     content: ' ';
     position: absolute;
     inset: 0;
-    background: no-repeat url(/icons/loader.svg) var(--color-background--subtle);
+    background: center no-repeat url(/icons/loader.svg) var(--color-background--subtle);
     display: none;
     opacity: 0;
     transition-property: display opacity;
-    transition-duration: 0.2s;
+    transition-duration: 0.4s;
     transition-timing-function: ease-in-out;
     transition-behavior: allow-discrete;
-    transition-delay: 1000ms;
+    transition-delay: 500ms;
+  }
+
+  &:not(button)::after {
     border-radius: var(--border-radius);
   }
 
@@ -140,7 +143,8 @@ a[href],
   }
 }
 
-a[href].in-progress {
+a[href].in-progress,
+button.in-progress {
   &::after {
     display: block;
     opacity: 1;
@@ -225,6 +229,8 @@ svg {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow: hidden;
+  border-radius: var(--border-radius);
 }
 
 .tiles img {

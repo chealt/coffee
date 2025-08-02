@@ -4,6 +4,10 @@
   flex-shrink: 1;
 }
 
-.controls button {
+.controls > button {
   width: auto;
+}
+
+.controls .more {
+  margin-left: auto;
 }

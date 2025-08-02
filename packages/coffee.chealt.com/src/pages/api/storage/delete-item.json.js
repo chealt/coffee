@@ -19,8 +19,7 @@ const DELETE = async ({ request }) => {
       case 'chealt-collection-item':
         await deleteCollectionItem({
           user: { name: loggedInUser.username, id: loggedInUser.userID },
-          collectionID: value.collectionID,
-          itemID: value.itemID
+          itemId: value
         });
 
         break;

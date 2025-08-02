@@ -22,6 +22,7 @@ class ChealtData extends HTMLElement {
       const elementToDelete = document.getElementById(id);
       const type = elementToDelete.dataset.type;
       const dialog = deleteTrigger.closest('dialog');
+      const redirectUrl = deleteTrigger.dataset.redirectUrl;
 
       if (!elementToDelete) {
         throw new Error(`Cannot find element to delete with id: ${id}`);
@@ -38,19 +39,29 @@ class ChealtData extends HTMLElement {
       deleteTrigger.addEventListener('click', async () => {
         // eslint-disable-next-line no-alert
         if (confirm(confirmMessage)) {
+          deleteTrigger.classList.add('in-progress');
+
           try {
             await ChealtData.deleteData({ key: type, value: id });
 
-            elementToDelete.remove();
+            if (!deleteTrigger.dataset.dontRemoveElement) {
+              elementToDelete.remove();
+            }
 
-            if (dialog) {
+            if (dialog && !deleteTrigger.dataset.dontCloseDialog) {
               dialog.close();
+            }
+
+            if (redirectUrl) {
+              window.location.assign(redirectUrl);
             }
           } catch (error) {
             // eslint-disable-next-line no-console
             console.error(error);
           }
         }
+
+        deleteTrigger.classList.remove('in-progress');
       });
     });
   }
