@@ -1,4 +1,3 @@
-.astro
 .lsp
 .prettierignore
 .vscode
@@ -11,4 +10,3 @@ node_modules
 **/*.webp
 **/*.jpg
 **/*.jpeg
-**/*.astro

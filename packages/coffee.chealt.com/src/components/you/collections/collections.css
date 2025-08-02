@@ -1,0 +1,25 @@
+.collections-page h1,
+.collections-page h2,
+.collections-page h3 {
+  padding: 0 var(--gap);
+}
+
+.collections-page [contenteditable] {
+  padding: var(--gap);
+  margin: 0;
+}
+
+.collections-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap--l);
+}
+
+.collections-list .items-list {
+  padding: var(--gap);
+
+  & a,
+  & img {
+    border-radius: var(--border-radius);
+  }
+}

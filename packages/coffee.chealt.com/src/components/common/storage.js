@@ -123,16 +123,6 @@ const getCollectionItems = ({ collectionID, itemID }) => {
   return collections.find(({ id }) => id === collectionID)?.items?.find(({ id }) => id === itemID);
 };
 
-const deleteCollection = ({ collectionID, shouldSync }) => {
-  const collections = getAllCollections();
-
-  localStorage.setItem(collectionsKey, JSON.stringify(collections.filter(({ id }) => id !== collectionID)));
-
-  if (shouldSync) {
-    deleteItem(collectionsKey, collectionID);
-  }
-};
-
 const deleteCollectionItem = ({ collectionID, itemID, shouldSync }) => {
   const collections = getAllCollections();
 
@@ -169,7 +159,6 @@ const updateCollectionName = ({ collectionID, collectionName, shouldSync }) => {
 };
 
 export {
-  deleteCollection,
   deleteCollectionItem,
   getAllCollections,
   getCollection,

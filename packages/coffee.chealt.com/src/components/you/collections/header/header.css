@@ -1,0 +1,9 @@
+.item-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.item-header coffee-collection-name {
+  flex-grow: 1;
+}

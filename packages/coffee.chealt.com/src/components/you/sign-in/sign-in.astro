@@ -1,14 +1,14 @@
 ---
-import Button from "../../form/button/button.astro";
+import Button from '../../form/button/button.astro';
 
-import allLocaleTranslations from "./locales.json";
+import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 ---
 
 <p>
-  {t["description"]}
+  {t['description']}
 </p>
 <Button class="sign-in primary">
-  {t["signIn"]}
+  {t['signIn']}
 </Button>

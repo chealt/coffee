@@ -1,39 +1,50 @@
 ---
-import ChealtOCR from "../../chealt-ocr.astro";
-import CoffeeDetailsTemplate from "./coffee-details.template.astro";
-import CoffeeControlsTemplate from "./coffee-controls.template.astro";
-import Collection from "./collection.astro";
-import CollectionTemplate from "./collection.template.astro";
-import Review from "./review/review.astro";
+import { getRelativeLocaleUrl } from 'astro:i18n';
 
-import "./coffee-gallery.css";
+import Common from '../../common/common.astro';
+import Header from './header/header.astro';
+import NewItem from './new-item.astro';
 
-import allLocaleTranslations from "./locales.json";
+import './collections.css';
+
+import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
-const { collections, getSignedUrl } = Astro.locals;
+const { collections, shouldAuthenticate } = Astro.locals;
 ---
 
-<h2>
-  {t["title"]}
-</h2>
-<coffee-gallery data-get-signed-url={getSignedUrl}>
-  <CoffeeDetailsTemplate />
-  <CoffeeControlsTemplate />
-  <CollectionTemplate />
-  <Review />
-  <chealt-ocr>
-    <ul data-db-type="collections">
-      {collections?.map(({ id, name, isBuiltIn, items }) => (
-        <Collection data-db-attr-id={id} name={name} data-db-attr-is-built-in={isBuiltIn} data-should-sync items={items} isBuiltIn={isBuiltIn} />
-      )) || (
-        <Collection data-db-attr-id="favorites" name={t["favorites"]} data-db-attr-is-built-in data-should-sync isBuiltIn />
-        <Collection data-db-attr-id="wishList" name={t["wishList"]} data-db-attr-is-built-in data-should-sync isBuiltIn />
-      )}
-    </ul>
-  </chealt-ocr>
-</coffee-gallery>
-
-{Astro.locals.clientSideOCR && <ChealtOCR />}
-<script src="./coffee-gallery.js"></script>
+<Common
+  class="collections-page"
+  shouldAuthenticate={shouldAuthenticate}
+  redirectUrl={getRelativeLocaleUrl(Astro.currentLocale, '/you/collections')}
+>
+  <h1>{t.title}</h1>
+  <ul class="collections-list" data-delete-confirm-message={t.deleteCollection.confirm}>
+    {
+      collections?.map(({ id: collectionId, name, items, isBuiltIn }) => (
+        <li id={collectionId} data-type="collection">
+          <Header collectionId={collectionId} name={t[collectionId] || name} isBuiltIn={isBuiltIn} />
+          <ul class="tiles items-list">
+            {items.length ? (
+              items.map(({ id: itemId, cover }) => (
+                <li>
+                  <a
+                    href={getRelativeLocaleUrl(Astro.currentLocale, `/you/collections/${collectionId}/items/${itemId}`)}
+                  >
+                    <img
+                      src={cover.src}
+                      style={`view-transition-name: collection-${collectionId}-image-${cover.filename}`}
+                    />
+                  </a>
+                </li>
+              ))
+            ) : (
+              <NewItem collectionId={collectionId} />
+            )}
+          </ul>
+        </li>
+      ))
+    }
+  </ul>
+</Common>

@@ -1,0 +1,23 @@
+---
+import Label from '../../../../form/label/label.astro';
+import Select from '../../../../form/select/select.astro';
+
+import roastingLevels from '../../../../../../data/roastingLevels.json';
+
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+---
+
+<Label>
+  <div class="name">
+    {t.roastingLevel}
+  </div>
+  <Select name="roastingLevel" showEmpty>
+    {
+      roastingLevels
+        .filter(({ language_code }) => language_code === Astro.currentLocale)
+        .map(({ roasting_level_id, name }) => <option value={roasting_level_id}>{name}</option>)
+    }
+  </Select>
+</Label>

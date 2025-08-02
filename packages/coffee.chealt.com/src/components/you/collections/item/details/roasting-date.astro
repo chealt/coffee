@@ -1,0 +1,15 @@
+---
+import Label from '../../../../form/label/label.astro';
+import Input from '../../../../form/input/input.astro';
+
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+---
+
+<Label>
+  <div class="name">
+    {t.roastingDate}
+  </div>
+  <Input name="roastingDate" type="date" />
+</Label>

@@ -1,0 +1,47 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+import Button from '../../../../form/button/button.astro';
+import CoffeeImageUpload from '../../../../common/coffee-image-upload.astro';
+import Dialog from '../../../../dialog/dialog.astro';
+import Icon from '../../../../icon/icon.astro';
+
+import './controls.css';
+
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+
+const { collectionId, isBuiltIn } = Astro.props;
+---
+
+<div class="controls">
+  <CoffeeImageUpload data-collection-id={collectionId}>
+    <Button
+      class="triggerButton ghost small"
+      href={getRelativeLocaleUrl(Astro.currentLocale, '/you/collections')}
+      aria-label={t.add}
+    >
+      <Icon type="add" />
+    </Button>
+  </CoffeeImageUpload>
+  <Button class="ghost small triggerButton" data-dialog-id={`collection-menu-${collectionId}`}>
+    <Icon type="menu" />
+  </Button>
+  <Dialog class="drawer" id={`collection-menu-${collectionId}`}>
+    <ul>
+      <li>
+        <Button class="ghost column" disabled={isBuiltIn} data-rename-trigger>
+          <Icon type="edit" />
+          {t.rename}
+        </Button>
+      </li>
+      <li>
+        <Button class="ghost column danger" data-delete-trigger for={collectionId}>
+          <Icon type="delete" />
+          {t.delete}
+        </Button>
+      </li>
+    </ul>
+  </Dialog>
+</div>

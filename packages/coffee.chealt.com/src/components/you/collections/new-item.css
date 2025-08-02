@@ -1,0 +1,14 @@
+.new-item {
+  display: flex;
+}
+
+.new-item > * {
+  flex-grow: 1;
+}
+
+.new-item .triggerButton {
+  height: 100%;
+  background-color: var(--color-background--alternative);
+  border-radius: var(--border-radius);
+  border-style: dashed;
+}

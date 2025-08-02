@@ -1,16 +1,16 @@
 ---
-import "./icon.css";
+import './icon.css';
 
-const images = import.meta.glob("/public/icons/*.svg", {
+const images = import.meta.glob('/public/icons/*.svg', {
   eager: true,
-  query: "?raw",
-  import: "default",
+  query: '?raw',
+  import: 'default'
 });
 
 const { type } = Astro.props;
 const Icon = images[`/public/icons/${type}.svg`];
 
-let className = "icon";
+let className = 'icon';
 
 if (Astro.props.class) {
   className += ` ${Astro.props.class}`;

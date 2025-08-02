@@ -1,0 +1,12 @@
+{
+  "en": {
+    "add": "add coffee",
+    "rename": "rename",
+    "delete": "delete"
+  },
+  "pl": {
+    "add": "dodaj kawa",
+    "rename": "rename",
+    "delete": "delete"
+  }
+}

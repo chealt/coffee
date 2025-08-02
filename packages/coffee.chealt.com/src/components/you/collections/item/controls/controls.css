@@ -1,0 +1,9 @@
+.controls {
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 1;
+}
+
+.controls button {
+  width: auto;
+}

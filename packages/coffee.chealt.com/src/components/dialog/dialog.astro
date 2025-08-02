@@ -1,10 +1,10 @@
 ---
-import Button from "../form/button/button.astro";
-import Icon from "../icon/icon.astro";
+import Button from '../form/button/button.astro';
+import Icon from '../icon/icon.astro';
 
-import "./dialog.css";
+import './dialog.css';
 
-import allLocaleTranslations from "./locales.json";
+import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 ---
@@ -15,7 +15,7 @@ const t = allLocaleTranslations[Astro.currentLocale];
       Astro.props.showClose && (
         <Button data-close-button>
           <Icon type="close" />
-          <span>{t["close"]}</span>
+          <span>{t['close']}</span>
         </Button>
       )
     }

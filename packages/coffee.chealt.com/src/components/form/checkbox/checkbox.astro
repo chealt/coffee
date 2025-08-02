@@ -1,11 +1,9 @@
 ---
-import Label from "../label/label.astro";
+import Label from '../label/label.astro';
 
-import "./checkbox.css";
+import './checkbox.css';
 ---
 
-<Label
-  class={`checkbox-container${Astro.props.type === "button" ? " button" : ""}`}
->
+<Label class={`checkbox-container${Astro.props.type === 'button' ? ' button' : ''}`}>
   <input type="checkbox" {...Astro.props} /><div class="label"><slot /></div>
 </Label>

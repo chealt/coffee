@@ -1,0 +1,29 @@
+#back-button {
+  z-index: var(--z-index--xs);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: auto;
+
+  &:active {
+    top: 2px;
+  }
+}
+
+.picture-collection {
+  padding: 0;
+}
+
+.picture-collection img {
+  width: 100%;
+  display: block;
+}
+
+.images-container {
+  min-height: 440px;
+  max-height: 50vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow-y: hidden;
+}

@@ -1,0 +1,61 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import Button from '../../../form/button/button.astro';
+import ChealtOCR from '../../../chealt-ocr.astro';
+import Common from '../../../common/common.astro';
+import Controls from './controls/controls.astro';
+import Details from './details/details.astro';
+import Icon from '../../../icon/icon.astro';
+import Review from './review/review.astro';
+
+import './item.css';
+
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+
+const { collectionId, itemId } = Astro.props;
+
+const { collectionItem, shouldAuthenticate } = Astro.locals;
+---
+
+<Common
+  shouldAuthenticate={shouldAuthenticate}
+  redirectUrl={getRelativeLocaleUrl(Astro.currentLocale, `/you/collections/${collectionId}/items/${itemId}`)}
+>
+  <Button
+    id="back-button"
+    href={getRelativeLocaleUrl(Astro.currentLocale, '/you/collections')}
+    class="small bordered"
+    aria-label={t.back}
+  >
+    <Icon type="back" />
+  </Button>
+  <coffee-details id={collectionItem?.id}>
+    <chealt-ocr>
+      <ul>
+        <li class="picture-collection">
+          {
+            collectionItem?.images.length && (
+              <div class="carousel images-container">
+                {collectionItem?.images.map(({ src, filename }) => (
+                  <img
+                    id={filename}
+                    src={src}
+                    style={`view-transition-name: collection-${collectionId}-image-${filename}`}
+                  />
+                ))}
+              </div>
+            )
+          }
+        </li>
+      </ul>
+    </chealt-ocr>
+    <Controls collectionId={collectionId} itemId={itemId} isFavorite={collectionItem?.isFavorite} />
+    <Details id={collectionItem?.id} />
+    <Review id={collectionItem?.id} />
+  </coffee-details>
+</Common>
+
+{Astro.locals.clientSideOCR && <ChealtOCR />}
+<script src="./coffee-details.js"></script>

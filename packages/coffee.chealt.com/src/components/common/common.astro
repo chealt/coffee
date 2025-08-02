@@ -1,12 +1,15 @@
 ---
-import Nav from "./nav.astro";
-import IosPolyfills from "./ios-polyfills.astro";
+import IosPolyfills from './ios-polyfills.astro';
+import Login from '../login/login.astro';
+import Nav from './nav.astro';
 
-import "./common.css";
+import './common.css';
 
-import allLocaleTranslations from "./common.json";
+import allLocaleTranslations from './common.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
+
+const { shouldAuthenticate, redirectUrl } = Astro.props;
 ---
 
 <!doctype html>
@@ -15,7 +18,7 @@ const t = allLocaleTranslations[Astro.currentLocale];
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#e1a76d" />
-    <meta name="description" content={t["description"]} />
+    <meta name="description" content={t.description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="apple-touch-icon" href="/favicons/favicon-192x192.svg" />
@@ -23,9 +26,13 @@ const t = allLocaleTranslations[Astro.currentLocale];
     {Astro.locals.isIOS && <IosPolyfills />}
   </head>
   <body>
-    <main>
-      <slot />
-    </main>
-    <Nav />
+    <chealt-data>
+      <main class={Astro.props.class}>
+        {shouldAuthenticate ? <Login redirectUrl={redirectUrl} /> : <slot />}
+      </main>
+      <Nav />
+    </chealt-data>
   </body>
 </html>
+
+<script src="../chealt-data.js"></script>

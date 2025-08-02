@@ -1,0 +1,11 @@
+---
+import '../../../form/input/input.css'; // to include the content editable styles
+---
+
+<coffee-collection-name data-collection-id={Astro.props.collectionId}>
+  <h2 contenteditable={!Astro.props.isBuiltIn ? 'true' : undefined} data-attr-name>
+    {Astro.props.name}
+  </h2>
+</coffee-collection-name>
+
+<script src="./name.js"></script>

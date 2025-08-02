@@ -1,0 +1,33 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import Button from '../../../../form/button/button.astro';
+import CoffeeImageUpload from '../../../../common/coffee-image-upload.astro';
+import Icon from '../../../../icon/icon.astro';
+
+import './controls.css';
+
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+
+const { collectionId, isFavorite, itemId } = Astro.props;
+---
+
+<div class="controls">
+  <coffee-controls data-item-id={itemId}>
+    <Button class="favorite ghost">
+      <Icon type="favorite" class=`${isFavorite ? 'active' : ''}` />
+      <span>{t['favorite']}</span>
+    </Button>
+  </coffee-controls>
+  <CoffeeImageUpload data-collection-id={collectionId} data-item-id={itemId}>
+    <Button class="add triggerButton ghost" href={getRelativeLocaleUrl(Astro.currentLocale, '/you/collections')}>
+      <Icon type="add" />
+      <span>{t['add']}</span>
+    </Button>
+  </CoffeeImageUpload>
+</div>
+
+<!-- add CoffeeImageUpload script, without this import it won't work -->
+<script src="../../../../common/coffee-image-upload.js"></script>
+<script src="./controls.js"></script>

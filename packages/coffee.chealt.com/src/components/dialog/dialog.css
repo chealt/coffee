@@ -49,3 +49,27 @@ dialog [data-close-button] {
 body:has(dialog[open]:not(.inline)) {
   overflow: hidden;
 }
+
+dialog.drawer {
+  opacity: 0;
+  top: auto;
+  bottom: 0;
+  min-height: auto;
+  translate: 0 100%;
+  transition-property: display opacity;
+  transition-duration: 0.4s;
+  transition-timing-function: ease-in-out;
+  transition-behavior: allow-discrete;
+}
+
+dialog.drawer[open] {
+  display: block;
+  opacity: 1;
+  translate: 0 0px;
+  box-shadow: 0 -2px 15px -4px lightgray;
+
+  @starting-style {
+    opacity: 0;
+    translate: 0 100%;
+  }
+}

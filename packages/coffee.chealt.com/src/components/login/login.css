@@ -1,0 +1,5 @@
+.login-page {
+  & h1 {
+    padding: 0 var(--gap);
+  }
+}

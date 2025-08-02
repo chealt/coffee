@@ -1,10 +1,10 @@
 ---
-import "./button.css";
+import './button.css';
 ---
 
 {
   (Astro.props.href && (
-    <a class="button" {...Astro.props}>
+    <a class={`button ${Astro.props.class}`} {...Astro.props}>
       <slot />
     </a>
   )) || (

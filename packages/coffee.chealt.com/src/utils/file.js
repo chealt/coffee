@@ -1,5 +1,3 @@
-import { setImageUploaded } from '../components/common/storage.js';
-
 const convertToHex = (arrayBuffer) =>
   Array.from(new Uint8Array(arrayBuffer))
     .map((b) => b.toString(16).padStart(2, '0'))
@@ -85,11 +83,7 @@ const uploadFile = async ({ filename, fileData, getSignedUrl }) => {
     body: renamedFile
   });
 
-  if (uploadResponse.ok) {
-    setImageUploaded(filename);
-  }
-
   return uploadResponse;
 };
 
-export { deleteFile, deleteFileRemote, uploadFile, writeFile };
+export { getContentHash, deleteFile, deleteFileRemote, uploadFile, writeFile };

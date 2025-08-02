@@ -1,0 +1,17 @@
+---
+import Label from '../../../../form/label/label.astro';
+import Select from '../../../../form/select/select.astro';
+
+import roasters from '../../../../../../data/roasters.json';
+
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+---
+
+<Label>
+  <div class="name">{t.roaster}</div>
+  <Select name="roaster" showEmpty>
+    {roasters.map((roaster) => <option value={`${roaster.id}`}>{roaster.name}</option>)}
+  </Select>
+</Label>

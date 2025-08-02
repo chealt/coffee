@@ -1,0 +1,24 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+import Button from '../../form/button/button.astro';
+import CoffeeImageUpload from '../../common/coffee-image-upload.astro';
+import Icon from '../../icon/icon.astro';
+
+import './new-item.css';
+
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+
+const { collectionId } = Astro.props;
+---
+
+<li class="new-item">
+  <CoffeeImageUpload data-collection-id={collectionId}>
+    <Button class="triggerButton column bordered" href={getRelativeLocaleUrl(Astro.currentLocale, '/you/collections')}>
+      <Icon type="add" />
+      {t.add}
+    </Button>
+  </CoffeeImageUpload>
+</li>

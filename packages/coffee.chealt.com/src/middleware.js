@@ -2,9 +2,8 @@ import jwt from 'jsonwebtoken';
 
 import { sessionSecret } from './server/authentication/config.js';
 import { getSessionUser } from './server/authentication/session.js';
-import { getAuthenticationOptions } from './server/login.js';
 import { createRegistrationOptions } from './server/registration.js';
-import { setCollections } from './server/you/collections.js';
+import { setCollections, setCollectionItem } from './server/you/collections.js';
 
 const isIOS = (userAgent) => /iPad|iPhone|iPod/u.test(userAgent);
 
@@ -48,28 +47,44 @@ const redirect = (url) =>
     }
   });
 
+const authenticate = (context) => {
+  const loggedInUser = getSessionUser(context.request);
+
+  context.locals.loggedInUser = loggedInUser;
+
+  if (loggedInUser) {
+    context.locals.getSignedUrl = '/api/storage/get-signed-url.json';
+  }
+};
+
 // eslint-disable-next-line complexity
 const onRequest = async (context, next) => {
   const { page, params } = parsePath(context.url.pathname);
 
-  if (page === 'api') {
-    const loggedInUser = getSessionUser(context.request);
+  if (page === 'api' && params[0] !== 'authentication') {
+    try {
+      authenticate(context);
+    } catch (error) {
+      console.error(error); // eslint-disable-line no-console
 
-    if (!loggedInUser && params[1] !== 'login' && params[1] !== 'registration') {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
     }
   }
 
-  try {
-    const loggedInUser = getSessionUser(context.request);
+  if (page === 'you') {
+    try {
+      if (!params[1]) {
+        await setCollections(context);
+      } else if (params[1] && params[3]) {
+        const itemId = params[3];
 
-    context.locals.loggedInUser = loggedInUser;
+        await setCollectionItem(context, itemId);
+      }
+    } catch (error) {
+      console.error(error); // eslint-disable-line no-console
 
-    if (loggedInUser) {
-      context.locals.getSignedUrl = '/api/storage/get-signed-url.json';
+      context.locals.shouldAuthenticate = true;
     }
-  } catch (error) {
-    console.error(error); // eslint-disable-line no-console
   }
 
   if (page === 'registration' && params[0] !== 'error') {
@@ -101,22 +116,6 @@ const onRequest = async (context, next) => {
         console.error(error); // eslint-disable-line no-console
       }
     }
-  } else if (page === 'login') {
-    const username = params[0];
-
-    if (username) {
-      try {
-        const authenticationOptions = await getAuthenticationOptions(username);
-
-        context.locals.authenticationOptions = JSON.stringify(authenticationOptions);
-      } catch (error) {
-        console.error(error); // eslint-disable-line no-console
-      }
-    }
-  }
-
-  if (page === 'you') {
-    await setCollections(context);
   }
 
   setClientSideOCR(context);

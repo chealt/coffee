@@ -1,17 +1,39 @@
 button,
 a.button {
   display: block;
+  position: relative;
   background-color: var(--color-background);
   padding: var(--gap);
   color: var(--color-text);
   width: 100%;
-  border: 1px solid var(--color-text);
   font-size: 1rem;
   cursor: pointer;
   text-transform: uppercase;
   user-select: none;
   box-sizing: border-box;
   text-align: center;
+
+  &.bordered {
+    border-width: 2px;
+    border-color: var(--color-border);
+  }
+}
+
+button[disabled],
+a.button[disabled] {
+  pointer-events: none;
+  opacity: 0.2;
+}
+
+button.small,
+a.button.small {
+  padding: var(--gap--s);
+}
+
+button:has(.icon):not(.column),
+a.button:has(.icon):not(.column) {
+  display: flex;
+  flex-direction: column;
 }
 
 button.primary {
@@ -24,14 +46,23 @@ button.primary .icon svg {
   fill: var(--color-text--primary);
 }
 
-button.column {
+button.column,
+a.column {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: var(--gap);
+  gap: var(--gap--s);
 }
 
-button.ghost {
-  border-color: transparent;
+button.ghost,
+a.ghost {
+  &:not(:focus-visible) {
+    border-color: transparent;
+  }
+}
+
+button.danger,
+a.button.danger {
+  background-color: var(--color-danger);
 }

@@ -1,0 +1,41 @@
+#geek-zone-container.visible {
+  display: flex;
+  flex-direction: column;
+  margin: var(--gap) 0;
+  gap: var(--gap);
+}
+
+.range-group {
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--gap) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.range-group-item-container {
+  display: flex;
+  align-items: center;
+  gap: var(--gap);
+}
+
+.range-group-item-container .times-sign {
+  font-size: 2rem;
+}
+
+.range-group-item {
+  display: flex;
+  flex-direction: row;
+  gap: var(--gap);
+}
+
+.range-group-item > * {
+  flex-grow: 1;
+}
+
+.final-score-container {
+  display: flex;
+  gap: var(--gap);
+  padding: var(--gap);
+  font-size: 1.5rem;
+}

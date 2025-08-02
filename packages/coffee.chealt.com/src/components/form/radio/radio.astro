@@ -1,13 +1,8 @@
 ---
-import Label from "../label/label.astro";
+import Label from '../label/label.astro';
 ---
 
 <Label>
-  <input
-    name={Astro.props.name}
-    value={Astro.props.value}
-    type="radio"
-    class="visually-hidden"
-  />
+  <input name={Astro.props.name} value={Astro.props.value} type="radio" class="visually-hidden" />
   <slot />
 </Label>

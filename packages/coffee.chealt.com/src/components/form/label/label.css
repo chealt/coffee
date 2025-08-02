@@ -1,5 +1,16 @@
 label {
   display: block;
   font-size: 1.2rem;
+  border: 2px solid transparent;
+
+  &:has(input[type='checkbox']):focus-within,
+  &:has(input[type='radio']):focus-within,
+  &:has(input[type='range']):focus-within {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+}
+
+label .name {
   padding: var(--gap);
 }

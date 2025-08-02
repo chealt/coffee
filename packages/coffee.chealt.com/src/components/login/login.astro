@@ -1,39 +1,46 @@
 ---
 import Button from '../form/button/button.astro';
-import Common from "../common/common.astro";
 import Form from '../form/form.astro';
 import Input from '../form/input/input.astro';
 import Label from '../form/label/label.astro';
 
-import allLocaleTranslations from "./locales.json";
+import './login.css';
+
+import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
-const { username } = Astro.props;
+const { username, redirectUrl } = Astro.props;
 ---
 
-<Common>
-  <h1>{t["title"]}</h1>
+<div class="login-page">
+  <h1>{t.title}</h1>
   <chealt-auth-login
     data-authentication-options={Astro.locals.authenticationOptions}
     data-authentication-options-endpoint="/api/authentication/login/options.json"
     data-verify-endpoint="/api/authentication/login/verify.json"
-    data-redirect-url="/">
-    <Form>
-      <Label>
-        {t["username"]}
-        <Input
-        type="text"
-        name="username"
-        autocomplete="username"
-        value={username}
-        readonly={Boolean(username)}
-        disabled={Boolean(username)}
-        required />
-      </Label>
-      <Button class="primary" type="submit">{t["login"]}</Button>
+    data-redirect-url={redirectUrl || '/'}
+  >
+    <Form name="login" data-storage="localStorage" data-save-on-input>
+      <section>
+        <Label>
+          {t.username}
+          <Input
+            type="text"
+            name="username"
+            autocomplete="username"
+            value={username}
+            readonly={Boolean(username)}
+            disabled={Boolean(username)}
+            required
+          />
+        </Label>
+      </section>
+      <section>
+        <Button class="primary" type="submit">{t.login}</Button>
+      </section>
     </Form>
   </chealt-auth-login>
-</Common>
+</div>
 
 <script src="../chealt-auth-login.js"></script>

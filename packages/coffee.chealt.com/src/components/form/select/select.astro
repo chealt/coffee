@@ -1,7 +1,7 @@
 ---
-import allLocaleTranslations from "../../common/common.json";
+import allLocaleTranslations from '../../common/common.json';
 
-import "./select.css";
+import './select.css';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 ---
@@ -10,7 +10,7 @@ const t = allLocaleTranslations[Astro.currentLocale];
   {
     Astro.props.showEmpty && (
       <option value="" selected>
-        {t["unknown"]}
+        {t['unknown']}
       </option>
     )
   }

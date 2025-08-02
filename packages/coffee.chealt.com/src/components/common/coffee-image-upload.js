@@ -1,12 +1,13 @@
-import { getCollectionByName, save } from './storage.js';
-import { uploadFile, writeFile } from '../../utils/file.js';
+import { getContentHash, uploadFile } from '../../utils/file.js';
+import { setItem } from '../../utils/storage.js';
 
+const addCollectionWithItem = 'chealt-collection-add-with-item';
+const addImageToCollection = 'chealt-add-image-to-collection';
+const addImageToCollectionItem = 'chealt-add-image-to-collection-item';
 class CoffeeImageUpload extends HTMLElement {
   connectedCallback() {
     this.triggerButton = this.querySelector('.triggerButton');
-    this.navigateTo = this.triggerButton.getAttribute('href');
     this.fileInput = this.querySelector('input[type=file]');
-    this.shouldSync = this.dataset.shouldSync;
     this.getSignedUrl = this.dataset.getSignedUrl;
 
     this.addClickListener();
@@ -14,39 +15,38 @@ class CoffeeImageUpload extends HTMLElement {
   }
 
   addFileChangeListener() {
-    // eslint-disable-next-line complexity
     this.fileInput.addEventListener('change', async () => {
-      const collectionElement = this.closest('[data-db-attr-id]');
-      const isBuiltIn = collectionElement?.getAttribute('data-db-attr-is-built-in') === '' || false;
-      const unnamedCollection = getCollectionByName(this.dataset.unnamedTitle);
-      const collectionID =
-        collectionElement?.getAttribute('data-db-attr-id') || unnamedCollection?.id || crypto.randomUUID();
-      const itemID = this.closest('[data-item-id]')?.getAttribute('data-item-id') || crypto.randomUUID();
-      const collectionName =
-        collectionElement?.querySelector('[data-db-attr-name]')?.textContent ||
-        unnamedCollection?.title ||
-        this.dataset.unnamedTitle;
+      this.triggerButton.classList.add('in-progress');
 
-      const fileData = this.fileInput.files[0];
+      const collectionId = this.dataset.collectionId || crypto.randomUUID();
+      const itemId = this.dataset.itemId || crypto.randomUUID();
 
       try {
-        const filename = await writeFile(fileData);
+        const fileData = this.fileInput.files[0];
+        const filename = await getContentHash({ arrayBuffer: await fileData.arrayBuffer() });
 
-        await save({
-          collectionID,
-          collectionName,
-          itemID,
-          filename,
-          isBuiltIn,
-          shouldSync: this.shouldSync
-        });
+        await uploadFile({ filename, fileData, getSignedUrl: this.getSignedUrl });
 
-        if (this.shouldSync) {
-          try {
-            uploadFile({ filename, fileData, getSignedUrl: this.getSignedUrl });
-          } catch (error) {
-            console.error(error); // eslint-disable-line no-console
-          }
+        if (this.dataset.itemId) {
+          await setItem(addImageToCollectionItem, {
+            itemId,
+            filename
+          });
+        } else if (this.dataset.collectionId) {
+          await setItem(addImageToCollection, {
+            id: collectionId,
+            itemId,
+            filename
+          });
+        } else {
+          const collectionName = this.dataset.unnamedTitle;
+
+          await setItem(addCollectionWithItem, {
+            id: collectionId,
+            name: collectionName,
+            isBuiltIn: false,
+            items: [{ id: itemId, images: [{ filename }] }]
+          });
         }
       } catch (error) {
         if (error.name === 'AbortError') {
@@ -56,16 +56,9 @@ class CoffeeImageUpload extends HTMLElement {
         }
       }
 
-      if (!collectionElement && !unnamedCollection) {
-        this.dispatchEvent(new CustomEvent('coffee-gallery-refresh', { bubbles: true }));
-      } else {
-        this.dispatchEvent(new CustomEvent('coffee-collection-refresh', { bubbles: true }));
-      }
+      this.triggerButton.classList.remove('in-progress');
 
-      // navigate to the collections page if it is not the current page
-      if (this.navigateTo && window.location.pathname !== this.navigateTo) {
-        window.location.assign(this.navigateTo);
-      }
+      window.location.assign(`${this.triggerButton.getAttribute('href')}${collectionId}/items/${itemId}`);
     });
   }
 

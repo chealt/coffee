@@ -1,10 +1,12 @@
 import { getSessionUser } from '../../../server/authentication/session.js';
 import {
   addCollection,
+  addCollectionItem,
   addCollectionItems,
   addCollectionItemImages,
   updateCollectionName,
-  saveCollections
+  deleteCollectionItem,
+  addItemToCollection
 } from '../../../server/database/collections.js';
 
 const POST = async ({ request }) => {
@@ -19,16 +21,8 @@ const POST = async ({ request }) => {
 
   try {
     switch (key) {
-      case 'chealt-collections':
-        await saveCollections({ user, collections: value });
-
-        break;
       case 'chealt-collection-name':
         await updateCollectionName({ user, ...value });
-
-        break;
-      case 'chealt-collection-add':
-        await addCollection({ user, ...value });
 
         break;
       case 'chealt-collection-add-with-item':
@@ -36,12 +30,20 @@ const POST = async ({ request }) => {
         await addCollectionItems({ user, id: value.id, items: value.items });
 
         break;
-      case 'chealt-collection-item-add':
-        await addCollectionItems({ user, id: value.id, items: value.items });
+      case 'chealt-add-item-to-collection':
+        await addItemToCollection({ user, ...value });
 
         break;
-      case 'chealt-collection-item-images-add':
+      case 'chealt-add-image-to-collection':
+        await addCollectionItem({ user, id: value.id, itemId: value.itemId, filename: value.filename });
+
+        break;
+      case 'chealt-add-image-to-collection-item':
         await addCollectionItemImages({ user, ...value });
+
+        break;
+      case 'chealt-remove-item-from-collection':
+        await deleteCollectionItem({ user, ...value });
 
         break;
       default:

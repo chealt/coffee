@@ -1,44 +1,37 @@
 ---
-import { getRelativeLocaleUrl } from "astro:i18n";
-import CoffeeImageUpload from "./coffee-image-upload.astro";
-import Icon from "../icon/icon.astro";
-import allLocaleTranslations from "./nav.json";
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import CoffeeImageUpload from './coffee-image-upload.astro';
+import Icon from '../icon/icon.astro';
+import allLocaleTranslations from './nav.json';
 
-import "./nav.css";
+import './nav.css';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
 const isActivePage = (pageName) => {
-  const firstPathParam = Astro.url.pathname
-    .replace(`${Astro.currentLocale}`, "")
-    .slice(1);
+  const firstPathParam = Astro.url.pathname.replace(`${Astro.currentLocale}`, '').slice(1);
 
-  return (
-    firstPathParam === `/${pageName}` ||
-    firstPathParam === `/${pageName}/` ||
-    firstPathParam === `${pageName}` ||
-    firstPathParam === `${pageName}/`
-  );
+  return pageName === '' ? firstPathParam === '' : firstPathParam.includes(pageName);
 };
 
 const items = [
   {
-    name: "home",
-    href: getRelativeLocaleUrl(Astro.currentLocale, "/"),
-    text: t["explore"],
-    isActive: isActivePage(""),
+    name: 'home',
+    href: getRelativeLocaleUrl(Astro.currentLocale, '/'),
+    text: t['explore'],
+    isActive: isActivePage('')
   },
   {
-    name: "capture",
-    href: getRelativeLocaleUrl(Astro.currentLocale, "/you"),
-    text: t["capture"],
+    name: 'capture',
+    href: getRelativeLocaleUrl(Astro.currentLocale, '/you/collections'),
+    text: t['capture']
   },
   {
-    name: "you",
-    href: getRelativeLocaleUrl(Astro.currentLocale, "/you"),
-    text: t["you"],
-    isActive: isActivePage("you"),
-  },
+    name: 'you',
+    href: getRelativeLocaleUrl(Astro.currentLocale, '/you/collections'),
+    text: t['you'],
+    isActive: isActivePage('you')
+  }
 ];
 
 const shouldSync = Boolean(Astro.locals.loggedInUser);
@@ -47,7 +40,7 @@ const shouldSync = Boolean(Astro.locals.loggedInUser);
 <nav>
   {
     items.map(({ name, href, text, isActive }) =>
-      name === "capture" ? (
+      name === 'capture' ? (
         <CoffeeImageUpload data-should-sync={shouldSync} data-unnamed-title={t.unnamedTitle}>
           <a href={href} class="triggerButton">
             <Icon class="icon" type={name} />
@@ -55,11 +48,11 @@ const shouldSync = Boolean(Astro.locals.loggedInUser);
           </a>
         </CoffeeImageUpload>
       ) : (
-        <a href={href} class={isActive ? "active" : ""}>
+        <a href={href} class={isActive ? 'active' : ''}>
           <Icon class="icon" type={name} />
           <span class="title">{text}</span>
         </a>
-      ),
+      )
     )
   }
 </nav>

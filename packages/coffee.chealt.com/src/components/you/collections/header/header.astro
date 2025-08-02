@@ -1,0 +1,17 @@
+---
+import Controls from './controls/controls.astro';
+import Name from './name.astro';
+
+import './header.css';
+
+const { collectionId, isBuiltIn, name } = Astro.props;
+---
+
+<coffee-collection-header data-collection-id={collectionId}>
+  <header class="item-header">
+    <Name isBuiltIn={isBuiltIn} name={name} collectionId={collectionId} />
+    <Controls collectionId={collectionId} isBuiltIn={isBuiltIn} />
+  </header>
+</coffee-collection-header>
+
+<script src="./header.js"></script>

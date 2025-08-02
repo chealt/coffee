@@ -12,7 +12,7 @@ const DELETE = async ({ request }) => {
 
   try {
     switch (key) {
-      case 'chealt-collections':
+      case 'collection':
         await deleteCollection({ user: { name: loggedInUser.username, id: loggedInUser.userID }, id: value });
 
         break;
