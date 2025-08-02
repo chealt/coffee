@@ -109,7 +109,8 @@ a {
   }
 }
 
-a[href] {
+a[href],
+.in-progress {
   &::after {
     content: ' ';
     position: absolute;
@@ -118,7 +119,7 @@ a[href] {
     display: none;
     opacity: 0;
     transition-property: display opacity;
-    transition-duration: 0.4s;
+    transition-duration: 0.2s;
     transition-timing-function: ease-in-out;
     transition-behavior: allow-discrete;
     transition-delay: 1000ms;
@@ -130,6 +131,17 @@ a[href] {
   }
 
   &:active::after {
+    display: block;
+    opacity: 1;
+
+    @starting-style {
+      opacity: 0;
+    }
+  }
+}
+
+a[href].in-progress {
+  &::after {
     display: block;
     opacity: 1;
 
@@ -219,11 +231,6 @@ svg {
   display: block;
   width: 100%;
   height: auto;
-}
-
-.in-progress {
-  opacity: 0.5;
-  pointer-events: none;
 }
 
 @view-transition {

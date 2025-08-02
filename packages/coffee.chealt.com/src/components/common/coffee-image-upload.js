@@ -56,8 +56,6 @@ class CoffeeImageUpload extends HTMLElement {
         }
       }
 
-      this.triggerButton.classList.remove('in-progress');
-
       window.location.assign(`${this.triggerButton.getAttribute('href')}${collectionId}/items/${itemId}`);
     });
   }

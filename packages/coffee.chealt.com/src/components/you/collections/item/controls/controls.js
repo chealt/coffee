@@ -26,6 +26,10 @@ class CoffeeControls extends HTMLElement {
           collectionId: 'favorites',
           itemId: this.dataset.itemId
         });
+
+        if (window.location.pathname.includes('favorites')) {
+          window.location.assign(this.dataset.collectionsUrl);
+        }
       }
     });
   }

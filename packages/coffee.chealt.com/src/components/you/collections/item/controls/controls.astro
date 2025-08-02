@@ -14,7 +14,10 @@ const { collectionId, isFavorite, itemId } = Astro.props;
 ---
 
 <div class="controls">
-  <coffee-controls data-item-id={itemId}>
+  <coffee-controls
+    data-item-id={itemId}
+    data-collections-url={getRelativeLocaleUrl(Astro.currentLocale, '/you/collections')}
+  >
     <Button class="favorite ghost">
       <Icon type="favorite" class=`${isFavorite ? 'active' : ''}` />
       <span>{t['favorite']}</span>
