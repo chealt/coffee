@@ -19,6 +19,10 @@ const setIsIOS = (context) => {
   context.locals.isIOS = isIOS(userAgent);
 };
 
+const setGetSignedUrl = (context) => {
+  context.locals.getSignedUrl = '/api/storage/get-signed-url.json';
+};
+
 const languages = ['pl', 'en'];
 
 const parsePath = (pathname) => {
@@ -51,10 +55,6 @@ const authenticate = (context) => {
   const loggedInUser = getSessionUser(context.request);
 
   context.locals.loggedInUser = loggedInUser;
-
-  if (loggedInUser) {
-    context.locals.getSignedUrl = '/api/storage/get-signed-url.json';
-  }
 };
 
 // eslint-disable-next-line complexity
@@ -120,6 +120,7 @@ const onRequest = async (context, next) => {
 
   setClientSideOCR(context);
   setIsIOS(context);
+  setGetSignedUrl(context);
 
   return next();
 };
