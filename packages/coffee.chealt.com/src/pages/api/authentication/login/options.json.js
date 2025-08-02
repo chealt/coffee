@@ -1,10 +1,16 @@
+import { relyingPartyID } from '../../../../server/authentication/config.js';
 import { getAuthenticationOptions } from '../../../../server/database/user.js';
+import { getAuthenticationOptions as getNewAuthenticationOptions } from '../../../../server/login.js';
 
 const POST = async ({ request }) => {
   const { username } = await request.json();
 
   try {
-    const options = await getAuthenticationOptions(username);
+    let options = await getAuthenticationOptions(username);
+
+    if (options.rpId !== relyingPartyID) {
+      options = await getNewAuthenticationOptions(username);
+    }
 
     return new Response(JSON.stringify({ options }), {
       status: 200,
