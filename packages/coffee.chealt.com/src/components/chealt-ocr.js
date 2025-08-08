@@ -59,8 +59,6 @@ class ChealtOcr extends HTMLElement {
 
         image.setAttribute('data-chealt-ocr', texts);
       }
-
-      ChealtOcr.removeDeletedOCR(images);
     } catch (error) {
       console.error(error); // eslint-disable-line no-console
     }
@@ -90,21 +88,6 @@ class ChealtOcr extends HTMLElement {
         [id]: texts
       })
     );
-  }
-
-  static removeDeletedOCR(existingImages) {
-    const savedTexts = ChealtOcr.getSavedTexts();
-    const cleanTexts = {};
-
-    for (const image of existingImages) {
-      const id = image.id;
-
-      if (savedTexts[id]) {
-        cleanTexts[id] = savedTexts[id];
-      }
-    }
-
-    localStorage.setItem(storageKey, JSON.stringify(cleanTexts));
   }
 
   disconnectedCallback() {
