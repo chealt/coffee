@@ -64,6 +64,11 @@
 .roasters-container:has([name='countryId-17']:checked) .roaster[data-country-id='17'],
 .roasters-container:has([name='countryId-18']:checked) .roaster[data-country-id='18'],
 .roasters-container:has([name='countryId-19']:checked) .roaster[data-country-id='19'],
+.roasters-container:has([name='countryId-20']:checked) .roaster[data-country-id='20'],
+.roasters-container:has([name='countryId-21']:checked) .roaster[data-country-id='21'],
+.roasters-container:has([name='countryId-22']:checked) .roaster[data-country-id='22'],
+.roasters-container:has([name='countryId-23']:checked) .roaster[data-country-id='23'],
+.roasters-container:has([name='countryId-24']:checked) .roaster[data-country-id='24'],
 .roasters-container:not(:has([name^='countryId']:checked)) .roaster {
   display: flex;
   opacity: 1;

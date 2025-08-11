@@ -1,11 +1,1 @@
-[
-  { "brewing_method_id": 1, "name": "espresso", "language_code": "pl" },
-  { "brewing_method_id": 1, "name": "espresso", "language_code": "en" },
-  { "brewing_method_id": 1, "name": "espresso", "language_code": "hu" },
-  { "brewing_method_id": 2, "name": "filter", "language_code": "en" },
-  { "brewing_method_id": 2, "name": "filter", "language_code": "hu" },
-  { "brewing_method_id": 2, "name": "filter", "language_code": "pl" },
-  { "brewing_method_id": 3, "name": "omni", "language_code": "hu" },
-  { "brewing_method_id": 3, "name": "omni", "language_code": "pl" },
-  { "brewing_method_id": 3, "name": "omni", "language_code": "en" }
-]
+[{"brewing_method_id":1,"name":"espresso","language_code":"pl"},{"brewing_method_id":1,"name":"espresso","language_code":"en"},{"brewing_method_id":1,"name":"espresso","language_code":"hu"},{"brewing_method_id":2,"name":"filter","language_code":"en"},{"brewing_method_id":2,"name":"filter","language_code":"hu"},{"brewing_method_id":2,"name":"filter","language_code":"pl"},{"brewing_method_id":3,"name":"omni","language_code":"hu"},{"brewing_method_id":3,"name":"omni","language_code":"pl"},{"brewing_method_id":3,"name":"omni","language_code":"en"}]
