@@ -122,7 +122,7 @@ a[href],
     transition-duration: 0.4s;
     transition-timing-function: ease-in-out;
     transition-behavior: allow-discrete;
-    transition-delay: 300ms;
+    transition-delay: 200ms;
   }
 
   &:not(button)::after {
