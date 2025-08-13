@@ -19,7 +19,7 @@ const {
   <span slot="trigger">{t['geek-zone']}</span>
   <div slot="content" id="geek-zone-container" data-content>
     <div class="range-group">
-      <Range name="roast-level" min="1" max="5" excludeFromSum value={review?.acidity}>
+      <Range name="roast-level" min="1" max="5" excludeFromSum value={review?.['roast-level']}>
         <span slot="title">{t['roast-level']}</span>
         <span slot="min">{t['light']}</span>
         <span slot="max">{t['dark']}</span>
