@@ -20,7 +20,11 @@ const { selected } = Astro.props;
     {
       brewingMethods
         .filter(({ language_code }) => language_code === Astro.currentLocale)
-        .map(({ brewing_method_id, name }) => <option value={brewing_method_id}>{name}</option>)
+        .map(({ brewing_method_id, name }) => (
+          <option value={brewing_method_id} selected={String(brewing_method_id) === selected}>
+            {name}
+          </option>
+        ))
     }
   </Select>
 </Label>

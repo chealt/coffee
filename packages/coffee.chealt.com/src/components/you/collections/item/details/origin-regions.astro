@@ -19,7 +19,11 @@ const { selected } = Astro.props;
     {
       originRegions
         .filter(({ language_code }) => language_code === Astro.currentLocale)
-        .map(({ origin_region_id, name }) => <option value={origin_region_id}>{name}</option>)
+        .map(({ origin_region_id, name }) => (
+          <option value={origin_region_id} selected={String(origin_region_id) === selected}>
+            {name}
+          </option>
+        ))
     }
   </Select>
 </Label>
