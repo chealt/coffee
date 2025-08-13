@@ -9,13 +9,17 @@ import './geek-zone.css';
 import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
+
+const {
+  collectionItem: { review }
+} = Astro.locals;
 ---
 
 <Toggle>
   <span slot="trigger">{t['geek-zone']}</span>
   <div slot="content" id="geek-zone-container" data-content>
     <div class="range-group">
-      <Range name="roast-level" min="1" max="5" excludeFromSum>
+      <Range name="roast-level" min="1" max="5" excludeFromSum value={review?.acidity}>
         <span slot="title">{t['roast-level']}</span>
         <span slot="min">{t['light']}</span>
         <span slot="max">{t['dark']}</span>
@@ -23,19 +27,19 @@ const t = allLocaleTranslations[Astro.currentLocale];
     </div>
     <div class="range-group">
       <div class="range-group-item">
-        <Range name="aroma" min="6" max="10">
+        <Range name="aroma" min="6" max="10" value={review?.aroma}>
           <span slot="title">{t['fragrance-aroma']}</span>
           <span slot="min">{6}</span>
           <span slot="max">{10}</span>
         </Range>
       </div>
       <div class="range-group-item">
-        <Range name="dry" min="1" max="5" excludeFromSum>
+        <Range name="dry" min="1" max="5" excludeFromSum value={review?.dry}>
           <span slot="title">{t['dry']}</span>
           <span slot="min">{1}</span>
           <span slot="max">{5}</span>
         </Range>
-        <Range name="break" min="1" max="5" excludeFromSum>
+        <Range name="break" min="1" max="5" excludeFromSum value={review?.break}>
           <span slot="title">{t['break']}</span>
           <span slot="min">{1}</span>
           <span slot="max">{5}</span>
@@ -43,78 +47,83 @@ const t = allLocaleTranslations[Astro.currentLocale];
       </div>
     </div>
     <div class="range-group">
-      <Range name="flavour" min="6" max="10">
+      <Range name="flavour" min="6" max="10" value={review?.flavour}>
         <span slot="title">{t['flavour']}</span>
         <span slot="min">{6}</span>
         <span slot="max">{10}</span>
       </Range>
-      <Range name="aftertaste" min="6" max="10">
+      <Range name="aftertaste" min="6" max="10" value={review?.aftertaste}>
         <span slot="title">{t['aftertaste']}</span>
         <span slot="min">{6}</span>
         <span slot="max">{10}</span>
       </Range>
     </div>
     <div class="range-group">
-      <Range name="intensity" min="1" max="5" excludeFromSum>
+      <Range name="intensity" min="1" max="5" excludeFromSum value={review?.intensity}>
         <span slot="title">{t['intensity']}</span>
         <span slot="min">{t['low']}</span>
         <span slot="max">{t['high']}</span>
       </Range>
     </div>
     <div class="range-group">
-      <Range name="body" min="6" max="10">
+      <Range name="body" min="6" max="10" value={review?.body}>
         <span slot="title">{t['body']}</span>
         <span slot="min">{6}</span>
         <span slot="max">{10}</span>
       </Range>
-      <Range name="level" min="1" max="5" excludeFromSum>
+      <Range name="level" min="1" max="5" excludeFromSum value={review?.level}>
         <span slot="title">{t['level']}</span>
         <span slot="min">{t['thin']}</span>
         <span slot="max">{t['heavy']}</span>
       </Range>
     </div>
     <div class="range-group">
-      <Range name="uniformity" min="6" max="10">
+      <Range name="uniformity" min="6" max="10" value={review?.uniformity}>
         <span slot="title">{t['uniformity']}</span>
         <span slot="min">{6}</span>
         <span slot="max">{10}</span>
       </Range>
-      <Range name="balance" min="6" max="10">
+      <Range name="balance" min="6" max="10" value={review?.balance}>
         <span slot="title">{t['balance']}</span>
         <span slot="min">{6}</span>
         <span slot="max">{10}</span>
       </Range>
     </div>
     <div class="range-group">
-      <Range name="clean-cup" min="6" max="10">
+      <Range name="clean-cup" min="6" max="10" value={review?.['clean-cup']}>
         <span slot="title">{t['clean-cup']}</span>
         <span slot="min">{6}</span>
         <span slot="max">{10}</span>
       </Range>
     </div>
     <div class="range-group">
-      <Range name="overall" min="6" max="10">
-        <span slot="title">{t['overall']}</span>
+      <Range name="overall" min="6" max="10" value={review?.overall}>
+        <span slot="title">{t.overall}</span>
         <span slot="min">{6}</span>
         <span slot="max">{10}</span>
       </Range>
       <fieldset class="range-group-item-container">
-        <legend>{t['defects']}</legend>
+        <legend>{t.defects}</legend>
         <div class="range-group-item-container">
           <Label>
             <span>{t['number-of-cups']}</span>
-            <Input name="number-of-cups" data-negative type="number" />
+            <Input name="number-of-cups" data-negative type="number" value={review?.['number-of-cups']} />
           </Label>
           <span class="times-sign">x</span>
           <Label>
-            <span>{t['intensity']}</span>
-            <Input name="defects-intensity" data-multiplier="number-of-cups" type="number" />
+            <span>{t.intensity}</span>
+            <Input
+              name="defects-intensity"
+              data-multiplier="number-of-cups"
+              type="number"
+              value={review?.['defects-intensity']}
+            />
           </Label>
         </div>
       </fieldset>
     </div>
     <Label>
-      <span>{t['notes']}</span>
+      <span>{t.notes}</span>
       <Input name="notes" type="text" />
     </Label>
     <div class="final-score-container">

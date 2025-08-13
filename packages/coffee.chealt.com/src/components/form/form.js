@@ -48,8 +48,12 @@ const calculateSumOnInput = (sumGroup) => {
 
 const addChangeEvent = ({ form, callback }) => {
   form.querySelectorAll('input,select').forEach((element) => {
-    element.addEventListener('input', () => {
-      callback(form);
+    element.addEventListener('input', (event) => {
+      if (event.isTrusted) {
+        return callback(form);
+      }
+
+      return undefined;
     });
   });
 };
@@ -57,6 +61,7 @@ const addChangeEvent = ({ form, callback }) => {
 const getFormData = ({ form, storage }) => {
   switch (storage) {
     case 'localStorage':
+    case 'api':
       const dataInStorage = localStorage.getItem(storageKey);
       const data = dataInStorage ? JSON.parse(dataInStorage) : {};
 
@@ -69,6 +74,7 @@ const getFormData = ({ form, storage }) => {
 const getAllFormsData = (storage) => {
   switch (storage) {
     case 'localStorage':
+    case 'api':
       const dataInStorage = localStorage.getItem(storageKey);
       const data = dataInStorage ? JSON.parse(dataInStorage) : {};
 
@@ -81,6 +87,7 @@ const getAllFormsData = (storage) => {
 const removeFormData = ({ storage, formName }) => {
   switch (storage) {
     case 'localStorage':
+    case 'api':
       const allData = getAllFormsData(storage);
 
       delete allData[formName];
@@ -93,19 +100,53 @@ const removeFormData = ({ storage, formName }) => {
   }
 };
 
-const saveFormData = (storage) => (form) => {
-  const formData = new FormData(form);
-  const data = formDataToObject(formData);
-  const savedFormData = getAllFormsData(storage);
+const saveFormData =
+  ({ storage, saveEndpoint }) =>
+  async (form) => {
+    if (!form.name) {
+      throw new Error('The form must have a name to save its data.');
+    }
 
-  localStorage.setItem(
-    storageKey,
-    JSON.stringify({
-      ...savedFormData, // this is to keep the data of other forms' on the page
-      [form.name]: data
-    })
-  );
-};
+    const formData = new FormData(form);
+    const data = formDataToObject(formData);
+    const savedFormData = getAllFormsData(storage);
+
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify({
+        ...savedFormData, // this is to keep the data of other forms' on the page
+        [form.name]: data
+      })
+    );
+
+    if (storage === 'api') {
+      try {
+        const response = await fetch(`${saveEndpoint}/${form.name}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          credentials: 'same-origin', // allow to set cookies
+          body: new URLSearchParams(formData)
+        });
+
+        if (!response.ok) {
+          // eslint-disable-next-line no-console
+          console.error(response);
+        }
+
+        const result = await response.json();
+
+        if (result.error) {
+          // eslint-disable-next-line no-console
+          console.error(result.error);
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error);
+      }
+    }
+  };
 
 const setFormData = ({ form, storage }) => {
   const data = getFormData({ form, storage });
@@ -147,12 +188,19 @@ class ChealtForm extends HTMLElement {
   connectedCallback() {
     this.form = this.querySelector('form');
     this.name = this.form.getAttribute('name');
-    this.storage = this.form.getAttribute('data-storage');
-    this.saveOnInput = this.form.getAttribute('data-save-on-input') || false;
-    this.sumGroupName = this.form.getAttribute('data-sum-group-name');
+    this.storage = this.form.dataset.storage;
+    this.saveOnInput = this.form.dataset.saveOnInput || false;
+    this.sumGroupName = this.form.dataset.sumGroupName;
+    this.saveEndpoint = this.form.dataset.saveEndpoint;
     this.sumGroups = this.form.querySelectorAll('[data-sum-group-name]');
 
     if (this.storage) {
+      if (this.storage === 'api' && !this.saveEndpoint) {
+        throw new Error(
+          `The API storage type needs to have a sve endpoint data attribute. Please add [data-save-endpoint] to the form.`
+        );
+      }
+
       if (!ChealtForm.isStorageTypeImplemented(this.storage)) {
         throw new Error(
           `Storage type: ${this.storage} is not implemented, use one of the following: ${supportedStorageTypes.join(', ')}`
@@ -162,7 +210,10 @@ class ChealtForm extends HTMLElement {
       this.changeFormDataOnNameChange();
 
       if (this.saveOnInput) {
-        addChangeEvent({ form: this.form, callback: saveFormData(this.storage) });
+        addChangeEvent({
+          form: this.form,
+          callback: saveFormData({ storage: this.storage, saveEndpoint: this.saveEndpoint })
+        });
       }
 
       ChealtForm.observeNodeDeletion(this.storage);
@@ -192,6 +243,8 @@ class ChealtForm extends HTMLElement {
   static isStorageTypeImplemented(storage) {
     switch (storage) {
       case 'localStorage':
+        return true;
+      case 'api':
         return true;
       default:
         return false;

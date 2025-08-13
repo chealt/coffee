@@ -5,11 +5,13 @@ import Input from '../../../../form/input/input.astro';
 import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
+
+const { value } = Astro.props;
 ---
 
 <Label>
   <div class="name">
     {t.roastingDate}
   </div>
-  <Input name="roastingDate" type="date" />
+  <Input name="roastingDate" type="date" value={value} />
 </Label>

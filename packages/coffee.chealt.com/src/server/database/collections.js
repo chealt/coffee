@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import { getClient } from './client.js';
+import { getValue } from './formData.js';
 import { getImageUrl } from '../cloudflare/r2/storage.js';
 
 const queryCollections = async (user) => {
@@ -97,13 +98,17 @@ const getCollectionItem = async (user, itemId) => {
   const collectionItem = await queryCollectionItem(user, itemId);
   const collectionItemImages = await queryCollectionItemImages(user);
   const favoriteItems = await queryCollectionItemsByCollectionId(user, 'favorites');
+  const details = await getValue({ user, key: `${itemId}.details` });
+  const review = await getValue({ user, key: `${itemId}.review` });
 
   return {
     id: collectionItem.id,
     isFavorite: favoriteItems.some(({ id }) => id === itemId),
     images: collectionItemImages
       .filter((image) => image.collection_item_id === itemId)
-      ?.map(({ filename }) => ({ filename, src: getImageUrl({ username: user.name, filename }) }))
+      ?.map(({ filename }) => ({ filename, src: getImageUrl({ username: user.name, filename }) })),
+    details,
+    review
   };
 };
 

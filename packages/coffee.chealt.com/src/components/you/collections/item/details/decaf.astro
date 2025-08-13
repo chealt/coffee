@@ -4,6 +4,8 @@ import Select from '../../../../form/select/select.astro';
 import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
+
+const { checked } = Astro.props;
 ---
 
-<Checkbox name="isDecaf">{t.decaf}</Checkbox>
+<Checkbox name="isDecaf" checked={checked === 'on'}>{t.decaf}</Checkbox>

@@ -56,8 +56,8 @@ const { collectionItem, shouldAuthenticate } = Astro.locals;
       </ul>
     </chealt-ocr>
     <Controls collectionId={collectionId} itemId={itemId} isFavorite={collectionItem?.isFavorite} />
-    <Details id={collectionItem?.id} />
-    <Review id={collectionItem?.id} />
+    <Details />
+    <Review />
     <section>
       <h1>{t.dangerZone}</h1>
       <Button

@@ -7,11 +7,19 @@ import roasters from '../../../../../../data/roasters.json';
 import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
+
+const { selected } = Astro.props;
 ---
 
 <Label>
   <div class="name">{t.roaster}</div>
   <Select name="roaster" showEmpty>
-    {roasters.map((roaster) => <option value={`${roaster.id}`}>{roaster.name}</option>)}
+    {
+      roasters.map((roaster) => (
+        <option value={`${roaster.id}`} selected={String(roaster.id) === selected}>
+          {roaster.name}
+        </option>
+      ))
+    }
   </Select>
 </Label>

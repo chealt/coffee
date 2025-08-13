@@ -13,7 +13,9 @@ import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
-const { id } = Astro.props;
+const {
+  collectionItem: { id, review }
+} = Astro.locals;
 ---
 
 <section>
@@ -21,31 +23,32 @@ const { id } = Astro.props;
   <Form
     class="review-form"
     name={`${id}.review`}
-    data-storage="localStorage"
+    data-storage="api"
+    data-save-endpoint="/api/storage/save-form-data"
     data-save-on-input
     data-sum-group-name="geek-zone"
   >
     <RadioList>
-      <Radio name="like" value="like">
+      <Radio name="like" value="like" checked={review?.like === 'like'}>
         <Icon type="thumbs-up--filled" />
         {t.like}
       </Radio>
-      <Radio name="like" value="dislike">
+      <Radio name="like" value="dislike" checked={review?.like === 'dislike'}>
         <Icon type="thumbs-down--filled" />
         {t.dislike}
       </Radio>
     </RadioList>
-    <Range name="acidity" min="6" max="10">
+    <Range name="acidity" min="6" max="10" value={review?.acidity}>
       <span slot="title">{t.acidity}</span>
       <span slot="min">{t.bitter}</span>
       <span slot="max">{t.acidic}</span>
     </Range>
-    <Range name="sweetness" min="6" max="10">
+    <Range name="sweetness" min="6" max="10" value={review?.sweetness}>
       <span slot="title">{t.sweetness}</span>
       <span slot="min">{t.sour}</span>
       <span slot="max">{t.sweet}</span>
     </Range>
-    <Range name="strength" excludeFromSum>
+    <Range name="strength" excludeFromSum value={review?.strength}>
       <span slot="min">{t.weak}</span>
       <span slot="max">{t.strong}</span>
     </Range>

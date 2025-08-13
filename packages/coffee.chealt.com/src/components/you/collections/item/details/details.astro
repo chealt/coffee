@@ -15,19 +15,21 @@ import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
-const { id } = Astro.props;
+const {
+  collectionItem: { id, details }
+} = Astro.locals;
 ---
 
 <section>
   <h1>{t.details}</h1>
-  <Form name={`${id}.details`} data-storage="localStorage" data-save-on-input>
-    <Roasters />
-    <RoastingLevels />
-    <RoastingDate />
-    <OriginCountries />
-    <OriginRegions />
-    <ProcessingMethods />
-    <BrewingMethods />
-    <Decaf />
+  <Form name={`${id}.details`} data-storage="api" data-save-endpoint="/api/storage/save-form-data" data-save-on-input>
+    <Roasters selected={details?.roaster} />
+    <RoastingLevels selected={details?.roastingLevel} />
+    <RoastingDate value={details?.roastingDate} />
+    <OriginCountries selected={details?.originCountry} />
+    <OriginRegions selected={details?.originRegion} />
+    <ProcessingMethods selected={details?.processingMethod} />
+    <BrewingMethods selected={details?.brewingMethod} />
+    <Decaf checked={details?.isDecaf} />
   </Form>
 </section>

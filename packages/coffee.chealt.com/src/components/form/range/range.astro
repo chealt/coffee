@@ -12,6 +12,7 @@ import './range.css';
     name={Astro.props.name}
     min={Astro.props.min || 1}
     max={Astro.props.max || 10}
+    value={Astro.props.value}
   />
   <div class="labels-container">
     <span><slot name="min" /></span>

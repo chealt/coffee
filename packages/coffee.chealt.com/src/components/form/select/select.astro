@@ -7,12 +7,6 @@ const t = allLocaleTranslations[Astro.currentLocale];
 ---
 
 <select {...Astro.props}>
-  {
-    Astro.props.showEmpty && (
-      <option value="" selected>
-        {t['unknown']}
-      </option>
-    )
-  }
+  {Astro.props.showEmpty && <option value="">{t.unknown}</option>}
   <slot />
 </select>
