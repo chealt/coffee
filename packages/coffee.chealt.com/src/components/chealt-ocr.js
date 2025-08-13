@@ -3,9 +3,13 @@ const ocrInProgressClass = 'ocr-in-progress';
 
 class ChealtOcr extends HTMLElement {
   connectedCallback() {
-    this.initOcr();
-    this.extractAllTexts();
-    this.addMutationObserver();
+    const missingOcrTexts = Array.from(this.querySelectorAll('img')).some((element) => !element.dataset.ocr);
+
+    if (missingOcrTexts) {
+      this.initOcr();
+      this.extractAllTexts();
+      this.addMutationObserver();
+    }
   }
 
   async initOcr() {
@@ -45,19 +49,21 @@ class ChealtOcr extends HTMLElement {
         const imageSrc = image.src;
         const id = image.id;
 
-        let texts = ChealtOcr.getSavedTexts(id);
+        let texts = image.dataset.ocr || ChealtOcr.getSavedTexts(id);
 
         if (!texts) {
           image.classList.add(ocrInProgressClass);
 
           texts = await this.triggerTextExtraction(imageSrc);
 
-          ChealtOcr.saveOCR({ id, texts });
+          await ChealtOcr.saveOCR({ id, texts, saveEndpoint: this.dataset.saveEndpoint });
 
           image.classList.remove(ocrInProgressClass);
         }
 
-        image.setAttribute('data-chealt-ocr', texts);
+        if (!image.dataset.ocr) {
+          image.setAttribute('data-ocr', texts);
+        }
       }
     } catch (error) {
       console.error(error); // eslint-disable-line no-console
@@ -78,7 +84,7 @@ class ChealtOcr extends HTMLElement {
     return !id ? savedTexts : (savedTexts || {})[id];
   }
 
-  static saveOCR({ id, texts }) {
+  static async saveOCR({ id, texts, saveEndpoint }) {
     const savedTexts = JSON.parse(localStorage.getItem(storageKey)) || {};
 
     localStorage.setItem(
@@ -88,6 +94,23 @@ class ChealtOcr extends HTMLElement {
         [id]: texts
       })
     );
+
+    if (saveEndpoint) {
+      const formData = new FormData();
+
+      formData.append('texts', texts);
+
+      return await fetch(`${saveEndpoint}/${id}.ocr`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        credentials: 'same-origin', // allow to set cookies
+        body: new URLSearchParams(formData)
+      });
+    }
+
+    return true;
   }
 
   disconnectedCallback() {

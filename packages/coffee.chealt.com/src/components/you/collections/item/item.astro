@@ -17,6 +17,8 @@ const t = allLocaleTranslations[Astro.currentLocale];
 const { collectionId, itemId } = Astro.props;
 
 const { collectionItem, shouldAuthenticate } = Astro.locals;
+
+console.log(collectionItem?.images);
 ---
 
 <Common
@@ -36,17 +38,18 @@ const { collectionItem, shouldAuthenticate } = Astro.locals;
     data-type="chealt-collection-item"
     data-delete-confirm-message={t.deleteItemConfirmMessage}
   >
-    <chealt-ocr>
+    <chealt-ocr data-save-endpoint="/api/storage/save-form-data">
       <ul>
         <li class="picture-collection">
           {
             collectionItem?.images.length && (
               <div class="carousel images-container">
-                {collectionItem?.images.map(({ src, filename }) => (
+                {collectionItem?.images.map(({ src, filename, ocr }) => (
                   <img
                     id={filename}
                     src={src}
                     style={`view-transition-name: collection-${collectionId}-image-${filename}`}
+                    data-ocr={ocr ? ocr : ''}
                   />
                 ))}
               </div>

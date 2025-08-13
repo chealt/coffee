@@ -45,8 +45,20 @@ const queryCollectionItem = async (user, itemId) => {
   return results.rows[0];
 };
 
-const queryCollectionItemImages = async (user) => {
+const queryCollectionItemImages = async (user, itemId) => {
   const client = getClient(user.name);
+
+  if (itemId) {
+    const results = await client.execute({
+      sql: 'SELECT cii.filename, fd.value AS ocr FROM collection_item_images cii LEFT JOIN form_data fd ON fd.key = CONCAT(cii.filename, ".ocr") WHERE collection_item_id = :itemId',
+      args: { itemId }
+    });
+
+    return results.rows.map(({ ocr, ...rest }) => ({
+      ocr: ocr ? JSON.parse(ocr).texts : undefined,
+      ...rest
+    }));
+  }
 
   const results = await client.execute({
     sql: 'SELECT filename, collection_item_id FROM collection_item_images'
@@ -96,7 +108,7 @@ const getCollections = async (user) => {
 
 const getCollectionItem = async (user, itemId) => {
   const collectionItem = await queryCollectionItem(user, itemId);
-  const collectionItemImages = await queryCollectionItemImages(user);
+  const collectionItemImages = await queryCollectionItemImages(user, itemId);
   const favoriteItems = await queryCollectionItemsByCollectionId(user, 'favorites');
   const details = await getValue({ user, key: `${itemId}.details` });
   const review = await getValue({ user, key: `${itemId}.review` });
@@ -104,9 +116,11 @@ const getCollectionItem = async (user, itemId) => {
   return {
     id: collectionItem.id,
     isFavorite: favoriteItems.some(({ id }) => id === itemId),
-    images: collectionItemImages
-      .filter((image) => image.collection_item_id === itemId)
-      ?.map(({ filename }) => ({ filename, src: getImageUrl({ username: user.name, filename }) })),
+    images: collectionItemImages?.map(({ filename, ocr }) => ({
+      filename,
+      src: getImageUrl({ username: user.name, filename }),
+      ocr
+    })),
     details,
     review
   };
