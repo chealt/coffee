@@ -50,14 +50,11 @@ const queryCollectionItemImages = async (user, itemId) => {
 
   if (itemId) {
     const results = await client.execute({
-      sql: 'SELECT cii.filename, fd.value AS ocr FROM collection_item_images cii LEFT JOIN form_data fd ON fd.key = CONCAT(cii.filename, ".ocr") WHERE collection_item_id = :itemId',
+      sql: 'SELECT filename FROM collection_item_images WHERE collection_item_id = :itemId',
       args: { itemId }
     });
 
-    return results.rows.map(({ ocr, ...rest }) => ({
-      ocr: ocr ? JSON.parse(ocr).texts : undefined,
-      ...rest
-    }));
+    return results.rows;
   }
 
   const results = await client.execute({
@@ -116,10 +113,9 @@ const getCollectionItem = async (user, itemId) => {
   return {
     id: collectionItem.id,
     isFavorite: favoriteItems.some(({ id }) => id === itemId),
-    images: collectionItemImages?.map(({ filename, ocr }) => ({
+    images: collectionItemImages?.map(({ filename }) => ({
       filename,
-      src: getImageUrl({ username: user.name, filename }),
-      ocr
+      src: getImageUrl({ username: user.name, filename })
     })),
     details,
     review

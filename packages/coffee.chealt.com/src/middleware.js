@@ -5,20 +5,6 @@ import { getSessionUser } from './server/authentication/session.js';
 import { createRegistrationOptions } from './server/registration.js';
 import { setCollections, setCollectionItem } from './server/you/collections.js';
 
-const isIOS = (userAgent) => /iPad|iPhone|iPod/u.test(userAgent);
-
-const setClientSideOCR = (context) => {
-  const userAgent = context.request.headers.get('user-agent');
-
-  context.locals.clientSideOCR = !isIOS(userAgent);
-};
-
-const setIsIOS = (context) => {
-  const userAgent = context.request.headers.get('user-agent');
-
-  context.locals.isIOS = isIOS(userAgent);
-};
-
 const setGetSignedUrl = (context) => {
   context.locals.getSignedUrl = '/api/storage/get-signed-url.json';
 };
@@ -118,8 +104,6 @@ const onRequest = async (context, next) => {
     }
   }
 
-  setClientSideOCR(context);
-  setIsIOS(context);
   setGetSignedUrl(context);
 
   return next();

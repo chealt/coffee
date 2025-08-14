@@ -1,7 +1,7 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
+
 import Button from '../../../form/button/button.astro';
-import ChealtOCR from '../../../chealt-ocr.astro';
 import Common from '../../../common/common.astro';
 import Controls from './controls/controls.astro';
 import Details from './details/details.astro';
@@ -17,8 +17,6 @@ const t = allLocaleTranslations[Astro.currentLocale];
 const { collectionId, itemId } = Astro.props;
 
 const { collectionItem, shouldAuthenticate } = Astro.locals;
-
-console.log(collectionItem?.images);
 ---
 
 <Common
@@ -33,31 +31,28 @@ console.log(collectionItem?.images);
   >
     <Icon type="back" />
   </Button>
-  <coffee-details
+  <div
     id={collectionItem?.id}
     data-type="chealt-collection-item"
     data-delete-confirm-message={t.deleteItemConfirmMessage}
   >
-    <chealt-ocr data-save-endpoint="/api/storage/save-form-data">
-      <ul>
-        <li class="picture-collection">
-          {
-            collectionItem?.images.length && (
-              <div class="carousel images-container">
-                {collectionItem?.images.map(({ src, filename, ocr }) => (
-                  <img
-                    id={filename}
-                    src={src}
-                    style={`view-transition-name: collection-${collectionId}-image-${filename}`}
-                    data-ocr={ocr ? ocr : ''}
-                  />
-                ))}
-              </div>
-            )
-          }
-        </li>
-      </ul>
-    </chealt-ocr>
+    <ul>
+      <li class="picture-collection">
+        {
+          collectionItem?.images.length && (
+            <div class="carousel images-container">
+              {collectionItem?.images.map(({ src, filename }) => (
+                <img
+                  id={filename}
+                  src={src}
+                  style={`view-transition-name: collection-${collectionId}-image-${filename}`}
+                />
+              ))}
+            </div>
+          )
+        }
+      </li>
+    </ul>
     <Controls collectionId={collectionId} itemId={itemId} isFavorite={collectionItem?.isFavorite} />
     <Details />
     <Review />
@@ -74,8 +69,5 @@ console.log(collectionItem?.images);
         {t.delete}
       </Button>
     </section>
-  </coffee-details>
+  </div>
 </Common>
-
-{Astro.locals.clientSideOCR && <ChealtOCR />}
-<script src="./coffee-details.js"></script>
