@@ -1,0 +1,18 @@
+---
+const { collectionItem } = Astro.locals;
+const { collectionId } = Astro.props;
+---
+
+<ul>
+  <li class="picture-collection">
+    {
+      collectionItem?.images.length && (
+        <div class="carousel images-container">
+          {collectionItem?.images.map(({ src, filename }) => (
+            <img id={filename} src={src} style={`view-transition-name: collection-${collectionId}-image-${filename}`} />
+          ))}
+        </div>
+      )
+    }
+  </li>
+</ul>

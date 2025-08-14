@@ -6,6 +6,7 @@ import Common from '../../../common/common.astro';
 import Controls from './controls/controls.astro';
 import Details from './details/details.astro';
 import Icon from '../../../icon/icon.astro';
+import Images from './images/images.astro';
 import Review from './review/review.astro';
 
 import './item.css';
@@ -36,23 +37,7 @@ const { collectionItem, shouldAuthenticate } = Astro.locals;
     data-type="chealt-collection-item"
     data-delete-confirm-message={t.deleteItemConfirmMessage}
   >
-    <ul>
-      <li class="picture-collection">
-        {
-          collectionItem?.images.length && (
-            <div class="carousel images-container">
-              {collectionItem?.images.map(({ src, filename }) => (
-                <img
-                  id={filename}
-                  src={src}
-                  style={`view-transition-name: collection-${collectionId}-image-${filename}`}
-                />
-              ))}
-            </div>
-          )
-        }
-      </li>
-    </ul>
+    <Images collectionId={collectionId} />
     <Controls collectionId={collectionId} itemId={itemId} isFavorite={collectionItem?.isFavorite} />
     <Details />
     <Review />
