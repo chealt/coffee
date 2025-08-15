@@ -15,8 +15,6 @@ const t = allLocaleTranslations[Astro.currentLocale];
 const { collectionId } = Astro.props;
 
 const { collectionItem, collections } = Astro.locals;
-
-const otherCollections = collections.filter(({ id }) => id !== collectionId);
 ---
 
 <coffee-controls
@@ -62,9 +60,14 @@ const otherCollections = collections.filter(({ id }) => id !== collectionId);
   <Dialog class="drawer" id="add-to-collection">
     <ul data-item-id={collectionItem.id}>
       {
-        otherCollections.map(({ id, name }) => (
+        collections.map(({ id, name }) => (
           <li>
-            <Checkbox name={id} value={id} checked={collectionItem.inCollections?.includes(id)}>
+            <Checkbox
+              name={id}
+              value={id}
+              checked={collectionItem.inCollections?.includes(id)}
+              disabled={collectionItem.inCollections?.length === 1 && collectionId === id}
+            >
               {name}
             </Checkbox>
           </li>

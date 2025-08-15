@@ -32,8 +32,22 @@ class CoffeeControls extends HTMLElement {
             itemId
           });
         }
+
+        this.toggleDisabledState();
       });
     });
+  }
+
+  toggleDisabledState() {
+    const checkedCheckboxes = this.querySelectorAll('#add-to-collection input[type=checkbox]:checked');
+
+    if (checkedCheckboxes.length === 1) {
+      checkedCheckboxes[0].setAttribute('disabled', true);
+    } else {
+      this.querySelectorAll('#add-to-collection input[type=checkbox]:checked').forEach((checkbox) => {
+        checkbox.removeAttribute('disabled');
+      });
+    }
   }
 
   addFavoriteEventListener() {
