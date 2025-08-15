@@ -3,12 +3,14 @@
     "add": "add",
     "favorite": "favorite",
     "more": "more",
-    "delete": "delete"
+    "delete": "delete",
+    "add-to-collection": "add to collection"
   },
   "pl": {
     "add": "dodaj",
     "favorite": "ulubiony",
     "more": "więcej",
-    "delete": "usuń"
+    "delete": "usuń",
+    "add-to-collection": "dodaj do kolekcji"
   }
 }

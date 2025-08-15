@@ -64,8 +64,17 @@ const queryCollectionItemImages = async (user, itemId) => {
   return results.rows;
 };
 
-const queryCollectionItemLinks = async (user) => {
+const queryCollectionItemLinks = async (user, itemId) => {
   const client = getClient(user.name);
+
+  if (itemId) {
+    const results = await client.execute({
+      sql: 'SELECT collection_item_id, collection_id FROM collection_item_links WHERE collection_item_id = :itemId',
+      args: { itemId }
+    });
+  
+    return results.rows;
+  }
 
   const results = await client.execute({
     sql: 'SELECT collection_item_id, collection_id FROM collection_item_links'
@@ -109,6 +118,7 @@ const getCollectionItem = async (user, itemId) => {
   const favoriteItems = await queryCollectionItemsByCollectionId(user, 'favorites');
   const details = await getValue({ user, key: `${itemId}.details` });
   const review = await getValue({ user, key: `${itemId}.review` });
+  const collectionItemLinks = await queryCollectionItemLinks(user, itemId);
 
   return {
     id: collectionItem.id,
@@ -118,7 +128,8 @@ const getCollectionItem = async (user, itemId) => {
       src: getImageUrl({ username: user.name, filename })
     })),
     details,
-    review
+    review,
+    inCollections: collectionItemLinks.map((link) => link.collection_id)
   };
 };
 

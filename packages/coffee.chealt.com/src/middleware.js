@@ -63,7 +63,8 @@ const onRequest = async (context, next) => {
         await setCollections(context);
       } else if (params[1] && params[3]) {
         const itemId = params[3];
-
+        
+        await setCollections(context); // to enable the 'add to collection' feature
         await setCollectionItem(context, itemId);
       }
     } catch (error) {

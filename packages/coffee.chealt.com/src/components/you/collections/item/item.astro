@@ -38,7 +38,7 @@ const { collectionItem, shouldAuthenticate } = Astro.locals;
     data-delete-confirm-message={t.deleteItemConfirmMessage}
   >
     <Images collectionId={collectionId} />
-    <Controls collectionId={collectionId} itemId={itemId} isFavorite={collectionItem?.isFavorite} />
+    <Controls collectionId={collectionId} />
     <Details />
     <Review />
     <section>
