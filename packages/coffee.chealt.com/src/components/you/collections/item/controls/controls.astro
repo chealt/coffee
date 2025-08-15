@@ -15,66 +15,64 @@ const t = allLocaleTranslations[Astro.currentLocale];
 const { collectionId } = Astro.props;
 
 const { collectionItem, collections } = Astro.locals;
+
+const otherCollections = collections.filter(({ id }) => id !== collectionId);
 ---
 
-<div>
-  <coffee-controls
-    class="controls"
-    data-item-id={collectionItem.id}
-    data-collections-url={getRelativeLocaleUrl(Astro.currentLocale, '/you/collections')}
-  >
-    <Button class="favorite">
-      <Icon type="favorite" class=`${collectionItem.isFavorite ? 'active' : ''}` />
-      <span>{t.favorite}</span>
+<coffee-controls
+  class="controls"
+  data-item-id={collectionItem.id}
+  data-collections-url={getRelativeLocaleUrl(Astro.currentLocale, '/you/collections')}
+>
+  <Button class="favorite">
+    <Icon type="favorite" class=`${collectionItem.isFavorite ? 'active' : ''}` />
+    <span>{t.favorite}</span>
+  </Button>
+  <CoffeeImageUpload data-collection-id={collectionId} data-item-id={collectionItem.id}>
+    <Button class="add triggerButton" href={getRelativeLocaleUrl(Astro.currentLocale, '/you/collections')}>
+      <Icon type="add" />
+      <span>{t.add}</span>
     </Button>
-    <CoffeeImageUpload data-collection-id={collectionId} data-item-id={collectionItem.id}>
-      <Button class="add triggerButton" href={getRelativeLocaleUrl(Astro.currentLocale, '/you/collections')}>
-        <Icon type="add" />
-        <span>{t.add}</span>
-      </Button>
-    </CoffeeImageUpload>
-    <Button class="more" data-dialog-id={`collection-item-menu-${collectionId}-${collectionItem.id}`}>
-      <Icon type="menu" />
-      <span>{t.more}</span>
-    </Button>
-    <Dialog class="drawer" id={`collection-item-menu-${collectionId}-${collectionItem.id}`}>
-      <ul>
-        <li>
-          <Button class="column" for="add-to-collection">
-            <Icon type="add" />
-            {t['add-to-collection']}
-          </Button>
-          <Button
-            class="column danger"
-            data-delete-trigger
-            for={collectionItem.id}
-            data-redirect-url={getRelativeLocaleUrl(Astro.currentLocale, '/you/collections')}
-            data-dont-remove-element
-            data-dont-close-dialog
-          >
-            <Icon type="delete" />
-            {t.delete}
-          </Button>
-        </li>
-      </ul>
-    </Dialog>
-    <Dialog class="drawer" id="add-to-collection">
-      <ul data-item-id={collectionItem.id}>
-        {
-          collections
-            .filter(({ id }) => id !== collectionId)
-            .map(({ id, name }) => (
-              <li>
-                <Checkbox name={id} value={id} checked={collectionItem.inCollections?.includes(id)}>
-                  {name}
-                </Checkbox>
-              </li>
-            ))
-        }
-      </ul>
-    </Dialog>
-  </coffee-controls>
-</div>
+  </CoffeeImageUpload>
+  <Button class="more" data-dialog-id={`collection-item-menu-${collectionId}-${collectionItem.id}`}>
+    <Icon type="menu" />
+    <span>{t.more}</span>
+  </Button>
+  <Dialog class="drawer" id={`collection-item-menu-${collectionId}-${collectionItem.id}`}>
+    <ul>
+      <li>
+        <Button class="column" for="add-to-collection">
+          <Icon type="add" />
+          {t['add-to-collection']}
+        </Button>
+        <Button
+          class="column danger"
+          data-delete-trigger
+          for={collectionItem.id}
+          data-redirect-url={getRelativeLocaleUrl(Astro.currentLocale, '/you/collections')}
+          data-dont-remove-element
+          data-dont-close-dialog
+        >
+          <Icon type="delete" />
+          {t.delete}
+        </Button>
+      </li>
+    </ul>
+  </Dialog>
+  <Dialog class="drawer" id="add-to-collection">
+    <ul data-item-id={collectionItem.id}>
+      {
+        otherCollections.map(({ id, name }) => (
+          <li>
+            <Checkbox name={id} value={id} checked={collectionItem.inCollections?.includes(id)}>
+              {name}
+            </Checkbox>
+          </li>
+        ))
+      }
+    </ul>
+  </Dialog>
+</coffee-controls>
 
 <!-- add CoffeeImageUpload script, without this import it won't work -->
 <script src="../../../../common/coffee-image-upload.js"></script>
