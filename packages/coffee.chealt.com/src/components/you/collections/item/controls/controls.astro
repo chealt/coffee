@@ -39,9 +39,9 @@ const { collectionItem, collections } = Astro.locals;
   <Dialog class="drawer" id={`collection-item-menu-${collectionId}-${collectionItem.id}`}>
     <ul>
       <li>
-        <Button class="column" for="add-to-collection">
-          <Icon type="add" />
-          {t['add-to-collection']}
+        <Button class="column" for="edit-collections">
+          <Icon type="edit" />
+          {t.collections}
         </Button>
         <Button
           class="column danger"
@@ -57,7 +57,7 @@ const { collectionItem, collections } = Astro.locals;
       </li>
     </ul>
   </Dialog>
-  <Dialog class="drawer" id="add-to-collection">
+  <Dialog class="drawer" id="edit-collections">
     <ul data-item-id={collectionItem.id}>
       {
         collections.map(({ id, name }) => (

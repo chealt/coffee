@@ -6,16 +6,16 @@ const removeItemFromCollection = 'chealt-remove-item-from-collection';
 class CoffeeControls extends HTMLElement {
   connectedCallback() {
     this.addFavoriteEventListener();
-    this.addToCollectionListener();
+    this.addEditCollectionsListener();
   }
 
-  addToCollectionListener() {
-    this.querySelector('[for="add-to-collection"]').addEventListener('click', (element) => {
+  addEditCollectionsListener() {
+    this.querySelector('[for="edit-collections"]').addEventListener('click', (element) => {
       element.currentTarget.closest('dialog').close();
-      document.querySelector('#add-to-collection').showModal();
+      document.querySelector('#edit-collections').showModal();
     });
 
-    this.querySelectorAll('#add-to-collection input[type=checkbox]').forEach((checkbox) => {
+    this.querySelectorAll('#edit-collections input[type=checkbox]').forEach((checkbox) => {
       checkbox.addEventListener('change', async (element) => {
         const collectionId = element.currentTarget.value;
         const itemId = this.closest('[data-item-id]').dataset.itemId;
@@ -39,12 +39,12 @@ class CoffeeControls extends HTMLElement {
   }
 
   toggleDisabledState() {
-    const checkedCheckboxes = this.querySelectorAll('#add-to-collection input[type=checkbox]:checked');
+    const checkedCheckboxes = this.querySelectorAll('#edit-collections input[type=checkbox]:checked');
 
     if (checkedCheckboxes.length === 1) {
       checkedCheckboxes[0].setAttribute('disabled', true);
     } else {
-      this.querySelectorAll('#add-to-collection input[type=checkbox]:checked').forEach((checkbox) => {
+      this.querySelectorAll('#edit-collections input[type=checkbox]:checked').forEach((checkbox) => {
         checkbox.removeAttribute('disabled');
       });
     }
