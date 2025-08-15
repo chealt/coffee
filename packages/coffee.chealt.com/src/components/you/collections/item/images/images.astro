@@ -8,8 +8,13 @@ const { collectionId } = Astro.props;
     {
       collectionItem?.images.length && (
         <div class="carousel images-container">
-          {collectionItem?.images.map(({ src, filename }) => (
-            <img id={filename} src={src} style={`view-transition-name: collection-${collectionId}-image-${filename}`} />
+          {collectionItem?.images.map(({ src, filename }, index) => (
+            // only the cover image should have a transition
+            <img
+              id={filename}
+              src={src}
+              style={index === 0 ? `view-transition-name: collection-${collectionId}-image-${filename}` : ''}
+            />
           ))}
         </div>
       )
