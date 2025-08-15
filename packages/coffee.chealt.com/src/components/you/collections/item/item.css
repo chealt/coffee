@@ -17,6 +17,7 @@
 .picture-collection img {
   width: 100%;
   display: block;
+  will-change: transform;
 }
 
 .images-container {

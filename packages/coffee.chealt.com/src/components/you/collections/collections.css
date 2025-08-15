@@ -18,3 +18,7 @@
 .collections-list .items-list {
   padding: var(--gap);
 }
+
+.collections-list img {
+  will-change: transform;
+}

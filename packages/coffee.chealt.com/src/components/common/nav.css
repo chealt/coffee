@@ -8,6 +8,7 @@ nav {
   background-color: var(--color-background);
   box-shadow: 0 -2px 15px -4px lightgray;
   align-items: center;
+  will-change: transform;
 }
 
 nav a {

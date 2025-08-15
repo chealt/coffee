@@ -37,7 +37,7 @@ const items = [
 const shouldSync = Boolean(Astro.locals.loggedInUser);
 ---
 
-<nav>
+<nav style={'view-transition-name: main-nav'}>
   {
     items.map(({ name, href, text, isActive }) =>
       name === 'capture' ? (
