@@ -27,7 +27,31 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webp}'],
         globIgnores: ['_worker.js/**/*'],
         navigateFallback: '/',
-        navigateFallbackDenylist: [/^\/_/u, /\/[^/?]+\.[^/]+$/u]
+        navigateFallbackDenylist: [/^\/_/u, /\/[^/?]+\.[^/]+$/u],
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname === '/',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'root-html-cache',
+              networkTimeoutSeconds: 3,
+              cacheableResponse: {
+                statuses: [200]
+              }
+            }
+          },
+          {
+            urlPattern: ({ url }) => url.pathname.endsWith('/you/collections'),
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'collections-html-cache',
+              networkTimeoutSeconds: 3,
+              cacheableResponse: {
+                statuses: [200]
+              }
+            }
+          }
+        ]
       },
       manifest: false,
       devOptions: {
