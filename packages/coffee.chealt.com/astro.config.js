@@ -1,7 +1,7 @@
 import cloudflare from '@astrojs/cloudflare';
+import AstroPWA from '@vite-pwa/astro';
 import { defineConfig } from 'astro/config';
 // import { visualizer } from 'rollup-plugin-visualizer';
-import wasm from 'vite-plugin-wasm';
 
 export default defineConfig({
   output: 'server',
@@ -12,23 +12,32 @@ export default defineConfig({
   devToolbar: {
     enabled: false
   },
-  integrations: [wasm()],
   server: {
     headers: {
       'Cross-Origin-Opener-Policy': 'same-origin',
       'Cross-Origin-Embedder-Policy': 'require-corp'
     }
   },
+  integrations: [
+    // eslint-disable-next-line new-cap
+    AstroPWA({
+      registerType: 'autoUpdate',
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp}']
+      },
+      manifest: false,
+      devOptions: {
+        enabled: true
+      }
+    })
+  ],
   vite: {
     plugins: [
       // visualizer({
       //   open: process.env.ANALYZE
       // })
     ],
-    assetsInclude: ['**/*.onnx', '**/*.txt', '**/*.{jpeg,jpg,png,gif,svg,webp}'],
-    optimizeDeps: {
-      exclude: ['onnxruntime-web', 'onnxruntime-common']
-    },
+    assetsInclude: ['**/*.txt', '**/*.{jpeg,jpg,png,gif,svg,webp}'],
     build: {
       sourcemap: true,
       assetsInlineLimit: 0
