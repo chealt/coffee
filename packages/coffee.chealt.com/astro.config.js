@@ -26,7 +26,20 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webp}', '/'],
         globIgnores: ['_worker.js/**/*'],
-        navigateFallback: '/'
+        navigateFallback: '/',
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) => request.mode === 'navigate',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'pages-cache',
+              networkTimeoutSeconds: 3,
+              cacheableResponse: {
+                statuses: [200]
+              }
+            }
+          }
+        ]
       },
       manifest: false,
       devOptions: {
