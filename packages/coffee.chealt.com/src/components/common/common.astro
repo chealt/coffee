@@ -36,4 +36,14 @@ const { shouldAuthenticate, redirectUrl } = Astro.props;
   </body>
 </html>
 
+<script>
+  import { registerSW } from 'virtual:pwa-register';
+
+  registerSW({
+    onOfflineReady() {
+      // Show a ready to work offline message
+      console.log('App ready to work offline');
+    }
+  });
+</script>
 <script src="../chealt-data.js"></script>
