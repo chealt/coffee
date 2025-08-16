@@ -24,7 +24,10 @@ export default defineConfig({
       registerType: 'autoUpdate',
       injectRegister: 'auto',
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp}']
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp}'],
+        globIgnores: ['_worker.js/**/*'],
+        navigateFallback: '/index.html',
+        navigateFallbackDenylist: [/^\/_/u, /\/[^/?]+\.[^/]+$/u]
       },
       manifest: false,
       devOptions: {
