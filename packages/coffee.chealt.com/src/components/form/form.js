@@ -50,7 +50,18 @@ const addChangeEvent = ({ form, callback }) => {
   form.querySelectorAll('input,select').forEach((element) => {
     element.addEventListener('input', (event) => {
       if (event.isTrusted) {
-        return callback(form);
+        callback(form); // eslint-disable-line callback-return
+
+        form.dispatchEvent(
+          new CustomEvent('chealt-form:change', {
+            bubbles: true,
+            detail: {
+              formName: form.name
+            }
+          })
+        );
+
+        return true;
       }
 
       return undefined;

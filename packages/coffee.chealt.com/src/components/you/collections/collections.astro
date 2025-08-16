@@ -31,7 +31,10 @@ const { collections, shouldAuthenticate } = Astro.locals;
               items.map(({ id: itemId, cover }) => (
                 <li>
                   <a
-                    href={getRelativeLocaleUrl(Astro.currentLocale, `/you/collections/${collectionId}/items/${itemId}`)}
+                    href={`${getRelativeLocaleUrl(
+                      Astro.currentLocale,
+                      `/you/collections/${collectionId}/items/${itemId}`
+                    )}?from=collections`}
                   >
                     <img
                       src={cover.src}

@@ -34,6 +34,7 @@ class CoffeeControls extends HTMLElement {
         }
 
         this.toggleDisabledState();
+        this.triggerCollectionsChangeEvent();
       });
     });
   }
@@ -63,6 +64,8 @@ class CoffeeControls extends HTMLElement {
           collectionId: 'favorites',
           itemId: this.dataset.itemId
         });
+
+        this.triggerCollectionsChangeEvent();
       } else {
         setItem(removeItemFromCollection, {
           collectionId: 'favorites',
@@ -74,6 +77,14 @@ class CoffeeControls extends HTMLElement {
         }
       }
     });
+  }
+
+  triggerCollectionsChangeEvent() {
+    const event = new CustomEvent('coffee:collections:change', {
+      bubbles: true
+    });
+
+    this.dispatchEvent(event);
   }
 }
 
