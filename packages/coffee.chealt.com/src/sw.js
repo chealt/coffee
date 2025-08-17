@@ -18,7 +18,7 @@ const pageStrategy = new NetworkFirst({
 });
 
 registerRoute(({ request }) => {
-  return request.mode === 'navigate';
+  return request.url.endsWith('/') || request.url === '';
 }, pageStrategy);
 
 const assetStrategy = new StaleWhileRevalidate({
