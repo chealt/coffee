@@ -22,6 +22,7 @@ export default defineConfig({
     // eslint-disable-next-line new-cap
     AstroPWA({
       registerType: 'autoUpdate',
+      navigateFallback: '/offline.html',
       workbox: {
         runtimeCaching: [
           {
