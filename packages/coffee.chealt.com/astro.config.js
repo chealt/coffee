@@ -22,28 +22,17 @@ export default defineConfig({
     // eslint-disable-next-line new-cap
     AstroPWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'favicon.ico', 'offline.html'],
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
-        globIgnores: ['_worker.js/**/*'],
-        navigateFallback: '/offline.html',
-        runtimeCaching: [
-          {
-            urlPattern: /^\/[^.]*$/u,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'pages-cache',
-              networkTimeoutSeconds: 10,
-              cacheableResponse: {
-                statuses: [200]
-              }
-            }
-          }
-        ]
-      },
       manifest: false,
       devOptions: {
         enabled: true
+      },
+      includeAssets: ['favicon.svg', 'favicon.ico', 'offline.html'],
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.js',
+      workbox: {
+        globIgnores: ['_worker.js/**/*'],
+        navigateFallback: '/offline.html'
       }
     })
   ],

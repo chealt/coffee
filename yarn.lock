@@ -1289,6 +1289,10 @@ __metadata:
     sharp: "npm:^0.34.3"
     vite: "npm:^7.1.2"
     vite-plugin-wasm: "npm:^3.5.0"
+    workbox-cacheable-response: "npm:^7.3.0"
+    workbox-precaching: "npm:^7.3.0"
+    workbox-routing: "npm:^7.3.0"
+    workbox-strategies: "npm:^7.3.0"
     wrangler: "npm:^4.30.0"
   languageName: unknown
   linkType: soft
@@ -10467,7 +10471,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"workbox-cacheable-response@npm:7.3.0":
+"workbox-cacheable-response@npm:7.3.0, workbox-cacheable-response@npm:^7.3.0":
   version: 7.3.0
   resolution: "workbox-cacheable-response@npm:7.3.0"
   dependencies:
@@ -10514,7 +10518,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"workbox-precaching@npm:7.3.0":
+"workbox-precaching@npm:7.3.0, workbox-precaching@npm:^7.3.0":
   version: 7.3.0
   resolution: "workbox-precaching@npm:7.3.0"
   dependencies:
@@ -10548,7 +10552,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"workbox-routing@npm:7.3.0":
+"workbox-routing@npm:7.3.0, workbox-routing@npm:^7.3.0":
   version: 7.3.0
   resolution: "workbox-routing@npm:7.3.0"
   dependencies:
@@ -10557,7 +10561,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"workbox-strategies@npm:7.3.0":
+"workbox-strategies@npm:7.3.0, workbox-strategies@npm:^7.3.0":
   version: 7.3.0
   resolution: "workbox-strategies@npm:7.3.0"
   dependencies:
