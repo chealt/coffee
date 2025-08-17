@@ -22,6 +22,7 @@ export default defineConfig({
     // eslint-disable-next-line new-cap
     AstroPWA({
       registerType: 'autoUpdate',
+      includeAssets: ['favicon.svg', 'offline.html'],
       navigateFallback: '/offline.html',
       globIgnores: ['_worker.js/**/*'],
       workbox: {
