@@ -22,9 +22,8 @@ export default defineConfig({
     // eslint-disable-next-line new-cap
     AstroPWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'offline.html'],
+      includeAssets: ['favicon.svg', 'favicon.ico'],
       workbox: {
-        navigateFallback: '/offline.html',
         globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
         globIgnores: ['_worker.js/**/*'],
         runtimeCaching: [
@@ -33,7 +32,7 @@ export default defineConfig({
             handler: 'NetworkFirst',
             options: {
               cacheName: 'pages-cache',
-              networkTimeoutSeconds: 3,
+              networkTimeoutSeconds: 10,
               cacheableResponse: {
                 statuses: [200]
               }
