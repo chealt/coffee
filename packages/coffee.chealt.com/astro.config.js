@@ -24,6 +24,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'offline.html'],
       navigateFallback: '/offline.html',
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
       globIgnores: ['_worker.js/**/*'],
       workbox: {
         runtimeCaching: [
