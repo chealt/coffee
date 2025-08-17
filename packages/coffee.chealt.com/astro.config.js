@@ -23,10 +23,10 @@ export default defineConfig({
     AstroPWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'offline.html'],
-      navigateFallback: '/offline.html',
-      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
-      globIgnores: ['_worker.js/**/*'],
       workbox: {
+        navigateFallback: '/offline.html',
+        globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+        globIgnores: ['_worker.js/**/*'],
         runtimeCaching: [
           {
             urlPattern: ({ request }) => request.mode === 'navigate',
