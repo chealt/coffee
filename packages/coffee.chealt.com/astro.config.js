@@ -23,6 +23,7 @@ export default defineConfig({
     AstroPWA({
       registerType: 'autoUpdate',
       navigateFallback: '/offline.html',
+      globIgnores: ['_worker.js/**/*'],
       workbox: {
         runtimeCaching: [
           {
