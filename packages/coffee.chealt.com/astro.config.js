@@ -1,5 +1,4 @@
 import cloudflare from '@astrojs/cloudflare';
-import AstroPWA from '@vite-pwa/astro';
 import { defineConfig } from 'astro/config';
 // import { visualizer } from 'rollup-plugin-visualizer';
 
@@ -18,36 +17,6 @@ export default defineConfig({
       'Cross-Origin-Embedder-Policy': 'require-corp'
     }
   },
-  integrations: [
-    // eslint-disable-next-line new-cap
-    AstroPWA({
-      registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'favicon.ico', 'offline.html'],
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
-        globIgnores: ['_worker.js/**/*'],
-        navigateFallback: '/offline.html',
-        runtimeCaching: [
-          {
-            urlPattern: ({ request }) =>
-              request.method === 'GET' && request.headers.get('accept')?.includes('text/html'),
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'pages-cache',
-              networkTimeoutSeconds: 10,
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
-          }
-        ]
-      },
-      manifest: false,
-      devOptions: {
-        enabled: true
-      }
-    })
-  ],
   vite: {
     plugins: [
       // visualizer({
