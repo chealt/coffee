@@ -17,7 +17,9 @@ const pageStrategy = new NetworkFirst({
   ]
 });
 
-registerRoute(({ request }) => request.mode === 'navigate', pageStrategy);
+registerRoute(({ request }) => {
+  return request.mode === 'navigate';
+}, pageStrategy);
 
 const assetStrategy = new StaleWhileRevalidate({
   cacheName: 'assets-cache',
