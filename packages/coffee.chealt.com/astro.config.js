@@ -29,7 +29,7 @@ export default defineConfig({
         navigateFallback: '/offline.html',
         runtimeCaching: [
           {
-            urlPattern: ({ request }) => request.mode === 'navigate',
+            urlPattern: /^\/[^.]*$/u,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'pages-cache',
