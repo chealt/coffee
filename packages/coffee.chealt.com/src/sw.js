@@ -22,7 +22,7 @@ registerRoute(({ request }) => {
 }, pageStrategy);
 
 const assetStrategy = new StaleWhileRevalidate({
-  cacheName: 'assets-cache',
+  cacheName: 'icon-cache',
   plugins: [
     new CacheableResponsePlugin({
       statuses: [200]
@@ -30,4 +30,6 @@ const assetStrategy = new StaleWhileRevalidate({
   ]
 });
 
-registerRoute(({ request }) => request.destination === 'image', assetStrategy);
+registerRoute(({ request }) => {
+  return request.url.endsWith('favicon.svg');
+}, assetStrategy);
