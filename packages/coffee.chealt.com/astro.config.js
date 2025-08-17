@@ -29,17 +29,14 @@ export default defineConfig({
         navigateFallback: '/offline.html',
         runtimeCaching: [
           {
-            urlPattern: ({ request }) => {
-              console.log(request.url);
-
-              return request.url.endsWith('/');
-            },
+            urlPattern: ({ request }) =>
+              request.method === 'GET' && request.headers.get('accept')?.includes('text/html'),
             handler: 'NetworkFirst',
             options: {
               cacheName: 'pages-cache',
               networkTimeoutSeconds: 10,
               cacheableResponse: {
-                statuses: [200]
+                statuses: [0, 200]
               }
             }
           }
