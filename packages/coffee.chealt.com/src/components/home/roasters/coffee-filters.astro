@@ -1,9 +1,9 @@
 ---
-import Button from '../form/button/button.astro';
-import Checkbox from '../form/checkbox/checkbox.astro';
-import Icon from '../icon/icon.astro';
+import Button from '../../form/button/button.astro';
+import Checkbox from '../../form/checkbox/checkbox.astro';
+import Icon from '../../icon/icon.astro';
 
-import countries from '../../../data/countries.json';
+import countries from '../../../../data/countries.json';
 
 import './coffee-filters.css';
 
@@ -32,7 +32,7 @@ const t = allLocaleTranslations[Astro.currentLocale];
       }
     </ul>
     <Button class="clear-button">
-      <span>{t['clearFilters']}</span>
+      <span>{t['clear-filters']}</span>
     </Button>
   </div>
 </coffee-filters>

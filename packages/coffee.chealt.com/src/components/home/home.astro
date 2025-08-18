@@ -1,52 +1,13 @@
 ---
-import { Image } from 'astro:assets';
-
-import Filters from './coffee-filters.astro';
 import Common from '../common/common.astro';
-
-import roasters from '../../../data/roasters.json';
-import countries from '../../../data/countries.json';
-
-import './home.css';
+import Roasters from './roasters/roasters.astro';
 
 import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
-
-const roasterCount = roasters.length || 0;
-const roasterCountryCount = countries.filter(({ language_code }) => language_code === Astro.currentLocale).length;
-
-const roasterImages = await import.meta.glob('/public/roasters/*.{jpeg,jpg,png,gif,svg,webp}', { eager: true });
 ---
 
 <Common>
   <h1>{t.title}</h1>
-  <section class="roasters-container">
-    <p>
-      More than <span class="emphasized">{roasterCount}</span> roasters, from <span class="emphasized"
-        >{roasterCountryCount}</span
-      > countries.
-    </p>
-    <Filters />
-    <ul class="roasters">
-      {
-        roasters
-          .filter(({ logo }) => Boolean(logo))
-          .map(({ name, country_id, logo, website, instagram }) => (
-            <li data-country-id={country_id} class="roaster">
-              <a
-                href={website || (instagram ? `https://www.instagram.com/${instagram}` : undefined)}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <div class="image">
-                  <img src={`/roasters/${logo}`} alt={name} />
-                </div>
-                <div class="name">{name}</div>
-              </a>
-            </li>
-          ))
-      }
-    </ul>
-  </section>
+  <Roasters />
 </Common>
