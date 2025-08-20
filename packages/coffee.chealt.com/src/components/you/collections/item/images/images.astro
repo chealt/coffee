@@ -7,7 +7,7 @@ const { collectionId } = Astro.props;
   <li class="picture-collection">
     {
       collectionItem?.images.length && (
-        <div class="carousel images-container">
+        <div class="carousel">
           {collectionItem?.images.map(({ src, filename }, index) => (
             // only the cover image should have a transition
             <img

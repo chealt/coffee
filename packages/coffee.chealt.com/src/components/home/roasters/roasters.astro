@@ -12,7 +12,7 @@ const roasterCountryCount = countries.filter(({ language_code }) => language_cod
 const roasterImages = await import.meta.glob('/public/roasters/*.{jpeg,jpg,png,gif,svg,webp}', { eager: true });
 ---
 
-<section class="roasters-container">
+<div class="roasters-container">
   <p>
     More than <span class="emphasized">{roasterCount}</span> roasters, from <span class="emphasized"
       >{roasterCountryCount}</span
@@ -39,4 +39,4 @@ const roasterImages = await import.meta.glob('/public/roasters/*.{jpeg,jpg,png,g
         ))
     }
   </ul>
-</section>
+</div>

@@ -1,26 +1,26 @@
 .roasters {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
   gap: var(--gap);
+}
+
+.roaster {
+  display: none;
+  flex: 0 0 auto;
+  background-color: white; /* works with transparent logos */
+  scroll-snap-align: start;
+  width: 80%;
 }
 
 .roasters img {
   display: block;
   width: 100%;
   height: auto;
-}
-
-.roaster {
-  display: none;
-  opacity: 0;
-  translate: 0 40px;
-  transition-property: display opacity;
-  transition-duration: 0.4s;
-  transition-behavior: allow-discrete;
-  background-color: white; /* works with transparent logos */
-  flex-direction: column;
-  height: 100%;
+  max-height: 200px;
 }
 
 .roaster a {
@@ -70,12 +70,5 @@
 .roasters-container:has([name='countryId-23']:checked) .roaster[data-country-id='23'],
 .roasters-container:has([name='countryId-24']:checked) .roaster[data-country-id='24'],
 .roasters-container:not(:has([name^='countryId']:checked)) .roaster {
-  display: flex;
-  opacity: 1;
-  translate: 0 0px;
-
-  @starting-style {
-    opacity: 0;
-    translate: 0 -40px;
-  }
+  display: block;
 }

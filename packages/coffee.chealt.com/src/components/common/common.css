@@ -77,6 +77,15 @@ h5 {
 section {
   margin: var(--gap--l) 0;
   padding: 0 var(--gap);
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    padding: 0;
+  }
 }
 
 ul,
@@ -182,6 +191,12 @@ svg {
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-marker-group: before;
+  min-height: 440px;
+  max-height: 50vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow-y: hidden;
 }
 
 .carousel > * {

@@ -19,12 +19,3 @@
   display: block;
   will-change: transform;
 }
-
-.images-container {
-  min-height: 440px;
-  max-height: 50vh;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  overflow-y: hidden;
-}

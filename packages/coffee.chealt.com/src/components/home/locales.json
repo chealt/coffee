@@ -1,8 +1,10 @@
 {
   "en": {
-    "title": "Coffee Explorer"
+    "title": "Coffee Explorer",
+    "roasters": "Roasters"
   },
   "pl": {
-    "title": "Kawa Explorer"
+    "title": "Kawa Explorer",
+    "roasters": "Palacze"
   }
 }
