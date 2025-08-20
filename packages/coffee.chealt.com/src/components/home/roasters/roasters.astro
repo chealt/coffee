@@ -13,11 +13,6 @@ const roasterImages = await import.meta.glob('/public/roasters/*.{jpeg,jpg,png,g
 ---
 
 <div class="roasters-container">
-  <p>
-    More than <span class="emphasized">{roasterCount}</span> roasters, from <span class="emphasized"
-      >{roasterCountryCount}</span
-    > countries.
-  </p>
   <Filters />
   <ul class="roasters">
     {
