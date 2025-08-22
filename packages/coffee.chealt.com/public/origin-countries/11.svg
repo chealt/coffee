@@ -1,0 +1,29 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Kenya flag colors: Black, Red, Green with white stripes and Maasai shield -->
+  <defs>
+    <linearGradient id="kenyaBlack" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#374151;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1F2937;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Simplified Kenya shape -->
+  <path d="M80 30 Q100 25 120 35 Q140 45 150 65 Q155 85 150 105 Q145 125 135 140 Q125 155 110 165 Q95 170 80 165 Q65 160 55 145 Q45 130 50 110 Q55 90 60 70 Q65 50 75 40 Q78 35 80 30 Z" 
+        fill="url(#kenyaBlack)" 
+        stroke="#FFFFFF" 
+        stroke-width="1"/>
+  <!-- Red stripe -->
+  <path d="M80 70 Q100 65 120 75 Q140 85 150 105 Q145 115 135 125 Q125 135 110 140 Q95 145 80 140 Q65 135 55 125 Q45 115 50 105 Q55 95 60 85 Q65 75 75 70 Q78 68 80 70 Z" 
+        fill="#DC2626" 
+        opacity="0.8"/>
+  <!-- Green stripe -->
+  <path d="M80 110 Q100 105 120 115 Q140 125 150 145 Q145 155 135 165 Q125 175 110 180 Q95 185 80 180 Q65 175 55 165 Q45 155 50 145 Q55 135 60 125 Q65 115 75 110 Q78 108 80 110 Z" 
+        fill="#16A34A" 
+        opacity="0.8"/>
+  <!-- White stripes -->
+  <path d="M80 65 Q100 60 120 70 Q140 80 150 100 Q145 105 135 110 Q125 115 110 120 Q95 125 80 120 Q65 115 55 110 Q45 105 50 100 Q55 80 60 70 Q65 65 75 65 Q78 64 80 65 Z" 
+        fill="#FFFFFF" 
+        opacity="0.3"/>
+  <!-- Maasai shield representation -->
+  <ellipse cx="100" cy="100" rx="12" ry="18" fill="#8B4513" opacity="0.7"/>
+  <path d="M95 90 L105 90 L100 110 Z" fill="#DC2626" opacity="0.8"/>
+</svg>

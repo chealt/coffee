@@ -1,0 +1,21 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Guatemala flag colors: Light Blue, White, Light Blue -->
+  <defs>
+    <linearGradient id="guatemalaBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#38BDF8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0EA5E9;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Simplified Guatemala shape -->
+  <path d="M70 50 Q90 45 110 50 Q130 55 140 70 Q145 90 140 110 Q135 130 125 145 Q115 160 100 165 Q85 170 70 165 Q55 160 45 145 Q35 130 40 110 Q45 90 50 70 Q55 55 65 50 Q68 48 70 50 Z" 
+        fill="url(#guatemalaBlue)" 
+        stroke="#FFFFFF" 
+        stroke-width="2"/>
+  <!-- White center stripe -->
+  <path d="M70 80 Q90 75 110 80 Q130 85 140 100 Q135 115 125 125 Q115 135 100 140 Q85 145 70 140 Q55 135 45 125 Q35 115 40 100 Q45 85 50 80 Q55 78 65 80 Q68 79 70 80 Z" 
+        fill="#FFFFFF" 
+        opacity="0.9"/>
+  <!-- Coat of arms representation (quetzal bird simplified) -->
+  <circle cx="100" cy="110" r="8" fill="#22C55E" opacity="0.8"/>
+  <path d="M95 105 Q100 100 105 105 Q100 110 95 105" fill="#DC2626" opacity="0.7"/>
+</svg>

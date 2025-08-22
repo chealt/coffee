@@ -1,0 +1,22 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Colombia flag colors: Yellow (top half), Blue, Red -->
+  <defs>
+    <linearGradient id="colombiaYellow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FDE047;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#EAB308;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Simplified Colombia shape -->
+  <path d="M70 30 Q90 25 110 30 Q130 35 140 50 Q145 70 140 90 Q135 110 130 125 Q120 140 110 150 Q100 160 90 155 Q80 150 70 145 Q60 135 55 120 Q50 100 55 80 Q60 60 65 45 Q68 35 70 30 Z" 
+        fill="url(#colombiaYellow)" 
+        stroke="#1E40AF" 
+        stroke-width="3"/>
+  <!-- Blue stripe -->
+  <path d="M70 90 Q90 85 110 90 Q130 95 140 110 Q135 125 130 135 Q120 145 110 150 Q100 155 90 150 Q80 145 70 140 Q60 130 55 115 Q50 100 55 95 Q60 90 70 90 Z" 
+        fill="#1E40AF" 
+        opacity="0.6"/>
+  <!-- Red stripe -->
+  <path d="M70 120 Q90 115 110 120 Q130 125 140 135 Q135 145 130 150 Q120 155 110 160 Q100 165 90 160 Q80 155 70 150 Q60 145 55 135 Q50 125 55 120 Q60 115 70 120 Z" 
+        fill="#DC2626" 
+        opacity="0.7"/>
+</svg>

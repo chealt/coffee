@@ -1,0 +1,27 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Ethiopia flag colors: Green, Yellow, Red -->
+  <defs>
+    <linearGradient id="ethiopiaGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#22C55E;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#16A34A;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Simplified Ethiopia shape (Horn of Africa) -->
+  <path d="M80 30 Q100 25 120 35 Q140 45 150 65 Q155 85 150 105 Q145 125 135 140 Q125 155 110 165 Q95 170 80 165 Q65 160 55 145 Q45 130 50 110 Q55 90 60 70 Q65 50 75 40 Q78 35 80 30 Z" 
+        fill="url(#ethiopiaGreen)" 
+        stroke="#EAB308" 
+        stroke-width="2"/>
+  <!-- Yellow stripe -->
+  <path d="M80 70 Q100 65 120 75 Q140 85 150 105 Q145 115 135 125 Q125 135 110 140 Q95 145 80 140 Q65 135 55 125 Q45 115 50 105 Q55 95 60 85 Q65 75 75 70 Q78 68 80 70 Z" 
+        fill="#EAB308" 
+        opacity="0.8"/>
+  <!-- Red stripe -->
+  <path d="M80 110 Q100 105 120 115 Q140 125 150 145 Q145 155 135 165 Q125 175 110 180 Q95 185 80 180 Q65 175 55 165 Q45 155 50 145 Q55 135 60 125 Q65 115 75 110 Q78 108 80 110 Z" 
+        fill="#DC2626" 
+        opacity="0.8"/>
+  <!-- Blue circle with star (simplified) -->
+  <circle cx="100" cy="100" r="20" fill="#1E40AF" opacity="0.6"/>
+  <polygon points="100,85 103,95 113,95 105,102 108,112 100,105 92,112 95,102 87,95 97,95" 
+           fill="#FFD700" 
+           opacity="0.9"/>
+</svg>

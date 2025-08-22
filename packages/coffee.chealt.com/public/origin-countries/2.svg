@@ -1,0 +1,20 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Brazil flag colors: Green background, yellow diamond, blue circle -->
+  <defs>
+    <linearGradient id="brazilGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#009739;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#007a2f;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Simplified Brazil shape -->
+  <path d="M50 40 Q60 30 80 35 Q100 25 120 30 Q140 35 150 50 Q160 70 155 90 Q150 110 140 130 Q130 150 120 160 Q100 170 80 165 Q60 160 50 150 Q40 130 35 110 Q30 90 35 70 Q40 50 50 40 Z" 
+        fill="url(#brazilGreen)" 
+        stroke="#FFD700" 
+        stroke-width="2"/>
+  <!-- Yellow diamond overlay -->
+  <polygon points="100,60 130,100 100,140 70,100" 
+           fill="#FFD700" 
+           opacity="0.7"/>
+  <!-- Blue circle -->
+  <circle cx="100" cy="100" r="15" fill="#002776" opacity="0.8"/>
+</svg>

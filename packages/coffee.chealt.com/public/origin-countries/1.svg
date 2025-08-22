@@ -1,0 +1,21 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Peru flag colors: Red, White, Red -->
+  <defs>
+    <linearGradient id="peruRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#EF4444;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DC2626;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Simplified Peru shape (long coastal country) -->
+  <path d="M70 20 Q80 15 90 20 Q100 25 110 30 Q120 40 125 60 Q130 80 125 100 Q120 120 115 140 Q110 160 100 175 Q90 180 80 175 Q70 170 60 150 Q50 130 55 110 Q60 90 65 70 Q68 50 70 30 Q69 25 70 20 Z" 
+        fill="url(#peruRed)" 
+        stroke="#FFFFFF" 
+        stroke-width="2"/>
+  <!-- White center stripe -->
+  <path d="M70 70 Q80 65 90 70 Q100 75 110 80 Q120 90 125 110 Q120 130 115 140 Q110 150 100 155 Q90 160 80 155 Q70 150 60 140 Q50 130 55 120 Q60 110 65 100 Q68 90 70 80 Q69 75 70 70 Z" 
+        fill="#FFFFFF" 
+        opacity="0.9"/>
+  <!-- Coat of arms representation (simplified) -->
+  <circle cx="95" cy="115" r="8" fill="#DC2626" opacity="0.6"/>
+  <path d="M90 110 Q95 105 100 110 Q95 120 90 110" fill="#EAB308" opacity="0.7"/>
+</svg>

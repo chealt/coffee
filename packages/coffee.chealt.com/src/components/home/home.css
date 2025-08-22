@@ -1,0 +1,35 @@
+.list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  gap: var(--gap);
+
+  .item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: var(--gap);
+    flex: 0 0 auto;
+    background-color: white; /* works with transparent logos */
+    scroll-snap-align: start;
+    width: 80%;
+    box-sizing: border-box;
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 200px;
+    }
+
+    .name {
+      padding: var(--gap) 0;
+      color: var(--color-background);
+      text-transform: capitalize;
+    }
+  }
+}

@@ -1,0 +1,23 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Nicaragua flag colors: Blue, White, Blue -->
+  <defs>
+    <linearGradient id="nicaraguaBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0EA5E9;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0284C7;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Simplified Nicaragua shape -->
+  <path d="M75 60 Q85 55 95 60 Q105 65 115 70 Q125 80 130 90 Q135 110 130 130 Q125 150 115 160 Q105 165 95 160 Q85 155 75 150 Q65 140 60 120 Q55 100 60 80 Q65 70 75 60 Z" 
+        fill="url(#nicaraguaBlue)" 
+        stroke="#FFFFFF" 
+        stroke-width="2"/>
+  <!-- White center stripe -->
+  <path d="M75 90 Q85 85 95 90 Q105 95 115 100 Q125 110 130 120 Q125 130 115 135 Q105 140 95 135 Q85 130 75 125 Q65 115 60 105 Q55 95 60 90 Q65 88 75 90 Z" 
+        fill="#FFFFFF" 
+        opacity="0.9"/>
+  <!-- Coat of arms representation (triangle) -->
+  <polygon points="95,105 100,95 105,105" 
+           fill="#0284C7" 
+           opacity="0.8"/>
+  <circle cx="100" cy="108" r="3" fill="#EAB308" opacity="0.7"/>
+</svg>

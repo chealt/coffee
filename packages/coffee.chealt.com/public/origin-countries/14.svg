@@ -1,0 +1,26 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Indonesia flag colors: Red, White -->
+  <defs>
+    <linearGradient id="indonesiaRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#EF4444;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DC2626;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Simplified Indonesia archipelago shape -->
+  <g>
+    <!-- Main island (Java/Sumatra representation) -->
+    <path d="M40 80 Q60 75 80 80 Q100 85 120 90 Q140 95 160 100 Q165 110 160 120 Q155 130 145 135 Q125 140 105 135 Q85 130 65 125 Q45 120 35 110 Q30 100 35 90 Q38 85 40 80 Z" 
+          fill="url(#indonesiaRed)" 
+          stroke="#FFFFFF" 
+          stroke-width="1"/>
+    <!-- White bottom half -->
+    <path d="M40 110 Q60 105 80 110 Q100 115 120 120 Q140 125 160 130 Q165 140 160 150 Q155 160 145 165 Q125 170 105 165 Q85 160 65 155 Q45 150 35 140 Q30 130 35 120 Q38 115 40 110 Z" 
+          fill="#FFFFFF" 
+          stroke="#DC2626" 
+          stroke-width="1"/>
+    <!-- Additional smaller islands -->
+    <ellipse cx="70" cy="60" rx="8" ry="5" fill="url(#indonesiaRed)"/>
+    <ellipse cx="130" cy="65" rx="6" ry="4" fill="url(#indonesiaRed)"/>
+    <ellipse cx="150" cy="75" rx="5" ry="3" fill="url(#indonesiaRed)"/>
+  </g>
+</svg>

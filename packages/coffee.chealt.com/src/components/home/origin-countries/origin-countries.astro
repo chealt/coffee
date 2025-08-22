@@ -1,0 +1,18 @@
+---
+import originCountries from '../../../../data/originCountries.json';
+
+const countries = originCountries.filter(({ language_code }) => language_code === Astro.currentLocale);
+---
+
+<ul class="list">
+  {
+    countries.map(({ origin_country_id, name }) => (
+      <li class="item">
+        <div class="image">
+          <img src={`/origin-countries/${origin_country_id}.svg`} alt={name} />
+        </div>
+        <div class="name">{name}</div>
+      </li>
+    ))
+  }
+</ul>
