@@ -1,97 +1,41 @@
-.roasters {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-  gap: var(--gap);
-}
-
-.roaster {
-  display: block;
-  flex: 0 0 auto;
-  background-color: white; /* works with transparent logos */
-  scroll-snap-align: start;
-  width: 80%;
-}
-
-.roasters img {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: 200px;
-}
-
-.roaster a {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: var(--gap);
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-}
-
-.roasters .image {
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-}
-
-.roasters .name {
-  padding: var(--gap) 0;
-  color: var(--color-background);
-}
-
-.roasters-container:has(:checked).roasters-container:not(:has([name='countryId-1']:checked))
-  .roaster[data-country-id='1'],
-.roasters-container:has(:checked).roasters-container:not(:has([name='countryId-2']:checked))
-  .roaster[data-country-id='2'],
-.roasters-container:has(:checked).roasters-container:not(:has([name='countryId-3']:checked))
-  .roaster[data-country-id='3'],
-.roasters-container:has(:checked).roasters-container:not(:has([name='countryId-4']:checked))
-  .roaster[data-country-id='4'],
-.roasters-container:has(:checked).roasters-container:not(:has([name='countryId-5']:checked))
-  .roaster[data-country-id='5'],
-.roasters-container:has(:checked).roasters-container:not(:has([name='countryId-6']:checked))
-  .roaster[data-country-id='6'],
-.roasters-container:has(:checked).roasters-container:not(:has([name='countryId-7']:checked))
-  .roaster[data-country-id='7'],
-.roasters-container:has(:checked).roasters-container:not(:has([name='countryId-8']:checked))
-  .roaster[data-country-id='8'],
-.roasters-container:has(:checked).roasters-container:not(:has([name='countryId-9']:checked))
-  .roaster[data-country-id='9'],
+.roasters-container:has(:checked).roasters-container:not(:has([name='countryId-1']:checked)) .item[data-country-id='1'],
+.roasters-container:has(:checked).roasters-container:not(:has([name='countryId-2']:checked)) .item[data-country-id='2'],
+.roasters-container:has(:checked).roasters-container:not(:has([name='countryId-3']:checked)) .item[data-country-id='3'],
+.roasters-container:has(:checked).roasters-container:not(:has([name='countryId-4']:checked)) .item[data-country-id='4'],
+.roasters-container:has(:checked).roasters-container:not(:has([name='countryId-5']:checked)) .item[data-country-id='5'],
+.roasters-container:has(:checked).roasters-container:not(:has([name='countryId-6']:checked)) .item[data-country-id='6'],
+.roasters-container:has(:checked).roasters-container:not(:has([name='countryId-7']:checked)) .item[data-country-id='7'],
+.roasters-container:has(:checked).roasters-container:not(:has([name='countryId-8']:checked)) .item[data-country-id='8'],
+.roasters-container:has(:checked).roasters-container:not(:has([name='countryId-9']:checked)) .item[data-country-id='9'],
 .roasters-container:has(:checked).roasters-container:not(:has([name='countryId-10']:checked))
-  .roaster[data-country-id='10'],
+  .item[data-country-id='10'],
 .roasters-container:has(:checked).roasters-container:not(:has([name='countryId-11']:checked))
-  .roaster[data-country-id='11'],
+  .item[data-country-id='11'],
 .roasters-container:has(:checked).roasters-container:not(:has([name='countryId-12']:checked))
-  .roaster[data-country-id='12'],
+  .item[data-country-id='12'],
 .roasters-container:has(:checked).roasters-container:not(:has([name='countryId-13']:checked))
-  .roaster[data-country-id='13'],
+  .item[data-country-id='13'],
 .roasters-container:has(:checked).roasters-container:not(:has([name='countryId-14']:checked))
-  .roaster[data-country-id='14'],
+  .item[data-country-id='14'],
 .roasters-container:has(:checked).roasters-container:not(:has([name='countryId-15']:checked))
-  .roaster[data-country-id='15'],
+  .item[data-country-id='15'],
 .roasters-container:has(:checked).roasters-container:not(:has([name='countryId-16']:checked))
-  .roaster[data-country-id='16'],
+  .item[data-country-id='16'],
 .roasters-container:has(:checked).roasters-container:not(:has([name='countryId-17']:checked))
-  .roaster[data-country-id='17'],
+  .item[data-country-id='17'],
 .roasters-container:has(:checked).roasters-container:not(:has([name='countryId-18']:checked))
-  .roaster[data-country-id='18'],
+  .item[data-country-id='18'],
 .roasters-container:has(:checked).roasters-container:not(:has([name='countryId-19']:checked))
-  .roaster[data-country-id='19'],
+  .item[data-country-id='19'],
 .roasters-container:has(:checked).roasters-container:not(:has([name='countryId-20']:checked))
-  .roaster[data-country-id='20'],
+  .item[data-country-id='20'],
 .roasters-container:has(:checked).roasters-container:not(:has([name='countryId-21']:checked))
-  .roaster[data-country-id='21'],
+  .item[data-country-id='21'],
 .roasters-container:has(:checked).roasters-container:not(:has([name='countryId-22']:checked))
-  .roaster[data-country-id='22'],
+  .item[data-country-id='22'],
 .roasters-container:has(:checked).roasters-container:not(:has([name='countryId-23']:checked))
-  .roaster[data-country-id='23'],
+  .item[data-country-id='23'],
 .roasters-container:has(:checked).roasters-container:not(:has([name='countryId-24']:checked))
-  .roaster[data-country-id='24'] {
+  .item[data-country-id='24'] {
   display: none;
 }
