@@ -26,7 +26,7 @@ const roasterImages = await import.meta.glob('/public/roasters/*.{jpeg,jpg,png,g
               rel="noopener noreferrer"
             >
               <div class="image">
-                <img src={`/roasters/${logo}`} alt={name} loading="lazy" />
+                <img src={`/roasters/${logo}`} alt={name} loading="lazy" width="200" height="200" />
               </div>
               <div class="name">{name}</div>
             </a>
