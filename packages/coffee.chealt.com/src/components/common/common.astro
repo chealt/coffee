@@ -22,7 +22,6 @@ const { shouldAuthenticate, redirectUrl } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="apple-touch-icon" href="/favicons/favicon-192x192.svg" />
-    <link rel="preload" href="/icons/loader.svg" as="image" type="image/svg+xml" />
     <title>{t.title}</title>
     {Astro.locals.isIOS && <IosPolyfills />}
   </head>
@@ -33,6 +32,7 @@ const { shouldAuthenticate, redirectUrl } = Astro.props;
       </main>
       <Nav />
     </chealt-data>
+    <img src="/icons/loader.svg" class="visually-hidden" aria-hidden="true" />
   </body>
 </html>
 
