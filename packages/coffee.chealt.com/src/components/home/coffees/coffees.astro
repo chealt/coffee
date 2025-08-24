@@ -45,7 +45,7 @@ const coffeesDetails = coffees.map((coffee) => ({
         <li class="item">
           <div class="image">
             <a href={webshopItemLink} target="_blank" rel="noopener noreferrer">
-              <img src={`/coffees/${id}.webp`} />
+              <img src={`/coffees/${id}.webp`} loading="lazy" />
             </a>
           </div>
           <div class="name">{originCountry?.name}</div>
