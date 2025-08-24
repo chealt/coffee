@@ -1,0 +1,62 @@
+---
+import brewingMethods from '../../../../data/brewingMethods.json';
+import countries from '../../../../data/countries.json';
+import originCountries from '../../../../data/originCountries.json';
+import originFarms from '../../../../data/originFarms.json';
+import originRegions from '../../../../data/originRegions.json';
+import coffees from '../../../../data/coffees.json';
+import roastingLevels from '../../../../data/roastingLevels.json';
+import roasters from '../../../../data/roasters.json';
+
+const coffeesDetails = coffees.map((coffee) => ({
+  id: coffee.id,
+  roastingDate: coffee.roasting_date,
+  webshopItemLink: coffee.webshop_item_link,
+  pricePerGram: coffee.price_per_gram,
+  roastingLevel: roastingLevels.find(
+    (roastingLevel) =>
+      roastingLevel.roasting_level_id === coffee.roasting_level_id &&
+      roastingLevel.language_code === Astro.currentLocale
+  ),
+  isDecaf: Boolean(coffee.is_decaf),
+  roaster: roasters.find((roaster) => roaster.id === coffee.roaster_id),
+  originCountry: originCountries.find(
+    (originCountry) =>
+      originCountry.origin_country_id === coffee.origin_country_id &&
+      originCountry.language_code === Astro.currentLocale
+  ),
+  originRegion: originRegions.find(
+    (originRegion) =>
+      originRegion.origin_region_id === coffee.origin_region_id && originRegion.language_code === Astro.currentLocale
+  ),
+  brewingMethod: brewingMethods.find(
+    (brewingMethod) =>
+      brewingMethod.brewing_method_id === coffee.brewing_method_id &&
+      brewingMethod.language_code === Astro.currentLocale
+  ),
+  originFarm: originFarms.find((originFarm) => originFarm.id === coffee.origin_farm_id)
+}));
+---
+
+<ul class="list">
+  {
+    coffeesDetails.map(
+      ({ id, roastingDate, brewingMethod, originCountry, originRegion, originFarm, webshopItemLink }) => (
+        <li class="item">
+          <div class="image">
+            <a href={webshopItemLink} target="_blank" rel="noopener noreferrer">
+              <img src={`/coffees/${id}.webp`} />
+            </a>
+          </div>
+          <div class="name">{originCountry?.name}</div>
+          <div class="name">{`${originRegion?.name} - ${originFarm?.name}`}</div>
+          {originFarm?.height && (
+            <div class="name">{`${Intl.NumberFormat(Astro.currentLocale).format(originFarm.height)} m`}</div>
+          )}
+          <div class="name">{brewingMethod?.name}</div>
+          <div class="name">{Intl.DateTimeFormat(Astro.currentLocale).format(new Date(roastingDate))}</div>
+        </li>
+      )
+    )
+  }
+</ul>

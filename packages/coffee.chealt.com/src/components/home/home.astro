@@ -1,4 +1,5 @@
 ---
+import Coffees from './coffees/coffees.astro';
 import Common from '../common/common.astro';
 import OriginCountries from './origin-countries/origin-countries.astro';
 import Roasters from './roasters/roasters.astro';
@@ -19,5 +20,9 @@ const t = allLocaleTranslations[Astro.currentLocale];
   <section>
     <h2>{t.originCountries}</h2>
     <OriginCountries />
+  </section>
+  <section>
+    <h2>{t.coffees}</h2>
+    <Coffees />
   </section>
 </Common>

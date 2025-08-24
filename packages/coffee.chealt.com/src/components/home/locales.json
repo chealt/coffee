@@ -2,11 +2,13 @@
   "en": {
     "title": "Coffee Explorer",
     "roasters": "Roasters",
-    "originCountries": "Origin Countries"
+    "originCountries": "Origin Countries",
+    "coffees": "Coffees"
   },
   "pl": {
     "title": "Kawa Explorer",
     "roasters": "Palacze",
-    "originCountries": "Kraje pochodzenia"
+    "originCountries": "Kraje pochodzenia",
+    "coffees": "Kawy"
   }
 }
