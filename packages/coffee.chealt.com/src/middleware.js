@@ -45,6 +45,9 @@ const authenticate = (context) => {
 
 // eslint-disable-next-line complexity
 const onRequest = async (context, next) => {
+  // TODO: remove this when TTFB problem is solved
+  console.log(`url: ${context.url}`);
+
   const { page, params } = parsePath(context.url.pathname);
 
   if (page === 'api' && params[0] !== 'authentication') {
@@ -63,7 +66,7 @@ const onRequest = async (context, next) => {
         await setCollections(context);
       } else if (params[1] && params[3]) {
         const itemId = params[3];
-        
+
         await setCollections(context); // to enable the 'add to collection' feature
         await setCollectionItem(context, itemId);
       }
