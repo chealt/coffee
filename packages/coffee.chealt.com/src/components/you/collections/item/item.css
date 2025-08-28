@@ -1,17 +1,22 @@
 #back-button {
   z-index: var(--z-index--xs);
   position: fixed;
-  top: 0;
-  left: 0;
+  top: var(--gap);
+  left: var(--gap);
+  border-radius: 50%;
   width: auto;
 
   &:active {
-    top: 2px;
+    top: calc(var(--gap) + 2px);
   }
 }
 
 .picture-collection {
   padding: 0;
+}
+
+.picture-collection > .carousel {
+  border-radius: 0 0 20px 20px;
 }
 
 .picture-collection img {
