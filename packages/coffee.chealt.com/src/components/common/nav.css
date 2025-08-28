@@ -6,7 +6,7 @@ nav {
   grid-auto-flow: column;
   box-sizing: border-box;
   background-color: var(--color-background);
-  box-shadow: 0 -2px 15px -4px lightgray;
+  box-shadow: 0 -2px 6px -4px lightgray;
   align-items: center;
   will-change: transform;
 }
@@ -25,6 +25,5 @@ nav a.active {
 }
 
 nav .title {
-  font-size: 0.8rem;
   text-transform: capitalize;
 }

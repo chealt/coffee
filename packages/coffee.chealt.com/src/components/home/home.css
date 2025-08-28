@@ -14,10 +14,11 @@
     align-items: center;
     padding: var(--gap);
     flex: 0 0 auto;
-    background-color: white; /* works with transparent logos */
+    background-color: var(--color-text);
     scroll-snap-align: start;
     width: 80%;
     box-sizing: border-box;
+    border-radius: var(--border-radius);
 
     .image {
       min-height: 200px;
