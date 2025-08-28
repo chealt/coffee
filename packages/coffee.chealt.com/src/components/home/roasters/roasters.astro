@@ -1,7 +1,5 @@
 ---
-import Filters from './coffee-filters.astro';
-
-import roasters from '../../../../data/roasters.json';
+import roasters from '../../../../data/roastersBest.json';
 import countries from '../../../../data/countries.json';
 
 import './roasters.css';
@@ -13,7 +11,6 @@ const roasterImages = await import.meta.glob('/public/roasters/*.{jpeg,jpg,png,g
 ---
 
 <div class="roasters-container">
-  <Filters />
   <ul class="list">
     {
       roasters

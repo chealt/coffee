@@ -28,11 +28,3 @@ nav .title {
   font-size: 0.8rem;
   text-transform: capitalize;
 }
-
-nav coffee-image-upload {
-  transform: scale(1.3);
-}
-
-nav coffee-image-upload .title {
-  font-size: 0.9rem;
-}

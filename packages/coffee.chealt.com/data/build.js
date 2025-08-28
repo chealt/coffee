@@ -13,6 +13,12 @@ const saveRoasters = async () => {
   return writeFile('./data/roasters.json', JSON.stringify(results.rows), { flag: 'w+' });
 };
 
+const saveRoastersBest = async () => {
+  const results = await turso.execute('SELECT * FROM roasters WHERE is_best = TRUE ORDER BY name COLLATE nocase ASC');
+
+  return writeFile('./data/roastersBest.json', JSON.stringify(results.rows), { flag: 'w+' });
+};
+
 const saveRoastingLevels = async () => {
   const results = await turso.execute('SELECT * FROM roasting_levels_all ORDER BY name ASC');
 
@@ -77,5 +83,6 @@ await Promise.all([
   saveOriginRegions(),
   saveProcessingMethods(),
   saveRoasters(),
+  saveRoastersBest(),
   saveRoastingLevels()
 ]);

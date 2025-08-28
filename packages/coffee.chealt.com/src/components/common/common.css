@@ -8,9 +8,9 @@
   --color-background--alternative: #d4d4d4;
   --color-border: black;
   --color-border--alternative: #c5c5c5;
-  --color-text: black;
-  --color-text--primary: black;
-  --color-primary: #e1a76d;
+  --color-text: #37352c;
+  --color-text--primary: #37352c;
+  --color-primary: #e9d2ae;
   --color-secondary: rgb(212 177 165 / 30%);
   --color-shadow: #505050;
   --color-success: #008000;
@@ -30,12 +30,12 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: #121212;
+    --color-background: #37352c;
     --color-background--subtle: rgba(32, 32, 32, 0.4);
     --color-background--alternative: #2f2f2f;
     --color-border: #e0e0e0;
     --color-border--alternative: #868686;
-    --color-text: #e0e0e0;
+    --color-text: #e9d2ae;
     --color-text--primary: #272727;
     --color-secondary: rgba(255, 255, 255, 0.1);
     --color-shadow: rgba(0, 0, 0, 0.5);
