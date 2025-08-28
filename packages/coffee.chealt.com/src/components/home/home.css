@@ -19,14 +19,16 @@
     a {
       width: 100%;
       height: 100%;
-      align-items: center;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: stretch;
     }
 
     .image {
       padding: var(--gap);
       background-color: var(--color-text);
       border-radius: var(--border-radius);
-      min-height: 200px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -46,14 +48,6 @@
       text-transform: capitalize;
       text-align: center;
       font-size: 1.2rem;
-    }
-  }
-
-  &.coffees {
-    .item {
-      .image {
-        height: auto;
-      }
     }
   }
 }
