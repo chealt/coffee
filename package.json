@@ -1,6 +1,6 @@
 {
   "name": "coffee",
-  "packageManager": "yarn@4.9.2",
+  "packageManager": "yarn@4.9.4",
   "private": true,
   "type": "module",
   "workspaces": [
