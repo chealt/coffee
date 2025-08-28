@@ -1,7 +1,6 @@
 select {
   display: block;
   width: 100%;
-  border-width: 0;
   border-radius: 0;
   padding: var(--gap);
   font-size: 1.2rem;
