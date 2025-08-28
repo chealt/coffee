@@ -60,7 +60,7 @@
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#000000",
-  "theme_color": "#e1a76d",
+  "theme_color": "#f1e3cd",
   "prefer_related_applications": false,
   "shortcuts": [
     {
