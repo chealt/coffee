@@ -10,7 +10,9 @@
     "brewingMethod": "Brewing method",
     "roastingDate": "Roasting date",
     "height": "Height",
-    "pricePerGram": "Price / gram"
+    "pricePerGram": "Price / gram",
+    "weight": "Weight",
+    "price": "Price"
   },
   "pl": {
     "originCountry": "Kraj pochodzenia",
@@ -23,6 +25,8 @@
     "brewingMethod": "Sposób zaparzania",
     "roastingDate": "Data palenia",
     "height": "Wysokość",
-    "pricePerGram": "Cena / gram"
+    "pricePerGram": "Cena / gram",
+    "weight": "Waga",
+    "price": "Cena"
   }
 }

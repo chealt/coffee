@@ -17,6 +17,8 @@ const coffeesDetails = coffees.map((coffee) => ({
   roastingDate: coffee.roasting_date,
   webshopItemLink: coffee.webshop_item_link,
   pricePerGram: coffee.price_per_gram,
+  weight: coffee.weight,
+  price: coffee.price,
   roastingLevel: roastingLevels.find(
     (roastingLevel) =>
       roastingLevel.roasting_level_id === coffee.roasting_level_id &&
@@ -45,7 +47,18 @@ const coffeesDetails = coffees.map((coffee) => ({
 <ul class="list">
   {
     coffeesDetails.map(
-      ({ id, roastingDate, brewingMethod, originCountry, originRegion, originFarm, webshopItemLink, pricePerGram }) => (
+      ({
+        id,
+        roastingDate,
+        brewingMethod,
+        originCountry,
+        originRegion,
+        originFarm,
+        webshopItemLink,
+        pricePerGram,
+        price,
+        weight
+      }) => (
         <li class="item">
           <a href={webshopItemLink} target="_blank" rel="noopener noreferrer">
             <div class="image">
@@ -83,6 +96,21 @@ const coffeesDetails = coffees.map((coffee) => ({
                   <Fragment>
                     <dt>{t.height}</dt>
                     <dd>{`${Intl.NumberFormat(Astro.currentLocale).format(originFarm.height)} m`}</dd>
+                  </Fragment>
+                )}
+                {weight && (
+                  <Fragment>
+                    <dt>{t.weight}</dt>
+                    <dd>{`${Intl.NumberFormat(Astro.currentLocale).format(weight)} g`}</dd>
+                  </Fragment>
+                )}
+                {price && (
+                  <Fragment>
+                    <dt>{t.price}</dt>
+                    <dd>{`${Intl.NumberFormat(Astro.currentLocale, {
+                      style: 'currency',
+                      currency: 'PLN'
+                    }).format(price)}`}</dd>
                   </Fragment>
                 )}
                 {pricePerGram && (
