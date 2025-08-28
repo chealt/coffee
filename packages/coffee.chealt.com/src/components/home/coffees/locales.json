@@ -1,0 +1,28 @@
+{
+  "en": {
+    "originCountry": "Origin",
+    "originRegion": "Region",
+    "originFarm": "Farm",
+    "processingMethod": "Processing method",
+    "roastingLevel": "Roasting level",
+    "roaster": "Roaster",
+    "decaf": "Decaf",
+    "brewingMethod": "Brewing method",
+    "roastingDate": "Roasting date",
+    "height": "Height",
+    "pricePerGram": "Price / gram"
+  },
+  "pl": {
+    "originCountry": "Kraj pochodzenia",
+    "originRegion": "Region",
+    "originFarm": "Farmia",
+    "processingMethod": "Obróbka",
+    "roastingLevel": "Stopień palenia",
+    "roaster": "Palarnia",
+    "decaf": "Bezkofeinowy",
+    "brewingMethod": "Sposób zaparzania",
+    "roastingDate": "Data palenia",
+    "height": "Wysokość",
+    "pricePerGram": "Cena / gram"
+  }
+}

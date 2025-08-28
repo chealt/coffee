@@ -8,10 +8,12 @@ const countries = originCountries.filter(({ language_code }) => language_code ==
   {
     countries.map(({ origin_country_id, name }) => (
       <li class="item">
-        <div class="image">
-          <img src={`/origin-countries/${origin_country_id}.svg`} alt={name} loading="lazy" />
-        </div>
-        <div class="name">{name}</div>
+        <a href={`/origin-countries/${origin_country_id}`}>
+          <div class="image">
+            <img src={`/origin-countries/${origin_country_id}.svg`} alt={name} loading="lazy" />
+          </div>
+          <div class="name">{name}</div>
+        </a>
       </li>
     ))
   }

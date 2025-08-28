@@ -8,6 +8,10 @@ import coffees from '../../../../data/coffees.json';
 import roastingLevels from '../../../../data/roastingLevels.json';
 import roasters from '../../../../data/roasters.json';
 
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+
 const coffeesDetails = coffees.map((coffee) => ({
   id: coffee.id,
   roastingDate: coffee.roasting_date,
@@ -41,20 +45,58 @@ const coffeesDetails = coffees.map((coffee) => ({
 <ul class="list">
   {
     coffeesDetails.map(
-      ({ id, roastingDate, brewingMethod, originCountry, originRegion, originFarm, webshopItemLink }) => (
+      ({ id, roastingDate, brewingMethod, originCountry, originRegion, originFarm, webshopItemLink, pricePerGram }) => (
         <li class="item">
-          <div class="image">
-            <a href={webshopItemLink} target="_blank" rel="noopener noreferrer">
+          <a href={webshopItemLink} target="_blank" rel="noopener noreferrer">
+            <div class="image">
               <img src={`/coffees/${id}.webp`} loading="lazy" />
-            </a>
-          </div>
-          <div class="name">{originCountry?.name}</div>
-          <div class="name">{`${originRegion?.name} - ${originFarm?.name}`}</div>
-          {originFarm?.height && (
-            <div class="name">{`${Intl.NumberFormat(Astro.currentLocale).format(originFarm.height)} m`}</div>
-          )}
-          <div class="name">{brewingMethod?.name}</div>
-          <div class="name">{Intl.DateTimeFormat(Astro.currentLocale).format(new Date(roastingDate))}</div>
+            </div>
+            <section>
+              <dl>
+                <dt>{t.originCountry}</dt>
+                <dd>{originCountry?.name}</dd>
+                {originRegion?.name && (
+                  <Fragment>
+                    <dt>{t.originRegion}</dt>
+                    <dd>{originRegion?.name}</dd>
+                  </Fragment>
+                )}
+                {originFarm?.name && (
+                  <Fragment>
+                    <dt>{t.originFarm}</dt>
+                    <dd>{originFarm?.name}</dd>
+                  </Fragment>
+                )}
+                {brewingMethod?.name && (
+                  <Fragment>
+                    <dt>{t.brewingMethod}</dt>
+                    <dd>{brewingMethod?.name}</dd>
+                  </Fragment>
+                )}
+                {roastingDate && (
+                  <Fragment>
+                    <dt>{t.roastingDate}</dt>
+                    <dd>{Intl.DateTimeFormat(Astro.currentLocale).format(new Date(roastingDate))}</dd>
+                  </Fragment>
+                )}
+                {originFarm?.height && (
+                  <Fragment>
+                    <dt>{t.height}</dt>
+                    <dd>{`${Intl.NumberFormat(Astro.currentLocale).format(originFarm.height)} m`}</dd>
+                  </Fragment>
+                )}
+                {pricePerGram && (
+                  <Fragment>
+                    <dt>{t.pricePerGram}</dt>
+                    <dd>{`${Intl.NumberFormat(Astro.currentLocale, {
+                      style: 'currency',
+                      currency: 'PLN'
+                    }).format(pricePerGram)}`}</dd>
+                  </Fragment>
+                )}
+              </dl>
+            </section>
+          </a>
         </li>
       )
     )

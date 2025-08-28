@@ -10,17 +10,21 @@
   .item {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    padding: var(--gap);
     flex: 0 0 auto;
-    background-color: var(--color-text);
     scroll-snap-align: start;
     width: 80%;
     box-sizing: border-box;
-    border-radius: var(--border-radius);
+
+    a {
+      width: 100%;
+      height: 100%;
+    }
 
     .image {
+      padding: var(--gap);
+      background-color: var(--color-text);
+      border-radius: var(--border-radius);
       min-height: 200px;
       display: flex;
       flex-direction: column;
@@ -31,14 +35,13 @@
       display: block;
       width: 100%;
       height: auto;
-      max-height: 200px;
     }
 
     .name {
       padding: var(--gap) 0;
-      color: var(--color-background);
       text-transform: capitalize;
       text-align: center;
+      font-size: 1.2rem;
     }
   }
 }

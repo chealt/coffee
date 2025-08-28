@@ -10,7 +10,7 @@
   --color-border--alternative: #c5c5c5;
   --color-text: #37352c;
   --color-text--primary: #37352c;
-  --color-primary: #e9d2ae;
+  --color-primary: #f1e3cd;
   --color-secondary: rgb(212 177 165 / 30%);
   --color-shadow: #505050;
   --color-success: #008000;
@@ -35,7 +35,7 @@
     --color-background--alternative: #2f2f2f;
     --color-border: #e0e0e0;
     --color-border--alternative: #868686;
-    --color-text: #e9d2ae;
+    --color-text: #f1e3cd;
     --color-text--primary: #272727;
     --color-secondary: rgba(255, 255, 255, 0.1);
     --color-shadow: rgba(0, 0, 0, 0.5);
@@ -96,6 +96,27 @@ li {
 
 li {
   list-style: none;
+}
+
+dl {
+  display: grid;
+  grid-gap: var(--gap) var(--gap);
+  grid-template-columns: max-content;
+}
+
+dt,
+dd {
+  font-size: 1.2rem;
+}
+
+dt {
+  font-weight: bold;
+}
+
+dd {
+  text-transform: capitalize;
+  margin: 0;
+  grid-column-start: 2;
 }
 
 a {
