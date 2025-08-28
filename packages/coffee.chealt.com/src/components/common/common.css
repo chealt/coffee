@@ -102,7 +102,6 @@ li {
 dl {
   display: grid;
   grid-gap: var(--gap) var(--gap);
-  grid-template-columns: max-content;
 }
 
 dt,
