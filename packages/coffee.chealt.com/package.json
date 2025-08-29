@@ -17,7 +17,6 @@
     "import": "node --env-file=.env data/importData.js",
     "import:logos": "node data/importLogos.js",
     "add:logos": "node --env-file=.env data/addLogos.js",
-    "add:user": "node --env-file=.env src/server/add-user.js",
     "preview": "astro build && astro preview"
   },
   "devDependencies": {

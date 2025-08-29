@@ -9,15 +9,6 @@ const getUser = async (username) => {
   return rows[0];
 };
 
-const recordUser = async ({ username, registrationCode, email }) => {
-  const client = getClient(username);
-
-  return client.execute({
-    sql: 'INSERT INTO users (name, registration_code, email) VALUES (:name, :registration_code, :email) ON CONFLICT (name) DO UPDATE SET registration_code = :registration_code',
-    args: { name: username, registration_code: registrationCode, email }
-  });
-};
-
 const getPasskeys = async (user) => {
   const client = getClient(user.name);
 
@@ -112,7 +103,6 @@ const updatePasskeyCounter = async ({ username, credentialID, newCounter }) => {
 
 export {
   getUser,
-  recordUser,
   getPasskeys,
   getRegistrationOptions,
   recordRegistrationOptions,
