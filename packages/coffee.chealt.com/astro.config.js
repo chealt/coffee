@@ -27,9 +27,6 @@ export default defineConfig({
     build: {
       sourcemap: true,
       assetsInlineLimit: 0
-    },
-    define: {
-      'process.env.TURSO_DATABASE_URL_ATTILABARTHA': process.env.TURSO_DATABASE_URL_ATTILABARTHA
     }
   },
   adapter: cloudflare({
