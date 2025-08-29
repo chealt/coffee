@@ -25,4 +25,4 @@ packages/coffee.chealt.com/stats.html
 dev-dist
 
 # Turso
-packages/coffee.chealt.com/.env
+.env
