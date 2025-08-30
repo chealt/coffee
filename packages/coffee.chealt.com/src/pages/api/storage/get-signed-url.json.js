@@ -2,11 +2,13 @@ import { getSessionUser } from '../../../server/authentication/session.js';
 import { generateUploadUrl } from '../../../server/cloudflare/r2/storage.js';
 
 const POST = async ({ request }) => {
-  const { username } = getSessionUser(request);
+  // check if user is logged in
+  getSessionUser(request);
+
   const { filename, contentType, method } = await request.json();
 
   try {
-    const url = await generateUploadUrl({ username, filename, contentType, method });
+    const url = await generateUploadUrl({ filename, contentType, method });
 
     return new Response(JSON.stringify({ url }), { status: 200 });
   } catch (error) {

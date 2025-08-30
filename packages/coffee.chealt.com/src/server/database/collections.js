@@ -72,7 +72,7 @@ const queryCollectionItemLinks = async (user, itemId) => {
       sql: 'SELECT collection_item_id, collection_id FROM collection_item_links WHERE collection_item_id = :itemId',
       args: { itemId }
     });
-  
+
     return results.rows;
   }
 
@@ -101,7 +101,7 @@ const getCollections = async (user) => {
         const images =
           collectionItemImages
             .filter((image) => image.collection_item_id === itemId)
-            ?.map(({ filename }) => ({ filename, src: getImageUrl({ username: user.name, filename }) })) || [];
+            ?.map(({ filename }) => ({ filename, src: getImageUrl({ filename }) })) || [];
 
         return {
           id: itemId,
