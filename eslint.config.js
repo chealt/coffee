@@ -1,9 +1,8 @@
 import css from '@eslint/css';
 import { defineConfig, globalIgnores } from 'eslint/config';
-import globals from 'globals';
-
 import { configs as astroConfigs } from 'eslint-plugin-astro';
 import importPlugin from 'eslint-plugin-import';
+import globals from 'globals';
 
 export default defineConfig([
   globalIgnores(['.yarn/*', '.*', '**/dist/*', '**/.astro/*']),
@@ -194,7 +193,8 @@ export default defineConfig([
       'packages/coffee.chealt.com/data/**/*.js',
       'packages/coffee.chealt.com/astro.config.js',
       'packages/coffee.chealt.com/src/server/**/*.js',
-      'packages/coffee.chealt.com/src/middleware.js'
+      'packages/coffee.chealt.com/src/middleware.js',
+      'packages/coffee-admin/**/*.js'
     ],
     languageOptions: {
       globals: {
