@@ -21,7 +21,7 @@ class CoffeeCollectionControls extends HTMLElement {
         name
       });
 
-      window.location.assign(event.target.getAttribute('href'));
+      window.location.reload();
     });
   }
 }
