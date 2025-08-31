@@ -145,7 +145,7 @@ a[href],
     content: ' ';
     position: absolute;
     inset: 0;
-    background: center no-repeat url(/icons/loader.svg) var(--color-background--subtle);
+    background: center no-repeat url(./loader.svg) var(--color-background--subtle);
     display: none;
     opacity: 0;
     transition-property: display opacity;
