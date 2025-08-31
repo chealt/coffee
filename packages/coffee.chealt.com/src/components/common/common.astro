@@ -2,6 +2,7 @@
 import IosPolyfills from './ios-polyfills.astro';
 import Login from '../login/login.astro';
 import Nav from './nav.astro';
+import loaderImage from './loader.svg';
 
 import './common.css';
 
@@ -32,7 +33,7 @@ const { shouldAuthenticate, redirectUrl } = Astro.props;
       </main>
       <Nav />
     </chealt-data>
-    <img src="/icons/loader.svg" class="visually-hidden" aria-hidden="true" />
+    <img src={loaderImage.src} class="visually-hidden" aria-hidden="true" />
   </body>
 </html>
 
