@@ -28,7 +28,18 @@ const generateUploadUrl = async ({ filename, contentType, method }) => {
   return result.url.toString();
 };
 
-const getImageUrl = ({ filename }) =>
-  `https://${env.CLOUDFLARE_R2_BUCKET_DOMAIN}/${env.CLOUDFLARE_R2_COLLECTION_FOLDER}/${filename}`;
+const getSizedImagePath = (size) => {
+  switch (size) {
+    case 'small':
+      return '/cdn-cgi/image/width=600,quality=50';
+    case 'medium':
+      return '/cdn-cgi/image/width=1024,quality=50';
+    default:
+      return '';
+  }
+};
+
+const getImageUrl = ({ filename, size }) =>
+  `https://${env.CLOUDFLARE_R2_BUCKET_DOMAIN}${getSizedImagePath(size)}/${env.CLOUDFLARE_R2_COLLECTION_FOLDER}/${filename}`;
 
 export { generateUploadUrl, getImageUrl };

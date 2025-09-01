@@ -36,10 +36,14 @@ const { collections, shouldAuthenticate } = Astro.locals;
                       `/you/collections/${collectionId}/items/${itemId}`
                     )}?from=collections`}
                   >
-                    <img
-                      src={cover.src}
-                      style={`view-transition-name: collection-${collectionId}-image-${cover.filename}`}
-                    />
+                    <picture>
+                      <source srcset={cover.srcSmall} media="(max-width: 599px)" />
+                      <source srcset={cover.srcMedium} media="(max-width: 1023px)" />
+                      <img
+                        src={cover.src}
+                        style={`view-transition-name: collection-${collectionId}-image-${cover.filename}`}
+                      />
+                    </picture>
                   </a>
                 </li>
               ))

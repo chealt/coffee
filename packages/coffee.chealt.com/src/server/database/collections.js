@@ -101,7 +101,12 @@ const getCollections = async (user) => {
         const images =
           collectionItemImages
             .filter((image) => image.collection_item_id === itemId)
-            ?.map(({ filename }) => ({ filename, src: getImageUrl({ filename }) })) || [];
+            ?.map(({ filename }) => ({
+              filename,
+              src: getImageUrl({ filename }),
+              srcSmall: getImageUrl({ filename, size: 'small' }),
+              srcMedium: getImageUrl({ filename, size: 'medium' })
+            })) || [];
 
         return {
           id: itemId,
