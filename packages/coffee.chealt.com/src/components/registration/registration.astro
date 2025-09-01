@@ -17,33 +17,37 @@ const { username } = Astro.props;
 ---
 
 <Common>
-  <h1>{t['title']}</h1>
+  <h1>{t.title}</h1>
   <chealt-auth
     data-registration-options={Astro.locals.registrationOptions}
     data-verify-endpoint="/api/authentication/registration/verify.json"
     data-redirect-url="/"
   >
-    <div data-registration-success class="hidden">{t['registrationSuccess']}</div>
+    <div data-registration-success class="hidden">{t.registrationSuccess}</div>
     <div data-registration-error class="error hidden">
-      <div class="error-message">{t['registrationError']}</div>
+      <div class="error-message">{t.registrationError}</div>
     </div>
     <div data-registration-error-authenticator-previously-registered class="error hidden">
-      <div class="error-message">{t['registrationErrorAuthenticatorPreviouslyRegistered']}</div>
-      <Button href={getRelativeLocaleUrl(Astro.currentLocale, '/login')}>{t['login']}</Button>
+      <div class="error-message">{t.registrationErrorAuthenticatorPreviouslyRegistered}</div>
+      <Button href={getRelativeLocaleUrl(Astro.currentLocale, '/login')}>{t.login}</Button>
     </div>
     <Form method="post">
-      <Label>
-        {t['username']}
-        <Input
-          type="text"
-          name="username"
-          autocomplete="username"
-          value={username}
-          readonly={username ? true : false}
-          disabled={username ? true : false}
-        />
-      </Label>
-      <Button type="submit" class="primary">{t['register']}</Button>
+      <section>
+        <Label>
+          {t.username}
+          <Input
+            type="text"
+            name="username"
+            autocomplete="username"
+            value={username}
+            readonly={username ? true : false}
+            disabled={username ? true : false}
+          />
+        </Label>
+      </section>
+      <section>
+        <Button type="submit" class="primary">{t.register}</Button>
+      </section>
     </Form>
   </chealt-auth>
 </Common>
