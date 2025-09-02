@@ -3,7 +3,7 @@ import { createClient } from '@libsql/client';
 import { createClient as createPlatformClient } from '@tursodatabase/api';
 import jwt from 'jsonwebtoken';
 
-import { addSecret } from './cloudflare.js';
+import { addSecret } from '../cloudflare.js';
 import { sendEmail } from './email.js';
 
 if (!process.argv?.some((arg) => arg.includes('--username='))) {

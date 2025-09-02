@@ -2,7 +2,8 @@
   "name": "@chealt/coffee-admin",
   "type": "module",
   "scripts": {
-    "create:user": "node --env-file=.env src/create-user.js"
+    "users:create": "node --env-file=.env src/users/create-user.js",
+    "coffees:flag-removed": "node --env-file=.env src/coffees/flag-removed-coffees.js"
   },
   "dependencies": {
     "@aws-sdk/client-sesv2": "^3.879.0",
