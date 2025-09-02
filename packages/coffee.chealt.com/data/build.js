@@ -62,7 +62,7 @@ const saveCountries = async () => {
 };
 
 const saveCoffees = async () => {
-  const results = await turso.execute('SELECT * FROM coffees_all');
+  const results = await turso.execute('SELECT * FROM coffees_all WHERE NOT is_removed');
 
   return writeFile('./data/coffees.json', JSON.stringify(results.rows), { flag: 'w+' });
 };
