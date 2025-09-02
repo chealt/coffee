@@ -20,7 +20,7 @@
 }
 
 .picture-collection img {
-  width: 100%;
+  width: 100vw;
   display: block;
   will-change: transform;
 }
