@@ -45,108 +45,113 @@ if (!parser) {
 const coffees = await parser(roaster);
 
 await Promise.all(
-  coffees.map(
-    async ({
-      image,
-      originCountryId,
-      originRegionId,
-      originFarmId,
-      brewingMethodId,
-      price,
-      pricePerGram,
-      weight,
-      webshopItemLink
-    }) => {
-      console.info('Adding coffee to DB...');
-      const results = await client.execute({
-        sql: `INSERT OR IGNORE INTO coffees (
-          roaster_id,
-          origin_country_id,
-          origin_region_id,
-          origin_farm_id,
-          brewing_method_id,
-          price,
-          price_per_gram,
-          weight,
-          webshop_item_link
-        ) VALUES (
-         :roasterId,
-         :originCountryId,
-         :originRegionId,
-         :originFarmId,
-         :brewingMethodId,
-         :price,
-         :pricePerGram,
-         :weight,
-         :webshopItemLink
-        )`,
-        args: {
-          roasterId,
-          originCountryId,
-          originRegionId,
-          originFarmId,
-          brewingMethodId,
-          price,
-          pricePerGram,
-          weight,
-          webshopItemLink
-        }
-      });
-
-      let coffeeId = results.rows[0]?.id;
-
-      if (coffeeId) {
-        console.info(`Inserted Coffee with ID: ${coffeeId}`);
-      } else {
-        console.info('Coffee already exists, fetching ID...');
-        const existingCoffee = await client.execute({
-          sql: `SELECT id FROM coffees WHERE webshop_item_link = :webshopItemLink`,
-          args: { webshopItemLink }
+  coffees
+    .filter(({ originCountryId }) => Boolean(originCountryId)) // origin country ID must be set
+    .map(
+      async ({
+        image,
+        isDecaf = false,
+        originCountryId,
+        originRegionId,
+        originFarmId,
+        brewingMethodId,
+        price,
+        pricePerGram,
+        weight,
+        webshopItemLink
+      }) => {
+        console.info('Adding coffee to DB...');
+        const results = await client.execute({
+          sql: `INSERT OR IGNORE INTO coffees (
+            roaster_id,
+            origin_country_id,
+            origin_region_id,
+            origin_farm_id,
+            brewing_method_id,
+            price,
+            price_per_gram,
+            weight,
+            webshop_item_link,
+            is_decaf
+          ) VALUES (
+            :roasterId,
+            :originCountryId,
+            :originRegionId,
+            :originFarmId,
+            :brewingMethodId,
+            :price,
+            :pricePerGram,
+            :weight,
+            :webshopItemLink,
+            :isDecaf
+          )`,
+          args: {
+            isDecaf,
+            roasterId,
+            originCountryId,
+            originRegionId,
+            originFarmId,
+            brewingMethodId,
+            price,
+            pricePerGram,
+            weight,
+            webshopItemLink
+          }
         });
 
-        coffeeId = existingCoffee.rows[0]?.id;
-      }
+        let coffeeId = results.rows[0]?.id;
 
-      if (!coffeeId) {
-        throw new Error(`Failed to retrieve coffee ID for: ${webshopItemLink}`);
-      }
+        if (coffeeId) {
+          console.info(`Inserted Coffee with ID: ${coffeeId}`);
+        } else {
+          console.info('Coffee already exists, fetching ID...');
+          const existingCoffee = await client.execute({
+            sql: `SELECT id FROM coffees WHERE webshop_item_link = :webshopItemLink`,
+            args: { webshopItemLink }
+          });
 
-      if (image) {
-        console.info('Fetching coffee image...');
-        const imageResponse = await fetch(image);
-
-        if (!imageResponse.ok) {
-          throw new Error(`Failed to fetch image ${image}`);
+          coffeeId = existingCoffee.rows[0]?.id;
         }
 
-        const arrayBuffer = await imageResponse.arrayBuffer();
+        if (!coffeeId) {
+          throw new Error(`Failed to retrieve coffee ID for: ${webshopItemLink}`);
+        }
 
-        const imageFilename = await getContentHash({ arrayBuffer });
+        if (image) {
+          console.info('Fetching coffee image...');
+          const imageResponse = await fetch(image);
 
-        console.info(`Saving coffee image for coffee ID: ${coffeeId}...`);
-        await writeFile(
-          `../coffee.chealt.com/public/coffees/${imageFilename}.${image.slice(image.lastIndexOf('.') + 1)}`,
-          Buffer.from(arrayBuffer),
-          { flag: 'a' }
-        );
+          if (!imageResponse.ok) {
+            throw new Error(`Failed to fetch image ${image}`);
+          }
 
-        console.info(`Saving coffee image into the DB for coffee ID: ${coffeeId}...`);
-        await client.execute({
-          sql: `INSERT OR IGNORE INTO coffee_images (
+          const arrayBuffer = await imageResponse.arrayBuffer();
+
+          const fileHash = await getContentHash({ arrayBuffer });
+          const imageFilename = `${fileHash}.${image.slice(image.lastIndexOf('.') + 1)}`;
+
+          console.info(`Saving coffee image for coffee ID: ${coffeeId}...`);
+          await writeFile(`../coffee.chealt.com/public/coffees/${imageFilename}`, Buffer.from(arrayBuffer), {
+            flag: 'a'
+          });
+
+          console.info(`Saving coffee image into the DB for coffee ID: ${coffeeId}...`);
+          await client.execute({
+            sql: `INSERT OR IGNORE INTO coffee_images (
             coffee_id,
             url
           ) VALUES (
             :coffeeId,
             :imageFilename
           )`,
-          args: {
-            coffeeId,
-            imageFilename
-          }
-        });
+            args: {
+              coffeeId,
+              imageFilename
+            }
+          });
+        }
       }
-    }
-  )
+    )
 ).catch((error) => {
   throw error;
 });

@@ -5,6 +5,7 @@ import brewingMethods from '../../../coffee.chealt.com/data/brewingMethods.json'
 import originCountries from '../../../coffee.chealt.com/data/originCountries.json' with { type: 'json' };
 import originFarms from '../../../coffee.chealt.com/data/originFarms.json' with { type: 'json' };
 import originRegions from '../../../coffee.chealt.com/data/originRegions.json' with { type: 'json' };
+import processingMethods from '../../../coffee.chealt.com/data/processingMethods.json' with { type: 'json' };
 
 const parsers = {
   // Sheep & Raven
@@ -80,7 +81,122 @@ const parsers = {
       })
     );
 
-    return coffees.filter(({ originCountryId }) => Boolean(originCountryId)); // origin country ID must be set
+    return coffees;
+  },
+  // BeMyBean
+  39: async ({ webshop }) => {
+    const response = await fetch(webshop);
+    const html = await response.text();
+
+    const {
+      window: { document }
+    } = new JSDOM(html);
+
+    // espresso links
+    const espressoLink = document.querySelector('[data-id="5e99470"] a');
+
+    const espressoResponse = await fetch(espressoLink.href);
+    const espressoHtml = await espressoResponse.text();
+
+    const {
+      window: { document: espressoDocument }
+    } = new JSDOM(espressoHtml);
+
+    const espressoLinks = espressoDocument.querySelectorAll('.product_cat-espresso a');
+
+    // alternative links
+    const alternativeLink = document.querySelector('[data-id="cbb6602"] a');
+
+    const alternativeResponse = await fetch(alternativeLink.href);
+    const alternativeHtml = await alternativeResponse.text();
+
+    const {
+      window: { document: alternativeDocument }
+    } = new JSDOM(alternativeHtml);
+
+    const alternativeLinks = alternativeDocument.querySelectorAll('.product_cat-alternatywa a');
+
+    const productLinks = [...espressoLinks, ...alternativeLinks];
+
+    const uniqueProductLinks = new Set(Array.from(productLinks).map((productLink) => productLink.href));
+
+    const coffees = await Promise.all(
+      Array.from(uniqueProductLinks).map(async (webshopItemLink) => {
+        console.log(`Fetching item page: ${webshopItemLink}...`);
+        const itemResponse = await fetch(webshopItemLink);
+        const itemHtml = await itemResponse.text();
+
+        const {
+          window: { document: itemDocument }
+        } = new JSDOM(itemHtml);
+
+        const price = parseFloat(itemDocument.querySelector('.price .woocommerce-Price-amount').textContent);
+
+        const weight = Number(
+          itemDocument.querySelector('#masa-netto option:not([value=""])').value.replaceAll('g', '')
+        );
+
+        const pricePerGram = Number((price / weight).toFixed(2));
+
+        const details = itemDocument
+          .querySelector('[data-table_id="16f18dc"]')
+          .textContent.replace(/\s\s+/gu, ' ')
+          .trim()
+          .toLowerCase();
+
+        const originCountry = details
+          .match(/kraj (.*) region/gu)
+          .join()
+          .replace('kraj ', '')
+          .replace(' region', '')
+          .trim();
+        const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
+
+        const brewingMethod = 'espresso';
+        const brewingMethodId = brewingMethods.find(({ name }) => name === brewingMethod)?.brewing_method_id || null;
+
+        const region = details
+          .match(/region (.*) odmiana/gu)
+          .join()
+          .replace('region ', '')
+          .replace(' odmiana', '')
+          .trim();
+        const originRegionId = originRegions.find(({ name }) => region.includes(name))?.origin_region_id || null;
+
+        const processingMethod = details
+          .match(/obróbka (.*)/gu)
+          .join()
+          .replace('obróbka ', '')
+          .trim();
+        const processingMethodId =
+          processingMethods.find(
+            ({ name }) =>
+              name ===
+                processingMethod.replace(' decaf', '').replace(' / ', ' ').replace('natural natural', 'natural') ||
+              (processingMethod === 'cautai, typica, bourbon, castillo' && name === 'washed') // bug in the website
+          )?.processing_method_id || null;
+
+        const isDecaf = processingMethod.includes('decaf');
+
+        const image = itemDocument.querySelector('.woocommerce-product-gallery__wrapper img').src;
+
+        return {
+          originCountryId,
+          originRegionId,
+          originFarmId: null,
+          brewingMethodId,
+          price,
+          pricePerGram,
+          processingMethodId,
+          weight,
+          webshopItemLink,
+          isDecaf,
+          image
+        };
+      })
+    );
+
+    return coffees;
   }
 };
 
