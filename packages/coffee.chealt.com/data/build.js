@@ -67,6 +67,12 @@ const saveCoffees = async () => {
   return writeFile('./data/coffees.json', JSON.stringify(results.rows), { flag: 'w+' });
 };
 
+const saveCoffeeImages = async () => {
+  const results = await turso.execute('SELECT * FROM coffee_images');
+
+  return writeFile('./data/coffeeImages.json', JSON.stringify(results.rows), { flag: 'w+' });
+};
+
 const saveFarms = async () => {
   const results = await turso.execute('SELECT * FROM origin_farms');
 
@@ -76,6 +82,7 @@ const saveFarms = async () => {
 await Promise.all([
   saveBrewingMethods(),
   saveCoffees(),
+  saveCoffeeImages(),
   saveCountries(),
   saveFarms(),
   saveMiscellaneousCoffeeProperties(),

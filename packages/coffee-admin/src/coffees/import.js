@@ -1,0 +1,152 @@
+/* eslint-disable no-console */
+import { createClient } from '@libsql/client';
+
+import parsers from './parsers.js';
+import roasters from '../../../coffee.chealt.com/data/roasters.json' with { type: 'json' };
+import { getContentHash } from '../../../coffee.chealt.com/src/utils/file.js';
+import { writeFile } from 'node:fs/promises';
+
+const authToken = process.env.TURSO_DEFAULT_TOKEN;
+const databaseUrl = process.env.TURSO_DATABASE_URL;
+
+if (!databaseUrl) {
+  throw new Error('TURSO_DATABASE_URL is not set');
+}
+
+if (!authToken) {
+  throw new Error('TURSO_DEFAULT_TOKEN is not set');
+}
+
+const client = createClient({
+  url: databaseUrl,
+  authToken
+});
+
+const hasRoaster = process.argv.some((arg) => arg.includes('--roasterId='));
+const roasterId =
+  hasRoaster && Number(process.argv.find((arg) => arg.includes('--roasterId=')).replace('--roasterId=', ''));
+
+if (!roasterId) {
+  throw new Error('Please provide a roasterId as an argument --roasterId=');
+}
+
+const roaster = roasters.find(({ id }) => id === roasterId);
+
+if (!roaster) {
+  throw new Error(`Roaster with id ${roasterId} not found`);
+}
+
+const parser = parsers[roasterId];
+
+if (!parser) {
+  throw new Error(`Parser for roaster ${roasterId} does NOT exist`);
+}
+
+const coffees = await parser(roaster);
+
+await Promise.all(
+  coffees.map(
+    async ({
+      image,
+      originCountryId,
+      originRegionId,
+      originFarmId,
+      brewingMethodId,
+      price,
+      pricePerGram,
+      weight,
+      webshopItemLink
+    }) => {
+      console.info('Adding coffee to DB...');
+      const results = await client.execute({
+        sql: `INSERT OR IGNORE INTO coffees (
+          roaster_id,
+          origin_country_id,
+          origin_region_id,
+          origin_farm_id,
+          brewing_method_id,
+          price,
+          price_per_gram,
+          weight,
+          webshop_item_link
+        ) VALUES (
+         :roasterId,
+         :originCountryId,
+         :originRegionId,
+         :originFarmId,
+         :brewingMethodId,
+         :price,
+         :pricePerGram,
+         :weight,
+         :webshopItemLink
+        )`,
+        args: {
+          roasterId,
+          originCountryId,
+          originRegionId,
+          originFarmId,
+          brewingMethodId,
+          price,
+          pricePerGram,
+          weight,
+          webshopItemLink
+        }
+      });
+
+      let coffeeId = results.rows[0]?.id;
+
+      if (coffeeId) {
+        console.info(`Inserted Coffee with ID: ${coffeeId}`);
+      } else {
+        console.info('Coffee already exists, fetching ID...');
+        const existingCoffee = await client.execute({
+          sql: `SELECT id FROM coffees WHERE webshop_item_link = :webshopItemLink`,
+          args: { webshopItemLink }
+        });
+
+        coffeeId = existingCoffee.rows[0]?.id;
+      }
+
+      if (!coffeeId) {
+        throw new Error(`Failed to retrieve coffee ID for: ${webshopItemLink}`);
+      }
+
+      if (image) {
+        console.info('Fetching coffee image...');
+        const imageResponse = await fetch(image);
+
+        if (!imageResponse.ok) {
+          throw new Error(`Failed to fetch image ${image}`);
+        }
+
+        const arrayBuffer = await imageResponse.arrayBuffer();
+
+        const imageFilename = await getContentHash({ arrayBuffer });
+
+        console.info(`Saving coffee image for coffee ID: ${coffeeId}...`);
+        await writeFile(
+          `../coffee.chealt.com/public/coffees/${imageFilename}.${image.slice(image.lastIndexOf('.') + 1)}`,
+          Buffer.from(arrayBuffer),
+          { flag: 'a' }
+        );
+
+        console.info(`Saving coffee image into the DB for coffee ID: ${coffeeId}...`);
+        await client.execute({
+          sql: `INSERT OR IGNORE INTO coffee_images (
+            coffee_id,
+            url
+          ) VALUES (
+            :coffeeId,
+            :imageFilename
+          )`,
+          args: {
+            coffeeId,
+            imageFilename
+          }
+        });
+      }
+    }
+  )
+).catch((error) => {
+  throw error;
+});
