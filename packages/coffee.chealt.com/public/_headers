@@ -3,3 +3,5 @@
   Cross-Origin-Embedder-Policy: require-corp
 /_astro/*
   Cache-Control: public, max-age=31556952, immutable
+/coffees/*
+  Cache-Control: public, max-age=31556952, immutable
