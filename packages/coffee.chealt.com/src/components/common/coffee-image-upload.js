@@ -1,7 +1,7 @@
 import { getContentHash, uploadFile } from '../../utils/file.js';
 import { setItem } from '../../utils/storage.js';
 
-const addCollectionWithItem = 'chealt-collection-add-with-item';
+const addCollection = 'chealt-add-collection';
 const addImageToCollection = 'chealt-add-image-to-collection';
 const addImageToCollectionItem = 'chealt-add-image-to-collection-item';
 class CoffeeImageUpload extends HTMLElement {
@@ -19,42 +19,45 @@ class CoffeeImageUpload extends HTMLElement {
       this.triggerButton.classList.add('in-progress');
 
       const collectionId = this.dataset.collectionId || crypto.randomUUID();
-      const itemId = this.dataset.itemId || crypto.randomUUID();
+      let itemId = this.dataset.itemId;
 
-      try {
-        const fileData = this.fileInput.files[0];
-        const filename = await getContentHash({ arrayBuffer: await fileData.arrayBuffer() });
+      // create collection if it doesn't exist
+      if (!this.dataset.collectionId && !this.dataset.itemId) {
+        await setItem(addCollection, {
+          id: collectionId,
+          name: this.dataset.unnamedTitle,
+          isBuiltIn: false
+        });
+      }
 
-        await uploadFile({ filename, fileData, getSignedUrl: this.getSignedUrl });
+      await Promise.all(
+        Array.from(this.fileInput.files).map(async (fileData) => {
+          const filename = await getContentHash({ arrayBuffer: await fileData.arrayBuffer() });
 
-        if (this.dataset.itemId) {
-          await setItem(addImageToCollectionItem, {
-            itemId,
-            filename
-          });
-        } else if (this.dataset.collectionId) {
-          await setItem(addImageToCollection, {
-            id: collectionId,
-            itemId,
-            filename
-          });
-        } else {
-          const collectionName = this.dataset.unnamedTitle;
+          await uploadFile({ filename, fileData, getSignedUrl: this.getSignedUrl });
 
-          await setItem(addCollectionWithItem, {
-            id: collectionId,
-            name: collectionName,
-            isBuiltIn: false,
-            items: [{ id: itemId, images: [{ filename }] }]
-          });
-        }
-      } catch (error) {
+          if (this.dataset.itemId) {
+            await setItem(addImageToCollectionItem, {
+              itemId: this.dataset.itemId,
+              filename
+            });
+          } else {
+            itemId = crypto.randomUUID();
+
+            await setItem(addImageToCollection, {
+              id: collectionId,
+              itemId,
+              filename
+            });
+          }
+        })
+      ).catch((error) => {
         if (error.name === 'AbortError') {
           console.log('user abort'); // eslint-disable-line no-console
         } else {
           console.error(error); // eslint-disable-line no-console
         }
-      }
+      });
 
       window.location.assign(`${this.triggerButton.getAttribute('href')}${collectionId}/items/${itemId}`);
     });
