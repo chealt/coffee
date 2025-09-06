@@ -267,6 +267,7 @@ svg {
   justify-content: center;
   overflow: hidden;
   border-radius: var(--border-radius);
+  background-color: var(--color-background--alternative);
 }
 
 .tiles img {
