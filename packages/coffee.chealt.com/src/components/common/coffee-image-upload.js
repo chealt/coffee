@@ -1,14 +1,16 @@
-import { getContentHash, uploadFile } from '../../utils/file.js';
+import { getContentHash } from '../../utils/file.js';
 import { setItem } from '../../utils/storage.js';
 
 const addCollection = 'chealt-add-collection';
 const addImageToCollection = 'chealt-add-image-to-collection';
 const addImageToCollectionItem = 'chealt-add-image-to-collection-item';
+
 class CoffeeImageUpload extends HTMLElement {
   connectedCallback() {
     this.triggerButton = this.querySelector('.triggerButton');
     this.fileInput = this.querySelector('input[type=file]');
     this.getSignedUrl = this.dataset.getSignedUrl;
+    this.imageUploadUrls = this.dataset.imageUploadUrls.split(';');
 
     this.addClickListener();
     this.addFileChangeListener();
@@ -32,9 +34,21 @@ class CoffeeImageUpload extends HTMLElement {
 
       await Promise.all(
         Array.from(this.fileInput.files).map(async (fileData) => {
-          const filename = await getContentHash({ arrayBuffer: await fileData.arrayBuffer() });
+          const arrayBuffer = await fileData.arrayBuffer();
+          const filename = await getContentHash({ arrayBuffer });
 
-          await uploadFile({ filename, fileData, getSignedUrl: this.getSignedUrl });
+          // upload and cache the image in a service worker
+          navigator.serviceWorker.controller.postMessage(
+            {
+              action: 'cache-image',
+              filename,
+              fileData,
+              getSignedUrl: this.getSignedUrl,
+              imageUploadUrls: this.imageUploadUrls,
+              buffer: arrayBuffer
+            },
+            [arrayBuffer]
+          );
 
           if (this.dataset.itemId) {
             await setItem(addImageToCollectionItem, {
@@ -51,15 +65,17 @@ class CoffeeImageUpload extends HTMLElement {
             });
           }
         })
-      ).catch((error) => {
-        if (error.name === 'AbortError') {
-          console.log('user abort'); // eslint-disable-line no-console
-        } else {
-          console.error(error); // eslint-disable-line no-console
-        }
-      });
-
-      window.location.assign(`${this.triggerButton.getAttribute('href')}${collectionId}/items/${itemId}`);
+      )
+        .then(() => {
+          window.location.assign(`${this.triggerButton.getAttribute('href')}${collectionId}/items/${itemId}`);
+        })
+        .catch((error) => {
+          if (error.name === 'AbortError') {
+            console.log('user abort'); // eslint-disable-line no-console
+          } else {
+            console.error(error); // eslint-disable-line no-console
+          }
+        });
     });
   }
 

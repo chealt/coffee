@@ -1,8 +1,13 @@
 ---
 const getSignedUrl = Astro.locals.getSignedUrl;
+const { small, medium, original } = Astro.locals.imageUploadUrls;
 ---
 
-<coffee-image-upload {...Astro.props} data-get-signed-url={getSignedUrl}>
+<coffee-image-upload
+  {...Astro.props}
+  data-get-signed-url={getSignedUrl}
+  data-image-upload-urls={`${small};${medium};${original}`}
+>
   <input type="file" class="visually-hidden" accept="image/*;capture=camera" inert multiple />
   <slot />
 </coffee-image-upload>

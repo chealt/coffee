@@ -2,11 +2,20 @@ import jwt from 'jsonwebtoken';
 
 import { sessionSecret } from './server/authentication/config.js';
 import { getSessionUser } from './server/authentication/session.js';
+import { getImageUrl } from './server/cloudflare/r2/storage.js';
 import { createRegistrationOptions } from './server/registration.js';
 import { setCollections, setCollectionItem } from './server/you/collections.js';
 
 const setGetSignedUrl = (context) => {
   context.locals.getSignedUrl = '/api/storage/get-signed-url.json';
+};
+
+const setImageUploadUrls = (context) => {
+  context.locals.imageUploadUrls = {
+    small: getImageUrl({ size: 'small' }),
+    medium: getImageUrl({ size: 'medium' }),
+    original: getImageUrl()
+  };
 };
 
 const languages = ['pl', 'en'];
@@ -106,6 +115,7 @@ const onRequest = async (context, next) => {
   }
 
   setGetSignedUrl(context);
+  setImageUploadUrls(context);
 
   return next();
 };
