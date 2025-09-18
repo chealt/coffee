@@ -130,7 +130,7 @@ const getCollectionItem = async (user, itemId) => {
     isFavorite: favoriteItems.some(({ id }) => id === itemId),
     images: collectionItemImages?.map(({ filename }) => ({
       filename,
-      src: getImageUrl({ username: user.name, filename }),
+      src: getImageUrl({ filename }),
       srcSmall: getImageUrl({ filename, size: 'small' }),
       srcMedium: getImageUrl({ filename, size: 'medium' })
     })),
