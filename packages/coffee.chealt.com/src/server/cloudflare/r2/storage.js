@@ -39,7 +39,7 @@ const getSizedImagePath = (size) => {
   }
 };
 
-const getImageUrl = ({ filename, size }) =>
-  `https://${env.CLOUDFLARE_R2_BUCKET_DOMAIN}${getSizedImagePath(size)}/${env.CLOUDFLARE_R2_COLLECTION_FOLDER}/${filename}`;
+const getImageUrl = ({ filename, size } = {}) =>
+  `https://${env.CLOUDFLARE_R2_BUCKET_DOMAIN}${getSizedImagePath(size)}/${env.CLOUDFLARE_R2_COLLECTION_FOLDER}/${filename || ''}`;
 
 export { generateUploadUrl, getImageUrl };
