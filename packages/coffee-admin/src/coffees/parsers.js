@@ -48,6 +48,13 @@ const parsers = {
             .replaceAll(',', '.')
         );
 
+        const currencySymbol = document.querySelector('.woocommerce-Price-currencySymbol').textContent;
+        const currency = currencyCodes[currencySymbol];
+
+        if (!currency) {
+          throw new Error(`Unknown currency: ${currencySymbol}`);
+        }
+
         const weight = Number(document.querySelector('.swatch_label').dataset.value.replaceAll('g', ''));
 
         const pricePerGram = Number((price / weight).toFixed(2));
@@ -69,15 +76,16 @@ const parsers = {
         const image = document.querySelector('.woocommerce-product-gallery__wrapper img').src;
 
         return {
-          originCountryId,
-          originRegionId,
-          originFarmId,
           brewingMethodId,
+          currency,
+          image,
+          originCountryId,
+          originFarmId,
+          originRegionId,
           price,
           pricePerGram,
-          weight,
           webshopItemLink,
-          image
+          weight
         };
       })
     );
@@ -123,7 +131,7 @@ const parsers = {
 
     const coffees = await Promise.all(
       Array.from(uniqueProductLinks).map(async (webshopItemLink) => {
-        console.log(`Fetching item page: ${webshopItemLink}...`);
+        console.info(`Fetching item page: ${webshopItemLink}...`);
         const itemResponse = await fetch(webshopItemLink);
         const itemHtml = await itemResponse.text();
 
@@ -131,7 +139,15 @@ const parsers = {
           window: { document: itemDocument }
         } = new JSDOM(itemHtml);
 
+        console.info(`Parsing item page: ${webshopItemLink}...`);
         const price = parseFloat(itemDocument.querySelector('.price .woocommerce-Price-amount').textContent);
+
+        const currencySymbol = itemDocument.querySelector('.woocommerce-Price-currencySymbol').textContent;
+        const currency = currencyCodes[currencySymbol];
+
+        if (!currency) {
+          throw new Error(`Unknown currency: ${currencySymbol}`);
+        }
 
         const weight = Number(
           itemDocument.querySelector('#masa-netto option:not([value=""])').value.replaceAll('g', '')
@@ -182,17 +198,18 @@ const parsers = {
         const image = itemDocument.querySelector('.woocommerce-product-gallery__wrapper img').src;
 
         return {
+          brewingMethodId,
+          currency,
+          image,
+          isDecaf,
           originCountryId,
           originRegionId,
           originFarmId: null,
-          brewingMethodId,
           price,
           pricePerGram,
           processingMethodId,
-          weight,
           webshopItemLink,
-          isDecaf,
-          image
+          weight
         };
       })
     );
@@ -244,6 +261,10 @@ const parsers = {
 
         const currencySymbol = document.querySelector('.woocommerce-Price-currencySymbol').textContent;
         const currency = currencyCodes[currencySymbol];
+
+        if (!currency) {
+          throw new Error(`Unknown currency: ${currencySymbol}`);
+        }
 
         const weightElement = document.querySelector('div[data-attribute_name="attribute_pa_vaha"] .nasa-attr-text');
 
