@@ -1,6 +1,7 @@
-/* eslint-disable no-console, no-shadow */
+/* eslint-disable no-console, no-shadow, complexity */
 import { JSDOM } from 'jsdom';
 
+import currencyCodes from './currencies.js';
 import brewingMethods from '../../../coffee.chealt.com/data/brewingMethods.json' with { type: 'json' };
 import originCountries from '../../../coffee.chealt.com/data/originCountries.json' with { type: 'json' };
 import originFarms from '../../../coffee.chealt.com/data/originFarms.json' with { type: 'json' };
@@ -192,6 +193,134 @@ const parsers = {
           webshopItemLink,
           isDecaf,
           image
+        };
+      })
+    );
+
+    return coffees;
+  },
+  // Father's (Czech)
+  277: async ({ webshop }) => {
+    const response = await fetch(webshop);
+    const html = await response.text();
+
+    const {
+      window: { document }
+    } = new JSDOM(html);
+
+    // Filter coffee
+    const filterCoffeeElements = document.querySelectorAll('.product_cat-filter.instock');
+    const espressoCoffeeElements = document.querySelectorAll('.product_cat-espresso-en.instock');
+    const uniqueCoffeeElements = Array.from([...filterCoffeeElements, ...espressoCoffeeElements]).reduce(
+      (uniqueElements, element) => {
+        const id = Array.from(element.classList)
+          .filter((className) => className.startsWith('post-'))[0]
+          .slice(5);
+
+        if (!uniqueElements.some((uniqueElement) => uniqueElement.id === id)) {
+          uniqueElements.push({ id, element });
+        }
+
+        return uniqueElements;
+      },
+      []
+    );
+
+    const uniqueProductLinks = uniqueCoffeeElements.map(({ element }) => element.querySelector('a').href);
+
+    const coffees = await Promise.all(
+      uniqueProductLinks.map(async (webshopItemLink) => {
+        console.info(`Fetching item page: ${webshopItemLink}...`);
+        const itemResponse = await fetch(webshopItemLink);
+        const itemHtml = await itemResponse.text();
+
+        const {
+          window: { document }
+        } = new JSDOM(itemHtml);
+
+        const price = parseFloat(
+          document.querySelector('.price .woocommerce-Price-amount').textContent.replaceAll('€ ', '')
+        );
+
+        const currencySymbol = document.querySelector('.woocommerce-Price-currencySymbol').textContent;
+        const currency = currencyCodes[currencySymbol];
+
+        const weightElement = document.querySelector('div[data-attribute_name="attribute_pa_vaha"] .nasa-attr-text');
+
+        if (!weightElement) {
+          console.error(`No weight found at: ${webshopItemLink}`);
+
+          return {};
+        }
+
+        const weight = Number(weightElement.textContent.replace('g', ''));
+
+        const pricePerGram = Number((price / weight).toFixed(2));
+
+        let detailNames = Array.from(
+          document.querySelectorAll('.woocommerce-product-details__short-description b')
+        ).map((element) => element.textContent.trim().toLowerCase().replace(':', ''));
+
+        if (detailNames.length === 0) {
+          detailNames = Array.from(
+            document.querySelectorAll('.woocommerce-product-details__short-description strong')
+          ).map((element) => element.textContent.trim().toLowerCase().replace(':', ''));
+        }
+
+        let detailValues = Array.from(
+          document.querySelectorAll('.woocommerce-product-details__short-description span')
+        ).map((element) => element.textContent.trim().toLowerCase());
+
+        if (detailValues.length === 0) {
+          detailValues = Array.from(
+            document.querySelectorAll('.woocommerce-product-details__short-description strong')
+          ).map((element) => element.nextSibling?.textContent.trim().toLowerCase());
+        }
+
+        const details = detailNames.reduce((details, name, index) => ({ ...details, [name]: detailValues[index] }), {});
+
+        if (Object.keys(details).length === 0 || !details.country) {
+          console.error(`No details found at: ${webshopItemLink}`);
+
+          return {};
+        }
+
+        const originCountry = details.country;
+        const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
+
+        const processingMethod = details.processing;
+        const processingMethodId =
+          processingMethods.find(({ name }) => name === processingMethod)?.processing_method_id || null;
+
+        const brewingMethod = document
+          .querySelector('.br_alabel_better_compatibility')
+          .textContent.trim()
+          .toLowerCase();
+        const brewingMethodId =
+          brewingMethods.find(
+            ({ name }) => name === brewingMethod || (brewingMethod === 'espresso / pour over' && name === 'omni')
+          )?.brewing_method_id || null;
+
+        const regionOrFarm = details.region;
+
+        const originRegionId = originRegions.find(({ name }) => regionOrFarm.includes(name))?.origin_region_id || null;
+        const originFarmId = originFarms.find(({ name }) => regionOrFarm.includes(name))?.id || null;
+
+        const image = document.querySelector('.nasa-item-main-image-wrap .wp-post-image').src;
+
+        return {
+          brewingMethodId,
+          currency,
+          originCountryId,
+          originFarmId,
+          originRegionId,
+          price,
+          pricePerGram,
+          processingMethodId,
+          webshopItemLink,
+          weight,
+          image,
+          isDecaf: processingMethod?.includes('decaf')
         };
       })
     );

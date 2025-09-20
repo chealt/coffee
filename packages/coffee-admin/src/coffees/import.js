@@ -49,53 +49,68 @@ await Promise.all(
     .filter(({ originCountryId }) => Boolean(originCountryId)) // origin country ID must be set
     .map(
       async ({
+        brewingMethodId,
+        currency,
         image,
         isDecaf = false,
         originCountryId,
-        originRegionId,
         originFarmId,
-        brewingMethodId,
+        originRegionId,
         price,
         pricePerGram,
-        weight,
-        webshopItemLink
+        webshopItemLink,
+        weight
       }) => {
         console.info('Adding coffee to DB...');
         const results = await client.execute({
-          sql: `INSERT OR IGNORE INTO coffees (
-            roaster_id,
-            origin_country_id,
-            origin_region_id,
-            origin_farm_id,
+          sql: `INSERT INTO coffees (
             brewing_method_id,
+            currency,
+            is_decaf,
+            origin_country_id,
+            origin_farm_id,
+            origin_region_id,
             price,
             price_per_gram,
-            weight,
+            roaster_id,
             webshop_item_link,
-            is_decaf
+            weight
           ) VALUES (
-            :roasterId,
-            :originCountryId,
-            :originRegionId,
-            :originFarmId,
             :brewingMethodId,
+            :currency,
+            :isDecaf,
+            :originCountryId,
+            :originFarmId,
+            :originRegionId,
             :price,
             :pricePerGram,
-            :weight,
+            :roasterId,
             :webshopItemLink,
-            :isDecaf
-          )`,
+            :weight
+          ) ON CONFLICT (webshop_item_link) DO UPDATE SET
+            brewing_method_id = excluded.brewing_method_id,
+            currency = excluded.currency,
+            is_decaf = excluded.is_decaf,
+            origin_country_id = excluded.origin_country_id,
+            origin_farm_id = excluded.origin_farm_id,
+            origin_region_id = excluded.origin_region_id,
+            price = excluded.price,
+            price_per_gram = excluded.price_per_gram,
+            roaster_id = excluded.roaster_id,
+            weight = excluded.weight
+          `,
           args: {
-            isDecaf,
-            roasterId,
-            originCountryId,
-            originRegionId,
-            originFarmId,
             brewingMethodId,
+            currency: currency || 'PLN',
+            isDecaf,
+            originCountryId,
+            originFarmId,
+            originRegionId,
             price,
             pricePerGram,
-            weight,
-            webshopItemLink
+            roasterId,
+            webshopItemLink,
+            weight
           }
         });
 

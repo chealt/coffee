@@ -15,34 +15,35 @@ const t = allLocaleTranslations[Astro.currentLocale];
 
 const coffeesDetails = coffees.map((coffee) => ({
   id: coffee.id,
-  images: coffeeImages.filter(({ coffee_id }) => coffee_id === coffee.id).map((coffeeImage) => coffeeImage.url),
-  roastingDate: coffee.roasting_date,
-  webshopItemLink: coffee.webshop_item_link,
-  pricePerGram: coffee.price_per_gram,
-  weight: coffee.weight,
-  price: coffee.price,
-  roastingLevel: roastingLevels.find(
-    (roastingLevel) =>
-      roastingLevel.roasting_level_id === coffee.roasting_level_id &&
-      roastingLevel.language_code === Astro.currentLocale
-  ),
-  isDecaf: Boolean(coffee.is_decaf),
-  roaster: roasters.find((roaster) => roaster.id === coffee.roaster_id),
-  originCountry: originCountries.find(
-    (originCountry) =>
-      originCountry.origin_country_id === coffee.origin_country_id &&
-      originCountry.language_code === Astro.currentLocale
-  ),
-  originRegion: originRegions.find(
-    (originRegion) =>
-      originRegion.origin_region_id === coffee.origin_region_id && originRegion.language_code === Astro.currentLocale
-  ),
   brewingMethod: brewingMethods.find(
     (brewingMethod) =>
       brewingMethod.brewing_method_id === coffee.brewing_method_id &&
       brewingMethod.language_code === Astro.currentLocale
   ),
-  originFarm: originFarms.find((originFarm) => originFarm.id === coffee.origin_farm_id)
+  currency: coffee.currency || 'PLN',
+  images: coffeeImages.filter(({ coffee_id }) => coffee_id === coffee.id).map((coffeeImage) => coffeeImage.url),
+  isDecaf: Boolean(coffee.is_decaf),
+  originCountry: originCountries.find(
+    (originCountry) =>
+      originCountry.origin_country_id === coffee.origin_country_id &&
+      originCountry.language_code === Astro.currentLocale
+  ),
+  originFarm: originFarms.find((originFarm) => originFarm.id === coffee.origin_farm_id),
+  originRegion: originRegions.find(
+    (originRegion) =>
+      originRegion.origin_region_id === coffee.origin_region_id && originRegion.language_code === Astro.currentLocale
+  ),
+  pricePerGram: coffee.price_per_gram,
+  price: coffee.price,
+  roaster: roasters.find((roaster) => roaster.id === coffee.roaster_id),
+  roastingDate: coffee.roasting_date,
+  roastingLevel: roastingLevels.find(
+    (roastingLevel) =>
+      roastingLevel.roasting_level_id === coffee.roasting_level_id &&
+      roastingLevel.language_code === Astro.currentLocale
+  ),
+  webshopItemLink: coffee.webshop_item_link,
+  weight: coffee.weight
 }));
 
 await import.meta.glob('/public/coffees/*.*', { eager: true });
@@ -53,15 +54,17 @@ await import.meta.glob('/public/coffees/*.*', { eager: true });
     coffeesDetails.map(
       ({
         id,
-        images,
-        roastingDate,
         brewingMethod,
+        currency,
+        images,
+        isDecaf,
         originCountry,
-        originRegion,
         originFarm,
-        webshopItemLink,
-        pricePerGram,
+        originRegion,
+        roastingDate,
         price,
+        pricePerGram,
+        webshopItemLink,
         weight
       }) => (
         <li class="item">
@@ -114,7 +117,7 @@ await import.meta.glob('/public/coffees/*.*', { eager: true });
                     <dt>{t.price}</dt>
                     <dd>{`${Intl.NumberFormat(Astro.currentLocale, {
                       style: 'currency',
-                      currency: 'PLN'
+                      currency
                     }).format(price)}`}</dd>
                   </Fragment>
                 )}
@@ -123,8 +126,13 @@ await import.meta.glob('/public/coffees/*.*', { eager: true });
                     <dt>{t.pricePerGram}</dt>
                     <dd>{`${Intl.NumberFormat(Astro.currentLocale, {
                       style: 'currency',
-                      currency: 'PLN'
+                      currency
                     }).format(pricePerGram)}`}</dd>
+                  </Fragment>
+                )}
+                {isDecaf && (
+                  <Fragment>
+                    <dt>{t.decaf}</dt>
                   </Fragment>
                 )}
               </dl>
