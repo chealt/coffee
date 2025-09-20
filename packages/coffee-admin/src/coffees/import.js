@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable no-console, complexity */
 import { createClient } from '@libsql/client';
 
 import parsers from './parsers.js';
@@ -146,9 +146,16 @@ await Promise.all(
           const imageFilename = `${fileHash}.${image.slice(image.lastIndexOf('.') + 1)}`;
 
           console.info(`Saving coffee image for coffee ID: ${coffeeId}...`);
-          await writeFile(`../coffee.chealt.com/public/coffees/${imageFilename}`, Buffer.from(arrayBuffer), {
-            flag: 'a'
-          });
+
+          try {
+            await writeFile(`../coffee.chealt.com/public/coffees/${imageFilename}`, Buffer.from(arrayBuffer), {
+              flag: 'wx'
+            });
+          } catch (error) {
+            if (error.code !== 'EEXIST') {
+              throw error;
+            }
+          }
 
           console.info(`Saving coffee image into the DB for coffee ID: ${coffeeId}...`);
           await client.execute({
