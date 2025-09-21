@@ -76,7 +76,7 @@ const saveCoffeeImages = async () => {
 const saveExchangeRates = async () => {
   const results = await turso.execute('SELECT * FROM exchange_rates');
 
-  return writeFile('./data/exchange_rates.json', JSON.stringify(results.rows), { flag: 'w+' });
+  return writeFile('./data/exchangeRates.json', JSON.stringify(results.rows), { flag: 'w+' });
 };
 
 const saveFarms = async () => {
