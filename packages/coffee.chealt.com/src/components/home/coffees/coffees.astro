@@ -3,6 +3,7 @@ import brewingMethods from '../../../../data/brewingMethods.json';
 import coffees from '../../../../data/coffees.json';
 import coffeeImages from '../../../../data/coffeeImages.json';
 import countries from '../../../../data/countries.json';
+import exchangeRates from '../../../../data/exchangeRates.json';
 import originCountries from '../../../../data/originCountries.json';
 import originFarms from '../../../../data/originFarms.json';
 import originRegions from '../../../../data/originRegions.json';
@@ -33,8 +34,18 @@ const coffeesDetails = coffees.map((coffee) => ({
     (originRegion) =>
       originRegion.origin_region_id === coffee.origin_region_id && originRegion.language_code === Astro.currentLocale
   ),
-  pricePerGram: coffee.price_per_gram,
   price: coffee.price,
+  pricePerGram: (() => {
+    const exchangeRate = exchangeRates.find(({ currency_code }) => currency_code === coffee.currency).rate;
+
+    if (!exchangeRate) {
+      console.error(`No exchange rate found for currency ${coffee.currency}`);
+
+      return;
+    }
+
+    return coffee.price_per_gram / exchangeRate;
+  })(),
   roaster: roasters.find((roaster) => roaster.id === coffee.roaster_id),
   roastingDate: coffee.roasting_date,
   roastingLevel: roastingLevels.find(
@@ -126,7 +137,7 @@ await import.meta.glob('/public/coffees/*.*', { eager: true });
                     <dt>{t.pricePerGram}</dt>
                     <dd>{`${Intl.NumberFormat(Astro.currentLocale, {
                       style: 'currency',
-                      currency
+                      currency: 'USD'
                     }).format(pricePerGram)}`}</dd>
                   </Fragment>
                 )}
