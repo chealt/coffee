@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/web-manifest-combined.json",
-  "short_name": "Chealt Coffee",
-  "name": "Chealt Coffee Explorer",
+  "short_name": "Central Beans",
+  "name": "Central Beans - Specialty Coffee Explorer",
   "description": "Explore the world of coffee and collect your favorites.",
   "icons": [
     {
