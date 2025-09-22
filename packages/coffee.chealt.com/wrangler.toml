@@ -12,7 +12,7 @@ directory = "./dist"
 enabled = true
 
 [vars]
-CLOUDFLARE_R2_BUCKET_DOMAIN = "images.coffee.chealt.com"
+CLOUDFLARE_R2_BUCKET_DOMAIN = "images.centralbeans.com"
 CLOUDFLARE_R2_COLLECTION_FOLDER = "collection-images"
-ORIGIN = "https://coffee.chealt.com"
-RELYING_PARTY_ID = "coffee.chealt.com"
+ORIGIN = "https://centralbeans.com"
+RELYING_PARTY_ID = "centralbeans.com"

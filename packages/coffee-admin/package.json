@@ -3,6 +3,7 @@
   "type": "module",
   "scripts": {
     "users:create": "node --env-file=.env src/users/create-user.js",
+    "users:send-registration-code": "node --env-file=.env src/users/send-registration-code.js",
     "coffees:flag-removed": "node --env-file=.env src/coffees/flag-removed.js",
     "coffees:import": "node --env-file=.env src/coffees/import.js",
     "currencies:import": "node --env-file=src/currencies/.env src/currencies/import.js"
