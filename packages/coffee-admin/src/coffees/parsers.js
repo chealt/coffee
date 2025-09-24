@@ -347,6 +347,157 @@ const parsers = {
     );
 
     return coffees;
+  },
+  // PALE
+  278: async ({ webshop }) => {
+    console.info('Fetching webshop page...');
+
+    const response = await fetch(webshop);
+    const html = await response.text();
+
+    const {
+      window: { document }
+    } = new JSDOM(html);
+
+    console.info('Parsing webshop page...');
+
+    const collectProductLinks = async (document) => {
+      let links = Array.from(document.querySelectorAll('.wc-block-components-product-image a')).map(
+        (element) => element.href
+      );
+      const nextPageLink = document.querySelector('[data-wp-key="product-collection-pagination--next"]');
+
+      if (nextPageLink) {
+        const response = await fetch(nextPageLink.href);
+        const html = await response.text();
+
+        const {
+          window: { document }
+        } = new JSDOM(html);
+
+        links = links.concat(await collectProductLinks(document));
+      }
+
+      return links;
+    };
+
+    const productLinks = await collectProductLinks(document);
+
+    const coffees = await Promise.all(
+      productLinks.map(async (webshopItemLink) => {
+        const itemResponse = await fetch(webshopItemLink);
+        const itemHtml = await itemResponse.text();
+
+        const {
+          window: { document }
+        } = new JSDOM(itemHtml);
+
+        const optionsPrice = document
+          .querySelector('.wapf-checked .wapf-pricing-hint')
+          ?.textContent.replace('(+', '')
+          .replace('zł)', '')
+          .trim();
+        const priceAmount = document.querySelector('.woocommerce-Price-amount')?.textContent;
+
+        const price = parseFloat(priceAmount) + (optionsPrice ? parseFloat(optionsPrice) : 0);
+        const currencySymbol = document.querySelector('.woocommerce-Price-currencySymbol').textContent;
+        const currency = currencyCodes[currencySymbol];
+
+        if (!currency) {
+          throw new Error(`Unknown currency: ${webshopItemLink}`);
+        }
+
+        if (!price) {
+          throw new Error(`Unknown price: ${webshopItemLink}`);
+        }
+
+        const weightSelectionValue = document
+          .querySelector('[data-wapf-price]:checked + .wapf-label-text')
+          ?.textContent.match(/\d+g/gu)?.[0];
+        const weightElementValue = document
+          .querySelector('.woocommerce-product-attributes-item--weight .woocommerce-product-attributes-item__value')
+          ?.textContent.replace(' g', '');
+        const weightDescription = Array.from(document.querySelectorAll('#tab-description p'))
+          .map((element) => element.textContent)
+          .find((text) => text.endsWith('g') || text.match(/\d+g /gu)?.length > 0);
+        const weight =
+          Number(weightDescription?.slice(0, weightDescription.indexOf('g'))) ||
+          (weightSelectionValue && Number(weightSelectionValue.replace('g', ''))) ||
+          (weightElementValue && Number(weightElementValue) * 1000) ||
+          null;
+
+        if (!weight) {
+          console.error(`Could not find weight for product: ${webshopItemLink}`);
+
+          return {};
+        }
+
+        const pricePerGram = Number((price / weight).toFixed(2));
+
+        const postTitle = document.querySelector('.wp-block-post-title').textContent.toLowerCase();
+        const countryRegionOrFarm = postTitle.includes(' // ') ? postTitle.split(' // ') : postTitle.split(' | ');
+
+        let originCountryId =
+          originCountries.find(({ name }) => countryRegionOrFarm.some((item) => name === item))?.origin_country_id ||
+          null;
+
+        // if everything fails, we try the URL
+        if (!originCountryId) {
+          originCountryId =
+            originCountries.find(({ name }) => webshopItemLink.includes(name))?.origin_country_id || null;
+        }
+
+        const originFarmId =
+          originFarms.find(({ name }) => countryRegionOrFarm.some((item) => name === item))?.id || null;
+
+        const originRegionId =
+          originRegions.find(({ name }) => countryRegionOrFarm.some((item) => name === item))?.origin_region_id || null;
+
+        const brewingMethodValues = Array.from(document.querySelectorAll('.wapf-label-text')).map((element) =>
+          element.textContent.toLowerCase()
+        );
+        const isFilter =
+          brewingMethodValues.includes('filter') ||
+          postTitle.includes('filter') ||
+          Array.from(document.querySelectorAll('#tab-description p'))
+            .map((element) => element.textContent)
+            .find((text) => text.toLocaleLowerCase().includes(' for filter'))?.length > 0;
+        const isEspresso = brewingMethodValues.includes('espresso') || postTitle.includes('espresso');
+        const brewingMethodId =
+          brewingMethods.find(
+            ({ name }) =>
+              (isFilter && isEspresso && name === 'omni') ||
+              (isFilter && name === 'filter') ||
+              (isEspresso && name === 'espresso') ||
+              (!isFilter && !isEspresso && name === 'omni')
+          )?.brewing_method_id || null;
+
+        const image = document.querySelector('.wp-post-image').src;
+
+        const isNatural = document
+          .querySelector('.wp-block-post-excerpt__excerpt')
+          ?.textContent.toLowerCase()
+          .includes('natural');
+        const processingMethodId =
+          processingMethods.find(({ name }) => name === (isNatural && 'natural'))?.processing_method_id || null;
+
+        return {
+          brewingMethodId,
+          currency,
+          image,
+          price,
+          pricePerGram,
+          processingMethodId,
+          originCountryId,
+          originFarmId,
+          originRegionId,
+          webshopItemLink,
+          weight
+        };
+      })
+    );
+
+    return coffees;
   }
 };
 
