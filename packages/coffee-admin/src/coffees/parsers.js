@@ -466,10 +466,9 @@ const parsers = {
         const brewingMethodId =
           brewingMethods.find(
             ({ name }) =>
-              (isFilter && isEspresso && name === 'omni') ||
-              (isFilter && name === 'filter') ||
-              (isEspresso && name === 'espresso') ||
-              (!isFilter && !isEspresso && name === 'omni')
+              (isFilter && !isEspresso && name === 'filter') ||
+              (isEspresso && !isFilter && name === 'espresso') ||
+              name === 'omni'
           )?.brewing_method_id || null;
 
         const image = document.querySelector('.wp-post-image').src;
