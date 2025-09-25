@@ -1,0 +1,18 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="vietnamRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#EF4444;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DC2626;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <path d="M90 20 Q100 15 110 25 Q115 35 120 50 Q125 70 115 90 Q105 100 95 110 Q105 120 115 140 Q125 160 120 175 Q115 185 105 180 Q95 175 85 170 Q75 160 70 145 Q65 125 75 110 Q85 100 95 90 Q85 80 75 65 Q70 45 75 30 Q80 20 90 20 Z" 
+        fill="url(#vietnamRed)" 
+        stroke="#FFFFFF" 
+        stroke-width="2"/>
+  <g transform="translate(95,100)">
+    <path d="M0,-12 L3.5,-3.5 L12,-3.5 L6,1.5 L9,10 L0,5 L-9,10 L-6,1.5 L-12,-3.5 L-3.5,-3.5 Z" 
+          fill="#FDE047" 
+          stroke="#EAB308" 
+          stroke-width="0.5"/>
+  </g>
+</svg>
