@@ -6,14 +6,14 @@ import getContent from './email-content.js';
 const sesClient = new SESv2Client({ region: process.env.AWS_REGION });
 
 const createSendEmailParams = ({ to, username, registrationCode }) => ({
-  FromEmailAddress: 'info@chealt.com',
+  FromEmailAddress: 'info@centralbeans.com',
   Destination: {
     ToAddresses: [to] // Recipient must also be verified in sandbox mode
   },
   Content: {
     Simple: {
       Subject: {
-        Data: 'Registration email from coffee.chealt.com',
+        Data: 'Registration email from centralbeans.com',
         Charset: 'UTF-8'
       },
       Body: {
