@@ -1,0 +1,32 @@
+.links {
+  display: flex;
+  flex-direction: row;
+
+  > a.button {
+    flex-grow: 0;
+    width: auto;
+  }
+}
+
+.image {
+  padding: var(--gap);
+  background-color: var(--color-text);
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 300px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.image.large {
+  height: 500px;
+}
+
+img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--border-radius);
+}

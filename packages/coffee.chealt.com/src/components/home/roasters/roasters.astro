@@ -1,8 +1,8 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
 import roasters from '../../../../data/roastersWithCoffees.json';
 import countries from '../../../../data/countries.json';
-
-import './roasters.css';
 
 const roasterCount = roasters.length || 0;
 const roasterCountryCount = countries.filter(({ language_code }) => language_code === Astro.currentLocale).length;
@@ -10,25 +10,19 @@ const roasterCountryCount = countries.filter(({ language_code }) => language_cod
 await import.meta.glob('/public/roasters/*.{jpeg,jpg,png,gif,svg,webp}', { eager: true });
 ---
 
-<div class="roasters-container">
-  <ul class="list">
-    {
-      roasters
-        .filter(({ logo }) => Boolean(logo))
-        .map(({ name, country_id, logo, website, instagram }) => (
-          <li data-country-id={country_id} class="item">
-            <a
-              href={website || (instagram ? `https://www.instagram.com/${instagram}` : undefined)}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div class="image">
-                <img src={`/roasters/${logo}`} alt={name} loading="lazy" />
-              </div>
-              <div class="name">{name}</div>
-            </a>
-          </li>
-        ))
-    }
-  </ul>
-</div>
+<ul class="list">
+  {
+    roasters
+      .filter(({ logo }) => Boolean(logo))
+      .map(({ id, name, country_id, logo, website, instagram }) => (
+        <li data-country-id={country_id} class="item">
+          <a href={getRelativeLocaleUrl(Astro.currentLocale, `/roasters/${name}`)}>
+            <div class="image">
+              <img src={`/roasters/${logo}`} alt={name} loading="lazy" style={`view-transition-name: roaster-${id}`} />
+            </div>
+            <div class="name">{name}</div>
+          </a>
+        </li>
+      ))
+  }
+</ul>

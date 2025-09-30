@@ -1,4 +1,6 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
 import originCountries from '../../../../data/originCountriesWithCoffees.json';
 
 const countries = originCountries.filter(({ language_code }) => language_code === Astro.currentLocale);
@@ -8,7 +10,7 @@ const countries = originCountries.filter(({ language_code }) => language_code ==
   {
     countries.map(({ origin_country_id, name }) => (
       <li class="item">
-        <a href={`/origin-countries/${name}`}>
+        <a href={getRelativeLocaleUrl(Astro.currentLocale, `/origin-countries/${name}`)}>
           <div class="image">
             <img src={`/origin-countries/${origin_country_id}.svg`} alt={name} loading="lazy" />
           </div>

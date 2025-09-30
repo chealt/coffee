@@ -1,0 +1,49 @@
+---
+import allCoffees from '../../../data/coffees.json';
+import roasters from '../../../data/roasters.json';
+
+import Button from '../form/button/button.astro';
+import Icon from '../icon/icon.astro';
+import Common from '../common/common.astro';
+import Coffees from '../coffees/list.astro';
+
+import './roaster.css';
+
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+
+const { id } = Astro.props;
+
+const { name, logo, instagram, website } = roasters.find((roaster) => roaster.id === id);
+const coffees = allCoffees.filter(({ roaster_id: roasterId }) => roasterId === id);
+---
+
+<Common>
+  <h1>{name}</h1>
+  <section>
+    <div class="image" style={`view-transition-name: roaster-${id}`}>
+      <img src={`/roasters/${logo}`} alt={name} />
+    </div>
+  </section>
+  <section class="links">
+    {
+      instagram && (
+        <Button href={`https://instagram.com/${instagram}`} target="_blank" rel="noopener noreferrer">
+          <Icon type="instagram" />
+        </Button>
+      )
+    }
+    {
+      website && (
+        <Button href={website} target="_blank" rel="noopener noreferrer">
+          <Icon type="home" />
+        </Button>
+      )
+    }
+  </section>
+  <section>
+    <h2>{t.coffees}</h2>
+    <Coffees coffees={coffees} />
+  </section>
+</Common>
