@@ -14,14 +14,12 @@ const createRegistrationOptions = async (username) => {
     attestationType: 'none',
     excludeCredentials: passkeys.map((passkey) => ({
       id: passkey.credential_id,
-      type: 'public-key',
-      transports: passkey.transports ? passkey.transports.split(',') : undefined
+      transports: passkey.transports.split(',')
     })),
     authenticatorSelection: {
       residentKey: 'preferred',
       userVerification: 'preferred',
-      // Remove platform restriction to allow both platform and cross-platform authenticators
-      authenticatorAttachment: undefined
+      authenticatorAttachment: 'platform'
     }
   });
 
