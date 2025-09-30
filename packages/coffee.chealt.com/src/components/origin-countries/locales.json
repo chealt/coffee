@@ -1,0 +1,14 @@
+{
+  "en": {
+    "allCoffees": "All Coffees",
+    "cheapestCoffees": "Cheapest Coffees",
+    "priciestCoffees": "Priciest Coffees",
+    "regions": "Regions"
+  },
+  "pl": {
+    "allCoffees": "Wszystkie kawy",
+    "cheapestCoffees": "Najtańsze kawy",
+    "priciestCoffees": "Najdroższe kawy",
+    "regions": "Regiony"
+  }
+}

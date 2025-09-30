@@ -6,7 +6,7 @@ const { collectionId } = Astro.props;
 <ul>
   <li class="picture-collection">
     {
-      collectionItem?.images.length && (
+      (collectionItem?.images.length && (
         <div class="carousel">
           {collectionItem?.images.map(({ src, srcSmall, srcMedium, filename }, index) => (
             // only the cover image should have a transition
@@ -21,7 +21,8 @@ const { collectionId } = Astro.props;
             </picture>
           ))}
         </div>
-      )
+      )) ||
+        null
     }
   </li>
 </ul>
