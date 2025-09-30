@@ -86,7 +86,7 @@ const onRequest = async (context, next) => {
       const username = getUsername(context.request);
 
       if (username) {
-        context.locals.authenticationOptions = await getAuthenticationOptions(username);
+        context.locals.authenticationOptions = JSON.stringify(await getAuthenticationOptions(username));
       }
     }
   }
