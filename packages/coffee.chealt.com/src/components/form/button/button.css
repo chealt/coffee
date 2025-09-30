@@ -70,3 +70,12 @@ button.danger,
 a.button.danger {
   background-color: var(--color-danger);
 }
+
+button.warning,
+a.button.warning {
+  color: var(--color-danger--text);
+
+  svg {
+    fill: var(--color-danger--text);
+  }
+}

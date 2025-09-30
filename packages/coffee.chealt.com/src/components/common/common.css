@@ -16,6 +16,7 @@
   --color-success: #008000;
   --color-error: #b72b2b;
   --color-danger: #b72b2b;
+  --color-danger--text: #dd6262;
 
   --border-radius: 18px;
 
@@ -43,6 +44,7 @@
     --color-success: #00ff00;
     --color-error: #b72b2b;
     --color-danger: #b72b2b;
+    --color-danger--text: #dd6262;
   }
 }
 
