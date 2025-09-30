@@ -1,0 +1,9 @@
+---
+const { logoutUrl } = Astro.props;
+---
+
+<chealt-auth-logout data-logout-url={logoutUrl}>
+  <slot />
+</chealt-auth-logout>
+
+<script src="./chealt-auth-logout.js"></script>
