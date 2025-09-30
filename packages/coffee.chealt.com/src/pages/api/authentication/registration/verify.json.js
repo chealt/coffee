@@ -45,12 +45,11 @@ const POST = async ({ request }) => {
   } catch (error) {
     console.error(error); // eslint-disable-line no-console
 
-    return new Response({
+    return new Response(JSON.stringify({ error: error.message }), {
       headers: {
         'Content-Type': 'application/json'
       },
-      status: 400,
-      body: JSON.stringify({ error: error.message })
+      status: 400
     });
   }
 };
