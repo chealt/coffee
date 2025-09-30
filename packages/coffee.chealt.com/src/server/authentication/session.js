@@ -1,16 +1,10 @@
 import jwt from 'jsonwebtoken';
 
-import { sessionSecret, cookieNameSession } from './config.js';
-import { parseCookie } from '../utils/request.js';
+import { sessionSecret } from './config.js';
+import { getSessionID } from './cookies.js';
 
 const getSessionJWT = ({ user }) =>
   jwt.sign({ userID: user.id, username: user.name }, sessionSecret, { expiresIn: '7d' });
-
-const getSessionID = (request) => {
-  const cookies = parseCookie(request);
-
-  return cookies?.[cookieNameSession];
-};
 
 const verifySessionID = (sessionID) => jwt.verify(sessionID, sessionSecret);
 

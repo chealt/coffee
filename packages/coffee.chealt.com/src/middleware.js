@@ -3,8 +3,10 @@ import jwt from 'jsonwebtoken';
 import { sessionSecret } from './server/authentication/config.js';
 import { getSessionUser } from './server/authentication/session.js';
 import { getImageUrl } from './server/cloudflare/r2/storage.js';
+import { getAuthenticationOptions } from './server/login.js';
 import { createRegistrationOptions } from './server/registration.js';
 import { setCollections, setCollectionItem } from './server/you/collections.js';
+import { getUsername } from './server/authentication/cookies.js';
 
 const setGetSignedUrl = (context) => {
   context.locals.getSignedUrl = '/api/storage/get-signed-url.json';
@@ -80,6 +82,12 @@ const onRequest = async (context, next) => {
       console.error(error); // eslint-disable-line no-console
 
       context.locals.shouldAuthenticate = true;
+
+      const username = getUsername(context.request);
+
+      if (username) {
+        context.locals.authenticationOptions = await getAuthenticationOptions(username);
+      }
     }
   }
 
