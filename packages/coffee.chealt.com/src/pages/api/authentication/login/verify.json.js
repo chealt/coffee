@@ -1,6 +1,11 @@
 import { verifyAuthenticationResponse } from '@simplewebauthn/server';
 
-import { cookieNameSession, relyingPartyID, origin } from '../../../../server/authentication/config.js';
+import {
+  cookieNameSession,
+  cookieNameUsername,
+  relyingPartyID,
+  origin
+} from '../../../../server/authentication/config.js';
 import { getSessionJWT } from '../../../../server/authentication/session.js';
 import {
   getUser,
@@ -57,10 +62,17 @@ const POST = async ({ request }) => {
 
     return new Response(JSON.stringify({ verified: true }), {
       status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Set-Cookie': `${cookieNameSession}=${getSessionJWT({ user })}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${60 * 60 * 24 * 7};`
-      }
+      headers: [
+        ['Content-Type', 'application/json'],
+        [
+          'Set-Cookie',
+          `${cookieNameSession}=${getSessionJWT({ user })}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${60 * 60 * 24 * 7};`
+        ],
+        [
+          'Set-Cookie',
+          `${cookieNameUsername}=${username}; Path=/; HttpOnly; SameSite=Strict; Secure; Max-Age=${60 * 60 * 24 * 365}`
+        ]
+      ]
     });
   } catch (error) {
     console.error(error); // eslint-disable-line no-console
