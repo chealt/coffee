@@ -21,7 +21,8 @@
     "deleteCollection": {
       "buttonLabel": "Delete collection",
       "confirm": "Are you sure you want to delete this collection?"
-    }
+    },
+    "logout": "logout"
   },
   "pl": {
     "title": "Kolekcje",
@@ -45,6 +46,7 @@
     "deleteCollection": {
       "buttonLabel": "Usuń kolekcję",
       "confirm": "Czy na pewno chcesz usunąć tę kolekcję?"
-    }
+    },
+    "logout": "wyloguj"
   }
 }

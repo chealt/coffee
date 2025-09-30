@@ -22,3 +22,17 @@
 .collections-list img {
   will-change: transform;
 }
+
+header.title {
+  display: flex;
+  align-items: center;
+  gap: var(--gap);
+
+  h1 {
+    flex-grow: 1;
+  }
+
+  button {
+    width: auto;
+  }
+}
