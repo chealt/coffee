@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken';
 
 import { sessionSecret } from './server/authentication/config.js';
+import { getUsername } from './server/authentication/cookies.js';
 import { getSessionUser } from './server/authentication/session.js';
 import { getImageUrl } from './server/cloudflare/r2/storage.js';
 import { getAuthenticationOptions } from './server/login.js';
 import { createRegistrationOptions } from './server/registration.js';
 import { setCollections, setCollectionItem } from './server/you/collections.js';
-import { getUsername } from './server/authentication/cookies.js';
 
 const setGetSignedUrl = (context) => {
   context.locals.getSignedUrl = '/api/storage/get-signed-url.json';
