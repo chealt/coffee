@@ -97,6 +97,12 @@ const saveOriginCountriesWithCoffees = async () => {
   return writeFile('./data/originCountriesWithCoffees.json', JSON.stringify(results.rows), { flag: 'w+' });
 };
 
+const saveTasteNotes = async () => {
+  const results = await turso.execute('SELECT * FROM taste_notes_all ORDER BY name ASC');
+
+  return writeFile('./data/tasteNotes.json', JSON.stringify(results.rows), { flag: 'w+' });
+};
+
 await Promise.all([
   saveBrewingMethods(),
   saveCoffees(),
@@ -112,5 +118,6 @@ await Promise.all([
   saveRoasters(),
   saveRoastersBest(),
   saveRoastersWithCoffees(),
-  saveRoastingLevels()
+  saveRoastingLevels(),
+  saveTasteNotes()
 ]);
