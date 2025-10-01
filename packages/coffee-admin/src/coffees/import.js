@@ -58,6 +58,7 @@ await Promise.all(
         originRegionId,
         price,
         pricePerGram,
+        tasteNoteIds = [],
         webshopItemLink,
         weight
       }) => {
@@ -130,6 +131,26 @@ await Promise.all(
 
         if (!coffeeId) {
           throw new Error(`Failed to retrieve coffee ID for: ${webshopItemLink}`);
+        }
+
+        if (tasteNoteIds.length) {
+          console.info('Adding taste notes to DB...');
+
+          await client.batch(
+            tasteNoteIds.map((tasteNoteId) => ({
+              sql: `INSERT OR IGNORE INTO coffee_taste_notes (
+                coffee_id,
+                taste_note_id
+              ) VALUES (
+                :coffeeId,
+                :tasteNoteId
+              )`,
+              args: {
+                coffeeId,
+                tasteNoteId
+              }
+            }))
+          );
         }
 
         if (image) {

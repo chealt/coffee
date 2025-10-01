@@ -7,6 +7,8 @@ import originCountries from '../../../coffee.chealt.com/data/originCountries.jso
 import originFarms from '../../../coffee.chealt.com/data/originFarms.json' with { type: 'json' };
 import originRegions from '../../../coffee.chealt.com/data/originRegions.json' with { type: 'json' };
 import processingMethods from '../../../coffee.chealt.com/data/processingMethods.json' with { type: 'json' };
+import roastingLevels from '../../../coffee.chealt.com/data/roastingLevels.json' with { type: 'json' };
+import tasteNotes from '../../../coffee.chealt.com/data/tasteNotes.json' with { type: 'json' };
 
 const parsers = {
   // Sheep & Raven
@@ -490,6 +492,132 @@ const parsers = {
           originCountryId,
           originFarmId,
           originRegionId,
+          webshopItemLink,
+          weight
+        };
+      })
+    );
+
+    return coffees;
+  },
+  // Meron
+  252: async ({ webshop }) => {
+    console.info('Fetching webshop page...');
+
+    const response = await fetch(webshop);
+    const html = await response.text();
+
+    const {
+      window: { document }
+    } = new JSDOM(html);
+
+    console.info('Parsing webshop page...');
+
+    const productLinks = Array.from(
+      document.querySelectorAll(
+        '.product_cat-coffee:not(.product_cat-boxes-en,.product_cat-gifts-en) a.product-image-link'
+      )
+    )
+      .filter(
+        ({ href }) =>
+          !href.includes('500g') && !href.includes('1kg') && !href.includes('1000g') && !href.includes('blend')
+      )
+      .map(({ href }) => href);
+
+    const coffees = await Promise.all(
+      productLinks.map(async (webshopItemLink) => {
+        console.info(`Fetching item page: ${webshopItemLink}...`);
+        const itemResponse = await fetch(webshopItemLink);
+        const itemHtml = await itemResponse.text();
+
+        console.info(`Parsing item page: ${webshopItemLink}...`);
+        const {
+          window: { document }
+        } = new JSDOM(itemHtml);
+
+        const price = parseFloat(
+          document.querySelector('.price .woocommerce-Price-amount.amount').textContent.replaceAll(' €', '')
+        );
+
+        const currencySymbol = document.querySelector('.summary .price .woocommerce-Price-currencySymbol').textContent;
+        const currency = currencyCodes[currencySymbol];
+
+        if (!currency) {
+          throw new Error(`Unknown currency: ${webshopItemLink}`);
+        }
+
+        const details = Array.from(document.querySelectorAll('.info-tab-tabel tr')).reduce((details, row) => {
+          const cells = Array.from(row.querySelectorAll('td'));
+
+          if (!cells?.length) {
+            return details;
+          }
+
+          const key = cells[0].textContent.trim().toLowerCase().replace(':', '');
+          const value = cells[1].textContent.trim().toLowerCase();
+
+          return { ...details, [key]: value };
+        }, {});
+
+        if (!details.volume) {
+          console.error(`No weight found at: ${webshopItemLink}`);
+
+          return {};
+        }
+
+        const weight = Number(details.volume.replace(' gr', ''));
+
+        const pricePerGram = Number((price / weight).toFixed(2));
+
+        const originCountryId =
+          originCountries.find(({ name }) => name === details['country of origin'] || webshopItemLink.includes(name))
+            ?.origin_country_id || null;
+
+        const region = details.region;
+        const originRegionId = originRegions.find(({ name }) => region?.includes(name))?.origin_region_id || null;
+
+        const farm = details['farm / farmer'];
+        const originFarmId =
+          originFarms.find(
+            ({ name, origin_country_id }) => farm?.includes(name) && originCountryId === origin_country_id // eslint-disable-line camelcase
+          )?.id || null;
+
+        const isEspresso = details.recommendations.includes('espresso');
+        const isFilter = details.recommendations.includes('filter');
+        const brewingMethodId =
+          brewingMethods.find(
+            ({ name }) =>
+              (isEspresso && isFilter && name === 'omni') ||
+              (isEspresso && !isFilter && name === 'espresso') ||
+              (!isEspresso && isFilter && name === 'filter') ||
+              details.recommendations.includes(name)
+          )?.brewing_method_id || null;
+
+        const roastingLevelId =
+          roastingLevels.find(({ name }) => details['roasting profile'].includes(name))?.roasting_level_id || null;
+
+        const detailsTasteNotes = details['tasting notes'].split(',').map((note) => note.trim());
+
+        const tasteNoteIds = Array.from(
+          new Set(tasteNotes.filter(({ name }) => detailsTasteNotes.includes(name)).map(({ taste_note_id: id }) => id))
+        );
+
+        const isDecaf = webshopItemLink.includes('decaf');
+
+        const image = document.querySelector('.woocommerce-product-gallery__image img').src;
+
+        return {
+          brewingMethodId,
+          currency,
+          image,
+          isDecaf,
+          originCountryId,
+          originFarmId,
+          originRegionId,
+          price,
+          pricePerGram,
+          roastingLevelId,
+          tasteNoteIds,
           webshopItemLink,
           weight
         };
