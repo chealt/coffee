@@ -1,14 +1,18 @@
 {
   "en": {
-    "title": "Central Beans",
-    "roasters": "Roasters",
+    "coffees": "Coffees",
+    "cheapestCoffees": "Cheapest Coffees",
     "originCountries": "Origin Countries",
-    "coffees": "Coffees"
+    "priciestCoffees": "Priciest Coffees",
+    "roasters": "Roasters",
+    "title": "Central Beans"
   },
   "pl": {
-    "title": "Central Beans",
-    "roasters": "Palacze",
+    "coffees": "Kawy",
+    "cheapestCoffees": "Kawy najtańsze",
     "originCountries": "Kraje pochodzenia",
-    "coffees": "Kawy"
+    "priciestCoffees": "Kawy najdroższe",
+    "roasters": "Palacze",
+    "title": "Central Beans"
   }
 }

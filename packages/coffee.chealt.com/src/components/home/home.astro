@@ -1,6 +1,7 @@
 ---
 import coffees from '../../../data/coffees.json';
 
+import { getConvertedPricePerGram } from '../coffees/utils.js';
 import Coffees from '../coffees/list.astro';
 import Common from '../common/common.astro';
 import OriginCountries from './origin-countries/origin-countries.astro';
@@ -9,6 +10,21 @@ import Roasters from './roasters/roasters.astro';
 import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
+
+const priciestCoffees = coffees
+  .sort(
+    (a, b) =>
+      getConvertedPricePerGram({ currency: b.currency, pricePerGram: b.price_per_gram }) -
+      getConvertedPricePerGram({ currency: a.currency, pricePerGram: a.price_per_gram })
+  )
+  .slice(0, 10);
+const cheapestCoffees = coffees
+  .sort(
+    (a, b) =>
+      getConvertedPricePerGram({ currency: a.currency, pricePerGram: a.price_per_gram }) -
+      getConvertedPricePerGram({ currency: b.currency, pricePerGram: b.price_per_gram })
+  )
+  .slice(0, 10);
 ---
 
 <Common>
@@ -21,6 +37,24 @@ const t = allLocaleTranslations[Astro.currentLocale];
     <h2>{t.originCountries}</h2>
     <OriginCountries />
   </section>
+  {
+    (priciestCoffees.length && (
+      <section>
+        <h2>{t.priciestCoffees}</h2>
+        <Coffees coffees={priciestCoffees} />
+      </section>
+    )) ||
+      null
+  }
+  {
+    (cheapestCoffees.length && (
+      <section>
+        <h2>{t.cheapestCoffees}</h2>
+        <Coffees coffees={cheapestCoffees} />
+      </section>
+    )) ||
+      null
+  }
   <section>
     <h2>{t.coffees}</h2>
     <Coffees coffees={coffees} />
