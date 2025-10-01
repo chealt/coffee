@@ -1,11 +1,13 @@
 import brewingMethods from '../../../data/brewingMethods.json';
 import coffeeImages from '../../../data/coffeeImages.json';
+import coffeeTasteNotes from '../../../data/coffeeTasteNotes.json';
 import exchangeRates from '../../../data/exchangeRates.json';
 import originCountries from '../../../data/originCountries.json';
 import originFarms from '../../../data/originFarms.json';
 import originRegions from '../../../data/originRegions.json';
 import roasters from '../../../data/roasters.json';
 import roastingLevels from '../../../data/roastingLevels.json';
+import tasteNotes from '../../../data/tasteNotes.json';
 
 const getConvertedPricePerGram = ({ currency, pricePerGram }) => {
   const exchangeRate = exchangeRates.find(({ currency_code: code }) => code === currency).rate;
@@ -30,6 +32,12 @@ const getDetails =
     ),
     currency: coffee.currency || 'PLN',
     images: coffeeImages.filter(({ coffee_id: id }) => id === coffee.id).map((coffeeImage) => coffeeImage.url),
+    tasteNotes: coffeeTasteNotes
+      .filter(({ coffee_id: id }) => id === coffee.id)
+      .map(
+        ({ taste_note_id: tasteNoteId }) =>
+          tasteNotes.find(({ taste_note_id: id, language_code: code }) => tasteNoteId === id && code === locale)?.name
+      ),
     isDecaf: Boolean(coffee.is_decaf),
     originCountry: originCountries.find(
       (originCountry) =>

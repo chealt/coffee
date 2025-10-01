@@ -27,6 +27,7 @@ await import.meta.glob('/public/coffees/*.*', { eager: true });
           roastingDate,
           price,
           pricePerGram,
+          tasteNotes,
           webshopItemLink,
           weight
         }) => (
@@ -63,6 +64,13 @@ await import.meta.glob('/public/coffees/*.*', { eager: true });
                       <dd>{Intl.DateTimeFormat(Astro.currentLocale).format(new Date(roastingDate))}</dd>
                     </Fragment>
                   )}
+                  {(tasteNotes?.length && (
+                    <Fragment>
+                      <dt>{t.tasteNotes}</dt>
+                      <dd>{tasteNotes.join(', ')}</dd>
+                    </Fragment>
+                  )) ||
+                    null}
                   {originFarm?.height && (
                     <Fragment>
                       <dt>{t.height}</dt>
