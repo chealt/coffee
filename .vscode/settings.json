@@ -11,6 +11,7 @@
     "Imread",
     "Imshow",
     "linalg",
+    "Meron",
     "ocrad",
     "onnx",
     "ppocr",
@@ -18,7 +19,8 @@
     "RETR",
     "sside",
     "techstark",
-    "unclip"
+    "unclip",
+    "woocommerce"
   ],
   "kiroAgent.configureMCP": "Disabled"
 }
