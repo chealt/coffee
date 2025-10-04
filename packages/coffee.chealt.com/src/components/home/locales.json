@@ -1,14 +1,12 @@
 {
   "en": {
-    "coffees": "All Coffees",
-    "cheapestCoffees": "Cheapest Coffees",
+    "cheapestCoffees": "Budget Friendly",
     "originCountries": "Origin Countries",
-    "priciestCoffees": "Priciest Coffees",
+    "priciestCoffees": "Fancy me",
     "roasters": "Roasters",
     "title": "Central Beans"
   },
   "pl": {
-    "coffees": "Wszystkie kawy",
     "cheapestCoffees": "Kawy najtańsze",
     "originCountries": "Kraje pochodzenia",
     "priciestCoffees": "Kawy najdroższe",
