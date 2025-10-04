@@ -6,11 +6,13 @@
     "users:send-registration-code": "node --env-file=.env src/users/send-registration-code.js",
     "coffees:flag-removed": "node --env-file=.env src/coffees/flag-removed.js",
     "coffees:import": "node --env-file=.env src/coffees/import.js",
+    "coffees:import:CQI": "node --env-file=.env ../../node_modules/playwright/cli.js test",
     "currencies:import": "node --env-file=src/currencies/.env src/currencies/import.js"
   },
   "dependencies": {
     "@aws-sdk/client-sesv2": "^3.879.0",
     "@libsql/client": "^0.15.14",
+    "@playwright/test": "^1.55.1",
     "@tursodatabase/api": "^1.9.0",
     "jsdom": "^26.1.0",
     "jsonwebtoken": "^9.0.2"
