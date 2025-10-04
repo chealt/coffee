@@ -1,6 +1,5 @@
 ---
 import originCountries from '../../../data/originCountries.json';
-import originRegions from '../../../data/originRegions.json';
 import allCoffees from '../../../data/coffees.json';
 
 import { getConvertedPricePerGram } from '../coffees/utils.js';
@@ -16,9 +15,6 @@ const t = allLocaleTranslations[Astro.currentLocale];
 const { id } = Astro.props;
 
 const { name } = originCountries.find(
-  ({ origin_country_id, language_code }) => origin_country_id === id && language_code === Astro.currentLocale
-);
-const regions = originRegions.filter(
   ({ origin_country_id, language_code }) => origin_country_id === id && language_code === Astro.currentLocale
 );
 const coffees = allCoffees.filter(({ origin_country_id }) => origin_country_id === id);
@@ -40,21 +36,6 @@ const cheapestCoffees = coffees
 
 <Common>
   <h1>{name}</h1>
-  {
-    (regions.length && (
-      <section>
-        <h2>{t.regions}</h2>
-        <ul class="regions">
-          {regions.map(({ origin_region_id, name }) => (
-            <li>
-              <h3>{name}</h3>
-            </li>
-          ))}
-        </ul>
-      </section>
-    )) ||
-      null
-  }
   {
     (priciestCoffees.length && (
       <section>
