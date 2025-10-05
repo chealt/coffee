@@ -109,6 +109,18 @@ const saveTasteNotes = async () => {
   return writeFile('./data/tasteNotes.json', JSON.stringify(results.rows), { flag: 'w+' });
 };
 
+const saveTasteNoteGroups = async () => {
+  const results = await turso.execute('SELECT * FROM taste_note_groups_all ORDER BY name ASC');
+
+  return writeFile('./data/tasteNoteGroups.json', JSON.stringify(results.rows), { flag: 'w+' });
+};
+
+const saveTasteNoteSubGroups = async () => {
+  const results = await turso.execute('SELECT * FROM taste_note_sub_groups_all ORDER BY name ASC');
+
+  return writeFile('./data/tasteNoteSubGroups.json', JSON.stringify(results.rows), { flag: 'w+' });
+};
+
 await Promise.all([
   saveBrewingMethods(),
   saveCoffees(),
@@ -126,5 +138,7 @@ await Promise.all([
   saveRoastersBest(),
   saveRoastersWithCoffees(),
   saveRoastingLevels(),
-  saveTasteNotes()
+  saveTasteNotes(),
+  saveTasteNoteGroups(),
+  saveTasteNoteSubGroups()
 ]);
