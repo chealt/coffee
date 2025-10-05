@@ -7,3 +7,5 @@
   Cache-Control: public, max-age=31556952, immutable
 /roasters/*
   Cache-Control: public, max-age=86400
+/origin-countries/*
+  Cache-Control: public, max-age=86400
