@@ -50,10 +50,7 @@ const { collections, shouldAuthenticate } = Astro.locals;
                     <picture>
                       <source srcset={cover.srcSmall} media="(max-width: 599px)" />
                       <source srcset={cover.srcMedium} media="(max-width: 1023px)" />
-                      <img
-                        src={cover.src}
-                        style={`view-transition-name: collection-${collectionId}-image-${cover.filename}`}
-                      />
+                      <img src={cover.src} />
                     </picture>
                   </a>
                 </li>
