@@ -18,7 +18,10 @@ const tasteNotesWithGroup = tasteNotes.map((tasteNote) => ({
     tasteNotesWithGroup.map(({ name, group }) => (
       <li class="note" style={group?.color ? `background-color: ${group.color}` : 'border: 1px dashed'}>
         {(group && (
-          <a href={getRelativeLocaleUrl(Astro.currentLocale, `/taste-note-groups/${encodeURIComponent(group.name)}`)}>
+          <a
+            href={getRelativeLocaleUrl(Astro.currentLocale, `/taste-note-groups/${encodeURIComponent(group.name)}`)}
+            style={group.color === '#ebb40d' ? 'color: #4f4b43' : ''}
+          >
             {name}
           </a>
         )) ||
