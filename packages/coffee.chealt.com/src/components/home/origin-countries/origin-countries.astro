@@ -1,12 +1,14 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
 
+import './origin-countries.css';
+
 import originCountries from '../../../../data/originCountriesWithCoffees.json';
 
 const countries = originCountries.filter(({ language_code }) => language_code === Astro.currentLocale);
 ---
 
-<ul class="list">
+<ul class="list origin-countries">
   {
     countries.map(({ origin_country_id, name }) => (
       <li class="item">
