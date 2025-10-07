@@ -1,0 +1,11 @@
+.item {
+  .color {
+    border-radius: var(--border-radius);
+
+    .name {
+      height: var(--card-height);
+      align-content: center;
+      font-size: 1.6rem;
+    }
+  }
+}

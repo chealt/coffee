@@ -1,11 +1,13 @@
 ---
 import coffees from '../../../data/coffees.json';
+import tasteNoteGroups from '../../../data/tasteNoteGroups.json';
 
 import { getConvertedPricePerGram } from '../coffees/utils.js';
 import Coffees from '../coffees/list.astro';
 import Common from '../common/common.astro';
 import OriginCountries from './origin-countries/origin-countries.astro';
 import Roasters from './roasters/roasters.astro';
+import TasteNoteGroups from './taste-note-groups/taste-note-groups.astro';
 
 import allLocaleTranslations from './locales.json';
 
@@ -25,6 +27,7 @@ const cheapestCoffees = coffees
       getConvertedPricePerGram({ currency: b.currency, pricePerGram: b.price_per_gram })
   )
   .slice(0, 10);
+const groups = tasteNoteGroups.filter(({ language_code }) => language_code === Astro.currentLocale);
 ---
 
 <Common>
@@ -51,6 +54,15 @@ const cheapestCoffees = coffees
       <section>
         <h2>{t.cheapestCoffees}</h2>
         <Coffees coffees={cheapestCoffees} />
+      </section>
+    )) ||
+      null
+  }
+  {
+    (groups.length && (
+      <section>
+        <h2>{t.tasteNoteGroups}</h2>
+        <TasteNoteGroups groups={groups} />
       </section>
     )) ||
       null

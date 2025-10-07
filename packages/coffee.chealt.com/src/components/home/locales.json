@@ -4,6 +4,7 @@
     "originCountries": "Origin Countries",
     "priciestCoffees": "Fancy me",
     "roasters": "Roasters",
+    "tasteNoteGroups": "Your Taste",
     "title": "Central Beans"
   },
   "pl": {
@@ -11,6 +12,7 @@
     "originCountries": "Kraje pochodzenia",
     "priciestCoffees": "Kawy najdroższe",
     "roasters": "Palacze",
+    "tasteNoteGroups": "Smak",
     "title": "Central Beans"
   }
 }

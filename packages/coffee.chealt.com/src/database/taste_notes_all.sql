@@ -1,8 +1,9 @@
-CREATE VIEW "taste_notes_all" AS
+CREATE VIEW taste_notes_all AS
 SELECT
   tn.id AS taste_note_id,
   l.code AS language_code,
-  tni."name"
+  tni."name",
+  taste_note_sub_group_id
 FROM
   "taste_notes_i18n" tni
   JOIN "taste_notes" tn ON tn.id = tni.taste_note_id

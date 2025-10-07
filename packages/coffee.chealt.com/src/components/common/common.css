@@ -30,6 +30,8 @@
 
   --icon-size: 32px;
   --icon-size--s: 24px;
+
+  --card-height: 300px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -78,6 +80,7 @@ h4,
 h5 {
   margin: var(--gap) 0;
   padding: 0 var(--gap);
+  text-transform: capitalize;
 }
 
 section {
@@ -319,7 +322,7 @@ svg {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      height: 300px;
+      height: var(--card-height);
       overflow: hidden;
       box-sizing: border-box;
     }
@@ -342,6 +345,14 @@ svg {
       font-size: 1.2rem;
     }
   }
+}
+
+.empty {
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--card-height);
 }
 
 @view-transition {

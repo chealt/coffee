@@ -8,109 +8,109 @@ const t = allLocaleTranslations[Astro.currentLocale];
 const { coffees } = Astro.props;
 
 await import.meta.glob('/public/coffees/*.*', { eager: true });
+
+const coffeesWithDetails = coffees.map(getDetails({ locale: Astro.currentLocale }));
 ---
 
 <ul class="list">
   {
-    coffees
-      .map(getDetails({ locale: Astro.currentLocale }))
-      .map(
-        ({
-          id,
-          brewingMethod,
-          currency,
-          images,
-          isDecaf,
-          originCountry,
-          originFarm,
-          originRegion,
-          roastingDate,
-          price,
-          pricePerGram,
-          tasteNotes,
-          webshopItemLink,
-          weight
-        }) => (
-          <li class="item">
-            <a href={webshopItemLink} target="_blank" rel="noopener noreferrer">
-              <div class="image large">
-                <img src={`/coffees/${images[0]}`} loading="lazy" />
-              </div>
-              <section>
-                <dl>
-                  <dt>{t.originCountry}</dt>
-                  <dd>{originCountry?.name}</dd>
-                  {originRegion?.name && (
-                    <Fragment>
-                      <dt>{t.originRegion}</dt>
-                      <dd>{originRegion?.name}</dd>
-                    </Fragment>
-                  )}
-                  {originFarm?.name && (
-                    <Fragment>
-                      <dt>{t.originFarm}</dt>
-                      <dd>{originFarm?.name}</dd>
-                    </Fragment>
-                  )}
-                  {brewingMethod?.name && (
-                    <Fragment>
-                      <dt>{t.brewingMethod}</dt>
-                      <dd>{brewingMethod?.name}</dd>
-                    </Fragment>
-                  )}
-                  {roastingDate && (
-                    <Fragment>
-                      <dt>{t.roastingDate}</dt>
-                      <dd>{Intl.DateTimeFormat(Astro.currentLocale).format(new Date(roastingDate))}</dd>
-                    </Fragment>
-                  )}
-                  {(tasteNotes?.length && (
-                    <Fragment>
-                      <dt>{t.tasteNotes}</dt>
-                      <dd>{tasteNotes.join(', ')}</dd>
-                    </Fragment>
-                  )) ||
-                    null}
-                  {originFarm?.height && (
-                    <Fragment>
-                      <dt>{t.height}</dt>
-                      <dd>{`${Intl.NumberFormat(Astro.currentLocale).format(originFarm.height)} m`}</dd>
-                    </Fragment>
-                  )}
-                  {weight && (
-                    <Fragment>
-                      <dt>{t.weight}</dt>
-                      <dd>{`${Intl.NumberFormat(Astro.currentLocale).format(weight)} g`}</dd>
-                    </Fragment>
-                  )}
-                  {price && (
-                    <Fragment>
-                      <dt>{t.price}</dt>
-                      <dd>{`${Intl.NumberFormat(Astro.currentLocale, {
-                        style: 'currency',
-                        currency
-                      }).format(price)}`}</dd>
-                    </Fragment>
-                  )}
-                  {pricePerGram && (
-                    <Fragment>
-                      <dt>{t.pricePerGram}</dt>
-                      <dd>{`${Intl.NumberFormat(Astro.currentLocale, {
-                        style: 'currency',
-                        currency: 'USD'
-                      }).format(pricePerGram)}`}</dd>
-                    </Fragment>
-                  )}
-                  {isDecaf && (
-                    <Fragment>
-                      <dt>{t.decaf}</dt>
-                    </Fragment>
-                  )}
-                </dl>
-              </section>
-            </a>
-          </li>
-        )
+    coffeesWithDetails.map(
+      ({
+        id,
+        brewingMethod,
+        currency,
+        images,
+        isDecaf,
+        originCountry,
+        originFarm,
+        originRegion,
+        roastingDate,
+        price,
+        pricePerGram,
+        tasteNotes,
+        webshopItemLink,
+        weight
+      }) => (
+        <li class="item">
+          <a href={webshopItemLink} target="_blank" rel="noopener noreferrer">
+            <div class="image large">
+              <img src={`/coffees/${images[0]}`} loading="lazy" />
+            </div>
+            <section>
+              <dl>
+                <dt>{t.originCountry}</dt>
+                <dd>{originCountry?.name}</dd>
+                {originRegion?.name && (
+                  <Fragment>
+                    <dt>{t.originRegion}</dt>
+                    <dd>{originRegion?.name}</dd>
+                  </Fragment>
+                )}
+                {originFarm?.name && (
+                  <Fragment>
+                    <dt>{t.originFarm}</dt>
+                    <dd>{originFarm?.name}</dd>
+                  </Fragment>
+                )}
+                {brewingMethod?.name && (
+                  <Fragment>
+                    <dt>{t.brewingMethod}</dt>
+                    <dd>{brewingMethod?.name}</dd>
+                  </Fragment>
+                )}
+                {roastingDate && (
+                  <Fragment>
+                    <dt>{t.roastingDate}</dt>
+                    <dd>{Intl.DateTimeFormat(Astro.currentLocale).format(new Date(roastingDate))}</dd>
+                  </Fragment>
+                )}
+                {(tasteNotes?.length && (
+                  <Fragment>
+                    <dt>{t.tasteNotes}</dt>
+                    <dd>{tasteNotes.join(', ')}</dd>
+                  </Fragment>
+                )) ||
+                  null}
+                {originFarm?.height && (
+                  <Fragment>
+                    <dt>{t.height}</dt>
+                    <dd>{`${Intl.NumberFormat(Astro.currentLocale).format(originFarm.height)} m`}</dd>
+                  </Fragment>
+                )}
+                {weight && (
+                  <Fragment>
+                    <dt>{t.weight}</dt>
+                    <dd>{`${Intl.NumberFormat(Astro.currentLocale).format(weight)} g`}</dd>
+                  </Fragment>
+                )}
+                {price && (
+                  <Fragment>
+                    <dt>{t.price}</dt>
+                    <dd>{`${Intl.NumberFormat(Astro.currentLocale, {
+                      style: 'currency',
+                      currency
+                    }).format(price)}`}</dd>
+                  </Fragment>
+                )}
+                {pricePerGram && (
+                  <Fragment>
+                    <dt>{t.pricePerGram}</dt>
+                    <dd>{`${Intl.NumberFormat(Astro.currentLocale, {
+                      style: 'currency',
+                      currency: 'USD'
+                    }).format(pricePerGram)}`}</dd>
+                  </Fragment>
+                )}
+                {isDecaf && (
+                  <Fragment>
+                    <dt>{t.decaf}</dt>
+                  </Fragment>
+                )}
+              </dl>
+            </section>
+          </a>
+        </li>
       )
+    )
   }
 </ul>

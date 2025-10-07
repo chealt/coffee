@@ -1,0 +1,23 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+import './taste-note-groups.css';
+
+const { groups } = Astro.props;
+---
+
+<ul class="list">
+  {
+    groups.map(({ name, color }) => (
+      <li class="item">
+        <a
+          href={getRelativeLocaleUrl(Astro.currentLocale, `/taste-note-groups/${encodeURIComponent(name)}`)}
+          class="color"
+          style={`background-color: ${color}`}
+        >
+          <div class="name">{name}</div>
+        </a>
+      </li>
+    ))
+  }
+</ul>

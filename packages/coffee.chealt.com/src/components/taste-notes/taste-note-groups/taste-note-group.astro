@@ -1,0 +1,37 @@
+---
+import coffees from '../../../../data/coffees.json';
+import tasteNoteGroups from '../../../../data/tasteNoteGroups.json';
+
+import { getTasteNoteGroup } from './utils.js';
+import Common from '../../common/common.astro';
+import Coffees from '../../coffees/list.astro';
+
+import './taste-note-group.css';
+
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+
+const { id } = Astro.props;
+
+const group = tasteNoteGroups.find((tasteNoteGroup) => tasteNoteGroup.taste_note_group_id === id);
+const coffeesWithTasteNoteGroup = coffees
+  .map((coffee) => ({
+    ...coffee,
+    tasteNoteGroup: getTasteNoteGroup(coffee.id)
+  }))
+  .filter((coffee) => coffee.tasteNoteGroup?.taste_note_group_id === id);
+---
+
+<Common>
+  <h1 class="title" style={`background-color: ${group.color}`}>
+    {group.name}
+  </h1>
+  <section>
+    {
+      (coffeesWithTasteNoteGroup.length && <Coffees coffees={coffeesWithTasteNoteGroup} />) || (
+        <p class="empty">{t.noCoffees}</p>
+      )
+    }
+  </section>
+</Common>
