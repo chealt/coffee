@@ -32,6 +32,12 @@ a.button[disabled] {
 button.small,
 a.button.small {
   padding: var(--gap--s);
+  font-size: 0.8rem;
+
+  .icon svg {
+    width: var(--icon-size--s);
+    height: var(--icon-size--s);
+  }
 }
 
 button:has(.icon):not(.column),

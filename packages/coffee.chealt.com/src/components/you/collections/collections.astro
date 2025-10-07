@@ -26,9 +26,9 @@ const { collections, shouldAuthenticate } = Astro.locals;
   <header class="title">
     <h1>{t.title}</h1>
     <Logout logoutUrl="/api/authentication/logout.json">
-      <Button class="column warning" data-logout-trigger>
+      <Button class="small warning" data-logout-trigger>
         <Icon type="power" />
-        <span class="visually-hidden">{t.logout}</span>
+        <span>{t.logout}</span>
       </Button>
     </Logout>
   </header>
