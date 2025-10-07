@@ -59,3 +59,24 @@ await client.batch(
     args: { id, name, polishLanguageId }
   }))
 );
+
+console.info('Querying taste notes...');
+const { rows: tasteNotes } = await client.execute({
+  sql: 'SELECT * FROM taste_notes'
+});
+
+console.info('Copying taste notes into i18n for English...');
+await client.batch(
+  tasteNotes.map(({ id, name }) => ({
+    sql: 'INSERT OR IGNORE INTO taste_notes_i18n (taste_note_id, name, language_id) VALUES (:id, :name, :englishLanguageId)',
+    args: { id, name, englishLanguageId }
+  }))
+);
+
+console.info('Copying taste notes into i18n for Polish ...');
+await client.batch(
+  tasteNotes.map(({ id, name }) => ({
+    sql: 'INSERT OR IGNORE INTO taste_notes_i18n (taste_note_id, name, language_id) VALUES (:id, :name, :polishLanguageId)',
+    args: { id, name, polishLanguageId }
+  }))
+);
