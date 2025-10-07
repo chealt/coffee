@@ -7,7 +7,8 @@
     "coffees:flag-removed": "node --env-file=.env src/coffees/flag-removed.js",
     "coffees:import": "node --env-file=.env src/coffees/import.js",
     "coffees:import:CQI": "node --env-file=.env ../../node_modules/playwright/cli.js test",
-    "currencies:import": "node --env-file=src/currencies/.env src/currencies/import.js"
+    "currencies:import": "node --env-file=src/currencies/.env src/currencies/import.js",
+    "taste-notes:copy-i18n": "node --env-file=.env src/taste-notes/copy-i18n.js"
   },
   "dependencies": {
     "@aws-sdk/client-sesv2": "^3.879.0",
