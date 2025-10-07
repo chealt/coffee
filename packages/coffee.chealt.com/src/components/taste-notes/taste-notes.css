@@ -1,0 +1,9 @@
+.taste-notes {
+  .note {
+    display: inline-block;
+    padding: var(--gap--s) var(--gap);
+    border-radius: var(--border-radius--s);
+    margin-bottom: var(--gap--s);
+    margin-right: var(--gap--s);
+  }
+}
