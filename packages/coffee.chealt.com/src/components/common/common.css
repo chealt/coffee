@@ -212,6 +212,7 @@ svg {
 
 .carousel {
   overflow-x: auto;
+  scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
   scroll-marker-group: before;
   min-height: 440px;
@@ -224,6 +225,7 @@ svg {
 
 .carousel > * {
   scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .carousel::scroll-marker-group {
@@ -284,6 +286,7 @@ svg {
   flex-wrap: nowrap;
   overflow-x: auto;
   overflow-y: hidden;
+  scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
   gap: var(--gap);
 
@@ -293,6 +296,7 @@ svg {
     align-items: center;
     flex: 0 0 auto;
     scroll-snap-align: start;
+    scroll-snap-stop: always;
     width: 80%;
     box-sizing: border-box;
 
