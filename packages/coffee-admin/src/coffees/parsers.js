@@ -56,10 +56,17 @@ const parsers = {
         );
 
         const tasteNotesText = document.querySelector('.woocommerce-product-details__short-description')?.textContent;
-        const tasteNotesStrings =
-          (tasteNotesText &&
-            (tasteNotesText.includes(' — ') ? tasteNotesText.split(' — ') : tasteNotesText.split(' – '))) ||
-          [];
+
+        let tasteNotesStrings = [];
+
+        if (tasteNotesText.includes(' — ')) {
+          tasteNotesStrings = tasteNotesText.split(' — ');
+        } else if (tasteNotesText.includes(' – ')) {
+          tasteNotesStrings = tasteNotesText.split(' – ');
+        } else if (tasteNotesText.includes(' - ')) {
+          tasteNotesStrings = tasteNotesText.split(' - ');
+        }
+
         const detailsTasteNotes = tasteNotesStrings.map((note) => note.toLowerCase().trim().replaceAll('\n', ''));
 
         const tasteNoteIds = Array.from(
