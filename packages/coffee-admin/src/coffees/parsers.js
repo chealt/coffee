@@ -24,7 +24,12 @@ const parsers = {
 
     console.info('Parsing webshop page...');
 
-    const hiddenProductSelectors = ['.product_cat-akcesoria', '.product_cat-warsztaty-kawowe'];
+    const hiddenProductSelectors = [
+      '.product_cat-akcesoria',
+      '.product_cat-accessories',
+      '.product_cat-warsztaty-kawowe',
+      '.product_cat-workshops'
+    ];
     const productLinks = document.querySelectorAll(
       `.product:not(${hiddenProductSelectors.join(',')}) .--eael-wrapper-link-tag`
     );
@@ -50,6 +55,17 @@ const parsers = {
             .replaceAll(',', '.')
         );
 
+        const tasteNotesText = document.querySelector('.woocommerce-product-details__short-description')?.textContent;
+        const tasteNotesStrings =
+          (tasteNotesText &&
+            (tasteNotesText.includes(' — ') ? tasteNotesText.split(' — ') : tasteNotesText.split(' – '))) ||
+          [];
+        const detailsTasteNotes = tasteNotesStrings.map((note) => note.toLowerCase().trim().replaceAll('\n', ''));
+
+        const tasteNoteIds = Array.from(
+          new Set(tasteNotes.filter(({ name }) => detailsTasteNotes.includes(name)).map(({ taste_note_id: id }) => id))
+        );
+
         const currencySymbol = document.querySelector('.woocommerce-Price-currencySymbol').textContent;
         const currency = currencyCodes[currencySymbol];
 
@@ -57,20 +73,20 @@ const parsers = {
           throw new Error(`Unknown currency: ${currencySymbol}`);
         }
 
-        const weight = Number(document.querySelector('.swatch_label').dataset.value.replaceAll('g', ''));
+        const weight = Number(document.querySelector('.swatch_label').dataset.value.replaceAll('g-en', ''));
 
         const pricePerGram = Number((price / weight).toFixed(2));
 
-        const originCountry = document.querySelector('[data-id="0e5f7ea"]').textContent.trim().toLowerCase();
+        const originCountry = document.querySelector('[data-id="4cb216da"]').textContent.trim().toLowerCase();
         const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
 
-        const brewingMethod = document.querySelector('[data-id="9f15ce8"]').textContent.trim().toLowerCase();
+        const brewingMethod = document.querySelector('[data-id="4af2f61c"]').textContent.trim().toLowerCase();
         const brewingMethodId =
           brewingMethods.find(
             ({ name }) => name === brewingMethod || (brewingMethod === 'espresso / pour over' && name === 'omni')
           )?.brewing_method_id || null;
 
-        const regionOrFarm = document.querySelector('[data-id="52c6f27"]').textContent.trim().toLowerCase();
+        const regionOrFarm = document.querySelector('[data-id="15362af"]').textContent.trim().toLowerCase();
 
         const originRegionId = originRegions.find(({ name }) => regionOrFarm.includes(name))?.origin_region_id || null;
         const originFarmId = originFarms.find(({ name }) => regionOrFarm.includes(name))?.id || null;
@@ -86,6 +102,7 @@ const parsers = {
           originRegionId,
           price,
           pricePerGram,
+          tasteNoteIds,
           webshopItemLink,
           weight
         };
