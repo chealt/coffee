@@ -1,5 +1,6 @@
 /* eslint-disable no-console, no-shadow, complexity */
 import { JSDOM } from 'jsdom';
+import { Agent } from 'undici';
 
 import currencyCodes from './currencies.js';
 import brewingMethods from '../../../coffee.chealt.com/data/brewingMethods.json' with { type: 'json' };
@@ -158,15 +159,62 @@ const parsers = {
     const coffees = await Promise.all(
       Array.from(uniqueProductLinks).map(async (webshopItemLink) => {
         console.info(`Fetching item page: ${webshopItemLink}...`);
-        const itemResponse = await fetch(webshopItemLink);
+
+        let itemResponse;
+
+        try {
+          itemResponse = await fetch(webshopItemLink, {
+            dispatcher: new Agent({
+              connectTimeout: 60 * 1000 // 1 minute
+            })
+          });
+        } catch (error) {
+          console.error(error);
+          console.error(`Error fetching item page: ${webshopItemLink}`);
+
+          return {};
+        }
+
         const itemHtml = await itemResponse.text();
+
+        if (itemResponse.status === 404 || itemResponse.status === 301 || itemResponse.status === 503) {
+          console.error(`Error fetching item page: ${webshopItemLink}, status is: ${itemResponse.status}`);
+
+          return {};
+        }
 
         const {
           window: { document: itemDocument }
         } = new JSDOM(itemHtml);
 
         console.info(`Parsing item page: ${webshopItemLink}...`);
-        const price = parseFloat(itemDocument.querySelector('.price .woocommerce-Price-amount').textContent);
+
+        const someInStock = JSON.parse(itemDocument.querySelector('.variations_form').dataset.product_variations)
+          .map((product) => product.is_in_stock)
+          .some(Boolean);
+
+        if (!someInStock) {
+          console.info(`All items at ${webshopItemLink} are out of stock`);
+
+          return {};
+        }
+
+        const priceElement =
+          itemDocument.querySelector('.price > *:not(del) .woocommerce-Price-amount') ||
+          itemDocument.querySelector('.price .woocommerce-Price-amount');
+
+        if (!priceElement) {
+          console.debug('html: ', itemHtml);
+          console.debug(
+            '.woocommerce-Price-amount elements: ',
+            itemDocument.querySelector('.woocommerce-Price-amount').textContent
+          );
+
+          throw new Error(`Price element not found: ${webshopItemLink}`);
+        }
+
+        const price = parseFloat(priceElement.textContent);
+        console.debug(`price for ${webshopItemLink}: ${price}`);
 
         const currencySymbol = itemDocument.querySelector('.woocommerce-Price-currencySymbol').textContent;
         const currency = currencyCodes[currencySymbol];
@@ -178,6 +226,7 @@ const parsers = {
         const weight = Number(
           itemDocument.querySelector('#masa-netto option:not([value=""])').value.replaceAll('g', '')
         );
+        console.debug(`weight for ${webshopItemLink}: ${weight}`);
 
         const pricePerGram = Number((price / weight).toFixed(2));
 

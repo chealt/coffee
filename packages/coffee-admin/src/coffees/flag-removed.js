@@ -1,5 +1,7 @@
 /* eslint-disable camelcase, no-console */
 import { createClient } from '@libsql/client';
+import { JSDOM } from 'jsdom';
+import { Agent } from 'undici';
 
 const authToken = process.env.TURSO_DEFAULT_TOKEN;
 const databaseUrl = process.env.TURSO_DATABASE_URL;
@@ -18,15 +20,46 @@ const client = createClient({
 });
 
 const results = await client.execute({
-  sql: 'SELECT id, webshop_item_link FROM coffees WHERE NOT is_removed AND webshop_item_link IS NOT NULL'
+  sql: 'SELECT id, webshop_item_link, roaster_id FROM coffees WHERE NOT is_removed AND webshop_item_link IS NOT NULL'
 });
 
+const isOutOfStock = ({ html, roaster_id, webshop_item_link }) => {
+  // only handle BeMyBean roaster
+  if (roaster_id !== 39) {
+    return false;
+  }
+
+  const {
+    window: { document }
+  } = new JSDOM(html);
+
+  const someInStock = JSON.parse(document.querySelector('.variations_form').dataset.product_variations)
+    .map((product) => product.is_in_stock)
+    .some(Boolean);
+
+  if (!someInStock) {
+    console.info(`Item at ${webshop_item_link} is out of stock`);
+  }
+
+  return !someInStock;
+};
+
 await Promise.all(
-  results.rows.map(async ({ id, webshop_item_link }) => {
-    const response = await fetch(webshop_item_link);
+  results.rows.map(async ({ id, webshop_item_link, roaster_id }) => {
+    console.info(`Checking coffee: ${webshop_item_link}`);
+
+    const response = await fetch(webshop_item_link, {
+      dispatcher: new Agent({
+        connectTimeout: 60 * 1000 // 1 minute
+      })
+    });
 
     // Sheep and Raven uses 301 for no longer available coffees
-    if (response.status === 404 || response.status === 301) {
+    if (
+      response.status === 404 ||
+      response.status === 301 ||
+      isOutOfStock({ html: await response.text(), roaster_id, webshop_item_link })
+    ) {
       console.info(`Flagging coffee with id ${id} as removed...`);
 
       await client.execute({
