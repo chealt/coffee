@@ -2,6 +2,8 @@
 import { getDetails } from './utils.js';
 import TasteNotes from '../taste-notes/taste-notes.astro';
 
+import './list.css';
+
 import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
@@ -38,28 +40,31 @@ const coffeesWithDetails = coffees.map(getDetails({ locale: Astro.currentLocale 
               <img src={`/coffees/${images[0]}`} loading="lazy" />
             </div>
           </a>
-          <section>
+          <section class="not-padded coffee-details">
             <dl>
               <dt>{t.originCountry}</dt>
-              <dd>{originCountry?.name}</dd>
-              {originRegion?.name && (
+              <dd>{originCountry?.name || null}</dd>
+              {(originRegion?.name && (
                 <Fragment>
                   <dt>{t.originRegion}</dt>
-                  <dd>{originRegion?.name}</dd>
+                  <dd>{originRegion.name}</dd>
                 </Fragment>
-              )}
-              {originFarm?.name && (
+              )) ||
+                null}
+              {(originFarm?.name && (
                 <Fragment>
                   <dt>{t.originFarm}</dt>
-                  <dd>{originFarm?.name}</dd>
+                  <dd>{originFarm.name}</dd>
                 </Fragment>
-              )}
-              {brewingMethod?.name && (
+              )) ||
+                null}
+              {(brewingMethod?.name && (
                 <Fragment>
                   <dt>{t.brewingMethod}</dt>
-                  <dd>{brewingMethod?.name}</dd>
+                  <dd>{brewingMethod.name}</dd>
                 </Fragment>
-              )}
+              )) ||
+                null}
               {roastingDate && (
                 <Fragment>
                   <dt>{t.roastingDate}</dt>
