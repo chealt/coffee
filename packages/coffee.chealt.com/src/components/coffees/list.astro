@@ -12,6 +12,12 @@ const { coffees } = Astro.props;
 
 await import.meta.glob('/public/coffees/*.*', { eager: true });
 
+const brewingMethodImages = await import.meta.glob('/public/icons/brewing-methods/*.*', {
+  eager: true,
+  query: '?raw',
+  import: 'default'
+});
+
 const coffeesWithDetails = coffees.map(getDetails({ locale: Astro.currentLocale }));
 ---
 
@@ -61,7 +67,17 @@ const coffeesWithDetails = coffees.map(getDetails({ locale: Astro.currentLocale 
               {(brewingMethod?.name && (
                 <Fragment>
                   <dt>{t.brewingMethod}</dt>
-                  <dd>{brewingMethod.name}</dd>
+                  <dd class="brewing-method">
+                    <span class="chip">
+                      {(brewingMethodImages[`/public/icons/brewing-methods/${brewingMethod.name}.svg`] && (
+                        <Fragment
+                          set:html={brewingMethodImages[`/public/icons/brewing-methods/${brewingMethod.name}.svg`]}
+                        />
+                      )) ||
+                        null}
+                      {brewingMethod.name}
+                    </span>
+                  </dd>
                 </Fragment>
               )) ||
                 null}

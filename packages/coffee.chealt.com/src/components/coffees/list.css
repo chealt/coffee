@@ -1,3 +1,14 @@
 .list .coffee-details {
   width: 100%;
+
+  .brewing-method .chip {
+    background-color: var(--color-text);
+    color: var(--color-background);
+    text-transform: lowercase;
+
+    svg {
+      fill: var(--color-background);
+      height: 28px;
+    }
+  }
 }
