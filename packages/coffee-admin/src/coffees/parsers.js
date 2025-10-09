@@ -268,6 +268,21 @@ const parsers = {
               (processingMethod === 'cautai, typica, bourbon, castillo' && name === 'washed') // bug in the website
           )?.processing_method_id || null;
 
+        const tasteNotesElement = itemDocument.querySelector('[data-id="09140d8"]');
+        const tasteNotesStrings =
+          tasteNotesElement?.textContent
+            .split(', ')
+            .map((note) => note.replaceAll('\t', '').replaceAll('\n', '').trim().toLowerCase()) || [];
+        const tasteNoteIds = tasteNotesStrings
+          .map((note) => tasteNotes.find(({ name }) => name === note)?.taste_note_id)
+          .filter(Boolean);
+
+        const missingTasteNotes = tasteNotesStrings.filter((note) => !tasteNotes.some(({ name }) => name === note));
+
+        if (missingTasteNotes.length) {
+          console.info(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
+        }
+
         const isDecaf = processingMethod.includes('decaf');
 
         const image = itemDocument.querySelector('.woocommerce-product-gallery__wrapper img').src;
@@ -283,6 +298,7 @@ const parsers = {
           price,
           pricePerGram,
           processingMethodId,
+          tasteNoteIds,
           webshopItemLink,
           weight
         };
