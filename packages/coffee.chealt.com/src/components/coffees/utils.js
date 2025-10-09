@@ -34,7 +34,11 @@ const getDetails =
     images: coffeeImages.filter(({ coffee_id: id }) => id === coffee.id).map((coffeeImage) => coffeeImage.url),
     tasteNotes: coffeeTasteNotes
       .filter(({ coffee_id: id }) => id === coffee.id)
-      .map(({ taste_note_id: tasteNoteId }) => tasteNotes.find(({ taste_note_id: id }) => id === tasteNoteId)),
+      .map(({ taste_note_id: tasteNoteId }) =>
+        tasteNotes.find(
+          ({ taste_note_id: id, language_code: languageCode }) => id === tasteNoteId && languageCode === locale
+        )
+      ),
     isDecaf: Boolean(coffee.is_decaf),
     originCountry: originCountries.find(
       (originCountry) =>
