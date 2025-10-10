@@ -75,6 +75,18 @@ self.addEventListener('message', (event) => {
 
           return uploadFile({ filename, fileData, getSignedUrl });
         })
+        .then((response) => {
+          if (response.ok) {
+            console.info('✅ SW: Image uploaded successfully!');
+
+            return response;
+          }
+
+          console.error('SW: Image upload failed:', response);
+
+          // retry once
+          return uploadFile({ filename, fileData, getSignedUrl });
+        })
         .catch((err) => console.error('SW: Caching failed:', err))
     );
   }
