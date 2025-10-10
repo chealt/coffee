@@ -1,0 +1,12 @@
+---
+export const prerender = false;
+
+import BrewingMethods from '../../components/brewing-methods/brewing-method.astro';
+import brewingMethods from '../../../data/brewingMethods.json';
+
+const { name } = Astro.params;
+
+const id = brewingMethods.find((brewingMethod) => brewingMethod.name === name)?.brewing_method_id;
+---
+
+<BrewingMethods id={id} />

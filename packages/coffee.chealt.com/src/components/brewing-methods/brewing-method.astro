@@ -1,0 +1,64 @@
+---
+import brewingMethods from '../../../data/brewingMethods.json';
+import allCoffees from '../../../data/coffees.json';
+
+import { getConvertedPricePerGram } from '../coffees/utils.js';
+import Coffees from '../coffees/list.astro';
+import Common from '../common/common.astro';
+
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+
+const { id } = Astro.props;
+
+const { name } = brewingMethods.find(
+  ({ brewing_method_id, language_code }) => brewing_method_id === id && language_code === Astro.currentLocale
+);
+const coffees = allCoffees.filter(({ brewing_method_id }) => brewing_method_id === id);
+const priciestCoffees = coffees
+  .sort(
+    (a, b) =>
+      getConvertedPricePerGram({ currency: b.currency, pricePerGram: b.price_per_gram }) -
+      getConvertedPricePerGram({ currency: a.currency, pricePerGram: a.price_per_gram })
+  )
+  .slice(0, 10);
+const cheapestCoffees = coffees
+  .sort(
+    (a, b) =>
+      getConvertedPricePerGram({ currency: a.currency, pricePerGram: a.price_per_gram }) -
+      getConvertedPricePerGram({ currency: b.currency, pricePerGram: b.price_per_gram })
+  )
+  .slice(0, 10);
+---
+
+<Common>
+  <h1>{name}</h1>
+  {
+    (priciestCoffees.length && (
+      <section>
+        <h2>{t.priciestCoffees}</h2>
+        <Coffees coffees={priciestCoffees} />
+      </section>
+    )) ||
+      null
+  }
+  {
+    (cheapestCoffees.length && (
+      <section>
+        <h2>{t.cheapestCoffees}</h2>
+        <Coffees coffees={cheapestCoffees} />
+      </section>
+    )) ||
+      null
+  }
+  {
+    (coffees.length && (
+      <section>
+        <h2>{t.allCoffees}</h2>
+        <Coffees coffees={coffees} />
+      </section>
+    )) ||
+      null
+  }
+</Common>

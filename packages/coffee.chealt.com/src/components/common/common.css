@@ -314,6 +314,10 @@ svg {
     box-sizing: border-box;
 
     a {
+      border: none;
+    }
+
+    > a {
       width: 100%;
       display: flex;
       flex-direction: column;
