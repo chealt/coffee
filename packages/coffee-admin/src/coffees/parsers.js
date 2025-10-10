@@ -39,7 +39,7 @@ const parsers = {
 
     const coffees = await Promise.all(
       Array.from(uniqueProductLinks).map(async (webshopItemLink) => {
-        console.info('Fetching webshop item page...');
+        console.info(`Fetching webshop item page: ${webshopItemLink}`);
 
         const response = await fetch(webshopItemLink);
         const html = await response.text();
@@ -99,6 +99,12 @@ const parsers = {
         const originRegionId = originRegions.find(({ name }) => regionOrFarm.includes(name))?.origin_region_id || null;
         const originFarmId = originFarms.find(({ name }) => regionOrFarm.includes(name))?.id || null;
 
+        const processingMethod = document.querySelector('[data-id="16e90837"]').textContent.trim().toLowerCase();
+        const processingMethodId =
+          processingMethods.find(({ name }) => name === processingMethod)?.processing_method_id ||
+          processingMethods.find(({ name }) => processingMethod.includes(name))?.processing_method_id ||
+          null;
+
         const image = document.querySelector('.woocommerce-product-gallery__wrapper img').src;
 
         return {
@@ -110,6 +116,7 @@ const parsers = {
           originRegionId,
           price,
           pricePerGram,
+          processingMethodId,
           tasteNoteIds,
           webshopItemLink,
           weight

@@ -58,7 +58,7 @@ await Promise.all(
         originRegionId,
         price,
         pricePerGram,
-        processingMethodId,
+        processingMethodId = null,
         tasteNoteIds = [],
         webshopItemLink,
         weight
