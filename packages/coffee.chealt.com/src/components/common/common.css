@@ -310,6 +310,7 @@ svg {
     scroll-snap-align: start;
     scroll-snap-stop: always;
     width: 90%;
+    max-width: 340px;
     box-sizing: border-box;
 
     a {
@@ -318,22 +319,27 @@ svg {
       flex-direction: column;
       align-items: stretch;
       justify-content: stretch;
+      box-sizing: border-box;
     }
 
-    .image {
+    .card {
       padding: var(--gap);
       background-color: var(--color-text);
       border-radius: var(--border-radius);
+    }
+
+    .image {
       display: flex;
       flex-direction: column;
       justify-content: center;
       height: var(--card-height);
       overflow: hidden;
       box-sizing: border-box;
+      border-radius: var(--border-radius);
     }
 
     .image.large {
-      height: 500px;
+      height: 380px;
     }
 
     img {

@@ -1,11 +1,10 @@
 .list .item {
-  .color {
-    border-radius: var(--border-radius);
-
+  .card {
     .name {
       height: var(--card-height);
       align-content: center;
       font-size: 1.6rem;
+      border-radius: var(--border-radius);
     }
   }
 }

@@ -17,7 +17,7 @@ await import.meta.glob('/public/roasters/*.{jpeg,jpg,png,gif,svg,webp}', { eager
       .map(({ id, name, country_id, logo, website, instagram }) => (
         <li data-country-id={country_id} class="item">
           <a href={getRelativeLocaleUrl(Astro.currentLocale, `/roasters/${name}`)}>
-            <div class="image" style={`view-transition-name: roaster-${id}`}>
+            <div class="image card" style={`view-transition-name: roaster-${id}`}>
               <img src={`/roasters/${logo}`} alt={name} loading="lazy" />
             </div>
             <div class="name">{name}</div>

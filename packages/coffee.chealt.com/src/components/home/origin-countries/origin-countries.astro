@@ -13,7 +13,7 @@ const countries = originCountries.filter(({ language_code }) => language_code ==
     countries.map(({ origin_country_id, name }) => (
       <li class="item">
         <a href={getRelativeLocaleUrl(Astro.currentLocale, `/origin-countries/${name}`)}>
-          <div class="image">
+          <div class="image card">
             <img src={`/origin-countries/${origin_country_id}.svg`} alt={name} loading="lazy" />
           </div>
           <div class="name">{name}</div>

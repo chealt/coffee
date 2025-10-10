@@ -42,7 +42,7 @@ const coffeesWithDetails = coffees.map(getDetails({ locale: Astro.currentLocale 
         weight
       }) => (
         <li class="item">
-          <a href={webshopItemLink} target="_blank" rel="noopener noreferrer">
+          <a href={webshopItemLink} class="card" target="_blank" rel="noopener noreferrer">
             <div class="image large">
               <img src={`/coffees/${images[0]}`} loading="lazy" />
             </div>
