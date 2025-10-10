@@ -36,6 +36,7 @@ const coffeesWithDetails = coffees.map(getDetails({ locale: Astro.currentLocale 
         roastingDate,
         price,
         pricePerGram,
+        processingMethod,
         tasteNotes,
         webshopItemLink,
         weight
@@ -78,6 +79,13 @@ const coffeesWithDetails = coffees.map(getDetails({ locale: Astro.currentLocale 
                       {brewingMethod.name}
                     </span>
                   </dd>
+                </Fragment>
+              )) ||
+                null}
+              {(processingMethod?.name && (
+                <Fragment>
+                  <dt>{t.processingMethod}</dt>
+                  <dd>{processingMethod.name}</dd>
                 </Fragment>
               )) ||
                 null}

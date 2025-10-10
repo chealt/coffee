@@ -5,6 +5,7 @@ import exchangeRates from '../../../data/exchangeRates.json';
 import originCountries from '../../../data/originCountries.json';
 import originFarms from '../../../data/originFarms.json';
 import originRegions from '../../../data/originRegions.json';
+import processingMethods from '../../../data/processingMethods.json';
 import roasters from '../../../data/roasters.json';
 import roastingLevels from '../../../data/roastingLevels.json';
 import tasteNotes from '../../../data/tasteNotes.json';
@@ -51,6 +52,10 @@ const getDetails =
     ),
     price: coffee.price,
     pricePerGram: getConvertedPricePerGram({ currency: coffee.currency, pricePerGram: coffee.price_per_gram }),
+    processingMethod: processingMethods.find(
+      ({ processing_method_id: id, language_code: languageCode }) =>
+        coffee.processing_method_id === id && languageCode === locale
+    ),
     roaster: roasters.find((roaster) => roaster.id === coffee.roaster_id),
     roastingDate: coffee.roasting_date,
     roastingLevel: roastingLevels.find(
