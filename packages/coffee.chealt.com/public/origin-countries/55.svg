@@ -1,0 +1,56 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Uganda flag colors: Black, Yellow, Red stripes with white circle and grey crowned crane -->
+  <defs>
+    <linearGradient id="ugandaBlack" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#000000;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1F1F1F;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ugandaYellow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FBBF24;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F59E0B;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ugandaRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#EF4444;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DC2626;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Simplified Uganda country shape -->
+  <path d="M60 30 Q70 25 80 30 Q90 35 100 40 Q110 45 120 50 Q130 60 135 80 Q140 100 135 120 Q130 140 125 155 Q115 170 105 175 Q95 180 85 175 Q75 170 65 160 Q55 150 50 135 Q45 120 50 105 Q55 90 58 75 Q60 60 62 45 Q61 37 60 30 Z" 
+        fill="url(#ugandaBlack)" 
+        stroke="#FFFFFF" 
+        stroke-width="2"/>
+  
+  <!-- Yellow stripe -->
+  <path d="M60 50 Q70 45 80 50 Q90 55 100 60 Q110 65 120 70 Q130 80 135 100 Q130 120 125 135 Q115 150 105 155 Q95 160 85 155 Q75 150 65 140 Q55 130 50 115 Q55 100 58 85 Q60 70 62 55 Q61 52 60 50 Z" 
+        fill="url(#ugandaYellow)" 
+        opacity="0.9"/>
+  
+  <!-- Red stripe -->
+  <path d="M60 70 Q70 65 80 70 Q90 75 100 80 Q110 85 120 90 Q130 100 135 120 Q130 140 125 155 Q115 170 105 175 Q95 180 85 175 Q75 170 65 160 Q55 150 50 135 Q55 120 58 105 Q60 90 62 75 Q61 72 60 70 Z" 
+        fill="url(#ugandaRed)" 
+        opacity="0.8"/>
+  
+  <!-- White circle for the crane -->
+  <circle cx="95" cy="110" r="25" fill="#FFFFFF" opacity="0.95" stroke="#E5E7EB" stroke-width="1"/>
+  
+  <!-- Simplified grey crowned crane -->
+  <!-- Crane body -->
+  <ellipse cx="95" cy="115" rx="8" ry="12" fill="#6B7280"/>
+  
+  <!-- Crane head -->
+  <circle cx="95" cy="105" r="4" fill="#6B7280"/>
+  
+  <!-- Crown (golden crest) -->
+  <path d="M92 100 Q95 97 98 100 Q95 102 92 100" fill="#EAB308"/>
+  
+  <!-- Beak -->
+  <path d="M95 105 L98 106 L95 107 Z" fill="#374151"/>
+  
+  <!-- Legs -->
+  <line x1="90" y1="125" x2="88" y2="130" stroke="#374151" stroke-width="1"/>
+  <line x1="100" y1="125" x2="102" y2="130" stroke="#374151" stroke-width="1"/>
+  
+  <!-- Wing detail -->
+  <path d="M88 112 Q92 110 96 112 Q92 118 88 112" fill="#9CA3AF" opacity="0.7"/>
+</svg>
