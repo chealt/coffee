@@ -33,6 +33,10 @@ const isOutOfStock = ({ html, roaster_id, webshop_item_link }) => {
     window: { document }
   } = new JSDOM(html);
 
+  if (!document.querySelector('.variations_form')) {
+    return false;
+  }
+
   const someInStock = JSON.parse(document.querySelector('.variations_form').dataset.product_variations)
     .map((product) => product.is_in_stock)
     .some(Boolean);
