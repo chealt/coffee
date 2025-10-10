@@ -139,6 +139,13 @@ await Promise.all(
         }
 
         if (tasteNoteIds.length) {
+          console.info('Clearing taste notes...');
+
+          await client.execute({
+            sql: `DELETE FROM coffee_taste_notes WHERE coffee_id = :coffeeId`,
+            args: { coffeeId }
+          });
+
           console.info('Adding taste notes to DB...');
 
           await client.batch(

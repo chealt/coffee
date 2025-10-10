@@ -542,6 +542,8 @@ const parsers = {
 
     const coffees = await Promise.all(
       productLinks.map(async (webshopItemLink) => {
+        console.info(`Fetching webshop item: ${webshopItemLink}`);
+
         const itemResponse = await fetch(webshopItemLink);
         const itemHtml = await itemResponse.text();
 
@@ -630,23 +632,29 @@ const parsers = {
 
         const image = document.querySelector('.wp-post-image').src;
 
-        const isNatural = document
-          .querySelector('.wp-block-post-excerpt__excerpt')
-          ?.textContent.toLowerCase()
-          .includes('natural');
+        const description = document.querySelector('.wp-block-post-excerpt__excerpt')?.textContent.trim().toLowerCase();
         const processingMethodId =
-          processingMethods.find(({ name }) => name === (isNatural && 'natural'))?.processing_method_id || null;
+          processingMethods.find(({ name }) => description.includes(name))?.processing_method_id || null;
+
+        const tasteNotesFound = tasteNotes.filter(({ name }) => description.includes(name));
+        // exclude taste notes that include each other like st'raw'berry and 'raw'
+        const distinctTasteNotes = tasteNotesFound.filter(
+          ({ name }) => !tasteNotesFound.some(({ name: n }) => n !== name && n.includes(name))
+        );
+
+        const uniqueTasteNoteIds = Array.from(new Set(distinctTasteNotes.map(({ taste_note_id: id }) => id)));
 
         return {
           brewingMethodId,
           currency,
           image,
-          price,
-          pricePerGram,
-          processingMethodId,
           originCountryId,
           originFarmId,
           originRegionId,
+          price,
+          pricePerGram,
+          processingMethodId,
+          tasteNoteIds: uniqueTasteNoteIds,
           webshopItemLink,
           weight
         };
