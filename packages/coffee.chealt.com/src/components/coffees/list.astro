@@ -93,7 +93,17 @@ const coffeesWithDetails = coffees.map(getDetails({ locale: Astro.currentLocale 
               {(processingMethod?.name && (
                 <Fragment>
                   <dt>{t.processingMethod}</dt>
-                  <dd>{processingMethod.name}</dd>
+                  <dd>
+                    <a
+                      href={getRelativeLocaleUrl(
+                        Astro.currentLocale,
+                        `/processing-methods/${encodeURIComponent(processingMethod.name)}`
+                      )}
+                      class="chip"
+                    >
+                      {processingMethod.name}
+                    </a>
+                  </dd>
                 </Fragment>
               )) ||
                 null}

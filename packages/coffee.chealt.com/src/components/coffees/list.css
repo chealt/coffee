@@ -1,7 +1,7 @@
 .list .coffee-details {
   width: 100%;
 
-  .brewing-method .chip {
+  a.chip {
     background-color: var(--color-text);
     color: var(--color-background);
 
