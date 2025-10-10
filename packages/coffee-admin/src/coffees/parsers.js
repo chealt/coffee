@@ -244,8 +244,28 @@ const parsers = {
           .trim();
         const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
 
-        const brewingMethod = 'espresso';
-        const brewingMethodId = brewingMethods.find(({ name }) => name === brewingMethod)?.brewing_method_id || null;
+        const brewingMethodElement = itemDocument.querySelector('[data-id="a074d76"]');
+        const brewingMethodStrings = brewingMethodElement?.textContent
+          .split(', ')
+          .map((method) => method.trim().toLowerCase());
+
+        const filterBrewingMethods = ['aeropress', 'drip', 'moccamaster', 'french press', 'kalita'];
+        const isFilter = brewingMethodStrings?.some((method) =>
+          filterBrewingMethods.some((filterMethod) => filterMethod.includes(method))
+        );
+
+        const espressoBrewingMethods = ['ekspres', 'kawiarka'];
+        const isEspresso = brewingMethodStrings?.some((method) =>
+          espressoBrewingMethods.some((espressoMethod) => espressoMethod.includes(method))
+        );
+
+        const brewingMethodId =
+          brewingMethods.find(
+            ({ name }) =>
+              (isFilter && !isEspresso && name === 'filter') ||
+              (isEspresso && !isFilter && name === 'espresso') ||
+              name === 'omni'
+          )?.brewing_method_id || null;
 
         const region = details
           .match(/region (.*) odmiana/gu)
