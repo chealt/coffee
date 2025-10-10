@@ -58,6 +58,7 @@ await Promise.all(
         originRegionId,
         price,
         pricePerGram,
+        processingMethodId,
         tasteNoteIds = [],
         webshopItemLink,
         weight
@@ -73,6 +74,7 @@ await Promise.all(
             origin_region_id,
             price,
             price_per_gram,
+            processing_method_id,
             roaster_id,
             webshop_item_link,
             weight
@@ -97,6 +99,7 @@ await Promise.all(
             origin_region_id = excluded.origin_region_id,
             price = excluded.price,
             price_per_gram = excluded.price_per_gram,
+            processing_method_id = excluded.processing_method_id,
             roaster_id = excluded.roaster_id,
             weight = excluded.weight
           `,
@@ -109,6 +112,7 @@ await Promise.all(
             originRegionId,
             price,
             pricePerGram,
+            processingMethodId,
             roasterId,
             webshopItemLink,
             weight
