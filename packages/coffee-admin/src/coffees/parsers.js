@@ -365,7 +365,7 @@ const parsers = {
 
     const coffees = await Promise.all(
       uniqueProductLinks.map(async (webshopItemLink) => {
-        console.info(`Fetching item page: ${webshopItemLink}...`);
+        console.info(`Fetching item page: ${webshopItemLink}`);
         const itemResponse = await fetch(webshopItemLink);
         const itemHtml = await itemResponse.text();
 
@@ -407,13 +407,19 @@ const parsers = {
         }
 
         let detailValues = Array.from(
-          document.querySelectorAll('.woocommerce-product-details__short-description span')
-        ).map((element) => element.textContent.trim().toLowerCase());
+          document.querySelectorAll('.woocommerce-product-details__short-description b')
+        ).map((element) => element.nextSibling?.textContent.trim().toLowerCase());
 
         if (detailValues.length === 0) {
           detailValues = Array.from(
             document.querySelectorAll('.woocommerce-product-details__short-description strong')
           ).map((element) => element.nextSibling?.textContent.trim().toLowerCase());
+        }
+
+        if (detailValues.length === 0) {
+          detailValues = Array.from(document.querySelectorAll('.woocommerce-product-details__short-description i')).map(
+            (element) => element.textContent.trim().toLowerCase()
+          );
         }
 
         const details = detailNames.reduce((details, name, index) => ({ ...details, [name]: detailValues[index] }), {});
@@ -427,9 +433,12 @@ const parsers = {
         const originCountry = details.country;
         const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
 
-        const processingMethod = details.processing;
         const processingMethodId =
-          processingMethods.find(({ name }) => name === processingMethod)?.processing_method_id || null;
+          processingMethods.find(({ name }) => name === details.process || name === details.processing)
+            ?.processing_method_id ||
+          processingMethods.find(({ name }) => details.process?.includes(name) || details.processing?.includes(name))
+            ?.processing_method_id ||
+          null;
 
         const brewingMethod = document
           .querySelector('.br_alabel_better_compatibility')
@@ -445,7 +454,36 @@ const parsers = {
         const originRegionId = originRegions.find(({ name }) => regionOrFarm.includes(name))?.origin_region_id || null;
         const originFarmId = originFarms.find(({ name }) => regionOrFarm.includes(name))?.id || null;
 
+        const tasteNotesString =
+          details['taste notes'] ||
+          details['tasting notes'] ||
+          details['taste profile'] ||
+          details['cup profile'] ||
+          details['flavour notes'] ||
+          details['flavour profile'] ||
+          details['flavor profile'];
+        const tasteNoteIds =
+          tasteNotesString
+            ?.split(', ')
+            .map((note) => note.trim().toLowerCase())
+            .map((note) => tasteNotes.find(({ name }) => name === note)?.taste_note_id)
+            .filter(Boolean) || [];
+
+        if (!tasteNotesString) {
+          console.debug(webshopItemLink, ': ', details);
+        }
+
+        const missingTasteNotes = tasteNotesString
+          ?.split(', ')
+          .filter((note) => !tasteNotes.some(({ name }) => name === note.trim().toLowerCase()));
+
+        if (missingTasteNotes.length) {
+          console.info(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
+        }
+
         const image = document.querySelector('.nasa-item-main-image-wrap .wp-post-image').src;
+
+        const isDecaf = details.processing?.includes('decaf') || details.process?.includes('decaf');
 
         return {
           brewingMethodId,
@@ -456,10 +494,11 @@ const parsers = {
           price,
           pricePerGram,
           processingMethodId,
+          tasteNoteIds,
           webshopItemLink,
           weight,
           image,
-          isDecaf: processingMethod?.includes('decaf')
+          isDecaf
         };
       })
     );
