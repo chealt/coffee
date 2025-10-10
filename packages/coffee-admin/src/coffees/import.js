@@ -87,6 +87,7 @@ await Promise.all(
             :originRegionId,
             :price,
             :pricePerGram,
+            :processingMethodId,
             :roasterId,
             :webshopItemLink,
             :weight
