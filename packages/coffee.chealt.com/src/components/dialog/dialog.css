@@ -35,15 +35,10 @@ dialog[open] {
 }
 
 dialog [data-close-button] {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
   width: auto;
   position: fixed;
   top: var(--gap);
   right: var(--gap);
-  border-color: transparent;
-  background-color: transparent;
 }
 
 body:has(dialog[open]:not(.inline)) {
