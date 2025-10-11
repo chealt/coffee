@@ -25,6 +25,10 @@ a.button {
   &.input {
     background-color: var(--color-secondary);
   }
+
+  &.round {
+    border-radius: 50%;
+  }
 }
 
 button[disabled],

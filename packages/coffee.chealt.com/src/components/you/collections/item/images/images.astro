@@ -1,4 +1,8 @@
 ---
+import Dialog from '../../../../dialog/dialog.astro';
+
+import './images.css';
+
 const { collectionItem } = Astro.locals;
 const { collectionId } = Astro.props;
 ---
@@ -9,8 +13,7 @@ const { collectionId } = Astro.props;
       (collectionItem?.images.length && (
         <div class="carousel">
           {collectionItem?.images.map(({ src, srcSmall, srcMedium, filename }, index) => (
-            // only the cover image should have a transition
-            <picture>
+            <picture data-dialog-id={`image-dialog-${index}`}>
               <source srcset={srcSmall} media="(max-width: 599px)" />
               <source srcset={srcMedium} media="(max-width: 1023px)" />
               <img id={filename} src={src} />
@@ -22,3 +25,10 @@ const { collectionId } = Astro.props;
     }
   </li>
 </ul>
+{
+  collectionItem?.images.map(({ src }, index) => (
+    <Dialog class="full-size-image" id={`image-dialog-${index}`} showClose>
+      <img src={src} />
+    </Dialog>
+  ))
+}

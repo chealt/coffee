@@ -13,9 +13,9 @@ const t = allLocaleTranslations[Astro.currentLocale];
   <dialog {...Astro.props}>
     {
       Astro.props.showClose && (
-        <Button data-close-button>
-          <Icon type="close" />
-          <span>{t['close']}</span>
+        <Button data-close-button class="small bordered round">
+          <Icon type="close" class="icon-only" />
+          <span class="visually-hidden">{t.close}</span>
         </Button>
       )
     }

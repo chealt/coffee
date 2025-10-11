@@ -39,9 +39,9 @@ dialog [data-close-button] {
   flex-direction: column;
   align-items: center;
   width: auto;
-  position: absolute;
-  top: 0;
-  right: 0;
+  position: fixed;
+  top: var(--gap);
+  right: var(--gap);
   border-color: transparent;
   background-color: transparent;
 }

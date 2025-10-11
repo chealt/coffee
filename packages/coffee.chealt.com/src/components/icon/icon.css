@@ -1,3 +1,13 @@
-.icon.active svg {
-  fill: var(--color-primary);
+.icon {
+  &.icon-only {
+    svg {
+      display: block;
+    }
+  }
+
+  &.active {
+    svg {
+      fill: var(--color-primary);
+    }
+  }
 }

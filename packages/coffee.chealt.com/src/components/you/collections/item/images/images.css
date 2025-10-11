@@ -1,0 +1,11 @@
+dialog.full-size-image {
+  align-items: center;
+
+  &[open] {
+    display: flex;
+  }
+
+  img {
+    width: 100%;
+  }
+}
