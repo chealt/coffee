@@ -24,7 +24,7 @@ const coffeesWithTasteNoteGroup = coffees
 ---
 
 <Common>
-  <h1 class="title" style={`background-color: ${group.color}`}>
+  <h1 class="title" style={`background-color: ${group.color};${group.color === '#ebb40d' ? 'color: #4f4b43' : ''}`}>
     {group.name}
   </h1>
   <section>
