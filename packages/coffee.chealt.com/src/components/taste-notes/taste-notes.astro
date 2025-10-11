@@ -3,6 +3,8 @@ import { getRelativeLocaleUrl } from 'astro:i18n';
 
 import { getTasteNoteGroupByNoteId } from './utils.js';
 
+import './taste-notes.css';
+
 const { tasteNotes } = Astro.props;
 
 const tasteNotesWithGroup = tasteNotes.map((tasteNote) => ({

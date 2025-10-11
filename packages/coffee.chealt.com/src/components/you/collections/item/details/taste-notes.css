@@ -1,0 +1,5 @@
+.taste-notes-section {
+  .taste-notes {
+    margin: var(--gap) 0;
+  }
+}

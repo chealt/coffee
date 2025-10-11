@@ -11,6 +11,8 @@ import TasteNotes from '../../../../taste-notes/taste-notes.astro';
 
 import { getTasteNoteGroupByNoteId } from '../../../../taste-notes/utils.js';
 
+import './taste-notes.css';
+
 import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
@@ -37,7 +39,7 @@ const notSelectedTasteNotes = tasteNotes
   }));
 ---
 
-<Label>
+<Label class="taste-notes-section">
   <div class="name">
     {t.tasteNotes}
   </div>
@@ -45,14 +47,7 @@ const notSelectedTasteNotes = tasteNotes
     <Icon type="edit" />
     {t.select}
   </Button>
-  {
-    (selectedTasteNotes.length && (
-      <section>
-        <TasteNotes tasteNotes={selectedTasteNotes} />
-      </section>
-    )) ||
-      null
-  }
+  {(selectedTasteNotes.length && <TasteNotes tasteNotes={selectedTasteNotes} />) || null}
 </Label>
 <coffee-taste-notes-dialog>
   <Dialog class="drawer fixed" id="edit-taste-notes">
