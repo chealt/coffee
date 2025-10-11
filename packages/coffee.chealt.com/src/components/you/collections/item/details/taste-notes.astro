@@ -29,6 +29,7 @@ const selectedTasteNotes = tasteNotes
     group: getTasteNoteGroupByNoteId(tasteNote.taste_note_id)
   }));
 const notSelectedTasteNotes = tasteNotes
+  .filter(({ language_code: languageCode }) => languageCode === Astro.currentLocale)
   .filter(({ taste_note_id: id, language_code: languageCode }) => !selected?.includes(String(id)))
   .map((tasteNote) => ({
     ...tasteNote,
