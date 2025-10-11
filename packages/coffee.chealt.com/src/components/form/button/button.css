@@ -21,6 +21,10 @@ a.button {
   &.dashed {
     border-style: dashed;
   }
+
+  &.input {
+    background-color: var(--color-secondary);
+  }
 }
 
 button[disabled],

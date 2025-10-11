@@ -10,6 +10,7 @@ import ProcessingMethods from './processing-methods.astro';
 import Roasters from './roasters.astro';
 import RoastingDate from './roasting-date.astro';
 import RoastingLevels from './roasting-levels.astro';
+import TasteNotes from './taste-notes.astro';
 
 import allLocaleTranslations from './locales.json';
 
@@ -30,6 +31,7 @@ const {
     <OriginRegions selected={details?.originRegion} />
     <ProcessingMethods selected={details?.processingMethod} />
     <BrewingMethods selected={details?.brewingMethod} />
+    <TasteNotes selected={details?.['tasteNoteIds[]']} />
     <Decaf checked={details?.isDecaf} />
   </Form>
 </section>

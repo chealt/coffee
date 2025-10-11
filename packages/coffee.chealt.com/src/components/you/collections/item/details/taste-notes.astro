@@ -1,0 +1,86 @@
+---
+import tasteNotes from '../../../../../../data/tasteNotes.json';
+
+import Button from '../../../../form/button/button.astro';
+import Checkbox from '../../../../form/checkbox/checkbox.astro';
+import Dialog from '../../../../dialog/dialog.astro';
+import Icon from '../../../../icon/icon.astro';
+import Input from '../../../../form/input/input.astro';
+import Label from '../../../../form/label/label.astro';
+import TasteNotes from '../../../../taste-notes/taste-notes.astro';
+
+import { getTasteNoteGroupByNoteId } from '../../../../taste-notes/utils.js';
+
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+
+const { selected } = Astro.props;
+
+const selectedTasteNotes = tasteNotes
+  .filter(
+    ({ taste_note_id: id, language_code: languageCode }) =>
+      selected?.includes(String(id)) && languageCode === Astro.currentLocale
+  )
+  .map((tasteNote) => ({
+    ...tasteNote,
+    group: getTasteNoteGroupByNoteId(tasteNote.taste_note_id)
+  }));
+const notSelectedTasteNotes = tasteNotes
+  .filter(
+    ({ taste_note_id: id, language_code: languageCode }) =>
+      !selected?.includes(String(id) && languageCode === Astro.currentLocale)
+  )
+  .map((tasteNote) => ({
+    ...tasteNote,
+    group: getTasteNoteGroupByNoteId(tasteNote.taste_note_id)
+  }));
+---
+
+<Label>
+  <div class="name">
+    {t.tasteNotes}
+  </div>
+  <Button data-dialog-id="edit-taste-notes" class="column input">
+    <Icon type="edit" />
+    {t.select}
+  </Button>
+  {
+    (selectedTasteNotes.length && (
+      <section>
+        <TasteNotes tasteNotes={selectedTasteNotes} />
+      </section>
+    )) ||
+      null
+  }
+</Label>
+<coffee-taste-notes-dialog>
+  <Dialog class="drawer fixed" id="edit-taste-notes">
+    <chealt-filter data-filter-selector="li:has(input[name='tasteNoteIds[]'])">
+      <Input name="taste-note-filter" placeholder={t.search} data-exclude />
+    </chealt-filter>
+    <ul>
+      {
+        selectedTasteNotes.map(({ taste_note_id: id, name, group }) => (
+          <li style={group?.color ? `border-right: 4px solid ${group.color}` : 'border-right: 4px solid transparent'}>
+            <Checkbox name="tasteNoteIds[]" value={id} checked>
+              {name}
+            </Checkbox>
+          </li>
+        ))
+      }
+      {
+        notSelectedTasteNotes.map(({ taste_note_id: id, name, group }) => (
+          <li style={group?.color ? `border-right: 4px solid ${group.color}` : 'border-right: 4px solid transparent'}>
+            <Checkbox name="tasteNoteIds[]" value={id}>
+              {name}
+            </Checkbox>
+          </li>
+        ))
+      }
+    </ul>
+  </Dialog>
+</coffee-taste-notes-dialog>
+
+<script src="./taste-notes-dialog.js"></script>
+<script src="../../../../chealt-filter.js"></script>

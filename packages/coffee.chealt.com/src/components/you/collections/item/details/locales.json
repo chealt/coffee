@@ -20,7 +20,10 @@
     "deleteCollection": {
       "buttonLabel": "Delete collection",
       "confirm": "Are you sure you want to delete this collection?"
-    }
+    },
+    "tasteNotes": "Taste notes",
+    "select": "Select",
+    "search": "search"
   },
   "pl": {
     "title": "Kolekcje",
@@ -43,6 +46,9 @@
     "deleteCollection": {
       "buttonLabel": "Usuń kolekcję",
       "confirm": "Czy na pewno chcesz usunąć tę kolekcję?"
-    }
+    },
+    "tasteNotes": "Smaki",
+    "select": "Wybierz",
+    "search": "szukaj"
   }
 }

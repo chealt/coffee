@@ -61,6 +61,10 @@ dialog.drawer {
   transition-duration: 0.4s;
   transition-timing-function: ease-in-out;
   transition-behavior: allow-discrete;
+
+  &.fixed {
+    height: 80vh;
+  }
 }
 
 dialog.drawer[open] {

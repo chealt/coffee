@@ -47,7 +47,7 @@ const calculateSumOnInput = (sumGroup) => {
 };
 
 const addChangeEvent = ({ form, callback }) => {
-  form.querySelectorAll('input,select').forEach((element) => {
+  form.querySelectorAll('input:not([data-exclude]),select:not([data-exclude])').forEach((element) => {
     element.addEventListener('input', (event) => {
       if (event.isTrusted) {
         callback(form); // eslint-disable-line callback-return

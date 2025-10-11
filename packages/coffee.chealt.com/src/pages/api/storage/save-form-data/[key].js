@@ -18,7 +18,16 @@ const POST = async ({ params, request }) => {
   const data = {};
 
   formData.forEach((value, key) => {
-    data[key] = value;
+    if (key.endsWith('[]')) {
+      // handle arrays
+      if (!data[key]) {
+        data[key] = [];
+      }
+
+      data[key].push(value);
+    } else {
+      data[key] = value;
+    }
   });
 
   try {
