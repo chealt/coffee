@@ -322,6 +322,21 @@ const parsers = {
           console.info(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
         }
 
+        const varietiesString = details
+          .match(/odmiana (.*) wysokość/gu)
+          .join()
+          .replace('odmiana ', '')
+          .replace(' wysokość', '')
+          .trim();
+        const varietiesStrings = varietiesString.includes(', ') ? varietiesString.split(', ') : [varietiesString];
+        const varietyIds = varieties
+          .filter(({ name }) => varietiesStrings.includes(name.toLowerCase()))
+          .map(({ id }) => id);
+
+        if (!varietyIds.length) {
+          console.info(`Missing varieties: ${varietiesStrings}`);
+        }
+
         const isDecaf = processingMethod.includes('decaf');
 
         const image = itemDocument.querySelector('.woocommerce-product-gallery__wrapper img').src;
@@ -338,6 +353,7 @@ const parsers = {
           pricePerGram,
           processingMethodId,
           tasteNoteIds,
+          varietyIds,
           webshopItemLink,
           weight
         };
