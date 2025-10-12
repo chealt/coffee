@@ -397,6 +397,7 @@ const parsers = {
         const itemResponse = await fetch(webshopItemLink);
         const itemHtml = await itemResponse.text();
 
+        console.info(`Parsing item page: ${webshopItemLink}`);
         const {
           window: { document }
         } = new JSDOM(itemHtml);
@@ -509,6 +510,16 @@ const parsers = {
           console.info(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
         }
 
+        const varietiesString = details.variety || details.varietal;
+        const varietiesStrings = varietiesString.includes(', ') ? varietiesString.split(', ') : [varietiesString];
+        const varietyIds = varieties
+          .filter(({ name }) => varietiesStrings.includes(name.toLowerCase()))
+          .map(({ id }) => id);
+
+        if (!varietyIds.length) {
+          console.info(`Missing varieties: ${varietiesStrings}`);
+        }
+
         const image = document.querySelector('.nasa-item-main-image-wrap .wp-post-image').src;
 
         const isDecaf = details.processing?.includes('decaf') || details.process?.includes('decaf');
@@ -516,6 +527,8 @@ const parsers = {
         return {
           brewingMethodId,
           currency,
+          image,
+          isDecaf,
           originCountryId,
           originFarmId,
           originRegionId,
@@ -523,10 +536,9 @@ const parsers = {
           pricePerGram,
           processingMethodId,
           tasteNoteIds,
+          varietyIds,
           webshopItemLink,
-          weight,
-          image,
-          isDecaf
+          weight
         };
       })
     );

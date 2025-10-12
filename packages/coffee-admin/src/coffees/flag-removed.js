@@ -24,9 +24,13 @@ const results = await client.execute({
 });
 
 const isOutOfStock = ({ html, roaster_id, webshop_item_link }) => {
-  // only handle BeMyBean roaster
-  if (roaster_id !== 39) {
+  // only handle BeMyBean, and Father's roaster
+  if (roaster_id !== 39 && roaster_id !== 277) {
     return false;
+  }
+
+  if (roaster_id === 277) {
+    return html.includes('This product is currently out of stock and unavailable.');
   }
 
   const {
