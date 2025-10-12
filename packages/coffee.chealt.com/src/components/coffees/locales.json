@@ -13,6 +13,7 @@
     "roastingDate": "Roasting date",
     "roastingLevel": "Roasting level",
     "tasteNotes": "Taste notes",
+    "varieties": "Varieties",
     "weight": "Weight"
   },
   "pl": {
@@ -29,6 +30,7 @@
     "roastingDate": "Data palenia",
     "roastingLevel": "Stopień palenia",
     "tasteNotes": "Smaki",
+    "varieties": "Odmiany",
     "weight": "Waga"
   }
 }

@@ -1,6 +1,7 @@
 import brewingMethods from '../../../data/brewingMethods.json';
 import coffeeImages from '../../../data/coffeeImages.json';
 import coffeeTasteNotes from '../../../data/coffeeTasteNotes.json';
+import coffeeVarieties from '../../../data/coffeeVarieties.json';
 import exchangeRates from '../../../data/exchangeRates.json';
 import originCountries from '../../../data/originCountries.json';
 import originFarms from '../../../data/originFarms.json';
@@ -9,6 +10,7 @@ import processingMethods from '../../../data/processingMethods.json';
 import roasters from '../../../data/roasters.json';
 import roastingLevels from '../../../data/roastingLevels.json';
 import tasteNotes from '../../../data/tasteNotes.json';
+import varieties from '../../../data/varieties.json';
 
 const getConvertedPricePerGram = ({ currency, pricePerGram }) => {
   const exchangeRate = exchangeRates.find(({ currency_code: code }) => code === currency).rate;
@@ -62,6 +64,10 @@ const getDetails =
       (roastingLevel) =>
         roastingLevel.roasting_level_id === coffee.roasting_level_id && roastingLevel.language_code === locale
     ),
+    varieties: coffeeVarieties
+      .filter(({ coffee_id: id }) => id === coffee.id)
+      .map(({ variety_id: varietyId }) => varieties.find(({ id }) => id === varietyId)),
+    webshopItem: Boolean(coffee.webshop_item),
     webshopItemLink: coffee.webshop_item_link,
     weight: coffee.weight
   });

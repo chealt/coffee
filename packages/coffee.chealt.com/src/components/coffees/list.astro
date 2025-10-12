@@ -40,6 +40,7 @@ const coffeesWithDetails = coffees.map(getDetails({ locale: Astro.currentLocale 
         pricePerGram,
         processingMethod,
         tasteNotes,
+        varieties,
         webshopItemLink,
         weight
       }) => (
@@ -113,6 +114,29 @@ const coffeesWithDetails = coffees.map(getDetails({ locale: Astro.currentLocale 
                   <dd>{Intl.DateTimeFormat(Astro.currentLocale).format(new Date(roastingDate))}</dd>
                 </Fragment>
               )}
+              {(varieties?.length && (
+                <Fragment>
+                  <dt>{t.varieties}</dt>
+                  <dd>
+                    <ul class="list">
+                      {varieties.map(({ name }) => (
+                        <li>
+                          <a
+                            href={getRelativeLocaleUrl(
+                              Astro.currentLocale,
+                              `/varieties/${encodeURIComponent(name.toLowerCase())}`
+                            )}
+                            class="chip"
+                          >
+                            {name}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </dd>
+                </Fragment>
+              )) ||
+                null}
               {(tasteNotes?.length && (
                 <Fragment>
                   <dt>{t.tasteNotes}</dt>
