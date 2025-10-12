@@ -85,6 +85,12 @@ const saveCoffeeTasteNotes = async () => {
   return writeFile('./data/coffeeTasteNotes.json', JSON.stringify(results.rows), { flag: 'w+' });
 };
 
+const saveCoffeeVarieties = async () => {
+  const results = await turso.execute('SELECT * FROM coffee_varieties');
+
+  return writeFile('./data/coffeeVarieties.json', JSON.stringify(results.rows), { flag: 'w+' });
+};
+
 const saveExchangeRates = async () => {
   const results = await turso.execute('SELECT * FROM exchange_rates');
 
@@ -132,6 +138,7 @@ await Promise.all([
   saveCoffees(),
   saveCoffeeImages(),
   saveCoffeeTasteNotes(),
+  saveCoffeeVarieties(),
   saveCountries(),
   saveExchangeRates(),
   saveFarms(),

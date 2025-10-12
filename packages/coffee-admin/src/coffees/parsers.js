@@ -10,6 +10,7 @@ import originRegions from '../../../coffee.chealt.com/data/originRegions.json' w
 import processingMethods from '../../../coffee.chealt.com/data/processingMethods.json' with { type: 'json' };
 import roastingLevels from '../../../coffee.chealt.com/data/roastingLevels.json' with { type: 'json' };
 import tasteNotes from '../../../coffee.chealt.com/data/tasteNotes.json' with { type: 'json' };
+import varieties from '../../../coffee.chealt.com/data/varieties.json' with { type: 'json' };
 
 const parsers = {
   // Sheep & Raven
@@ -105,6 +106,16 @@ const parsers = {
           processingMethods.find(({ name }) => processingMethod.includes(name))?.processing_method_id ||
           null;
 
+        const varietiesString = document.querySelector('[data-id="512fea5c"]').textContent.trim().toLowerCase();
+        const varietiesStrings = varietiesString.includes(' / ') ? varietiesString.split(' / ') : [varietiesString];
+        const varietyIds = varieties
+          .filter(({ name }) => varietiesStrings.includes(name.toLowerCase()))
+          .map(({ id }) => id);
+
+        if (!varietyIds.length) {
+          console.info(`Missing varieties: ${varietiesStrings}`);
+        }
+
         const image = document.querySelector('.woocommerce-product-gallery__wrapper img').src;
 
         return {
@@ -118,6 +129,7 @@ const parsers = {
           pricePerGram,
           processingMethodId,
           tasteNoteIds,
+          varietyIds,
           webshopItemLink,
           weight
         };

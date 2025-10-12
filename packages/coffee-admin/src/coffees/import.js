@@ -60,6 +60,7 @@ await Promise.all(
         pricePerGram,
         processingMethodId = null,
         tasteNoteIds = [],
+        varietyIds = [],
         webshopItemLink,
         weight
       }) => {
@@ -160,6 +161,26 @@ await Promise.all(
               args: {
                 coffeeId,
                 tasteNoteId
+              }
+            }))
+          );
+        }
+
+        if (varietyIds.length) {
+          console.info('Adding varieties to DB...');
+
+          await client.batch(
+            varietyIds.map((varietyId) => ({
+              sql: `INSERT OR IGNORE INTO coffee_varieties (
+                coffee_id,
+                variety_id
+              ) VALUES (
+                :coffeeId,
+                :varietyId
+              )`,
+              args: {
+                coffeeId,
+                varietyId
               }
             }))
           );
