@@ -740,7 +740,7 @@ const parsers = {
         const itemResponse = await fetch(webshopItemLink);
         const itemHtml = await itemResponse.text();
 
-        console.info(`Parsing item page: ${webshopItemLink}...`);
+        console.info(`Parsing item page: ${webshopItemLink}`);
         const {
           window: { document }
         } = new JSDOM(itemHtml);
@@ -812,6 +812,14 @@ const parsers = {
           new Set(tasteNotes.filter(({ name }) => detailsTasteNotes.includes(name)).map(({ taste_note_id: id }) => id))
         );
 
+        const description = document.querySelector('.woocommerce-Tabs-panel--description').textContent.toLowerCase();
+        const varietiesFound = varieties.filter(({ name }) => description.includes(name.toLowerCase()));
+        // exclude varieties that include each other like Ruiru and Ruiru 11
+        const distinctVarieties = varietiesFound.filter(
+          ({ name }) => !varietiesFound.some(({ name: n }) => n !== name && n.includes(name))
+        );
+        const uniqueVarietyIds = Array.from(new Set(distinctVarieties.map(({ id }) => id)));
+
         const isDecaf = webshopItemLink.includes('decaf');
 
         const image = document.querySelector('.woocommerce-product-gallery__image img').src;
@@ -828,6 +836,7 @@ const parsers = {
           pricePerGram,
           roastingLevelId,
           tasteNoteIds,
+          varietyIds: uniqueVarietyIds,
           webshopItemLink,
           weight
         };
