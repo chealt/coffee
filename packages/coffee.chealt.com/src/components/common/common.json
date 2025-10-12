@@ -4,13 +4,21 @@
     "search": "Search",
     "select": "Select",
     "title": "Central Beans",
-    "unknown": "unknown"
+    "unknown": "unknown",
+    "allCoffees": "All Coffees",
+    "cheapestCoffees": "Budget Friendly",
+    "priciestCoffees": "Fancy me",
+    "noCoffees": "No coffees yet"
   },
   "pl": {
     "description": "Przeglądaj świat kawy i zbieraj swoje ulubione kawy",
     "search": "Szukaj",
     "select": "Wybierz",
     "title": "Central Beans",
-    "unknown": "nieznany"
+    "unknown": "nieznany",
+    "allCoffees": "Wszystkie kawy",
+    "cheapestCoffees": "Kawy najtańsze",
+    "priciestCoffees": "Kawy najdroższe",
+    "noCoffees": "Brak kaw"
   }
 }

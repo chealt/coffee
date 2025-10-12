@@ -1,8 +1,8 @@
 ---
-import originCountries from '../../../data/originCountries.json';
 import allCoffees from '../../../data/coffees.json';
+import varieties from '../../../data/varieties.json';
 
-import { getConvertedPricePerGram } from '../coffees/utils.js';
+import { getConvertedPricePerGram, getDetails } from '../coffees/utils.js';
 import Coffees from '../coffees/list.astro';
 import Common from '../common/common.astro';
 
@@ -12,10 +12,10 @@ const t = allLocaleTranslations[Astro.currentLocale];
 
 const { id } = Astro.props;
 
-const { name } = originCountries.find(
-  ({ origin_country_id, language_code }) => origin_country_id === id && language_code === Astro.currentLocale
-);
-const coffees = allCoffees.filter(({ origin_country_id }) => origin_country_id === id);
+const { name } = varieties.find((variety) => variety.id === id);
+const coffees = allCoffees
+  .map(getDetails({ locale: Astro.currentLocale }))
+  .filter(({ varieties }) => varieties?.some((variety) => variety.id === id));
 const priciestCoffees = coffees
   .sort(
     (a, b) =>
@@ -35,7 +35,7 @@ const cheapestCoffees = coffees
 <Common>
   <h1>{name}</h1>
   {
-    (priciestCoffees.length && (
+    (priciestCoffees.length && coffees.length > 9 && (
       <section>
         <h2>{t.priciestCoffees}</h2>
         <Coffees coffees={priciestCoffees} />
@@ -44,7 +44,7 @@ const cheapestCoffees = coffees
       null
   }
   {
-    (cheapestCoffees.length && (
+    (cheapestCoffees.length && coffees.length > 9 && (
       <section>
         <h2>{t.cheapestCoffees}</h2>
         <Coffees coffees={cheapestCoffees} />

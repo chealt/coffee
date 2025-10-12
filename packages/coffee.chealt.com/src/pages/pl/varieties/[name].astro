@@ -1,0 +1,13 @@
+---
+export const prerender = false;
+
+import varieties from '../../../../data/varieties.json';
+
+import Varieties from '../../../components/varieties/variety.astro';
+
+const { name } = Astro.params;
+
+const id = varieties.find((variety) => variety.name.toLowerCase() === decodeURIComponent(name))?.id;
+---
+
+<Varieties id={id} />
