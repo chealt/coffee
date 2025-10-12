@@ -681,8 +681,14 @@ const parsers = {
         const distinctTasteNotes = tasteNotesFound.filter(
           ({ name }) => !tasteNotesFound.some(({ name: n }) => n !== name && n.includes(name))
         );
-
         const uniqueTasteNoteIds = Array.from(new Set(distinctTasteNotes.map(({ taste_note_id: id }) => id)));
+
+        const varietiesFound = varieties.filter(({ name }) => description.includes(name.toLowerCase()));
+        // exclude varieties that include each other like Ruiru and Ruiru 11
+        const distinctVarieties = varietiesFound.filter(
+          ({ name }) => !varietiesFound.some(({ name: n }) => n !== name && n.includes(name))
+        );
+        const uniqueVarietyIds = Array.from(new Set(distinctVarieties.map(({ id }) => id)));
 
         return {
           brewingMethodId,
@@ -695,6 +701,7 @@ const parsers = {
           pricePerGram,
           processingMethodId,
           tasteNoteIds: uniqueTasteNoteIds,
+          varietyIds: uniqueVarietyIds,
           webshopItemLink,
           weight
         };
