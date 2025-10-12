@@ -7,6 +7,20 @@ class CoffeeDialog extends HTMLElement {
     this.addBackdropClickListener();
     this.openOnClick();
     this.closeOnClick();
+
+    if (this.dataset.reloadOnChange) {
+      this.inputs = this.querySelectorAll('input[type="checkbox"]').forEach((input) => {
+        input.addEventListener('change', () => {
+          this.hasChanges = true;
+        });
+      });
+
+      this.dialog.addEventListener('close', () => {
+        if (this.hasChanges) {
+          window.location.reload();
+        }
+      });
+    }
   }
 
   addBackdropClickListener() {

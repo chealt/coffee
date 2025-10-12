@@ -1,12 +1,16 @@
 {
   "en": {
+    "description": "Explore the world of coffee and collect your favorites.",
+    "search": "Search",
+    "select": "Select",
     "title": "Central Beans",
-    "unknown": "unknown",
-    "description": "Explore the world of coffee and collect your favorites."
+    "unknown": "unknown"
   },
   "pl": {
+    "description": "Przeglądaj świat kawy i zbieraj swoje ulubione kawy",
+    "search": "Szukaj",
+    "select": "Wybierz",
     "title": "Central Beans",
-    "unknown": "nieznany",
-    "description": "Przeglądaj świat kawy i zbieraj swoje ulubione kawy"
+    "unknown": "nieznany"
   }
 }

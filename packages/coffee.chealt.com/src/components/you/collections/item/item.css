@@ -24,3 +24,8 @@
   display: block;
   will-change: transform;
 }
+
+.selected-items {
+  margin-top: var(--gap);
+  padding: 0 var(--gap);
+}

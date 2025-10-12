@@ -23,7 +23,8 @@
     },
     "tasteNotes": "Taste notes",
     "select": "Select",
-    "search": "search"
+    "search": "search",
+    "varieties": "Varieties"
   },
   "pl": {
     "title": "Kolekcje",
@@ -49,6 +50,7 @@
     },
     "tasteNotes": "Smaki",
     "select": "Wybierz",
-    "search": "szukaj"
+    "search": "szukaj",
+    "varieties": "Odmiana"
   }
 }

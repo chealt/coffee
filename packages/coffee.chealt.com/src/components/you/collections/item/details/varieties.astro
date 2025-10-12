@@ -1,0 +1,39 @@
+---
+import Checkbox from '../../../../form/checkbox/checkbox.astro';
+import Label from '../../../../form/label/label.astro';
+import Select from '../../../../form/select/select.astro';
+
+import varieties from '../../../../../../data/varieties.json';
+
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+
+const { selected } = Astro.props;
+---
+
+<Label for="varieties">
+  <div class="name">
+    {t.varieties}
+  </div>
+</Label>
+<Select name="varieties" multiple>
+  {
+    varieties.map(({ id, name }) => (
+      <li>
+        <Checkbox name="varieties[]" value={id} checked={selected?.includes(String(id))}>
+          {name}
+        </Checkbox>
+      </li>
+    ))
+  }
+</Select>
+{
+  selected?.length > 0 && (
+    <ul class="selected-items">
+      {selected.map((selectedId) => (
+        <li class="chip">{varieties.find(({ id }) => String(id) === selectedId)?.name}</li>
+      ))}
+    </ul>
+  )
+}

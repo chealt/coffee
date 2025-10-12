@@ -378,6 +378,13 @@ svg {
   border-radius: var(--border-radius--s);
   margin-bottom: var(--gap--s);
   margin-right: var(--gap--s);
+  background-color: var(--color-text);
+  color: var(--color-background);
+
+  svg {
+    fill: var(--color-background);
+    height: 28px;
+  }
 }
 
 @view-transition {

@@ -1,12 +1,40 @@
 ---
-import allLocaleTranslations from '../../common/common.json';
+import Button from '../button/button.astro';
+import Dialog from '../../dialog/dialog.astro';
+import Icon from '../../icon/icon.astro';
+import Input from '../input/input.astro';
 
 import './select.css';
 
+import allLocaleTranslations from '../../common/common.json';
+
 const t = allLocaleTranslations[Astro.currentLocale];
+
+const { showEmpty, name, multiple, ...props } = Astro.props;
 ---
 
-<select {...Astro.props}>
-  {Astro.props.showEmpty && <option value="">{t.unknown}</option>}
-  <slot />
-</select>
+{
+  (multiple && (
+    <Fragment>
+      <Button data-dialog-id={name} class="column input">
+        <Icon type="edit" />
+        {t.select}
+      </Button>
+      <Dialog id={name} class="drawer fixed" reloadOnChange>
+        <chealt-filter data-filter-selector={`li:has(input[name='${name}[]'])`}>
+          <Input name={`${name}-filter`} placeholder={t.search} data-exclude />
+        </chealt-filter>
+        <ul>
+          <slot />
+        </ul>
+      </Dialog>
+    </Fragment>
+  )) || (
+    <select {...props} name={name || undefined}>
+      {showEmpty && <option value="">{t.unknown}</option>}
+      <slot />
+    </select>
+  )
+}
+
+<script src="../../chealt-filter.js"></script>

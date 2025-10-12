@@ -11,6 +11,7 @@ import Roasters from './roasters.astro';
 import RoastingDate from './roasting-date.astro';
 import RoastingLevels from './roasting-levels.astro';
 import TasteNotes from './taste-notes.astro';
+import Varieties from './varieties.astro';
 
 import allLocaleTranslations from './locales.json';
 
@@ -29,6 +30,7 @@ const {
     <RoastingDate value={details?.roastingDate} />
     <OriginCountries selected={details?.originCountry} />
     <OriginRegions selected={details?.originRegion} />
+    <Varieties selected={details?.['varieties[]']} />
     <ProcessingMethods selected={details?.processingMethod} />
     <BrewingMethods selected={details?.brewingMethod} />
     <TasteNotes selected={details?.['tasteNoteIds[]']} />

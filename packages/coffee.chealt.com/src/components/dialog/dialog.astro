@@ -7,12 +7,14 @@ import './dialog.css';
 import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
+
+const { reloadOnChange, showClose, ...props } = Astro.props;
 ---
 
-<coffee-dialog>
-  <dialog {...Astro.props}>
+<coffee-dialog data-reload-on-change={reloadOnChange || undefined}>
+  <dialog {...props}>
     {
-      Astro.props.showClose && (
+      showClose && (
         <Button data-close-button class="small bordered round">
           <Icon type="close" class="icon-only" />
           <span class="visually-hidden">{t.close}</span>
