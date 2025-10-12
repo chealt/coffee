@@ -118,15 +118,14 @@ const coffeesWithDetails = coffees.map(getDetails({ locale: Astro.currentLocale 
                 <Fragment>
                   <dt>{t.varieties}</dt>
                   <dd>
-                    <ul class="list">
+                    <ul>
                       {varieties.map(({ name }) => (
-                        <li>
+                        <li class="chip">
                           <a
                             href={getRelativeLocaleUrl(
                               Astro.currentLocale,
                               `/varieties/${encodeURIComponent(name.toLowerCase())}`
                             )}
-                            class="chip"
                           >
                             {name}
                           </a>
