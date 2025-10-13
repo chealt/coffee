@@ -53,7 +53,7 @@ const notSelectedTasteNotes = tasteNotes
     <ul>
       {
         selectedTasteNotes.map(({ taste_note_id: id, name, group }) => (
-          <li style={group?.color ? `border-right: 4px solid ${group.color}` : 'border-right: 4px solid transparent'}>
+          <li style={group?.color ? `border-left: 4px solid ${group.color}` : 'border-left: 4px solid transparent'}>
             <Checkbox name="tasteNoteIds[]" value={id} checked>
               {name}
             </Checkbox>
@@ -62,7 +62,7 @@ const notSelectedTasteNotes = tasteNotes
       }
       {
         notSelectedTasteNotes.map(({ taste_note_id: id, name, group }) => (
-          <li style={group?.color ? `border-right: 4px solid ${group.color}` : 'border-right: 4px solid transparent'}>
+          <li style={group?.color ? `border-left: 4px solid ${group.color}` : 'border-left: 4px solid transparent'}>
             <Checkbox name="tasteNoteIds[]" value={id}>
               {name}
             </Checkbox>
