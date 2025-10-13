@@ -7,6 +7,8 @@ import roasters from '../../../data/roasters.json';
 const { name } = Astro.params;
 
 const id = roasters.find((roaster) => roaster.name === name)?.id;
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---
 
 <Roaster id={id} />
