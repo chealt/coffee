@@ -1,5 +1,6 @@
 ---
 import allCoffees from '../../../data/coffees.json';
+import coffeeVarieties from '../../../data/coffeeVarieties.json';
 import varieties from '../../../data/varieties.json';
 
 import { getConvertedPricePerGram, getDetails } from '../coffees/utils.js';
@@ -13,9 +14,10 @@ const t = allLocaleTranslations[Astro.currentLocale];
 const { id } = Astro.props;
 
 const { name } = varieties.find((variety) => variety.id === id);
-const coffees = allCoffees
-  .map(getDetails({ locale: Astro.currentLocale }))
-  .filter(({ varieties }) => varieties?.some((variety) => variety.id === id));
+const coffees = allCoffees.filter((coffee) =>
+  coffeeVarieties.some(({ variety_id: varietyId, coffee_id: coffeeId }) => varietyId === id && coffeeId === coffee.id)
+);
+
 const priciestCoffees = coffees
   .sort(
     (a, b) =>
