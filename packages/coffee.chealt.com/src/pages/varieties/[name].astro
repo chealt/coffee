@@ -8,6 +8,8 @@ import Varieties from '../../components/varieties/variety.astro';
 const { name } = Astro.params;
 
 const id = varieties.find((variety) => variety.name.toLowerCase() === decodeURIComponent(name))?.id;
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---
 
 <Varieties id={id} />

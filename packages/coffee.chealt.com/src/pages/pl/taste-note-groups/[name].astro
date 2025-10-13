@@ -7,6 +7,8 @@ import tasteNoteGroups from '../../../../data/tasteNoteGroups.json';
 const { name } = Astro.params;
 
 const id = tasteNoteGroups.find((country) => country.name === decodeURIComponent(name))?.taste_note_group_id;
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---
 
 <TasteNoteGroup id={id} />
