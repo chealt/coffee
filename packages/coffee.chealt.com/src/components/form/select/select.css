@@ -9,3 +9,8 @@ select {
   box-sizing: border-box;
   appearance: initial;
 }
+
+chealt-filter {
+  position: sticky;
+  top: 0;
+}

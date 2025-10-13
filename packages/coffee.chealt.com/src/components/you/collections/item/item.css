@@ -25,6 +25,6 @@
   will-change: transform;
 }
 
-.item-details ul {
+.item-details ul:has(.chip) {
   margin-top: var(--gap);
 }
