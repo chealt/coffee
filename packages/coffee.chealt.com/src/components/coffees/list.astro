@@ -3,6 +3,7 @@ import { getRelativeLocaleUrl } from 'astro:i18n';
 
 import { getDetails } from './utils.js';
 import TasteNotes from '../taste-notes/taste-notes.astro';
+import Varieties from '../varieties/list.astro';
 
 import './list.css';
 
@@ -118,20 +119,7 @@ const coffeesWithDetails = coffees.map(getDetails({ locale: Astro.currentLocale 
                 <Fragment>
                   <dt>{t.varieties}</dt>
                   <dd>
-                    <ul>
-                      {varieties.map(({ name }) => (
-                        <li class="chip">
-                          <a
-                            href={getRelativeLocaleUrl(
-                              Astro.currentLocale,
-                              `/varieties/${encodeURIComponent(name.toLowerCase())}`
-                            )}
-                          >
-                            {name}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
+                    <Varieties varieties={varieties} />
                   </dd>
                 </Fragment>
               )) ||

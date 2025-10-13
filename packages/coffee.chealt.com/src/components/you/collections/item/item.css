@@ -25,7 +25,6 @@
   will-change: transform;
 }
 
-.selected-items {
+.item-details ul {
   margin-top: var(--gap);
-  padding: 0 var(--gap);
 }

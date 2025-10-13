@@ -2,6 +2,7 @@
 import Checkbox from '../../../../form/checkbox/checkbox.astro';
 import Label from '../../../../form/label/label.astro';
 import Select from '../../../../form/select/select.astro';
+import Varieties from '../../../../varieties/list.astro';
 
 import varieties from '../../../../../../data/varieties.json';
 
@@ -10,6 +11,8 @@ import allLocaleTranslations from './locales.json';
 const t = allLocaleTranslations[Astro.currentLocale];
 
 const { selected } = Astro.props;
+
+const selectedVarieties = selected?.map((id) => varieties.find(({ id: varietyId }) => String(varietyId) === id)) || [];
 ---
 
 <Label for="varieties">
@@ -28,12 +31,4 @@ const { selected } = Astro.props;
     ))
   }
 </Select>
-{
-  selected?.length > 0 && (
-    <ul class="selected-items">
-      {selected.map((selectedId) => (
-        <li class="chip">{varieties.find(({ id }) => String(id) === selectedId)?.name}</li>
-      ))}
-    </ul>
-  )
-}
+{(selected?.length > 0 && <Varieties varieties={selectedVarieties} />) || null}

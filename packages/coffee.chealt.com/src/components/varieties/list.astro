@@ -1,0 +1,17 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+const { varieties } = Astro.props;
+---
+
+<ul>
+  {
+    varieties.map(({ name }) => (
+      <li class="chip">
+        <a href={getRelativeLocaleUrl(Astro.currentLocale, `/varieties/${encodeURIComponent(name.toLowerCase())}`)}>
+          {name}
+        </a>
+      </li>
+    ))
+  }
+</ul>
