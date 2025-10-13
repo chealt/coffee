@@ -13,12 +13,12 @@
     "taste-notes:translate": "node --env-file=.env src/taste-notes/translate.js"
   },
   "dependencies": {
-    "@aws-sdk/client-sesv2": "^3.879.0",
-    "@aws-sdk/client-translate": "^3.906.0",
-    "@libsql/client": "^0.15.14",
-    "@playwright/test": "^1.55.1",
+    "@aws-sdk/client-sesv2": "^3.908.0",
+    "@aws-sdk/client-translate": "^3.908.0",
+    "@libsql/client": "^0.15.15",
+    "@playwright/test": "^1.56.0",
     "@tursodatabase/api": "^1.9.0",
-    "jsdom": "^26.1.0",
+    "jsdom": "^27.0.0",
     "jsonwebtoken": "^9.0.2",
     "undici": "^7.16.0"
   }
