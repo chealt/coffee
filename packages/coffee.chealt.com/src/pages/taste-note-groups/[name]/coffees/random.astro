@@ -28,13 +28,7 @@ const randomCoffeeId =
 const randomCoffee = coffees.find(({ id }) => id === randomCoffeeId);
 const noCoffeeFound = !selectedTasteNoteIds.length || !coffeeIdsWithMatchingTasteNote.length || !randomCoffee;
 
-let details;
-
-if (noCoffeeFound) {
-  Astro.response.status = 404;
-} else {
-  details = getDetails({ locale: Astro.currentLocale })(randomCoffee);
-}
+const details = !noCoffeeFound && getDetails({ locale: Astro.currentLocale })(randomCoffee);
 ---
 
 {
