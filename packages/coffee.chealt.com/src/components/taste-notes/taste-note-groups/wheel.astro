@@ -1,0 +1,144 @@
+---
+import tasteNoteGroups from '../../../../data/tasteNoteGroups.json';
+
+import Button from '../../form/button/button.astro';
+
+import './wheel.css';
+import '../../icon/arrow.css';
+
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+
+const size = 180;
+const innerRadius = 20;
+const outerRadius = 90;
+
+const groups = tasteNoteGroups
+  .filter(({ name, language_code: languageCode }) => languageCode === Astro.currentLocale && name !== 'other')
+  .map(({ name, ...rest }) => (name.includes('/') ? { name: name.split(' / ')[0], ...rest } : { name, ...rest }));
+
+const segmentAngle = 360 / groups.length;
+
+const createArcPath = (centerX, centerY, innerRadius, outerRadius, startAngle, endAngle) => {
+  const startAngleRad = (startAngle * Math.PI) / 180;
+  const endAngleRad = (endAngle * Math.PI) / 180;
+
+  const x1 = centerX + outerRadius * Math.cos(startAngleRad);
+  const y1 = centerY + outerRadius * Math.sin(startAngleRad);
+  const x2 = centerX + outerRadius * Math.cos(endAngleRad);
+  const y2 = centerY + outerRadius * Math.sin(endAngleRad);
+
+  const x3 = centerX + innerRadius * Math.cos(endAngleRad);
+  const y3 = centerY + innerRadius * Math.sin(endAngleRad);
+  const x4 = centerX + innerRadius * Math.cos(startAngleRad);
+  const y4 = centerY + innerRadius * Math.sin(startAngleRad);
+
+  const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
+
+  return [
+    'M',
+    x1,
+    y1,
+    'A',
+    outerRadius,
+    outerRadius,
+    0,
+    largeArcFlag,
+    1,
+    x2,
+    y2,
+    'L',
+    x3,
+    y3,
+    'A',
+    innerRadius,
+    innerRadius,
+    0,
+    largeArcFlag,
+    0,
+    x4,
+    y4,
+    'Z'
+  ].join(' ');
+};
+
+const segments = groups.map((note, index) => {
+  const startAngle = index * segmentAngle;
+  const endAngle = startAngle + segmentAngle;
+  const percentage = 1 / groups.length;
+
+  return {
+    ...note,
+    percentage,
+    angle: segmentAngle,
+    startAngle,
+    endAngle,
+    path: createArcPath(size / 2, size / 2, innerRadius, outerRadius, startAngle, endAngle)
+  };
+});
+---
+
+<coffee-taste-note-wheel data-groups={JSON.stringify(segments.map(({ name }) => name))}>
+  <div class="random-coffee-container card">
+    <div class="random-coffee"></div>
+    <Button data-try-again class="rounded bordered">{t.tryAgain}</Button>
+  </div>
+  <div class="wheel card">
+    <svg width="100%" height="100%" viewBox={`0 0 ${size} ${size}`}>
+      {
+        segments.map((segment) => (
+          <path
+            d={segment.path}
+            fill={segment.color}
+            stroke="white"
+            stroke-width="1"
+            class="segment"
+            data-taste-note={segment.name}
+            data-group-id={segment.taste_note_group_id}
+            data-percentage={Math.round(segment.percentage * 100)}
+          />
+        ))
+      }
+
+      {
+        segments.map((segment) => {
+          const midAngle = (segment.startAngle + segment.endAngle) / 2;
+          const midAngleRad = (midAngle * Math.PI) / 180;
+          const labelRadius = (innerRadius + outerRadius) / 2;
+          const labelX = size / 2 + labelRadius * Math.cos(midAngleRad);
+          const labelY = size / 2 + labelRadius * Math.sin(midAngleRad);
+
+          // Calculate rotation angle for radial text (along the radius line)
+          // Text should point from outside to inside along the radius
+          let textRotation = midAngle;
+
+          // For left half of circle, flip text 180 degrees to keep it readable (pointing inward)
+          if (midAngle > 90 && midAngle < 270) {
+            textRotation = midAngle + 180;
+          }
+
+          return (
+            <text
+              x={labelX}
+              y={labelY}
+              text-anchor="middle"
+              dominant-baseline="middle"
+              class="segment-label"
+              transform={`rotate(${textRotation} ${labelX} ${labelY})`}
+              style={segment.name === 'sour' ? 'fill: #4f4b43' : undefined}
+            >
+              {segment.name}
+            </text>
+          );
+        })
+      }
+    </svg>
+    <div class="button-container">
+      <button data-spin>{t.iFeelLucky}</button>
+    </div>
+    <div class="down arrow bordered"></div>
+  </div>
+</coffee-taste-note-wheel>
+
+<script src="./wheel.js"></script>

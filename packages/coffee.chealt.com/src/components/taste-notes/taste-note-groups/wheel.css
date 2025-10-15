@@ -1,0 +1,82 @@
+coffee-taste-note-wheel {
+  position: relative;
+
+  .random-coffee-container {
+    transform: rotate3d(0, 1, 0, 0.25turn);
+  }
+}
+
+.wheel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap);
+  position: relative;
+  overflow: hidden;
+
+  .arrow {
+    position: absolute;
+    top: 8px;
+  }
+
+  .segment {
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    shape-rendering: crispEdges;
+  }
+
+  .segment:hover {
+    opacity: 0.8;
+  }
+
+  .segment-label {
+    pointer-events: none;
+    font-size: 0.7rem;
+    font-family: monospace;
+    fill: var(--color-text);
+    text-transform: capitalize;
+  }
+
+  .button-container {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-self: center;
+    justify-content: center;
+
+    button {
+      border-radius: 50%;
+      background-color: transparent;
+      color: var(--color-text--primary);
+      width: 70px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+.random-coffee-container {
+  position: absolute;
+  inset: 0;
+
+  a {
+    display: block;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  button {
+    position: absolute;
+    top: var(--gap);
+    right: var(--gap);
+    width: auto;
+  }
+}

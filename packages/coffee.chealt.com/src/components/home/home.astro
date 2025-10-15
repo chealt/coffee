@@ -8,6 +8,7 @@ import Common from '../common/common.astro';
 import OriginCountries from './origin-countries/origin-countries.astro';
 import Roasters from './roasters/roasters.astro';
 import TasteNoteGroups from './taste-note-groups/taste-note-groups.astro';
+import Wheel from '../taste-notes/taste-note-groups/wheel.astro';
 
 import allLocaleTranslations from './locales.json';
 
@@ -67,4 +68,8 @@ const groups = tasteNoteGroups.filter(({ language_code }) => language_code === A
     )) ||
       null
   }
+  <section>
+    <h2>{t.tasteNotesWheel}</h2>
+    <Wheel />
+  </section>
 </Common>

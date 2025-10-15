@@ -326,12 +326,6 @@ svg {
       box-sizing: border-box;
     }
 
-    .card {
-      padding: var(--gap);
-      background-color: var(--color-text);
-      border-radius: var(--border-radius);
-    }
-
     .image {
       display: flex;
       flex-direction: column;
@@ -360,6 +354,12 @@ svg {
       font-size: 1.2rem;
     }
   }
+}
+
+.card {
+  padding: var(--gap);
+  background-color: var(--color-text);
+  border-radius: var(--border-radius);
 }
 
 .empty {

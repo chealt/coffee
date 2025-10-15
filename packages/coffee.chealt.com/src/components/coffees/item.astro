@@ -1,0 +1,182 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+import TasteNotes from '../taste-notes/taste-notes.astro';
+import Varieties from '../varieties/list.astro';
+
+import './item.css';
+
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+
+const brewingMethodImages = await import.meta.glob('/public/icons/brewing-methods/*.*', {
+  eager: true,
+  query: '?raw',
+  import: 'default'
+});
+
+const {
+  id,
+  brewingMethod,
+  currency,
+  images,
+  isDecaf,
+  originCountry,
+  originFarm,
+  originRegion,
+  roastingDate,
+  price,
+  pricePerGram,
+  processingMethod,
+  tasteNotes,
+  varieties,
+  webshopItemLink,
+  weight
+} = Astro.props;
+---
+
+<a href={webshopItemLink} class="card" target="_blank" rel="noopener noreferrer">
+  <div class="image large">
+    <img src={`/coffees/${images[0]}`} loading="lazy" />
+  </div>
+</a>
+<section class="not-padded coffee-details">
+  <dl>
+    <dt>{t.originCountry}</dt>
+    <dd>{originCountry?.name || null}</dd>
+    {
+      (originRegion?.name && (
+        <Fragment>
+          <dt>{t.originRegion}</dt>
+          <dd>{originRegion.name}</dd>
+        </Fragment>
+      )) ||
+        null
+    }
+    {
+      (originFarm?.name && (
+        <Fragment>
+          <dt>{t.originFarm}</dt>
+          <dd>{originFarm.name}</dd>
+        </Fragment>
+      )) ||
+        null
+    }
+    {
+      (brewingMethod?.name && (
+        <Fragment>
+          <dt>{t.brewingMethod}</dt>
+          <dd class="brewing-method">
+            <a
+              href={getRelativeLocaleUrl(
+                Astro.currentLocale,
+                `/brewing-methods/${encodeURIComponent(brewingMethod.name)}`
+              )}
+              class="chip"
+            >
+              {(brewingMethodImages[`/public/icons/brewing-methods/${brewingMethod.name}.svg`] && (
+                <Fragment set:html={brewingMethodImages[`/public/icons/brewing-methods/${brewingMethod.name}.svg`]} />
+              )) ||
+                null}
+              {brewingMethod.name}
+            </a>
+          </dd>
+        </Fragment>
+      )) ||
+        null
+    }
+    {
+      (processingMethod?.name && (
+        <Fragment>
+          <dt>{t.processingMethod}</dt>
+          <dd>
+            <a
+              href={getRelativeLocaleUrl(
+                Astro.currentLocale,
+                `/processing-methods/${encodeURIComponent(processingMethod.name)}`
+              )}
+              class="chip"
+            >
+              {processingMethod.name}
+            </a>
+          </dd>
+        </Fragment>
+      )) ||
+        null
+    }
+    {
+      roastingDate && (
+        <Fragment>
+          <dt>{t.roastingDate}</dt>
+          <dd>{Intl.DateTimeFormat(Astro.currentLocale).format(new Date(roastingDate))}</dd>
+        </Fragment>
+      )
+    }
+    {
+      (varieties?.length && (
+        <Fragment>
+          <dt>{t.varieties}</dt>
+          <dd>
+            <Varieties varieties={varieties} />
+          </dd>
+        </Fragment>
+      )) ||
+        null
+    }
+    {
+      (tasteNotes?.length && (
+        <Fragment>
+          <dt>{t.tasteNotes}</dt>
+          <dd>{<TasteNotes tasteNotes={tasteNotes} />}</dd>
+        </Fragment>
+      )) ||
+        null
+    }
+    {
+      originFarm?.height && (
+        <Fragment>
+          <dt>{t.height}</dt>
+          <dd>{`${Intl.NumberFormat(Astro.currentLocale).format(originFarm.height)} m`}</dd>
+        </Fragment>
+      )
+    }
+    {
+      weight && (
+        <Fragment>
+          <dt>{t.weight}</dt>
+          <dd>{`${Intl.NumberFormat(Astro.currentLocale).format(weight)} g`}</dd>
+        </Fragment>
+      )
+    }
+    {
+      price && (
+        <Fragment>
+          <dt>{t.price}</dt>
+          <dd>{`${Intl.NumberFormat(Astro.currentLocale, {
+            style: 'currency',
+            currency
+          }).format(price)}`}</dd>
+        </Fragment>
+      )
+    }
+    {
+      pricePerGram && (
+        <Fragment>
+          <dt>{t.pricePerGram}</dt>
+          <dd>{`${Intl.NumberFormat(Astro.currentLocale, {
+            style: 'currency',
+            currency: 'USD'
+          }).format(pricePerGram)}`}</dd>
+        </Fragment>
+      )
+    }
+    {
+      isDecaf && (
+        <Fragment>
+          <dt>{t.decaf}</dt>
+        </Fragment>
+      )
+    }
+  </dl>
+</section>
