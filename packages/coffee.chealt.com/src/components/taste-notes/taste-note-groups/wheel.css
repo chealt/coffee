@@ -67,6 +67,10 @@ coffee-taste-note-wheel {
     top: var(--gap);
     right: var(--gap);
     width: auto;
+
+    &:active {
+      top: auto;
+    }
   }
 
   .coffee {
