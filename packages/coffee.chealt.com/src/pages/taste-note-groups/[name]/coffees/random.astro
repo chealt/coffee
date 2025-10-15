@@ -34,7 +34,9 @@ const details = !noCoffeeFound && getDetails({ locale: Astro.currentLocale })(ra
 {
   (noCoffeeFound && <p style="color: var(--color-text--primary)">{t.noCoffeeFound}</p>) || (
     <a href={details?.webshopItemLink} target="_blank" rel="noopener noreferrer">
-      <img src={`/coffees/${details?.images[0]}`} />
+      <div class="image large">
+        <img src={`/coffees/${details?.images[0]}`} />
+      </div>
     </a>
   )
 }
