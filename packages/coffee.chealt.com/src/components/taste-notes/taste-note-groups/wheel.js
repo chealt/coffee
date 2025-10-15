@@ -31,7 +31,7 @@ class TasteNoteWheel extends HTMLElement {
   async spinTheWheel(svg) {
     this.triggerButton.disabled = true;
 
-    const rotations = 2.3 * 360;
+    const rotations = 1.8 * 360;
     const randomRotation = rotations + Math.floor(Math.random() * 360);
     const segmentSize = 360 / this.dataset.numberOfSegments;
     const degreesFromStart = 360 * (randomRotation / 360 - Math.floor(randomRotation / 360));
@@ -40,7 +40,7 @@ class TasteNoteWheel extends HTMLElement {
     const selectedGroup = this.groups.slice(selectedGroupIndex)[0];
 
     this.animation = svg.animate([{ transform: 'rotate(0deg)' }, { transform: `rotate(${randomRotation}deg)` }], {
-      duration: 3 * 1000,
+      duration: 2 * 1000,
       easing: 'ease-out',
       fill: 'forwards'
     });
