@@ -1,5 +1,5 @@
 const animationOptions = {
-  duration: 800,
+  duration: 500,
   easing: 'ease-out',
   fill: 'forwards'
 };
