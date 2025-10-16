@@ -69,7 +69,7 @@ coffee-taste-note-wheel {
     width: auto;
 
     &:active {
-      top: auto;
+      top: var(--gap);
     }
   }
 
