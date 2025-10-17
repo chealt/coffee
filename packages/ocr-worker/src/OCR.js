@@ -77,7 +77,17 @@ const OCR = async ({ debug, modelPaths: { detectionPath, recognitionPath }, onnx
     const image = await prepareImage({ imageBuffer });
 
     console.info(`Running detection model...`);
+
+    performance.mark('model:detection:start');
     const modelOutput = await runModel({ model: detectionModel, image });
+    performance.mark('model:detection:end');
+
+    const { duration: detectionModelDuration } = performance.measure(
+      'model:detection',
+      'model:detection:start',
+      'model:detection:end'
+    );
+    console.info(`Detection model took: ${detectionModelDuration}ms`);
 
     console.info(`Converting output to image...`);
     const outputImage = outputToImage(modelOutput, 0.03);
