@@ -80,7 +80,9 @@ const saveCoffeeImages = async () => {
 };
 
 const saveCoffeeTasteNotes = async () => {
-  const results = await turso.execute('SELECT * FROM coffee_taste_notes');
+  const results = await turso.execute(
+    'SELECT ctn.* FROM coffee_taste_notes ctn JOIN coffees c ON c.id = ctn.coffee_id WHERE NOT c.is_removed'
+  );
 
   return writeFile('./data/coffeeTasteNotes.json', JSON.stringify(results.rows), { flag: 'w+' });
 };
