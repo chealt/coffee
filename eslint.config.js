@@ -194,7 +194,8 @@ export default defineConfig([
       'packages/coffee.chealt.com/astro.config.js',
       'packages/coffee.chealt.com/src/server/**/*.js',
       'packages/coffee.chealt.com/src/middleware.js',
-      'packages/coffee-admin/**/*.js'
+      'packages/coffee-admin/**/*.js',
+      'packages/ocr-worker/**/*.js'
     ],
     languageOptions: {
       globals: {
