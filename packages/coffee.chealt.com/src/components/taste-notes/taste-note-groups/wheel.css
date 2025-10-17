@@ -1,5 +1,6 @@
 coffee-taste-note-wheel {
   position: relative;
+  display: block;
 
   .random-coffee-container {
     transform: rotate3d(0, 1, 0, 0.25turn);
