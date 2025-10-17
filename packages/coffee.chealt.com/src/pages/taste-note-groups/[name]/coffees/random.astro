@@ -13,7 +13,9 @@ const t = allLocaleTranslations[Astro.currentLocale];
 
 const { name } = Astro.params;
 
-const tasteNoteGroupId = tasteNoteGroups.find((group) => group.name === decodeURIComponent(name))?.taste_note_group_id;
+const tasteNoteGroupId = tasteNoteGroups.find((group) =>
+  group.name.includes(decodeURIComponent(name))
+)?.taste_note_group_id;
 const selectedTasteNoteSubGroupIds = tasteNoteSubGroups
   .filter((subGroup) => subGroup.taste_note_group_id === tasteNoteGroupId)
   .map(({ taste_note_sub_group_id: id }) => id);
