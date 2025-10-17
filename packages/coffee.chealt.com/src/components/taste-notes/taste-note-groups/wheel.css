@@ -42,7 +42,7 @@ coffee-taste-note-wheel {
     position: absolute;
     inset: 0;
     display: flex;
-    align-self: center;
+    align-items: center;
     justify-content: center;
 
     button {
