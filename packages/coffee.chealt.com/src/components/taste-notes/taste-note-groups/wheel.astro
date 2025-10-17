@@ -85,7 +85,7 @@ const segments = groups.map((note, index) => {
     <Button data-try-again class="rounded bordered">{t.tryAgain}</Button>
   </div>
   <div class="wheel card">
-    <svg width="100%" height="100%" viewBox={`0 0 ${size} ${size}`}>
+    <svg viewBox={`0 0 ${size} ${size}`}>
       {
         segments.map((segment) => (
           <path

@@ -13,6 +13,12 @@ coffee-taste-note-wheel {
   gap: var(--gap);
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
 
   .arrow {
     position: absolute;
