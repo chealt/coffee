@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { InferenceSession, Tensor, env } from 'onnxruntime-web';
+import { InferenceSession, Tensor } from 'onnxruntime-web';
 import sharp from 'sharp';
 
 import dictionary from './dictionary.js';
@@ -7,9 +7,6 @@ import { outputToImage, multipleOfBaseSize, resizeImage } from './imageUtils.js'
 import { imageToModelInput } from './modelUtils.js';
 import { splitIntoLineImages } from './splitIntoLineImages.js';
 import { clean } from './utils/text.js';
-
-env.wasm.numThreads = 1;
-env.wasm.simd = false;
 
 const defaultOptions = {
   debug: false,
