@@ -1,26 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- (c) ammap.com | SVG map of Ethiopia - Low -->
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:amcharts="http://amcharts.com/ammap" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="-15.3344 -15.974400000000001 830.6688 652.3288">
-	<defs>
-		<style type="text/css">
-			.land
-			{
-				fill: #CCCCCC;
-				fill-opacity: 1;
-				stroke:white;
-				stroke-opacity: 1;
-				stroke-width:0.5;
-			}
-		</style>
-    
-
-		<amcharts:ammap projection="mercator" leftLongitude="32.997734" topLatitude="14.8942141" rightLongitude="48.0010561" bottomLatitude="3.4041369"></amcharts:ammap>
-
-		<!-- All areas are listed in the line below. You can use this list in your script. -->
-		<!--{id:"ET-HA"},{id:"ET-DD"},{id:"ET-SO"},{id:"ET-AA"},{id:"ET-BE"},{id:"ET-AA"},{id:"ET-GA"},{id:"ET-SN"},{id:"ET-AF"},{id:"ET-TI"},{id:"ET-AM"}-->
-
-	</defs>
-	<g>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="-15.3344 -15.974400000000001 830.6688 652.3288">
+		<g>
 		<path id="ET-HA" title="Harari People" class="land" d="M494.01,310.19L494.43,299.6L484.01,306.79L494.01,310.19z"/>
 		<path id="ET-DD" title="Dire Dawa" class="land" d="M498.93,281.47L468.12,285.81L466.74,294.8L484.84,294.74L498.93,281.47z"/>
 		<path id="ET-SO" title="Somali" class="land" d="M349.48,620.38L366.11,595.7L414.88,573.39L436.15,591.67L472.01,591.31L486.24,578.36L525.07,572.46L562.2,543.63L637.49,539.89L799.36,374.44L746.07,374.44L586.51,319.92L556.37,298.08L525.32,255.08L515.24,232.1L527.29,213.33L513.56,207.29L468.31,212.72L440.81,215.42L431.91,229.55L428.63,268.99L411.22,296.38L422.92,297.2L419.29,303.8L441.85,293.06L466.74,294.8L468.12,285.81L498.93,281.47L529.42,346.74L516.37,366.68L495.36,340.71L482.48,350.9L474.1,400.56L492.86,416.04L482.05,446.13L460.61,462.12L428.98,446.44L419.93,459.12L423.34,497.72L402.36,512.93L374.96,514.66L345.93,593.02L325.72,614.33L349.48,620.38z"/>

@@ -1,27 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- (c) ammap.com | SVG map of Papua New Guinea - Low -->
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:amcharts="http://amcharts.com/ammap" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="-15.240799999999998 -15.970799999999999 830.4816 579.5015999999999">
-	<defs>
-		<style type="text/css">
-			.land
-			{
-				fill: #CCCCCC;
-				fill-opacity: 1;
-				stroke:white;
-				stroke-opacity: 1;
-				stroke-width:0.5;
-			}
-		</style>
-    
-
-		<amcharts:ammap projection="mercator" leftLongitude="140.8419695" topLatitude="-0.8713195" rightLongitude="155.549804687" bottomLatitude="-11.6578607"></amcharts:ammap>
-
-		<!-- All areas are listed in the line below. You can use this list in your script. -->
-		<!--{id:"PG-WBK"},{id:"PG-NPP"},{id:"PG-NIK"},{id:"PG-NCD"},{id:"PG-MPL"},{id:"PG-MBA"},{id:"PG-MRL"},{id:"PG-EBR"},{id:"PG-CPM"},{id:"PG-WPD"},{id:"PG-WHM"},{id:"PG-SHM"},{id:"PG-NSB"},{id:"PG-GPK"},{id:"PG-EHG"},{id:"PG-CPK"},{id:"PG-SAN"},{id:"PG-MPM"},{id:"PG-ESW"},{id:"PG-EPW"}-->
-
-        
-	</defs>
-	<g>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="-15.240799999999998 -15.970799999999999 830.4816 579.5015999999999">
+		<g>
 		<path id="PG-WBK" title="West New Britain" class="land" d="M571.24,190.34L556.51,187.93L541.4,201.74L537.01,215.6L517.68,222.59L510.25,216.79L499.5,223.11L491.71,221.39L485.88,208.71L494.88,196.34L490.13,193.46L477.47,221.04L468.83,223.16L466.76,218.46L457.71,224.29L443.21,224.85L430.19,217.73L407.92,221.7L401.24,216.64L396.59,221.34L398.93,234.18L434.16,246.47L434.15,254.72L448.29,249.04L455.87,251.58L464.92,262.5L506.45,261.33L524.93,253.02L515.94,235.89L535.6,230.36L536.52,225.06L548.17,220.48L545.82,215.48L555.31,197.28L572.63,193.55L571.24,190.34z"/>
 		<path id="PG-NPP" title="Northern" class="land" d="M377.33,352.81L325.25,352.6L357.11,379.58L352.73,398.84L375.76,422.55L381.47,437.26L421.28,457.46L430.06,455.73L429.04,448.07L430.99,443.1L455.72,437.82L441.25,426.92L448.16,407.22L409.46,409.44L402.05,388.62L390.65,382.2L386.25,355.03L377.33,352.81z"/>
 		<path id="PG-NIK" title="New Ireland" class="land" d="M678.11,144.83L676.7,141.25L673.84,145.08L678.11,144.83zM624.38,98.5L624.23,89.58L620.21,89.24L618.15,93.37L624.38,98.5zM536.13,84.62L530.8,81.99L524.86,86.04L536.13,84.62zM589.55,76.68L585.26,71.54L585.4,78.88L589.55,76.68zM539.32,71.81L527.12,63.63L531.33,71.12L523.23,73.62L541.8,78.27L579.76,106.23L605.1,117.27L626.19,148.73L626.29,169.07L637.28,185.01L649.93,159.97L639.83,139.29L620.23,130.58L592.62,100.17L539.32,71.81zM496.35,54.51L481.95,59.49L493.55,70.01L508.4,68.79L507.82,59.85L496.35,54.51zM462.36,0L460.95,7.69L473.25,12.06L462.36,0z"/>

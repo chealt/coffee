@@ -1,26 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- (c) ammap.com | SVG map of Jamaica - Low -->
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:amcharts="http://amcharts.com/ammap" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="-14.679200000000002 -15.949200000000001 829.3584000000001 344.8384">
-	<defs>
-		<style type="text/css">
-			.land
-			{
-				fill: #CCCCCC;
-				fill-opacity: 1;
-				stroke:white;
-				stroke-opacity: 1;
-				stroke-width:0.5;
-			}
-		</style>
-    
-
-		<amcharts:ammap projection="mercator" leftLongitude="-78.368846" topLatitude="18.525310" rightLongitude="-76.183159" bottomLatitude="17.705724"></amcharts:ammap>
-
-		<!-- All areas are listed in the line below. You can use this list in your script. -->
-		<!--{id:"JM-03"},{id:"JM-02"},{id:"JM-05"},{id:"JM-14"},{id:"JM-06"},{id:"JM-04"},{id:"JM-01"},{id:"JM-10"},{id:"JM-07"},{id:"JM-08"},{id:"JM-11"},{id:"JM-12"},{id:"JM-09"},{id:"JM-13"}-->
-
-	</defs>
-	<g>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="-14.679200000000002 -15.949200000000001 829.3584000000001 344.8384">
+		<g>
 		<path id="JM-03" title="Saint Thomas" class="land" d="M773.63,200.63L674.36,190.73L638.33,170.99L642.54,207.33L627.62,226.18L647.46,249.97L734.89,252.57L798.73,231.63L773.63,200.63z"/>
 		<path id="JM-02" title="Saint Andrew" class="land" d="M593.24,146.05L548.97,142.34L542.84,188.68L557.31,202.19L570.99,210.14L591.78,200.53L602.17,216.94L563.76,223.54L627.62,226.18L642.54,207.33L638.33,170.99L601.83,167.58L593.24,146.05z"/>
 		<path id="JM-05" title="Saint Mary" class="land" d="M611.47,96.85L578.31,90.47L540.91,42.11L476.94,40.54L503.9,106.38L519.87,106.05L548.97,142.34L593.24,146.05L611.47,96.85z"/>

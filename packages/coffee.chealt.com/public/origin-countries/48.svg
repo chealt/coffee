@@ -1,26 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- (c) ammap.com | SVG map of Tanzania - Low -->
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:amcharts="http://amcharts.com/ammap" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="-15.469600000000002 -15.979600000000001 830.9392 807.7292">
-	<defs>
-		<style type="text/css">
-			.land
-			{
-				fill: #CCCCCC;
-				fill-opacity: 1;
-				stroke:white;
-				stroke-opacity: 1;
-				stroke-width:0.5;
-			}
-		</style>
-    
-
-		<amcharts:ammap projection="mercator" leftLongitude="29.3399999" topLatitude="-0.984397" rightLongitude="40.4449653" bottomLatitude="-11.761254"></amcharts:ammap>
-		
-		<!-- All areas are listed in the line below. You can use this list in your script. -->
-		<!--{id:"TZ-29"},{id:"TZ-27"},{id:"TZ-30"},{id:"TZ-28"},{id:"TZ-25"},{id:"TZ-13"},{id:"TZ-09"},{id:"TZ-26"},{id:"TZ-01"},{id:"TZ-23"},{id:"TZ-21"},{id:"TZ-17"},{id:"TZ-12"},{id:"TZ-04"},{id:"TZ-03"},{id:"TZ-15"},{id:"TZ-07"},{id:"TZ-19"},{id:"TZ-10"},{id:"TZ-06"},{id:"TZ-16"},{id:"TZ-02"},{id:"TZ-08"},{id:"TZ-05"},{id:"TZ-24"},{id:"TZ-22"},{id:"TZ-18"},{id:"TZ-11"},{id:"TZ-20"},{id:"TZ-14"}-->
-
-	</defs>
-	<g>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="-15.469600000000002 -15.979600000000001 830.9392 807.7292">
+		<g>
 		<path id="TZ-29" title="Njombe" class="land" d="M434.39,577.62L422.33,578.96L416.32,561.13L388.93,548.3L370.45,564.31L325.79,570.71L325.44,592.37L341.97,614.12L374.02,650.45L377.99,688.62L416.71,663.76L423.65,652.87L417.03,632.31L458.2,601.72L434.39,577.62z"/>
 		<path id="TZ-27" title="Geita" class="land" d="M229.36,157.76L235.56,140.68L218.58,122.67L222.42,115.39L189.28,99.61L183.88,82.29L166.4,97.26L132.87,91.75L111.91,120.83L119.61,131.94L150.81,241.14L169.85,230.77L170.49,218.22L180.87,196.98L202.34,191.92L205.7,163.11L229.36,157.76z"/>
 		<path id="TZ-30" title="Simiyu" class="land" d="M423.05,106.66L383.57,106.96L338.89,81.17L290.23,83.72L321.06,122.5L301.35,131.7L294.89,163.24L347.7,183.11L365.98,212.67L390.95,201.22L400.42,186.47L401.05,135.13L416.96,137.75L423.05,106.66z"/>
