@@ -1,11 +1,13 @@
 import cloudflare from '@astrojs/cloudflare';
 import { defineConfig } from 'astro/config';
+
 // import { visualizer } from 'rollup-plugin-visualizer';
+import locales from './data/supportedLanguages.json';
 
 export default defineConfig({
   output: 'server',
   i18n: {
-    locales: ['en', 'pl'],
+    locales,
     defaultLocale: 'en',
     routing: {
       prefixDefaultLocale: true

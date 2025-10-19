@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 
+import languages from '../data/supportedLanguages.json';
 import { sessionSecret } from './server/authentication/config.js';
 import { getUsername } from './server/authentication/cookies.js';
 import { getSessionUser } from './server/authentication/session.js';
@@ -19,8 +20,6 @@ const setImageUploadUrls = (context) => {
     original: getImageUrl()
   };
 };
-
-const languages = ['pl', 'en'];
 
 const parsePath = (pathname) => {
   const pathParams = pathname.split('/');
