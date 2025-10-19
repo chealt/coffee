@@ -40,7 +40,6 @@ coffee-taste-note-wheel {
     pointer-events: none;
     font-size: 0.7rem;
     font-family: monospace;
-    fill: var(--color-text);
     text-transform: capitalize;
     letter-spacing: 2px;
   }

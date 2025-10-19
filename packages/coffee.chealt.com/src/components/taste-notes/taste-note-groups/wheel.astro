@@ -126,7 +126,7 @@ const segments = groups.map((note, index) => {
               dominant-baseline="middle"
               class="segment-label"
               transform={`rotate(${textRotation} ${labelX} ${labelY})`}
-              style={segment.name === 'sour' ? 'fill: #4f4b43' : undefined}
+              style={`fill: ${segment.text_color}`}
             >
               {segment.name}
             </text>
