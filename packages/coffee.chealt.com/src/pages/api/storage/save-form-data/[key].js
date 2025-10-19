@@ -1,3 +1,4 @@
+import { cookieNameLocale } from '../../../../server/authentication/config.js';
 import { getSessionUser } from '../../../../server/authentication/session.js';
 import { insert } from '../../../../server/database/formData.js';
 
@@ -31,9 +32,22 @@ const POST = async ({ params, request }) => {
   });
 
   try {
+    let redirectUrl;
+    let headers;
+
     await insert({ user, key: params.key, value: data });
 
-    return new Response(JSON.stringify({ success: true }), { status: 200 });
+    if (params.key === 'locale') {
+      redirectUrl = `/${data.language}/you/profile`;
+      headers = [
+        [
+          'Set-Cookie',
+          `${cookieNameLocale}=${data.language}; Path=/; HttpOnly; SameSite=Strict; Secure; Max-Age=${60 * 60 * 24 * 365}`
+        ]
+      ];
+    }
+
+    return new Response(JSON.stringify({ success: true, redirectUrl }), { status: 200, headers });
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error);

@@ -1,10 +1,11 @@
 import jwt from 'jsonwebtoken';
 
 import languages from '../data/supportedLanguages.json';
-import { sessionSecret } from './server/authentication/config.js';
+import { cookieNameLocale, sessionSecret } from './server/authentication/config.js';
 import { getUsername } from './server/authentication/cookies.js';
 import { getSessionUser } from './server/authentication/session.js';
 import { getImageUrl } from './server/cloudflare/r2/storage.js';
+import { getValue } from './server/database/formData.js';
 import { getAuthenticationOptions } from './server/login.js';
 import { createRegistrationOptions } from './server/registration.js';
 import { setCollections, setCollectionItem } from './server/you/collections.js';
@@ -56,7 +57,34 @@ const authenticate = (context) => {
 // eslint-disable-next-line complexity
 const onRequest = async (context, next) => {
   const { page, params } = parsePath(context.url.pathname);
-  const { itemId, collectionId } = context.params;
+  const { itemId, collectionId, locale } = context.params;
+
+  let savedLocaleDB;
+
+  try {
+    const settings = await getValue({ user: { name: getSessionUser(context.request)?.username }, key: 'settings' });
+
+    savedLocaleDB = settings?.language;
+  } catch {
+    // eslint-disable-next-line no-console
+    console.info('Not logged in, so could not read language from DB.');
+  }
+
+  const savedLocale = context.cookies.get(cookieNameLocale)?.value || savedLocaleDB;
+
+  if (savedLocale && locale && savedLocale !== locale && languages.includes(locale)) {
+    let url = `/${savedLocale}`;
+
+    if (page) {
+      url += `/${page}`;
+    }
+
+    if (params.length) {
+      url += `/${params.join('/')}`;
+    }
+
+    return redirect(url);
+  }
 
   if (page === 'api' && params[0] !== 'authentication') {
     try {
