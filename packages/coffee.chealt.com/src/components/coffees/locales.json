@@ -1,6 +1,7 @@
 {
   "en": {
     "brewingMethod": "Brewing method",
+    "coffeeFrom": "coffee from",
     "decaf": "Decaf",
     "height": "Height",
     "originCountry": "Origin",
@@ -14,10 +15,12 @@
     "roastingLevel": "Roasting level",
     "tasteNotes": "Taste notes",
     "varieties": "Varieties",
+    "webshopLinkName": "Webshop link to",
     "weight": "Weight"
   },
   "pl": {
     "brewingMethod": "Sposób zaparzania",
+    "coffeeFrom": "Kawa z",
     "decaf": "Bezkofeinowy",
     "height": "Wysokość",
     "originCountry": "Kraj pochodzenia",
@@ -31,6 +34,7 @@
     "roastingLevel": "Stopień palenia",
     "tasteNotes": "Smaki",
     "varieties": "Odmiany",
+    "webshopLinkName": "Link do sklepu",
     "weight": "Waga"
   }
 }

@@ -5,6 +5,10 @@ import './origin-countries.css';
 
 import originCountries from '../../../../data/originCountriesWithCoffees.json';
 
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+
 const countries = originCountries.filter(({ language_code }) => language_code === Astro.currentLocale);
 ---
 
@@ -14,7 +18,7 @@ const countries = originCountries.filter(({ language_code }) => language_code ==
       <li class="item">
         <a href={getRelativeLocaleUrl(Astro.currentLocale, `/origin-countries/${name}`)}>
           <div class="image card">
-            <img src={`/origin-countries/${origin_country_id}.svg`} alt={name} loading="lazy" />
+            <img src={`/origin-countries/${origin_country_id}.svg`} alt={`${t.originCountry} ${name}`} loading="lazy" />
           </div>
           <div class="name">{name}</div>
         </a>

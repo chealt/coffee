@@ -8,13 +8,13 @@ const { groups } = Astro.props;
 
 <ul class="list">
   {
-    groups.map(({ name, color }) => (
+    groups.map(({ name, color, text_color }) => (
       <li class="item">
         <a
           href={getRelativeLocaleUrl(Astro.currentLocale, `/taste-note-groups/${encodeURIComponent(name)}`)}
           class="card"
         >
-          <div class="name" style={`background-color: ${color}; ${color === '#ebb40d' ? 'color: #4f4b43' : ''}`}>
+          <div class="name" style={`background-color: ${color}; color: ${text_color}`}>
             {name}
           </div>
         </a>

@@ -36,9 +36,9 @@ const {
 } = Astro.props;
 ---
 
-<a href={webshopItemLink} class="card" target="_blank" rel="noopener noreferrer">
+<a href={webshopItemLink} class="card" target="_blank" rel="noopener noreferrer" name={t.webshopLinkName}>
   <div class="image large">
-    <img src={`/coffees/${images[0]}`} loading="lazy" />
+    <img src={`/coffees/${images[0]}`} loading="lazy" alt={`${t.coffeeFrom} ${originCountry?.name}`} />
   </div>
 </a>
 <section class="not-padded coffee-details">

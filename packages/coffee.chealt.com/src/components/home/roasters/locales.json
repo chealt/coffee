@@ -1,4 +1,8 @@
 {
-  "en": {},
-  "pl": {}
+  "en": {
+    "roasterLogo": "logo of the roaster"
+  },
+  "pl": {
+    "roasterLogo": "logo roasteru"
+  }
 }

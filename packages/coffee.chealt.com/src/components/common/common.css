@@ -5,6 +5,7 @@
 
   --color-background: white;
   --color-background--subtle: rgba(250, 250, 250, 0.4);
+  --color-background--dark: #efb376;
   --color-background--alternative: #d4d4d4;
   --color-border: black;
   --color-border--alternative: #c5c5c5;
@@ -40,8 +41,9 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --color-background: #37352c;
-    --color-background--subtle: rgba(32, 32, 32, 0.4);
     --color-background--alternative: #25241e;
+    --color-background--dark: #f1e3cd;
+    --color-background--subtle: rgba(32, 32, 32, 0.4);
     --color-border: #e0e0e0;
     --color-border--alternative: #868686;
     --color-text: #f1e3cd;
@@ -360,7 +362,7 @@ svg {
 
 .card {
   padding: var(--gap);
-  background-color: var(--color-text);
+  background-color: var(--color-background--dark);
   border-radius: var(--border-radius);
 }
 

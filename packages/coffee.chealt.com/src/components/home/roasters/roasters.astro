@@ -4,6 +4,10 @@ import { getRelativeLocaleUrl } from 'astro:i18n';
 import roasters from '../../../../data/roastersWithCoffees.json';
 import countries from '../../../../data/countries.json';
 
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+
 const roasterCount = roasters.length || 0;
 const roasterCountryCount = countries.filter(({ language_code }) => language_code === Astro.currentLocale).length;
 
@@ -18,7 +22,7 @@ await import.meta.glob('/public/roasters/*.{jpeg,jpg,png,gif,svg,webp}', { eager
         <li data-country-id={country_id} class="item">
           <a href={getRelativeLocaleUrl(Astro.currentLocale, `/roasters/${name}`)}>
             <div class="image card" style={`view-transition-name: roaster-${id}`}>
-              <img src={`/roasters/${logo}`} alt={name} loading="lazy" />
+              <img src={`/roasters/${logo}`} alt={`${t.roasterLogo} ${name}`} loading="lazy" />
             </div>
             <div class="name">{name}</div>
           </a>
