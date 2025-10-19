@@ -177,7 +177,7 @@ const parsers = {
 
     const coffees = await Promise.all(
       Array.from(uniqueProductLinks).map(async (webshopItemLink) => {
-        console.info(`Fetching item page: ${webshopItemLink}...`);
+        console.info(`Fetching item page: ${webshopItemLink}`);
 
         let itemResponse;
 
@@ -206,7 +206,7 @@ const parsers = {
           window: { document: itemDocument }
         } = new JSDOM(itemHtml);
 
-        console.info(`Parsing item page: ${webshopItemLink}...`);
+        console.info(`Parsing item page: ${webshopItemLink}`);
 
         const someInStock = JSON.parse(itemDocument.querySelector('.variations_form').dataset.product_variations)
           .map((product) => product.is_in_stock)
@@ -362,6 +362,152 @@ const parsers = {
 
     return coffees;
   },
+  // Klaro
+  70: async ({ webshop }) => {
+    console.info('Fetching webshop page...');
+
+    const response = await fetch(webshop);
+    const html = await response.text();
+
+    const {
+      window: { document }
+    } = new JSDOM(html);
+
+    console.info('Parsing webshop page...');
+
+    const productLinks = Array.from(
+      document.querySelectorAll('.instock.product_cat-coffee:not(.product_cat-dripbags) a.ast-loop-product__link')
+    ).map(({ href }) => href);
+
+    const coffees = await Promise.all(
+      productLinks.map(async (webshopItemLink) => {
+        console.info(`Fetching item page: ${webshopItemLink}`);
+
+        const itemResponse = await fetch(webshopItemLink);
+        const itemHtml = await itemResponse.text();
+
+        console.info(`Parsing item page: ${webshopItemLink}`);
+        const {
+          window: { document: itemDocument }
+        } = new JSDOM(itemHtml);
+
+        const price = parseFloat(
+          itemDocument.querySelector('.price .woocommerce-Price-amount.amount').textContent.replaceAll(' zł', '')
+        );
+
+        const currencySymbol = itemDocument.querySelector(
+          '.summary .price .woocommerce-Price-currencySymbol'
+        ).textContent;
+        const currency = currencyCodes[currencySymbol];
+
+        if (!currency) {
+          throw new Error(`Unknown currency: ${webshopItemLink}`);
+        }
+
+        const weightElementValue = itemDocument
+          .querySelector('.woocommerce-product-attributes-item--weight td')
+          .textContent.replaceAll(' kg', '')
+          .replaceAll(',', '.');
+        const weight = parseFloat(weightElementValue) * 1000; // convert to grams
+
+        const pricePerGram = Number((price / weight).toFixed(2));
+
+        const originCountryId = originCountries.find(({ name }) =>
+          webshopItemLink.replaceAll('-', ' ').includes(name)
+        )?.origin_country_id;
+
+        const originRegion = itemDocument
+          .querySelector('.woocommerce-product-attributes-item--attribute_region td')
+          .textContent.toLowerCase();
+        const originRegionId = originRegions.find(({ name }) => originRegion.includes(name))?.origin_region_id || null;
+
+        if (!originRegionId) {
+          console.debug(`Missing origin region: ${originRegion.textContent}`);
+        }
+
+        const processingMethod = itemDocument
+          .querySelector('.woocommerce-product-attributes-item--attribute_process td')
+          .textContent.trim()
+          .toLowerCase();
+        const processingMethodId = processingMethods.find(
+          ({ name }) => name === processingMethod
+        )?.processing_method_id;
+
+        if (!processingMethodId) {
+          console.debug(`Missing processing method: ${processingMethod}`);
+        }
+
+        const brewingMethodId =
+          brewingMethods.find(({ name }) => webshopItemLink.includes(name))?.brewing_method_id || null;
+
+        const tasteNoteValues = itemDocument
+          .querySelector('.woocommerce-product-attributes-item--attribute_taste td')
+          .textContent.trim()
+          .toLowerCase()
+          .split(', ');
+        const tasteNoteIds = tasteNoteValues
+          .map((tasteNote) => tasteNotes.find(({ name }) => name === tasteNote)?.taste_note_id)
+          .filter(Boolean);
+        const missingTasteNotes = tasteNoteValues.filter(
+          (tasteNote) => !tasteNotes.some(({ name }) => name === tasteNote)
+        );
+
+        if (missingTasteNotes.length) {
+          console.debug(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
+        }
+
+        const varietiesStrings = itemDocument
+          .querySelector('.woocommerce-product-attributes-item--attribute_variety td')
+          .textContent.trim()
+          .toLowerCase()
+          .split(', ');
+        const varietyIds = varieties
+          .filter(
+            ({ name }) =>
+              varietiesStrings.includes(name.toLowerCase()) ||
+              (name.toLowerCase() === 'mundo novo' && varietiesStrings.includes('mundo movo')) // typo
+          )
+          .map(({ id }) => id);
+        const missingVarieties = varietiesStrings.filter(
+          (variety) =>
+            !varieties.some(
+              ({ name }) =>
+                name.toLowerCase() === variety || (name.toLowerCase() === 'mundo novo' && variety === 'mundo movo')
+            )
+        );
+
+        if (missingVarieties.length) {
+          console.debug(`Missing varieties: ${missingVarieties.join(', ')}`);
+        }
+
+        const isDecaf = webshopItemLink.includes('decaf');
+
+        const image = itemDocument.querySelector('img.wp-post-image').src;
+
+        if (!image) {
+          throw new Error(`No image found: ${webshopItemLink}`);
+        }
+
+        return {
+          brewingMethodId,
+          currency,
+          image,
+          isDecaf,
+          originCountryId,
+          originRegionId,
+          price,
+          pricePerGram,
+          processingMethodId,
+          tasteNoteIds,
+          varietyIds,
+          webshopItemLink,
+          weight
+        };
+      })
+    );
+
+    return coffees;
+  },
   // Meron
   252: async ({ webshop }) => {
     console.info('Fetching webshop page...');
@@ -388,7 +534,7 @@ const parsers = {
 
     const coffees = await Promise.all(
       productLinks.map(async (webshopItemLink) => {
-        console.info(`Fetching item page: ${webshopItemLink}...`);
+        console.info(`Fetching item page: ${webshopItemLink}`);
         const itemResponse = await fetch(webshopItemLink);
         const itemHtml = await itemResponse.text();
 
