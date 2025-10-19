@@ -20,6 +20,7 @@ const {
   id,
   brewingMethod,
   currency,
+  highPriority,
   images,
   isDecaf,
   originCountry,
@@ -38,7 +39,12 @@ const {
 
 <a href={webshopItemLink} class="card" target="_blank" rel="noopener noreferrer" name={t.webshopLinkName}>
   <div class="image large">
-    <img src={`/coffees/${images[0]}`} loading="lazy" alt={`${t.coffeeFrom} ${originCountry?.name}`} />
+    <img
+      src={`/coffees/${images[0]}`}
+      alt={`${t.coffeeFrom} ${originCountry?.name}`}
+      loading={highPriority ? undefined : 'lazy'}
+      fetchpriority={highPriority ? 'high' : undefined}
+    />
   </div>
 </a>
 <section class="not-padded coffee-details">
