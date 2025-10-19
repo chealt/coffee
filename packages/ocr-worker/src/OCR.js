@@ -7,6 +7,7 @@ import { outputToImage, multipleOfBaseSize, resizeImage } from './imageUtils.js'
 import { imageToModelInput } from './modelUtils.js';
 import { splitIntoLineImages } from './splitIntoLineImages.js';
 import { clean } from './utils/text.js';
+import { memoryUsage } from 'node:process';
 
 const defaultOptions = {
   debug: false,
@@ -336,9 +337,11 @@ const OCR = async ({ debug, modelPaths: { detectionPath, recognitionPath }, onnx
 
   const extractText = async (imageBuffer) => {
     try {
+      console.info(`Memory usage - before detection: ${JSON.stringify(memoryUsage())}`);
       performance.mark('detection:start');
       const { lineImages } = await detect({ imageBuffer });
       performance.mark('detection:end');
+      console.info(`Memory usage - after detection: ${JSON.stringify(memoryUsage())}`);
 
       const { duration: detectionDuration } = performance.measure('detection', 'detection:start', 'detection:end');
       console.info(`Detection took ${detectionDuration}ms`);
@@ -350,6 +353,7 @@ const OCR = async ({ debug, modelPaths: { detectionPath, recognitionPath }, onnx
       performance.mark('recognition:start');
       const texts = await recognize(lineImages);
       performance.mark('recognition:end');
+      console.info(`Memory usage - before recognition: ${JSON.stringify(memoryUsage())}`);
 
       const { duration: recognitionDuration } = performance.measure(
         'recognition',
