@@ -37,7 +37,7 @@ const POST = async ({ params, request }) => {
 
     await insert({ user, key: params.key, value: data });
 
-    if (params.key === 'locale') {
+    if (params.key === 'settings') {
       redirectUrl = `/${data.language}/you/profile`;
       headers = [
         [
