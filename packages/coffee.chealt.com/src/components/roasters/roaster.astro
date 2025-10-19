@@ -6,6 +6,7 @@ import Button from '../form/button/button.astro';
 import Icon from '../icon/icon.astro';
 import Common from '../common/common.astro';
 import Coffees from '../coffees/list.astro';
+import { getConvertedPricePerGram } from '../coffees/utils.js';
 
 import './roaster.css';
 
@@ -16,7 +17,13 @@ const t = allLocaleTranslations[Astro.currentLocale];
 const { id } = Astro.props;
 
 const { name, logo, instagram, website } = roasters.find((roaster) => roaster.id === id);
-const coffees = allCoffees.filter(({ roaster_id: roasterId }) => roasterId === id);
+const coffees = allCoffees
+  .filter(({ roaster_id: roasterId }) => roasterId === id)
+  .sort(
+    (a, b) =>
+      getConvertedPricePerGram({ currency: b.currency, pricePerGram: b.price_per_gram }) -
+      getConvertedPricePerGram({ currency: a.currency, pricePerGram: a.price_per_gram })
+  );
 ---
 
 <Common>
