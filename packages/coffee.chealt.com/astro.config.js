@@ -6,7 +6,10 @@ export default defineConfig({
   output: 'server',
   i18n: {
     locales: ['en', 'pl'],
-    defaultLocale: 'en'
+    defaultLocale: 'en',
+    routing: {
+      prefixDefaultLocale: true
+    }
   },
   devToolbar: {
     enabled: false
