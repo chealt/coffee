@@ -56,6 +56,7 @@ const authenticate = (context) => {
 // eslint-disable-next-line complexity
 const onRequest = async (context, next) => {
   const { page, params } = parsePath(context.url.pathname);
+  const { itemId, collectionId } = context.params;
 
   if (page === 'api' && params[0] !== 'authentication') {
     try {
@@ -69,11 +70,9 @@ const onRequest = async (context, next) => {
 
   if (page === 'you') {
     try {
-      if (!params[1]) {
+      if (!collectionId) {
         await setCollections(context);
-      } else if (params[1] && params[3]) {
-        const itemId = params[3];
-
+      } else if (collectionId && itemId) {
         await setCollections(context); // to enable the 'add to collection' feature
         await setCollectionItem(context, itemId);
       }
