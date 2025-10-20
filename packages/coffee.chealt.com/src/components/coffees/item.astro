@@ -7,6 +7,7 @@ import Varieties from '../varieties/list.astro';
 import './item.css';
 
 import allLocaleTranslations from './locales.json';
+import { getConvertedPrice } from './utils';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
@@ -19,7 +20,6 @@ const brewingMethodImages = await import.meta.glob('/public/icons/brewing-method
 const {
   id,
   brewingMethod,
-  currency,
   highPriority,
   images,
   isDecaf,
@@ -35,6 +35,8 @@ const {
   webshopItemLink,
   weight
 } = Astro.props;
+
+const { currency } = Astro.locals;
 ---
 
 <a href={webshopItemLink} class="card" target="_blank" rel="noopener noreferrer" name={t.webshopLinkName}>
@@ -162,7 +164,7 @@ const {
           <dd>{`${Intl.NumberFormat(Astro.currentLocale, {
             style: 'currency',
             currency
-          }).format(price)}`}</dd>
+          }).format(getConvertedPrice({ price, currency }))}`}</dd>
         </Fragment>
       )
     }
@@ -172,8 +174,8 @@ const {
           <dt>{t.pricePerGram}</dt>
           <dd>{`${Intl.NumberFormat(Astro.currentLocale, {
             style: 'currency',
-            currency: 'USD'
-          }).format(pricePerGram)}`}</dd>
+            currency
+          }).format(getConvertedPrice({ price: pricePerGram, currency }))}`}</dd>
         </Fragment>
       )
     }

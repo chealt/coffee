@@ -25,24 +25,6 @@ const setImageUploadUrls = (context) => {
   };
 };
 
-const parsePath = (pathname) => {
-  const pathParams = pathname.split('/');
-  let language = 'en';
-  let page;
-  let params = [];
-
-  if (locales.includes(pathParams[1])) {
-    language = pathParams[1];
-    page = pathParams[2];
-    params = pathParams.slice(3);
-  } else {
-    page = pathParams[1];
-    params = pathParams.slice(2);
-  }
-
-  return { language, page, params };
-};
-
 const setCurrency = async (context) => {
   const cookieCurrency = context.cookies.get(cookieNameCurrency)?.value;
   let currencyDB;
@@ -61,6 +43,24 @@ const setCurrency = async (context) => {
   context.locals.currency = currency;
 };
 
+const parsePath = (pathname) => {
+  const pathParams = pathname.split('/');
+  let language = 'en';
+  let page;
+  let params = [];
+
+  if (locales.includes(pathParams[1])) {
+    language = pathParams[1];
+    page = pathParams[2];
+    params = pathParams.slice(3);
+  } else {
+    page = pathParams[1];
+    params = pathParams.slice(2);
+  }
+
+  return { language, page, params };
+};
+
 const redirect = (url) =>
   new Response(null, {
     status: 302,
@@ -77,6 +77,10 @@ const authenticate = (context) => {
 
 // eslint-disable-next-line complexity
 const onRequest = async (context, next) => {
+  await setCurrency(context);
+  setGetSignedUrl(context);
+  setImageUploadUrls(context);
+
   const { page, params } = parsePath(context.url.pathname);
   const { itemId, collectionId, locale } = context.params;
 
@@ -168,10 +172,6 @@ const onRequest = async (context, next) => {
       }
     }
   }
-
-  setGetSignedUrl(context);
-  setImageUploadUrls(context);
-  setCurrency(context);
 
   return next();
 };

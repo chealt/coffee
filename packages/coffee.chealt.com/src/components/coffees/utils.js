@@ -25,6 +25,19 @@ const getConvertedPrice = ({ currency, price }) => {
   return price * exchangeRate;
 };
 
+const convertToUSD = ({ currency, price }) => {
+  const exchangeRate = exchangeRates.find(({ currency_code: code }) => code === currency).rate;
+
+  if (!exchangeRate) {
+    // eslint-disable-next-line no-console
+    console.error(`No exchange rate found for currency ${currency}`);
+
+    return undefined;
+  }
+
+  return price / exchangeRate;
+};
+
 const getDetails =
   ({ locale }) =>
   (coffee) => ({
@@ -33,7 +46,6 @@ const getDetails =
       (brewingMethod) =>
         brewingMethod.brewing_method_id === coffee.brewing_method_id && brewingMethod.language_code === locale
     ),
-    currency: coffee.currency || 'PLN',
     images: coffeeImages.filter(({ coffee_id: id }) => id === coffee.id).map((coffeeImage) => coffeeImage.url),
     tasteNotes: coffeeTasteNotes
       .filter(({ coffee_id: id }) => id === coffee.id)
@@ -52,8 +64,8 @@ const getDetails =
       (originRegion) =>
         originRegion.origin_region_id === coffee.origin_region_id && originRegion.language_code === locale
     ),
-    price: coffee.price,
-    pricePerGram: getConvertedPrice({ price: coffee.price_per_gram, currency: coffee.currency }),
+    price: convertToUSD({ price: coffee.price, currency: coffee.currency || 'PLN' }),
+    pricePerGram: convertToUSD({ price: coffee.price_per_gram, currency: coffee.currency }),
     processingMethod: processingMethods.find(
       ({ processing_method_id: id, language_code: languageCode }) =>
         coffee.processing_method_id === id && languageCode === locale

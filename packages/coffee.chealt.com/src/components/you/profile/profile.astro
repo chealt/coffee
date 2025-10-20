@@ -12,7 +12,7 @@ import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
-const { shouldAuthenticate, selectedCurrency = 'PLN' } = Astro.locals;
+const { shouldAuthenticate, currency: selectedCurrency } = Astro.locals;
 
 const currencies = exchangeRates.map(({ currency_code }) => currency_code);
 ---
