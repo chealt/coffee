@@ -1,5 +1,5 @@
-import { cookieNameLocale } from '../../../../server/authentication/config.js';
 import { getSessionUser } from '../../../../server/authentication/session.js';
+import { cookieNameCurrency, cookieNameLocale } from '../../../../server/config.js';
 import { insert } from '../../../../server/database/formData.js';
 
 const POST = async ({ params, request }) => {
@@ -33,18 +33,23 @@ const POST = async ({ params, request }) => {
 
   try {
     let redirectUrl;
-    let headers;
+    const headers = [];
 
     await insert({ user, key: params.key, value: data });
 
-    if (params.key === 'settings') {
+    if (params.key === 'settings' && data.language) {
       redirectUrl = `/${data.language}/you/profile`;
-      headers = [
-        [
-          'Set-Cookie',
-          `${cookieNameLocale}=${data.language}; Path=/; HttpOnly; SameSite=Strict; Secure; Max-Age=${60 * 60 * 24 * 365}`
-        ]
-      ];
+      headers.push([
+        'Set-Cookie',
+        `${cookieNameLocale}=${data.language}; Path=/; HttpOnly; SameSite=Strict; Secure; Max-Age=${60 * 60 * 24 * 365}`
+      ]);
+    }
+
+    if (params.key === 'settings' && data.currency) {
+      headers.push([
+        'Set-Cookie',
+        `${cookieNameCurrency}=${data.currency}; Path=/; HttpOnly; SameSite=Strict; Secure; Max-Age=${60 * 60 * 24 * 365}`
+      ]);
     }
 
     return new Response(JSON.stringify({ success: true, redirectUrl }), { status: 200, headers });

@@ -1,10 +1,11 @@
 import jwt from 'jsonwebtoken';
 
 import supportedLanguages from '../data/supportedLanguages.json';
-import { cookieNameLocale, sessionSecret } from './server/authentication/config.js';
+import { sessionSecret } from './server/authentication/config.js';
 import { getUsername } from './server/authentication/cookies.js';
 import { getSessionUser } from './server/authentication/session.js';
 import { getImageUrl } from './server/cloudflare/r2/storage.js';
+import { cookieNameLocale, cookieNameCurrency, defaultCurrency } from './server/config.js';
 import { getValue } from './server/database/formData.js';
 import { getAuthenticationOptions } from './server/login.js';
 import { createRegistrationOptions } from './server/registration.js';
@@ -40,6 +41,24 @@ const parsePath = (pathname) => {
   }
 
   return { language, page, params };
+};
+
+const setCurrency = async (context) => {
+  const cookieCurrency = context.cookies.get(cookieNameCurrency)?.value;
+  let currencyDB;
+
+  try {
+    const settings = await getValue({ user: { name: getSessionUser(context.request)?.username }, key: 'settings' });
+
+    currencyDB = settings?.currency;
+  } catch {
+    // eslint-disable-next-line no-console
+    console.info('Not logged in, so could not read currency from DB.');
+  }
+
+  const currency = currencyDB || cookieCurrency || defaultCurrency;
+
+  context.locals.currency = currency;
 };
 
 const redirect = (url) =>
@@ -152,6 +171,7 @@ const onRequest = async (context, next) => {
 
   setGetSignedUrl(context);
   setImageUploadUrls(context);
+  setCurrency(context);
 
   return next();
 };

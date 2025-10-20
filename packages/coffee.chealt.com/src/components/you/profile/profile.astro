@@ -5,13 +5,16 @@ import Common from '../../common/common.astro';
 import Form from '../../form/form.astro';
 import Label from '../../form/label/label.astro';
 import Select from '../../form/select/select.astro';
+import exchangeRates from '../../../../data/exchangeRates.json';
 import supportedLanguages from '../../../../data/supportedLanguages.json';
 
 import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
-const { shouldAuthenticate } = Astro.locals;
+const { shouldAuthenticate, selectedCurrency = 'PLN' } = Astro.locals;
+
+const currencies = exchangeRates.map(({ currency_code }) => currency_code);
 ---
 
 <Common shouldAuthenticate={shouldAuthenticate} redirectUrl={getRelativeLocaleUrl(Astro.currentLocale, '/you/profile')}>
@@ -25,6 +28,18 @@ const { shouldAuthenticate } = Astro.locals;
             supportedLanguages.map(({ locale, label }) => (
               <option value={locale} selected={locale === Astro.currentLocale}>
                 {label}
+              </option>
+            ))
+          }
+        </Select>
+      </Label>
+      <Label>
+        <div class="name">{t.currency}</div>
+        <Select name="currency">
+          {
+            currencies.map((currency) => (
+              <option value={currency} selected={currency === selectedCurrency}>
+                {currency}
               </option>
             ))
           }
