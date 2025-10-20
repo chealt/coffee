@@ -3,6 +3,7 @@ import coffees from '../../../../data/coffees.json';
 import tasteNoteGroups from '../../../../data/tasteNoteGroups.json';
 
 import { getTasteNoteGroup } from '../utils.js';
+import { convertToUSD } from '../../coffees/utils.js';
 import Common from '../../common/common.astro';
 import Coffees from '../../coffees/list.astro';
 
@@ -20,7 +21,12 @@ const coffeesWithTasteNoteGroup = coffees
     ...coffee,
     tasteNoteGroup: getTasteNoteGroup(coffee.id)
   }))
-  .filter((coffee) => coffee.tasteNoteGroup?.taste_note_group_id === id);
+  .filter((coffee) => coffee.tasteNoteGroup?.taste_note_group_id === id)
+  .sort(
+    (a, b) =>
+      convertToUSD({ currency: b.currency, price: b.price_per_gram }) -
+      convertToUSD({ currency: a.currency, price: a.price_per_gram })
+  );
 ---
 
 <Common>

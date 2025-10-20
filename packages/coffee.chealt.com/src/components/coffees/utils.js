@@ -84,4 +84,4 @@ const getDetails =
     weight: coffee.weight
   });
 
-export { getConvertedPrice, getDetails };
+export { getConvertedPrice, convertToUSD, getDetails };
