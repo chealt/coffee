@@ -2,7 +2,7 @@
 import coffees from '../../../data/coffees.json';
 import tasteNoteGroups from '../../../data/tasteNoteGroups.json';
 
-import { getConvertedPricePerGram } from '../coffees/utils.js';
+import { getConvertedPrice } from '../coffees/utils.js';
 import Coffees from '../coffees/list.astro';
 import Common from '../common/common.astro';
 import OriginCountries from './origin-countries/origin-countries.astro';
@@ -17,15 +17,15 @@ const t = allLocaleTranslations[Astro.currentLocale];
 const priciestCoffees = coffees
   .sort(
     (a, b) =>
-      getConvertedPricePerGram({ currency: b.currency, pricePerGram: b.price_per_gram }) -
-      getConvertedPricePerGram({ currency: a.currency, pricePerGram: a.price_per_gram })
+      getConvertedPrice({ currency: b.currency, price: b.price_per_gram }) -
+      getConvertedPrice({ currency: a.currency, price: a.price_per_gram })
   )
   .slice(0, 10);
 const cheapestCoffees = coffees
   .sort(
     (a, b) =>
-      getConvertedPricePerGram({ currency: a.currency, pricePerGram: a.price_per_gram }) -
-      getConvertedPricePerGram({ currency: b.currency, pricePerGram: b.price_per_gram })
+      getConvertedPrice({ currency: a.currency, price: a.price_per_gram }) -
+      getConvertedPrice({ currency: b.currency, price: b.price_per_gram })
   )
   .slice(0, 10);
 const groups = tasteNoteGroups.filter(({ language_code }) => language_code === Astro.currentLocale);

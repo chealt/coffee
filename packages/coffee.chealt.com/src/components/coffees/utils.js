@@ -12,7 +12,7 @@ import roastingLevels from '../../../data/roastingLevels.json';
 import tasteNotes from '../../../data/tasteNotes.json';
 import varieties from '../../../data/varieties.json';
 
-const getConvertedPricePerGram = ({ currency, pricePerGram }) => {
+const getConvertedPrice = ({ currency, price }) => {
   const exchangeRate = exchangeRates.find(({ currency_code: code }) => code === currency).rate;
 
   if (!exchangeRate) {
@@ -22,7 +22,7 @@ const getConvertedPricePerGram = ({ currency, pricePerGram }) => {
     return undefined;
   }
 
-  return pricePerGram / exchangeRate;
+  return price * exchangeRate;
 };
 
 const getDetails =
@@ -53,7 +53,7 @@ const getDetails =
         originRegion.origin_region_id === coffee.origin_region_id && originRegion.language_code === locale
     ),
     price: coffee.price,
-    pricePerGram: getConvertedPricePerGram({ currency: coffee.currency, pricePerGram: coffee.price_per_gram }),
+    pricePerGram: getConvertedPrice({ price: coffee.price_per_gram, currency: coffee.currency }),
     processingMethod: processingMethods.find(
       ({ processing_method_id: id, language_code: languageCode }) =>
         coffee.processing_method_id === id && languageCode === locale
@@ -72,4 +72,4 @@ const getDetails =
     weight: coffee.weight
   });
 
-export { getConvertedPricePerGram, getDetails };
+export { getConvertedPrice, getDetails };

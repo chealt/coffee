@@ -3,7 +3,7 @@ import allCoffees from '../../../data/coffees.json';
 import coffeeVarieties from '../../../data/coffeeVarieties.json';
 import varieties from '../../../data/varieties.json';
 
-import { getConvertedPricePerGram, getDetails } from '../coffees/utils.js';
+import { getConvertedPrice, getDetails } from '../coffees/utils.js';
 import Coffees from '../coffees/list.astro';
 import Common from '../common/common.astro';
 
@@ -21,15 +21,15 @@ const coffees = allCoffees.filter((coffee) =>
 const priciestCoffees = coffees
   .sort(
     (a, b) =>
-      getConvertedPricePerGram({ currency: b.currency, pricePerGram: b.price_per_gram }) -
-      getConvertedPricePerGram({ currency: a.currency, pricePerGram: a.price_per_gram })
+      getConvertedPrice({ currency: b.currency, price: b.price_per_gram }) -
+      getConvertedPrice({ currency: a.currency, price: a.price_per_gram })
   )
   .slice(0, 10);
 const cheapestCoffees = coffees
   .sort(
     (a, b) =>
-      getConvertedPricePerGram({ currency: a.currency, pricePerGram: a.price_per_gram }) -
-      getConvertedPricePerGram({ currency: b.currency, pricePerGram: b.price_per_gram })
+      getConvertedPrice({ currency: a.currency, price: a.price_per_gram }) -
+      getConvertedPrice({ currency: b.currency, price: b.price_per_gram })
   )
   .slice(0, 10);
 ---
