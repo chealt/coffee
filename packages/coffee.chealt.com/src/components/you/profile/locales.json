@@ -2,11 +2,13 @@
   "en": {
     "currency": "Currency",
     "language": "Language",
+    "logout": "logout",
     "title": "Profile"
   },
   "pl": {
     "currency": "Waluta",
     "language": "Język",
+    "logout": "wyloguj",
     "title": "Profil"
   }
 }
