@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-import languages from '../data/supportedLanguages.json';
+import supportedLanguages from '../data/supportedLanguages.json';
 import { cookieNameLocale, sessionSecret } from './server/authentication/config.js';
 import { getUsername } from './server/authentication/cookies.js';
 import { getSessionUser } from './server/authentication/session.js';
@@ -9,6 +9,8 @@ import { getValue } from './server/database/formData.js';
 import { getAuthenticationOptions } from './server/login.js';
 import { createRegistrationOptions } from './server/registration.js';
 import { setCollections, setCollectionItem } from './server/you/collections.js';
+
+const locales = supportedLanguages.map(({ locale }) => locale);
 
 const setGetSignedUrl = (context) => {
   context.locals.getSignedUrl = '/api/storage/get-signed-url.json';
@@ -28,7 +30,7 @@ const parsePath = (pathname) => {
   let page;
   let params = [];
 
-  if (languages.includes(pathParams[1])) {
+  if (locales.includes(pathParams[1])) {
     language = pathParams[1];
     page = pathParams[2];
     params = pathParams.slice(3);
@@ -72,7 +74,7 @@ const onRequest = async (context, next) => {
 
   const savedLocale = context.cookies.get(cookieNameLocale)?.value || savedLocaleDB;
 
-  if (savedLocale && locale && savedLocale !== locale && languages.includes(locale)) {
+  if (savedLocale && locale && savedLocale !== locale && locales.includes(locale)) {
     let url = `/${savedLocale}`;
 
     if (page) {

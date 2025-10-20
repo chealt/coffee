@@ -2,7 +2,9 @@ import cloudflare from '@astrojs/cloudflare';
 import { defineConfig } from 'astro/config';
 
 // import { visualizer } from 'rollup-plugin-visualizer';
-import locales from './data/supportedLanguages.json';
+import supportedLanguages from './data/supportedLanguages.json';
+
+const locales = supportedLanguages.map(({ locale }) => locale);
 
 export default defineConfig({
   output: 'server',

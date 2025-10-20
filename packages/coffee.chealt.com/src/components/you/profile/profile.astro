@@ -22,9 +22,9 @@ const { shouldAuthenticate } = Astro.locals;
         <div class="name">{t.language}</div>
         <Select name="language">
           {
-            supportedLanguages.map((language) => (
-              <option value={language} selected={language === Astro.currentLocale}>
-                {language}
+            supportedLanguages.map(({ locale, label }) => (
+              <option value={locale} selected={locale === Astro.currentLocale}>
+                {label}
               </option>
             ))
           }

@@ -1,4 +1,10 @@
 [
-  "pl",
-  "en"
+  {
+    "locale": "pl",
+    "label": "polski"
+  },
+  {
+    "locale": "en",
+    "label": "english"
+  }
 ]
