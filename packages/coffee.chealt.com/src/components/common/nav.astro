@@ -11,25 +11,25 @@ const t = allLocaleTranslations[Astro.currentLocale];
 const isActivePage = (pageName) => {
   const firstPathParam = Astro.url.pathname.replace(`${Astro.currentLocale}`, '').slice(1);
 
-  return pageName === '' ? firstPathParam === '' : firstPathParam.includes(pageName);
+  return pageName === '' ? firstPathParam === '' || firstPathParam === '/' : firstPathParam.includes(pageName);
 };
 
 const items = [
   {
     name: 'home',
     href: getRelativeLocaleUrl(Astro.currentLocale, '/'),
-    text: t['explore'],
+    text: t.explore,
     isActive: isActivePage('')
   },
   {
     name: 'capture',
     href: getRelativeLocaleUrl(Astro.currentLocale, '/you/collections'),
-    text: t['capture']
+    text: t.capture
   },
   {
     name: 'you',
     href: getRelativeLocaleUrl(Astro.currentLocale, '/you/collections'),
-    text: t['you'],
+    text: t.you,
     isActive: isActivePage('you')
   }
 ];
