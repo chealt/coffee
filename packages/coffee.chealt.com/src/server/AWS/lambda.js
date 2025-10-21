@@ -1,19 +1,23 @@
+/* eslint-disable no-console */
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 
 import { region, accessKeyId, secretAccessKey } from './config.js';
 
 const invoke = async ({ name, payload }) => {
+  console.info('Creating Lambda client');
   const client = new LambdaClient({
     region,
     accessKeyId,
     secretAccessKey
   });
 
+  console.info('Creating Lambda invoke command');
   const command = new InvokeCommand({
     FunctionName: name,
     Payload: JSON.stringify(payload)
   });
 
+  console.info('Invoking lambda');
   const { StatusCode: statusCode, Payload } = await client.send(command);
 
   if (statusCode !== 200) {
