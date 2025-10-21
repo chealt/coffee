@@ -7,8 +7,10 @@ const invoke = async ({ name, payload }) => {
   console.info('Creating Lambda client');
   const client = new LambdaClient({
     region,
-    accessKeyId,
-    secretAccessKey
+    credentials: {
+      accessKeyId,
+      secretAccessKey
+    }
   });
 
   console.info('Creating Lambda invoke command');
