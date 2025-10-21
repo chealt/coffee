@@ -1,4 +1,5 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import tasteNoteGroups from '../../../../data/tasteNoteGroups.json';
 
 import Button from '../../form/button/button.astro';
@@ -79,7 +80,10 @@ const segments = groups.map((note, index) => {
 });
 ---
 
-<coffee-taste-note-wheel data-groups={JSON.stringify(segments.map(({ name }) => name))}>
+<coffee-taste-note-wheel
+  data-groups={JSON.stringify(segments.map(({ name }) => name))}
+  data-url-prefix={getRelativeLocaleUrl(Astro.currentLocale)}
+>
   <div class="random-coffee-container card">
     <div class="random-coffee coffee"></div>
     <Button data-try-again class="rounded bordered">{t.tryAgain}</Button>

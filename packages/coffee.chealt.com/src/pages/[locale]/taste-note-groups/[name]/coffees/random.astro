@@ -1,0 +1,44 @@
+---
+import coffees from '../../../../../../data/coffees.json';
+import coffeeTasteNotes from '../../../../../../data/coffeeTasteNotes.json';
+import tasteNoteGroups from '../../../../../../data/tasteNoteGroups.json';
+import tasteNoteSubGroups from '../../../../../../data/tasteNoteSubGroups.json';
+import tasteNotes from '../../../../../../data/tasteNotes.json';
+
+import { getDetails } from '../../../../../components/coffees/utils.js';
+
+import allLocaleTranslations from './_locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+
+const { name } = Astro.params;
+
+const tasteNoteGroupId = tasteNoteGroups.find((group) =>
+  group.name.includes(decodeURIComponent(name))
+)?.taste_note_group_id;
+const selectedTasteNoteSubGroupIds = tasteNoteSubGroups
+  .filter((subGroup) => subGroup.taste_note_group_id === tasteNoteGroupId)
+  .map(({ taste_note_sub_group_id: id }) => id);
+const selectedTasteNoteIds = tasteNotes
+  .filter((tasteNote) => selectedTasteNoteSubGroupIds.includes(tasteNote.taste_note_sub_group_id))
+  .map(({ taste_note_id: id }) => id);
+const coffeeIdsWithMatchingTasteNote = coffeeTasteNotes
+  .filter(({ taste_note_id: tasteNoteId }) => selectedTasteNoteIds.includes(tasteNoteId))
+  .map(({ coffee_id: id }) => id);
+const randomCoffeeId =
+  coffeeIdsWithMatchingTasteNote[Math.floor(Math.random() * coffeeIdsWithMatchingTasteNote.length)];
+const randomCoffee = coffees.find(({ id }) => id === randomCoffeeId);
+const noCoffeeFound = !selectedTasteNoteIds.length || !coffeeIdsWithMatchingTasteNote.length || !randomCoffee;
+
+const details = !noCoffeeFound && getDetails({ locale: Astro.currentLocale })(randomCoffee);
+---
+
+{
+  (noCoffeeFound && <p style="color: var(--color-text--primary)">{t.noCoffeeFound}</p>) || (
+    <a href={details?.webshopItemLink} target="_blank" rel="noopener noreferrer">
+      <div class="image large">
+        <img src={`/coffees/${details?.images[0]}`} />
+      </div>
+    </a>
+  )
+}

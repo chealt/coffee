@@ -14,6 +14,7 @@ class TasteNoteWheel extends HTMLElement {
     this.groups = JSON.parse(this.dataset.groups);
     this.dataset.numberOfSegments = this.groups.length;
     this.tryAgainButton = this.querySelector('[data-try-again]');
+    this.urlPrefix = this.dataset.urlPrefix;
 
     this.triggerButton.addEventListener('click', (event) => {
       event.preventDefault();
@@ -51,7 +52,7 @@ class TasteNoteWheel extends HTMLElement {
       TasteNoteWheel.flip(this.wheel, this.randomCoffeeContainer);
     });
 
-    const response = await fetch(`/taste-note-groups/${selectedGroup}/coffees/random`);
+    const response = await fetch(`${this.urlPrefix}taste-note-groups/${selectedGroup}/coffees/random`);
     const coffeeHTML = await response.text();
 
     this.randomCoffee.innerHTML = coffeeHTML;
