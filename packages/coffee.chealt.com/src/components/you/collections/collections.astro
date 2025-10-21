@@ -5,7 +5,6 @@ import Button from '../../form/button/button.astro';
 import Common from '../../common/common.astro';
 import Icon from '../../icon/icon.astro';
 import Header from './header/header.astro';
-import Logout from '../../logout/logout.astro';
 import NewCollection from './new-collection.astro';
 import NewItem from './new-item.astro';
 
@@ -15,7 +14,7 @@ import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
-const { collections, shouldAuthenticate } = Astro.locals;
+const { collections, shouldAuthenticate, username } = Astro.locals;
 ---
 
 <Common
@@ -25,12 +24,10 @@ const { collections, shouldAuthenticate } = Astro.locals;
 >
   <header class="title">
     <h1>{t.title}</h1>
-    <Logout logoutUrl="/api/authentication/logout.json">
-      <Button class="small warning" data-logout-trigger>
-        <Icon type="power" />
-        <span>{t.logout}</span>
-      </Button>
-    </Logout>
+    <Button class="round bordered small profile" href={getRelativeLocaleUrl(Astro.currentLocale, '/you/profile')}>
+      <Icon type="user" />
+      <span class="visually-hidden">{username}</span>
+    </Button>
   </header>
   <ul class="collections-list" data-delete-confirm-message={t.deleteCollection.confirm}>
     {

@@ -32,7 +32,8 @@ header.title {
     flex-grow: 1;
   }
 
-  button {
+  .profile {
     width: auto;
+    margin-right: var(--gap);
   }
 }

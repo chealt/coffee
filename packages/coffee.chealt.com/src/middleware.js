@@ -123,6 +123,10 @@ const onRequest = async (context, next) => {
 
   if (page === 'you') {
     try {
+      const loggedInUser = getSessionUser(context.request);
+
+      context.locals.username = loggedInUser?.username;
+
       if (!collectionId) {
         await setCollections(context);
       } else if (collectionId && itemId) {
