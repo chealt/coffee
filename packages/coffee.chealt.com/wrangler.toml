@@ -12,6 +12,7 @@ directory = "./dist"
 enabled = true
 
 [vars]
+AWS_REGION = "eu-central-1"
 CLOUDFLARE_R2_BUCKET_DOMAIN = "images.centralbeans.com"
 CLOUDFLARE_R2_COLLECTION_FOLDER = "collection-images"
 ORIGIN = "https://centralbeans.com"
