@@ -9,7 +9,7 @@
     "coffees:import": "node --env-file=.env src/coffees/import.js",
     "coffees:import:CQI": "node --env-file=.env ../../node_modules/playwright/cli.js test",
     "coffees:import:varieties": "node --env-file=.env src/coffees/varieties.js",
-    "currencies:import": "node --env-file=src/currencies/.env src/currencies/import.js",
+    "currencies:import": "node --env-file=.env src/currencies/import.js",
     "taste-notes:copy-i18n": "node --env-file=.env src/taste-notes/copy-i18n.js",
     "taste-notes:translate": "node --env-file=.env src/taste-notes/translate.js"
   },
