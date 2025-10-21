@@ -51,6 +51,14 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
     </Form>
   </section>
   <section>
+    <coffee-api-button data-api-endpoint="/api/authentication/registration/send-new-code.json">
+      <Button class="bordered column">
+        <span>{t.sendRegistrationCode}</span>
+        <Icon type="email" />
+      </Button>
+    </coffee-api-button>
+  </section>
+  <section>
     <Logout logoutUrl="/api/authentication/logout.json">
       <Button class="danger column" data-logout-trigger>
         <Icon type="power" />
@@ -59,3 +67,5 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
     </Logout>
   </section>
 </Common>
+
+<script src="../../common/api-button.js"></script>

@@ -37,6 +37,8 @@ const main = async ({ filename }) => {
 
   console.info(`Memory usage: ${JSON.stringify(memoryUsage())}`);
   console.info(`Extracted text: ${text}`);
+
+  return { text, filename };
 };
 
 export { main };

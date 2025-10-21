@@ -12,7 +12,20 @@ const handler = async (event) => {
     };
   }
 
-  return main({ filename });
+  try {
+    const result = await main({ filename });
+    return {
+      statusCode: 200,
+      body: JSON.stringify(result)
+    };
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: error.message
+      })
+    };
+  }
 };
 
 export { handler };

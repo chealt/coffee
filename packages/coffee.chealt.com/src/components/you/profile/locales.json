@@ -3,12 +3,14 @@
     "currency": "Currency",
     "language": "Language",
     "logout": "logout",
+    "sendRegistrationCode": "Send new registration code",
     "title": "Profile"
   },
   "pl": {
     "currency": "Waluta",
     "language": "Język",
     "logout": "wyloguj",
+    "sendRegistrationCode": "Wyślij nowy kod rejestracji",
     "title": "Profil"
   }
 }

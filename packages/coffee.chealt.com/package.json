@@ -11,7 +11,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "AWS_PROFILE=centralbeans.com astro dev",
     "build": "astro build",
     "build:scan": "node --env-file=.env data/build.js",
     "import": "node --env-file=.env data/importData.js",
@@ -31,6 +31,7 @@
     "wrangler": "^4.43.0"
   },
   "dependencies": {
+    "@aws-sdk/client-lambda": "^3.913.0",
     "@simplewebauthn/browser": "13.1.2",
     "@simplewebauthn/server": "13.1.2",
     "astro": "^5.14.7",
