@@ -10,13 +10,13 @@ import allLocaleTranslations from '../../common/common.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
-const { showEmpty, name, multiple, ...props } = Astro.props;
+const { id, showEmpty, name, multiple, ...props } = Astro.props;
 ---
 
 {
   (multiple && (
     <Fragment>
-      <Button data-dialog-id={name} class="column input">
+      <Button id={id} data-dialog-id={name} class="column input">
         <Icon type="edit" />
         {t.select}
       </Button>

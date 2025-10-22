@@ -1,6 +1,7 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
 
+import { capitalize } from '../../../utils/string.js';
 import Common from '../../common/common.astro';
 import Button from '../../form/button/button.astro';
 import Form from '../../form/form.astro';
@@ -30,7 +31,7 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
           {
             supportedLanguages.map(({ locale, label }) => (
               <option value={locale} selected={locale === Astro.currentLocale}>
-                {label}
+                {capitalize(label)}
               </option>
             ))
           }

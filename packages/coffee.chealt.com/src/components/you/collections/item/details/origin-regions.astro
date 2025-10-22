@@ -1,4 +1,5 @@
 ---
+import { titleCase } from '../../../../../utils/string.js';
 import Label from '../../../../form/label/label.astro';
 import Select from '../../../../form/select/select.astro';
 
@@ -13,7 +14,7 @@ const { selected } = Astro.props;
 
 <Label>
   <div class="name">
-    {t['originRegion']}
+    {t.originRegion}
   </div>
   <Select name="originRegion" showEmpty>
     {
@@ -21,7 +22,7 @@ const { selected } = Astro.props;
         .filter(({ language_code }) => language_code === Astro.currentLocale)
         .map(({ origin_region_id, name }) => (
           <option value={origin_region_id} selected={String(origin_region_id) === selected}>
-            {name}
+            {titleCase(name)}
           </option>
         ))
     }

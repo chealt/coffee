@@ -1,4 +1,5 @@
 ---
+import { capitalize } from '../../../../../utils/string.js';
 import Label from '../../../../form/label/label.astro';
 import Select from '../../../../form/select/select.astro';
 
@@ -21,7 +22,7 @@ const { selected } = Astro.props;
         .filter(({ language_code }) => language_code === Astro.currentLocale)
         .map(({ origin_country_id, name }) => (
           <option value={origin_country_id} selected={String(origin_country_id) === selected}>
-            {name}
+            {capitalize(name)}
           </option>
         ))
     }

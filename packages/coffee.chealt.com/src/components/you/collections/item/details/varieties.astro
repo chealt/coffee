@@ -20,7 +20,7 @@ const selectedVarieties = selected?.map((id) => varieties.find(({ id: varietyId 
     {t.varieties}
   </div>
 </Label>
-<Select name="varieties" multiple>
+<Select id="varieties" name="varieties" multiple>
   {
     varieties.map(({ id, name }) => (
       <li>

@@ -3,5 +3,14 @@ const removeSpaces = (string) => string.replaceAll(' ', '');
 const friendlyIncludes = (haystack, needle) =>
   haystack.toLowerCase().includes(removeSpaces(normalize(needle.toLowerCase()))) ||
   haystack.toLowerCase().includes(normalize(needle.toLowerCase()));
+const capitalize = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+const titleCase = (string) => {
+  const words = string.toLowerCase().split(' ');
 
-export { normalize, friendlyIncludes };
+  return words.reduce(
+    (titleCaseString, word, index) => `${titleCaseString}${index === 0 ? '' : ' '}${capitalize(word)}`,
+    ''
+  );
+};
+
+export { capitalize, normalize, friendlyIncludes, titleCase };
