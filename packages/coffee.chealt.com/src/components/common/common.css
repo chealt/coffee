@@ -317,11 +317,8 @@ svg {
     max-width: 340px;
     box-sizing: border-box;
 
-    a {
-      border: none;
-    }
-
     > a {
+      border: none;
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -384,10 +381,17 @@ svg {
   margin-right: var(--gap--s);
   background-color: var(--color-text);
   color: var(--color-background);
+  border: 2px solid transparent;
 
   svg {
     fill: var(--color-background);
     height: 28px;
+  }
+
+  &.bordered {
+    border-color: var(--color-text);
+    background-color: var(--color-background);
+    color: var(--color-text);
   }
 }
 

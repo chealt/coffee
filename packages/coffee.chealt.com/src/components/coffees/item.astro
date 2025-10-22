@@ -52,7 +52,22 @@ const { currency } = Astro.locals;
 <section class="not-padded coffee-details">
   <dl>
     <dt>{t.originCountry}</dt>
-    <dd>{originCountry?.name || null}</dd>
+    <dd>
+      {
+        (originCountry?.name && (
+          <a
+            href={getRelativeLocaleUrl(
+              Astro.currentLocale,
+              `/origin-countries/${encodeURIComponent(originCountry.name)}`
+            )}
+            class="chip bordered"
+          >
+            {originCountry.name}
+          </a>
+        )) ||
+          null
+      }
+    </dd>
     {
       (originRegion?.name && (
         <Fragment>
