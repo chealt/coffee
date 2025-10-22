@@ -316,6 +316,7 @@ svg {
     width: 90%;
     max-width: 340px;
     box-sizing: border-box;
+    overflow: hidden;
 
     > a {
       border: none;

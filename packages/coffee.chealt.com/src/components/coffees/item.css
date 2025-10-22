@@ -1,3 +1,22 @@
 .list .coffee-details {
   width: 100%;
 }
+
+.coffee-details {
+  .price-per-gram {
+    font-size: 1rem;
+    text-transform: none;
+  }
+}
+
+.decaf-tag {
+  position: absolute;
+  width: 100%;
+  top: 24px;
+  right: -50%;
+  text-align: center;
+  transform: rotate(45deg);
+  background-color: var(--color-background--alternative);
+  padding: var(--gap--s) 40px;
+  text-transform: uppercase;
+}

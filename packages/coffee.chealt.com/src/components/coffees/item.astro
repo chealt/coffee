@@ -48,6 +48,7 @@ const { currency } = Astro.locals;
       fetchpriority={highPriority ? 'high' : undefined}
     />
   </div>
+  {isDecaf && <span class="decaf-tag">{t.decaf}</span>}
 </a>
 <section class="not-padded coffee-details">
   <dl>
@@ -67,16 +68,8 @@ const { currency } = Astro.locals;
         )) ||
           null
       }
+      {(originRegion?.name && <span> - {originRegion.name}</span>) || null}
     </dd>
-    {
-      (originRegion?.name && (
-        <Fragment>
-          <dt>{t.originRegion}</dt>
-          <dd>{originRegion.name}</dd>
-        </Fragment>
-      )) ||
-        null
-    }
     {
       (originFarm?.name && (
         <Fragment>
@@ -165,41 +158,31 @@ const { currency } = Astro.locals;
       )
     }
     {
-      weight && (
+      (weight && price && (
         <Fragment>
-          <dt>{t.weight}</dt>
-          <dd>{`${Intl.NumberFormat(Astro.currentLocale).format(weight)} g`}</dd>
+          <dt>
+            {t.weight} - {t.price}
+          </dt>
+          <dd>
+            <span>
+              {`${Intl.NumberFormat(Astro.currentLocale, {
+                style: 'currency',
+                currency
+              }).format(
+                getConvertedPrice({ price, currency })
+              )} - ${Intl.NumberFormat(Astro.currentLocale).format(weight)} g`}
+            </span>
+            <span class="price-per-gram">
+              {`(${Intl.NumberFormat(Astro.currentLocale, {
+                style: 'decimal',
+                currency,
+                maximumFractionDigits: 2
+              }).format(getConvertedPrice({ price: pricePerGram, currency }))} ${t.pricePerGram})`}
+            </span>
+          </dd>
         </Fragment>
-      )
-    }
-    {
-      price && (
-        <Fragment>
-          <dt>{t.price}</dt>
-          <dd>{`${Intl.NumberFormat(Astro.currentLocale, {
-            style: 'currency',
-            currency
-          }).format(getConvertedPrice({ price, currency }))}`}</dd>
-        </Fragment>
-      )
-    }
-    {
-      pricePerGram && (
-        <Fragment>
-          <dt>{t.pricePerGram}</dt>
-          <dd>{`${Intl.NumberFormat(Astro.currentLocale, {
-            style: 'currency',
-            currency
-          }).format(getConvertedPrice({ price: pricePerGram, currency }))}`}</dd>
-        </Fragment>
-      )
-    }
-    {
-      isDecaf && (
-        <Fragment>
-          <dt>{t.decaf}</dt>
-        </Fragment>
-      )
+      )) ||
+        null
     }
   </dl>
 </section>

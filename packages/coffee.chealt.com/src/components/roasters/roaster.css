@@ -8,7 +8,7 @@
   }
 }
 
-.image {
+.image.roaster {
   padding: var(--gap);
   background-color: var(--color-text);
   border-radius: var(--border-radius);
@@ -20,7 +20,7 @@
   box-sizing: border-box;
 }
 
-.image.large {
+.roaster.image.large {
   height: 500px;
 }
 
