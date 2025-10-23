@@ -14,9 +14,9 @@
     "taste-notes:translate": "node --env-file=.env src/taste-notes/translate.js"
   },
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.913.0",
-    "@aws-sdk/client-sesv2": "^3.913.0",
-    "@aws-sdk/client-translate": "^3.913.0",
+    "@aws-sdk/client-secrets-manager": "^3.914.0",
+    "@aws-sdk/client-sesv2": "^3.914.0",
+    "@aws-sdk/client-translate": "^3.914.0",
     "@libsql/client": "^0.15.15",
     "@playwright/test": "^1.56.1",
     "@tursodatabase/api": "^1.9.0",
