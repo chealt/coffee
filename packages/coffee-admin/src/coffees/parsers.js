@@ -138,6 +138,156 @@ const parsers = {
 
     return coffees;
   },
+  // El Cafetero
+  7: async ({ webshop, website }) => {
+    console.info('Fetching webshop page...');
+
+    const response = await fetch(webshop);
+    const html = await response.text();
+
+    const {
+      window: { document }
+    } = new JSDOM(html);
+
+    console.info('Parsing webshop page...');
+
+    const productLinks = new Set(
+      Array.from(document.querySelectorAll(`product-link a`)).map(
+        ({ href }) => (href.startsWith('/') ? `${website}${href}` : href) // handle relative URLs
+      )
+    );
+
+    const coffees = await Promise.all(
+      Array.from(productLinks).map(async (webshopItemLink) => {
+        console.info(`Fetching webshop item page: ${webshopItemLink}`);
+
+        const response = await fetch(webshopItemLink);
+        const html = await response.text();
+
+        const {
+          window: { document: itemDocument }
+        } = new JSDOM(html);
+
+        console.info('Parsing webshop item page...');
+        const price = parseFloat(
+          itemDocument
+            .querySelector('.js__product-price-gross .price__value')
+            .textContent.replaceAll(' zł', '')
+            .replaceAll(',', '.')
+        );
+
+        const currencySymbol = 'zł';
+        const currency = currencyCodes[currencySymbol];
+
+        if (!currency) {
+          throw new Error(`Unknown currency: ${currencySymbol}`);
+        }
+
+        const weight = Number(itemDocument.querySelector('h-option').textContent.trim().replace('g', ''));
+
+        if (isNaN(weight)) {
+          throw new Error(`Invalid weight: ${weight}`);
+        }
+
+        const pricePerGram = Number((price / weight).toFixed(2));
+
+        const details = Array.from(itemDocument.querySelectorAll('product-short-description tr')).reduce(
+          (details, row) => {
+            const cells = Array.from(row.querySelectorAll('td'));
+
+            if (!cells?.length) {
+              return details;
+            }
+
+            const key = cells[0].textContent.trim().toLowerCase().replace(':', '');
+            const value = cells[1].textContent.trim().toLowerCase();
+
+            return { ...details, [key]: value };
+          },
+          {}
+        );
+
+        if (details['skład']?.includes('robusta')) {
+          console.info(`Skipping robusta: ${webshopItemLink}`);
+
+          return {};
+        }
+
+        const originCountry = details.pochodzenie;
+        const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
+
+        if (!originCountryId) {
+          console.info(`Missing origin country: ${originCountry}`);
+        }
+
+        const originRegion = details.region;
+        const originRegionId = originRegions.find(({ name }) => name === originRegion)?.origin_region_id || null;
+
+        if (!originRegionId) {
+          console.info(`Missing origin region: ${originCountry} - ${originRegion}`);
+        }
+
+        const brewingMethod = details['profil palenia'];
+        const brewingMethodId = brewingMethods.find(({ name }) => name === brewingMethod)?.brewing_method_id || null;
+
+        if (!brewingMethodId) {
+          console.info(`Missing brewing method: ${brewingMethod}`);
+        }
+
+        const processingMethod = details['obróbka'];
+        const processingMethodId =
+          processingMethods.find(
+            ({ name }) => name === processingMethod || (name === 'washed' && processingMethod === 'myta')
+          )?.processing_method_id || null;
+
+        if (!processingMethodId) {
+          console.info(`Missing processing method: ${processingMethod}`);
+        }
+
+        const tasteNotesStrings = details['profil smakowy']?.split(', ').map((name) => name.trim().toLowerCase()) || [];
+        const tasteNoteIds = Array.from(
+          new Set(tasteNotes.filter(({ name }) => tasteNotesStrings.includes(name)).map(({ taste_note_id: id }) => id))
+        );
+        const missingTasteNotes = tasteNotesStrings.filter((note) => !tasteNotes.some(({ name }) => name === note));
+
+        if (missingTasteNotes.length) {
+          console.info(`Missing taste notes: ${missingTasteNotes}`);
+        }
+
+        const varietiesStrings =
+          details['odmiana botaniczna']?.split(', ').map((name) => name.trim().toLocaleLowerCase()) || [];
+        const varietyIds = varieties
+          .filter(({ name }) => varietiesStrings.includes(name.toLowerCase()))
+          .map(({ id }) => id);
+        const missingVarieties = varietiesStrings.filter(
+          (variety) => !varieties.some(({ name }) => name.toLowerCase() === variety)
+        );
+
+        if (missingVarieties.length) {
+          console.info(`Missing varieties: ${missingVarieties}`);
+        }
+
+        const image = `${website}${itemDocument.querySelector('.image .product-gallery__main-image').src}`;
+
+        return {
+          brewingMethodId,
+          currency,
+          image,
+          originCountryId,
+          originRegionId,
+          price,
+          pricePerGram,
+          processingMethodId,
+          tasteNoteIds,
+          varietyIds,
+          webshopItemLink,
+          weight
+        };
+      })
+    );
+
+    return coffees;
+  },
   // BeMyBean
   39: async ({ webshop }) => {
     const response = await fetch(webshop);
