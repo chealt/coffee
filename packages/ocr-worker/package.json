@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "start:CLI": "node ./src/CLI.js",
+    "start:CLI:debug": "node --inspect-brk ./src/CLI.js",
     "deploy": "aws s3 cp OCRWorker.zip s3://ocr-worker/OCRWorker.zip",
     "build": "rm -rf dist && mkdir dist && cp -r package.json dist && cp ../../yarn.lock dist && cp .yarnrc.yml dist && cp -r src/ dist && cp -r models dist && cd dist && yarn workspaces focus && rm -rf .yarn && rm -rf yarn.lock && rm -rf .yarnrc.yml && zip -rq ../OCRWorker.zip ."
   },
