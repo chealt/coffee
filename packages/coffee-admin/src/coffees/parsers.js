@@ -834,7 +834,9 @@ const parsers = {
         } = new JSDOM(itemHtml);
 
         const price = parseFloat(
-          document.querySelector('.price .woocommerce-Price-amount').textContent.replaceAll('€ ', '')
+          document
+            .querySelector('.price.nasa-single-product-price .woocommerce-Price-amount')
+            .textContent.replaceAll('€ ', '')
         );
 
         const currencySymbol = document.querySelector('.woocommerce-Price-currencySymbol').textContent;
