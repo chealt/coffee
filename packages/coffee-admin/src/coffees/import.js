@@ -64,6 +64,12 @@ for (const {
     continue;
   }
 
+  if (!image) {
+    console.info(`No image for ${webshopItemLink}`);
+
+    continue;
+  }
+
   console.info('Adding coffee to DB...');
   const results = await client.execute({
     sql: `INSERT INTO coffees (
@@ -139,32 +145,52 @@ for (const {
     throw new Error(`Failed to retrieve coffee ID for: ${webshopItemLink}`);
   }
 
-  if (tasteNoteIds.length) {
-    console.info('Clearing taste notes...');
+  if (!tasteNoteIds.length) {
+    console.info(`Removing coffee without taste notes: ${coffeeId}`);
 
-    await client.execute({
-      sql: `DELETE FROM coffee_taste_notes WHERE coffee_id = :coffeeId`,
-      args: { coffeeId }
-    });
+    await client.batch([
+      { sql: 'UPDATE coffees SET is_removed = true WHERE id = :coffeeId', args: { coffeeId } },
+      {
+        sql: 'DELETE FROM coffee_taste_notes WHERE coffee_id = :coffeeId',
+        args: { coffeeId }
+      },
+      {
+        sql: 'DELETE FROM coffee_varieties WHERE coffee_id = :coffeeId',
+        args: { coffeeId }
+      },
+      {
+        sql: 'DELETE FROM coffee_images WHERE coffee_id = :coffeeId',
+        args: { coffeeId }
+      }
+    ]);
 
-    console.info('Adding taste notes to DB...');
+    continue;
+  }
 
-    await client.batch(
-      tasteNoteIds.map((tasteNoteId) => ({
-        sql: `INSERT OR IGNORE INTO coffee_taste_notes (
+  console.info('Clearing taste notes...');
+
+  await client.execute({
+    sql: `DELETE FROM coffee_taste_notes WHERE coffee_id = :coffeeId`,
+    args: { coffeeId }
+  });
+
+  console.info('Adding taste notes to DB...');
+
+  await client.batch(
+    tasteNoteIds.map((tasteNoteId) => ({
+      sql: `INSERT OR IGNORE INTO coffee_taste_notes (
           coffee_id,
           taste_note_id
         ) VALUES (
           :coffeeId,
           :tasteNoteId
         )`,
-        args: {
-          coffeeId,
-          tasteNoteId
-        }
-      }))
-    );
-  }
+      args: {
+        coffeeId,
+        tasteNoteId
+      }
+    }))
+  );
 
   if (varietyIds.length) {
     console.info('Adding varieties to DB...');
@@ -186,44 +212,42 @@ for (const {
     );
   }
 
-  if (image) {
-    console.info('Fetching coffee image...');
-    const imageResponse = await fetch(image);
+  console.info('Fetching coffee image...');
+  const imageResponse = await fetch(image);
 
-    if (!imageResponse.ok) {
-      throw new Error(`Failed to fetch image ${image}`);
+  if (!imageResponse.ok) {
+    throw new Error(`Failed to fetch image ${image}`);
+  }
+
+  const arrayBuffer = await imageResponse.arrayBuffer();
+
+  const fileHash = await getContentHash({ arrayBuffer });
+  const imageFilename = `${fileHash}.${image.slice(image.lastIndexOf('.') + 1)}`;
+
+  console.info(`Saving coffee image for coffee ID: ${coffeeId}...`);
+
+  try {
+    await writeFile(`../coffee.chealt.com/public/coffees/${imageFilename}`, Buffer.from(arrayBuffer), {
+      flag: 'wx'
+    });
+  } catch (error) {
+    if (error.code !== 'EEXIST') {
+      throw error;
     }
+  }
 
-    const arrayBuffer = await imageResponse.arrayBuffer();
-
-    const fileHash = await getContentHash({ arrayBuffer });
-    const imageFilename = `${fileHash}.${image.slice(image.lastIndexOf('.') + 1)}`;
-
-    console.info(`Saving coffee image for coffee ID: ${coffeeId}...`);
-
-    try {
-      await writeFile(`../coffee.chealt.com/public/coffees/${imageFilename}`, Buffer.from(arrayBuffer), {
-        flag: 'wx'
-      });
-    } catch (error) {
-      if (error.code !== 'EEXIST') {
-        throw error;
-      }
-    }
-
-    console.info(`Saving coffee image into the DB for coffee ID: ${coffeeId}...`);
-    await client.execute({
-      sql: `INSERT OR IGNORE INTO coffee_images (
+  console.info(`Saving coffee image into the DB for coffee ID: ${coffeeId}...`);
+  await client.execute({
+    sql: `INSERT OR IGNORE INTO coffee_images (
       coffee_id,
       url
     ) VALUES (
       :coffeeId,
       :imageFilename
     )`,
-      args: {
-        coffeeId,
-        imageFilename
-      }
-    });
-  }
+    args: {
+      coffeeId,
+      imageFilename
+    }
+  });
 }
