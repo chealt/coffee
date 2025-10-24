@@ -2,16 +2,16 @@
   display: flex;
   align-items: flex-end;
   padding: var(--gap);
+
+  .label {
+    flex-grow: 1;
+    margin-left: var(--gap);
+  }
 }
 
 input[type='checkbox'] {
   width: 1.2rem;
   height: 1.2rem;
-}
-
-.label {
-  flex-grow: 1;
-  margin-left: var(--gap);
 }
 
 .checkbox-container.button input[type='checkbox'] {

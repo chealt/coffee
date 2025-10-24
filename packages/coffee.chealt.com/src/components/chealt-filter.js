@@ -15,6 +15,7 @@ class ChealtFilter extends HTMLElement {
     }
 
     this.searchInput.addEventListener('input', this.filterElements.bind(this));
+    this.searchInput.addEventListener('keyup', this.selectOption.bind(this));
   }
 
   filterElements() {
@@ -25,10 +26,25 @@ class ChealtFilter extends HTMLElement {
 
       if (elementText.includes(searchTerm)) {
         element.style.display = 'block';
+        element.ariaHidden = false;
       } else {
         element.style.display = 'none';
+        element.ariaHidden = true;
       }
     });
+  }
+
+  selectOption(event) {
+    if (event.key === 'ArrowDown') {
+      const firstOption = this.closest('dialog')?.querySelector('[role=option]:not([aria-hidden="true"])');
+
+      firstOption?.focus();
+    } else if (event.key === 'ArrowUp') {
+      const visibleOptions = this.closest('dialog')?.querySelectorAll('[role=option]:not([aria-hidden="true"])');
+      const lastOption = Array.from(visibleOptions)[visibleOptions.length - 1];
+
+      lastOption?.focus();
+    }
   }
 }
 

@@ -10,25 +10,30 @@ import allLocaleTranslations from '../../common/common.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
-const { id, showEmpty, name, multiple, ...props } = Astro.props;
+const { id, name, multiple, searchable, selected, selectedValue, selectedLabel, showEmpty, ...props } = Astro.props;
 ---
 
 {
-  (multiple && (
-    <Fragment>
-      <Button id={id} data-dialog-id={name} class="column input">
-        <Icon type="edit" />
-        {t.select}
+  ((multiple || searchable) && (
+    <coffee-select data-searchable>
+      {searchable && <input type="hidden" name={name} value={selectedValue} />}
+      <Button id={id} data-dialog-id={name} class={`column input ${searchable ? 'combobox' : ''}`} role="combobox">
+        {(searchable && <div class="input-value">{selectedLabel || t.unknown}</div>) || (
+          <Fragment>
+            <Icon type="edit" />
+            {t.select}
+          </Fragment>
+        )}
       </Button>
       <Dialog id={name} class="drawer fixed" reloadOnChange>
-        <chealt-filter data-filter-selector={`li:has(input[name='${name}[]'])`}>
+        <chealt-filter data-filter-selector={`${multiple ? `li:has([name='${name}[]'])` : `li[name='${name}[]']`}`}>
           <Input name={`${name}-filter`} placeholder={t.search} data-exclude />
         </chealt-filter>
-        <ul>
+        <ul role="listbox">
           <slot />
         </ul>
       </Dialog>
-    </Fragment>
+    </coffee-select>
   )) || (
     <select {...props} name={name || undefined}>
       {showEmpty && <option value="">{t.unknown}</option>}
@@ -38,3 +43,4 @@ const { id, showEmpty, name, multiple, ...props } = Astro.props;
 }
 
 <script src="../../chealt-filter.js"></script>
+<script src="./select.js"></script>

@@ -9,17 +9,36 @@ import allLocaleTranslations from './locales.json';
 const t = allLocaleTranslations[Astro.currentLocale];
 
 const { selected } = Astro.props;
+
+const selectedRoaster = roasters.find((roaster) => roaster.id === Number(selected));
 ---
 
-<Label>
+<Label for="roaster">
   <div class="name">{t.roaster}</div>
-  <Select name="roaster" showEmpty>
-    {
-      roasters.map((roaster) => (
-        <option value={`${roaster.id}`} selected={String(roaster.id) === selected}>
-          {roaster.name}
-        </option>
-      ))
-    }
-  </Select>
 </Label>
+<Select
+  id="roaster"
+  name="roaster"
+  showEmpty
+  searchable
+  selectedValue={selectedRoaster?.id}
+  selectedLabel={selectedRoaster?.name}
+>
+  {
+    roasters.map((roaster) => (
+      <li
+        role="option"
+        aria-selected={selectedRoaster?.id === roaster.id}
+        tabindex="0"
+        name="roaster[]"
+        data-input-name="roaster"
+        data-input-value={roaster.id}
+        data-input-label={roaster.name}
+      >
+        <div class="label">
+          <div class="name">{roaster.name}</div>
+        </div>
+      </li>
+    ))
+  }
+</Select>

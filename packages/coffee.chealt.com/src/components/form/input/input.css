@@ -48,7 +48,8 @@ input[type='radio'] {
 }
 
 input[type='date'],
-select {
+select,
+button.combobox {
   /* iOS hack because of lack of padding support */
   text-indent: 16px;
   line-height: 21px;

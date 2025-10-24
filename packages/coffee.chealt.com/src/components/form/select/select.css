@@ -1,4 +1,5 @@
-select {
+select,
+button.combobox {
   display: block;
   width: 100%;
   border-radius: 0;
@@ -10,7 +11,24 @@ select {
   appearance: initial;
 }
 
+button.combobox {
+  text-transform: none;
+  text-align: initial;
+}
+
 chealt-filter {
   position: sticky;
   top: 0;
+}
+
+[role='listbox'] > * {
+  cursor: pointer;
+
+  &:focus,
+  &:focus-within,
+  &:focus-visible,
+  &:active {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+  }
 }
