@@ -14,7 +14,7 @@ const nextVisibleSibling = (element) => {
 
 class Select extends HTMLElement {
   connectedCallback() {
-    this.searchable = this.dataset.searchable;
+    this.searchable = this.dataset.searchable === 'true';
     this.hiddenInput = this.querySelector('input[type="hidden"]');
     this.inputValueElement = this.querySelector('.input-value');
     this.options = this.querySelectorAll('[role="option"]');
