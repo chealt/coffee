@@ -86,6 +86,24 @@ h5 {
   margin: var(--gap) 0;
   padding: 0 var(--gap);
   text-transform: capitalize;
+
+  &:has(a.button),
+  &:has(button) {
+    display: flex;
+    align-items: center;
+    gap: var(--gap--s);
+
+    & > * {
+      flex-grow: 1;
+    }
+
+    a.button,
+    button {
+      flex-grow: 0;
+      flex-shrink: 1;
+      width: auto;
+    }
+  }
 }
 
 section {

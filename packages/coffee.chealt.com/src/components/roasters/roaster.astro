@@ -1,4 +1,6 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
 import allCoffees from '../../../data/coffees.json';
 import roasters from '../../../data/roasters.json';
 
@@ -14,6 +16,7 @@ import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
+const { loggedInUser } = Astro.locals;
 const { id } = Astro.props;
 
 const { name, logo, instagram, website } = roasters.find((roaster) => roaster.id === id);
@@ -27,7 +30,17 @@ const coffees = allCoffees
 ---
 
 <Common>
-  <h1>{name}</h1>
+  <h1>
+    <div>{name}</div>
+    {
+      loggedInUser && (
+        <Button class="ghost" href={getRelativeLocaleUrl(Astro.currentLocale, `/roasters/${name}/stats`)}>
+          <Icon type="chart" />
+          <span class="visually-hidden">{t.chart}</span>
+        </Button>
+      )
+    }
+  </h1>
   <section>
     <div class="image roaster" style={`view-transition-name: roaster-${id}`}>
       <img src={`/roasters/${logo}`} alt={name} />

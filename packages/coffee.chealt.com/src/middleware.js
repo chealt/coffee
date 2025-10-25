@@ -81,6 +81,13 @@ const onRequest = async (context, next) => {
   setGetSignedUrl(context);
   setImageUploadUrls(context);
 
+  try {
+    // set the user if we have it
+    authenticate(context);
+  } catch {
+    // DO NOTHING
+  }
+
   const { page, params } = parsePath(context.url.pathname);
   const { itemId, collectionId, locale } = context.params;
 

@@ -1,8 +1,14 @@
 {
   "en": {
-    "coffees": "Coffees"
+    "back": "Back",
+    "chart": "Chart",
+    "coffees": "Coffees",
+    "pricesPerGram": "Prices"
   },
   "pl": {
-    "coffees": "Kawy"
+    "back": "Powrót",
+    "chart": "Wykres",
+    "coffees": "Kawy",
+    "pricesPerGram": "Ceny"
   }
 }
