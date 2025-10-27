@@ -82,6 +82,7 @@
   }
 
   .bar-label {
+    padding-top: var(--gap);
     writing-mode: vertical-rl;
     text-orientation: upright;
     text-transform: capitalize;
