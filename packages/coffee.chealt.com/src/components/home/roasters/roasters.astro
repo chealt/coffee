@@ -5,20 +5,29 @@ import roasters from '../../../../data/roastersWithCoffees.json';
 import countries from '../../../../data/countries.json';
 
 import allLocaleTranslations from './locales.json';
+import allLocaleCommonTranslations from '../../common/common.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
+const tc = allLocaleCommonTranslations[Astro.currentLocale];
 
 const roasterCount = roasters.length || 0;
 const roasterCountryCount = countries.filter(({ language_code }) => language_code === Astro.currentLocale).length;
 
 await import.meta.glob('/public/roasters/*.{jpeg,jpg,png,gif,svg,webp}', { eager: true });
+
+const { recommended } = Astro.locals;
 ---
 
 <ul class="list">
   {
     roasters
       .filter(({ logo }) => Boolean(logo))
-      .map(({ id, name, country_id, logo, website, instagram }, index) => (
+      .map(({ id, ...rest }) => ({
+        id,
+        ...rest,
+        isRecommended: recommended?.roasters?.includes(id)
+      }))
+      .map(({ id, name, country_id, isRecommended, logo, website, instagram }, index) => (
         <li data-country-id={country_id} class="item">
           <a href={getRelativeLocaleUrl(Astro.currentLocale, `/roasters/${name}`)}>
             <div class="image card" style={`view-transition-name: roaster-${id}`}>
@@ -29,6 +38,7 @@ await import.meta.glob('/public/roasters/*.{jpeg,jpg,png,gif,svg,webp}', { eager
                 fetchpriority={index >= 2 ? undefined : 'high'}
               />
             </div>
+            {isRecommended && <span class="tag primary">{tc.recommended}</span>}
             <div class="name">{name}</div>
           </a>
         </li>

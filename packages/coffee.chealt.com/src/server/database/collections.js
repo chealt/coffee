@@ -83,6 +83,16 @@ const queryCollectionItemLinks = async (user, itemId) => {
   return results.rows;
 };
 
+const queryRecommendedRoasterIds = async (user) => {
+  const client = getClient(user.name);
+
+  const results = await client.execute({
+    sql: 'SELECT * FROM recommended_roaster_ids'
+  });
+
+  return results.rows;
+};
+
 const getCollections = async (user) => {
   const collections = await queryCollections(user);
   const collectionItems = await queryCollectionItems(user);
@@ -138,6 +148,12 @@ const getCollectionItem = async (user, itemId) => {
     review,
     inCollections: collectionItemLinks.map((link) => link.collection_id)
   };
+};
+
+const getRecommendedRoasterIds = async (user) => {
+  const recommendedRoasterIds = await queryRecommendedRoasterIds(user);
+
+  return recommendedRoasterIds?.map(({ roaster_id: roasterId }) => roasterId) || [];
 };
 
 const deleteCollection = async ({ user, id }) => {
@@ -268,5 +284,6 @@ export {
   deleteCollectionItem,
   getCollections,
   getCollectionItem,
+  getRecommendedRoasterIds,
   updateCollectionName
 };

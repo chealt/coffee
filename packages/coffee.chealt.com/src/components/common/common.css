@@ -337,6 +337,7 @@ svg {
     overflow: hidden;
 
     > a {
+      position: relative;
       border: none;
       width: 100%;
       display: flex;
@@ -411,6 +412,24 @@ svg {
     border-color: var(--color-text);
     background-color: var(--color-background);
     color: var(--color-text);
+  }
+}
+
+.tag {
+  position: absolute;
+  width: 100%;
+  top: 24px;
+  right: -50%;
+  text-align: center;
+  transform: rotate(45deg);
+  background-color: var(--color-background--alternative);
+  padding: var(--gap--s) 40px;
+  text-transform: uppercase;
+  font-weight: bold;
+
+  &.primary {
+    background-color: var(--color-primary);
+    color: var(--color-text--primary);
   }
 }
 

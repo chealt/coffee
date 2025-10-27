@@ -10,6 +10,7 @@ import { getValue } from './server/database/formData.js';
 import { getAuthenticationOptions } from './server/login.js';
 import { createRegistrationOptions } from './server/registration.js';
 import { setCollections, setCollectionItem } from './server/you/collections.js';
+import { setRecommended } from './server/you/recommendations.js';
 
 const locales = supportedLanguages.map(({ locale }) => locale);
 
@@ -84,8 +85,11 @@ const onRequest = async (context, next) => {
   try {
     // set the user if we have it
     authenticate(context);
-  } catch {
-    // DO NOTHING
+
+    await setRecommended(context);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.info(error);
   }
 
   const { page, params } = parsePath(context.url.pathname);
