@@ -11,6 +11,10 @@
     aspect-ratio: 1 / 1;
   }
 
+  .part {
+    cursor: pointer;
+  }
+
   .dot {
     width: 6px;
     height: 6px;
@@ -19,7 +23,6 @@
     background-color: var(--color-text);
     border-radius: 50%;
     opacity: 0.5;
-    cursor: pointer;
 
     &.active {
       opacity: 1;
@@ -31,13 +34,13 @@
 
   .labels {
     position: absolute;
-    bottom: -30px;
+    bottom: 0;
     width: 100%;
   }
 
   .label {
     position: absolute;
-    bottom: 0;
+    top: var(--gap--s);
     width: 100%;
     display: flex;
     align-items: center;
@@ -48,5 +51,41 @@
     &.active {
       opacity: 1;
     }
+  }
+
+  .bars {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: var(--gap);
+    aspect-ratio: 1 / 1;
+  }
+
+  .bar-container {
+    position: relative;
+    flex-grow: 1;
+    justify-items: center;
+  }
+
+  .bar {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    opacity: 0.2;
+    background-color: var(--color-border--alternative);
+
+    &.active {
+      opacity: 1;
+      z-index: var(--z-index--xs);
+      background-color: var(--color-primary);
+    }
+  }
+
+  .bar-label {
+    padding: var(--gap);
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    text-transform: capitalize;
+    letter-spacing: 8px;
   }
 }

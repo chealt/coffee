@@ -1,5 +1,6 @@
 nav {
   position: fixed;
+  z-index: var(--z-index--xs);
   bottom: 0;
   width: 100%;
   display: grid;

@@ -3,12 +3,14 @@
     "back": "Back",
     "chart": "Chart",
     "coffees": "Coffees",
-    "pricesPerGram": "Prices"
+    "prices": "Prices",
+    "tasteNotes": "Taste Notes"
   },
   "pl": {
     "back": "Powrót",
     "chart": "Wykres",
     "coffees": "Kawy",
-    "pricesPerGram": "Ceny"
+    "prices": "Ceny",
+    "tasteNotes": "Smaki"
   }
 }

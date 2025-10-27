@@ -1,27 +1,27 @@
 class Stats extends HTMLElement {
   connectedCallback() {
-    this.dots = this.querySelectorAll('.dot');
+    this.parts = this.querySelectorAll('.part');
 
-    this.dots.forEach((dot) => {
-      dot.addEventListener('mouseover', (event) => {
+    this.parts.forEach((part) => {
+      part.addEventListener('mouseover', (event) => {
         this.activateLabel.bind(this)(event.target.dataset.label);
-        this.activateDot.bind(this)(event.target.dataset.label);
+        this.activatePart.bind(this)(event.target.dataset.label);
       });
-      dot.addEventListener('mouseout', () => {
+      part.addEventListener('mouseout', () => {
         this.activateLabel.bind(this)(this.dataset.defaultLabel);
-        this.activateDot.bind(this)(this.dataset.defaultLabel);
+        this.activatePart.bind(this)(this.dataset.defaultLabel);
       });
     });
   }
 
   activateLabel(label) {
     this.querySelectorAll('.labels .label').forEach(({ classList }) => classList.remove('active'));
-    this.querySelector(`.label[data-dot="${label}"]`).classList.add('active');
+    this.querySelector(`.label[data-part="${label}"]`).classList.add('active');
   }
 
-  activateDot(label) {
-    this.querySelectorAll('.dot').forEach(({ classList }) => classList.remove('active'));
-    this.querySelectorAll(`.dot[data-label="${label}"]`).forEach(({ classList }) => classList.add('active'));
+  activatePart(label) {
+    this.querySelectorAll('.part').forEach(({ classList }) => classList.remove('active'));
+    this.querySelectorAll(`.part[data-label="${label}"]`).forEach(({ classList }) => classList.add('active'));
   }
 }
 
