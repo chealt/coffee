@@ -426,6 +426,7 @@ svg {
   padding: var(--gap--s) 40px;
   text-transform: uppercase;
   font-weight: bold;
+  font-size: 0.8rem;
 
   &.primary {
     background-color: var(--color-primary);

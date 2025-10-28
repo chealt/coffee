@@ -13,6 +13,7 @@ import { setCollections, setCollectionItem } from './server/you/collections.js';
 import { setRecommended } from './server/you/recommendations.js';
 
 const locales = supportedLanguages.map(({ locale }) => locale);
+const defaultLocale = supportedLanguages.find(({ isDefault }) => isDefault).locale;
 
 const setGetSignedUrl = (context) => {
   context.locals.getSignedUrl = '/api/storage/get-signed-url.json';
@@ -46,7 +47,7 @@ const setCurrency = async (context) => {
 
 const parsePath = (pathname) => {
   const pathParams = pathname.split('/');
-  let language = 'en';
+  let language = defaultLocale;
   let page;
   let params = [];
 
@@ -78,6 +79,21 @@ const authenticate = (context) => {
 
 // eslint-disable-next-line complexity
 const onRequest = async (context, next) => {
+  const { page, params } = parsePath(context.url.pathname);
+
+  if (page !== 'api' && !context.params.locale) {
+    const acceptLanguage = context.request.headers.get('accept-language')?.slice(0, 2) || defaultLocale;
+    const locale = locales.find((l) => l === acceptLanguage);
+
+    return context.rewrite(
+      new Request(`${context.url.origin}/${locale}${context.url.pathname}${context.url.search}`, {
+        headers: {
+          'x-redirected-from': context.url.pathname
+        }
+      })
+    );
+  }
+
   await setCurrency(context);
   setGetSignedUrl(context);
   setImageUploadUrls(context);
@@ -91,7 +107,6 @@ const onRequest = async (context, next) => {
 
   await setRecommended(context);
 
-  const { page, params } = parsePath(context.url.pathname);
   const { itemId, collectionId, locale } = context.params;
 
   let savedLocaleDB;
