@@ -5,6 +5,7 @@
   },
   {
     "locale": "en",
-    "label": "english"
+    "label": "english",
+    "isDefault": true
   }
 ]

@@ -10,7 +10,7 @@ export default defineConfig({
   output: 'server',
   i18n: {
     locales,
-    defaultLocale: 'en',
+    defaultLocale: supportedLanguages.find(({ isDefault }) => isDefault)?.locale || 'en',
     routing: {
       prefixDefaultLocale: true
     }
