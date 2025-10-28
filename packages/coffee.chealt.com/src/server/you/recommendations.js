@@ -9,11 +9,11 @@ const setRecommended = async (context) => {
   context.locals.recommended = {};
 
   try {
-    const loggedInUser = getSessionUser(context.request);
+    const user = getSessionUser(context.request);
 
-    if (loggedInUser) {
-      coffees = await getRecommendedCoffees({ username: loggedInUser.username, locale: context.currentLocale });
-      roasters = await getRecommendedRoasterIds({ name: loggedInUser.username });
+    if (user) {
+      coffees = await getRecommendedCoffees({ user, locale: context.currentLocale });
+      roasters = await getRecommendedRoasterIds({ name: user.username });
     }
   } catch (error) {
     // eslint-disable-next-line no-console
