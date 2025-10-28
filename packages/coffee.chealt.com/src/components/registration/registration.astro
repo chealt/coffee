@@ -22,6 +22,7 @@ const { username } = Astro.props;
     data-registration-options={Astro.locals.registrationOptions}
     data-verify-endpoint="/api/authentication/registration/verify.json"
     data-redirect-url="/"
+    data-not-supported-message={t.notSupportedBrowser}
   >
     <div data-registration-success class="hidden">{t.registrationSuccess}</div>
     <div data-registration-error class="error hidden">

@@ -1,7 +1,8 @@
-import { startRegistration } from '@simplewebauthn/browser';
+import { browserSupportsWebAuthn, startRegistration } from '@simplewebauthn/browser';
 
 class ChealtAuth extends HTMLElement {
   connectedCallback() {
+    this.checkSupport();
     this.verifyEndpoint = this.dataset.verifyEndpoint;
     this.registrationOptions = JSON.parse(this.dataset.registrationOptions);
     this.redirectUrl = this.dataset.redirectUrl;
@@ -13,6 +14,13 @@ class ChealtAuth extends HTMLElement {
     );
 
     this.registerOnSubmit();
+  }
+
+  checkSupport() {
+    if (!browserSupportsWebAuthn) {
+      // eslint-disable-next-line no-alert
+      window.alert(this.dataset.notSupportedMessage);
+    }
   }
 
   registerOnSubmit() {

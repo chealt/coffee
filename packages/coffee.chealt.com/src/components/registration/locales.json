@@ -15,7 +15,8 @@
         "NotBeforeError": "Registration failed",
         "default": "Registration failed"
       }
-    }
+    },
+    "notSupportedBrowser": "Your browser is not supported, if you opened this page from your email client, please open it from your default browser."
   },
   "pl": {
     "title": "Rejestracja",
@@ -33,6 +34,7 @@
         "NotBeforeError": "Rejestracja nie powiodła się",
         "default": "Rejestracja nie powiodła się"
       }
-    }
+    },
+    "notSupportedBrowser": "Twoja przeglądarka nie jest obsługiwana. Jeżeli otworzyłeś tę stronę za pomocą swojego klienta poczty e-mail, otwórz ją w domyślnej przeglądarce."
   }
 }
