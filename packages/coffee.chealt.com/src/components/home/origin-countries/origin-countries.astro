@@ -6,26 +6,31 @@ import './origin-countries.css';
 import originCountries from '../../../../data/originCountriesWithCoffees.json';
 
 import allLocaleTranslations from './locales.json';
+import allLocaleCommonTranslations from '../../common/common.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
+const tc = allLocaleCommonTranslations[Astro.currentLocale];
 
 const countries = originCountries.filter(({ language_code }) => language_code === Astro.currentLocale);
+
+const { recommended } = Astro.locals;
 ---
 
 <ul class="list origin-countries">
   {
-    countries.map(({ origin_country_id, name }, index) => (
+    countries.map(({ origin_country_id: id, name }, index) => (
       <li class="item">
         <a href={getRelativeLocaleUrl(Astro.currentLocale, `/origin-countries/${name}`)}>
           <div class="image card">
             <img
-              src={`/origin-countries/${origin_country_id}.svg`}
+              src={`/origin-countries/${id}.svg`}
               alt={`${t.originCountry} ${name}`}
               loading={index >= 2 ? 'lazy' : undefined}
               fetchpriority={index >= 2 ? undefined : 'high'}
             />
           </div>
           <div class="name">{name}</div>
+          {recommended?.originCountries?.includes(id) && <span class="tag primary left">{tc.recommended}</span>}
         </a>
       </li>
     ))

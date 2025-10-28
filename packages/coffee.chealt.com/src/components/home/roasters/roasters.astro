@@ -38,7 +38,7 @@ const { recommended } = Astro.locals;
                 fetchpriority={index >= 2 ? undefined : 'high'}
               />
             </div>
-            {isRecommended && <span class="tag primary">{tc.recommended}</span>}
+            {isRecommended && <span class="tag primary left">{tc.recommended}</span>}
             <div class="name">{name}</div>
           </a>
         </li>

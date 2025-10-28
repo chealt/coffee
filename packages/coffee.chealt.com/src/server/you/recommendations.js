@@ -1,10 +1,16 @@
 import { getSessionUser } from '../authentication/session.js';
-import { getRecommendedCoffees } from '../coffees/recommended.js';
-import { getRecommendedRoasterIds } from '../database/collections.js';
+import { getRecommendedCoffees } from '../coffees/recommendations.js';
+import {
+  getRecommendedOriginCountryIds,
+  getRecommendedRoasterIds,
+  getRecommendedTasteNoteGroupIds
+} from '../database/collections.js';
 
 const setRecommended = async (context) => {
   let coffees;
+  let originCountries;
   let roasters;
+  let tasteNoteGroups;
 
   context.locals.recommended = {};
 
@@ -12,8 +18,10 @@ const setRecommended = async (context) => {
     const user = getSessionUser(context.request);
 
     if (user) {
-      coffees = await getRecommendedCoffees({ user, locale: context.currentLocale });
+      coffees = await getRecommendedCoffees({ user: { name: user.username }, locale: context.currentLocale });
+      originCountries = await getRecommendedOriginCountryIds({ name: user.username });
       roasters = await getRecommendedRoasterIds({ name: user.username });
+      tasteNoteGroups = await getRecommendedTasteNoteGroupIds({ name: user.username });
     }
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -24,7 +32,9 @@ const setRecommended = async (context) => {
 
   context.locals.recommended = {
     coffees,
-    roasters
+    originCountries,
+    roasters,
+    tasteNoteGroups
   };
 };
 
