@@ -11,8 +11,10 @@ import TasteNoteGroups from './taste-note-groups/taste-note-groups.astro';
 import Wheel from '../taste-notes/taste-note-groups/wheel.astro';
 
 import allLocaleTranslations from './locales.json';
+import allLocaleCommonTranslations from '../common/common.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
+const tc = allLocaleCommonTranslations[Astro.currentLocale];
 
 const priciestCoffees = coffees
   .sort(
@@ -29,10 +31,20 @@ const cheapestCoffees = coffees
   )
   .slice(0, 10);
 const groups = tasteNoteGroups.filter(({ language_code }) => language_code === Astro.currentLocale);
+
+const { recommended } = Astro.locals;
 ---
 
 <Common>
   <h1>{t.title}</h1>
+  {
+    recommended.coffees && (
+      <section>
+        <h2>{tc.recommended}</h2>
+        <Coffees coffees={recommended.coffees} isRecommendedList />
+      </section>
+    )
+  }
   <section>
     <h2>{t.roasters}</h2>
     <Roasters />

@@ -85,12 +85,11 @@ const onRequest = async (context, next) => {
   try {
     // set the user if we have it
     authenticate(context);
-
-    await setRecommended(context);
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.info(error);
+  } catch {
+    // DO NOTHING
   }
+
+  await setRecommended(context);
 
   const { page, params } = parsePath(context.url.pathname);
   const { itemId, collectionId, locale } = context.params;

@@ -7,9 +7,11 @@ import Varieties from '../varieties/list.astro';
 import './item.css';
 
 import allLocaleTranslations from './locales.json';
+import allLocaleCommonTranslations from '../common/common.json';
 import { getConvertedPrice } from './utils';
 
 const t = allLocaleTranslations[Astro.currentLocale];
+const tc = allLocaleCommonTranslations[Astro.currentLocale];
 
 const brewingMethodImages = await import.meta.glob('/public/icons/brewing-methods/*.*', {
   eager: true,
@@ -23,6 +25,7 @@ const {
   highPriority,
   images,
   isDecaf,
+  isRecommended,
   originCountry,
   originFarm,
   originRegion,
@@ -48,7 +51,10 @@ const { currency } = Astro.locals;
       fetchpriority={highPriority ? 'high' : undefined}
     />
   </div>
-  {isDecaf && <span class="decaf-tag">{t.decaf}</span>}
+  {
+    (isRecommended && <span class="tag primary left">{tc.recommended}</span>) ||
+      (isDecaf && <span class="decaf-tag">{t.decaf}</span>)
+  }
 </a>
 <section class="not-padded coffee-details">
   <dl>

@@ -431,6 +431,12 @@ svg {
     background-color: var(--color-primary);
     color: var(--color-text--primary);
   }
+
+  &.left {
+    transform: rotate(-45deg);
+    left: -50%;
+    right: auto;
+  }
 }
 
 @view-transition {

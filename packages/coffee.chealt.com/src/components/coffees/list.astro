@@ -2,11 +2,17 @@
 import { getDetails } from './utils.js';
 import Item from './item.astro';
 
-const { coffees } = Astro.props;
+const { coffees, isRecommendedList } = Astro.props;
 
 await import.meta.glob('/public/coffees/*.*', { eager: true });
 
-const coffeesWithDetails = coffees.map(getDetails({ locale: Astro.currentLocale }));
+const { recommended } = Astro.locals;
+
+const coffeesWithDetails = coffees.map(getDetails({ locale: Astro.currentLocale })).map(({ id, ...rest }) => ({
+  id,
+  isRecommended: !isRecommendedList && recommended?.coffees?.some(({ id: coffeeId }) => coffeeId === id),
+  ...rest
+}));
 ---
 
 <ul class="list">
