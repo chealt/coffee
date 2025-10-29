@@ -1,6 +1,7 @@
-/* eslint-disable camelcase, no-console */
-import { TranslateClient, TranslateTextCommand } from '@aws-sdk/client-translate';
+/* eslint-disable no-console */
 import { createClient } from '@libsql/client';
+
+import { translate } from '../translate.js';
 
 const authToken = process.env.TURSO_DEFAULT_TOKEN;
 const databaseUrl = process.env.TURSO_DATABASE_URL;
@@ -27,17 +28,9 @@ console.info('Translating taste notes...');
 const polishLanguageId = 1;
 await Promise.all(
   tasteNotes.map(async ({ id, name }) => {
-    const config = {};
-    const translationClient = new TranslateClient(config);
-    const input = {
-      Text: name,
-      SourceLanguageCode: 'en',
-      TargetLanguageCode: 'pl'
-    };
-    const command = new TranslateTextCommand(input);
-
     try {
-      const { TranslatedText: translated } = await translationClient.send(command);
+      const translated = await translate({ text: name, from: 'en', to: 'pl' });
+
       console.info(`Translated '${name}' to '${translated}'`);
 
       console.info(`Inserting translated taste note '${translated}'...`);
