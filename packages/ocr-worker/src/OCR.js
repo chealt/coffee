@@ -7,7 +7,6 @@ import { outputToImage, multipleOfBaseSize, resizeImage } from './imageUtils.js'
 import { imageToModelInput } from './modelUtils.js';
 import { splitIntoLineImages } from './splitIntoLineImages.js';
 import { clean } from './utils/text.js';
-import { memoryUsage } from 'node:process';
 
 const defaultOptions = {
   debug: false,
@@ -17,10 +16,17 @@ const defaultOptions = {
   },
   onnxOptions: {
     executionProviders: ['wasm']
-  }
+  },
+  logMemory: () => null
 };
 
-const OCR = async ({ debug, modelPaths: { detectionPath, recognitionPath }, onnxOptions } = defaultOptions) => {
+const OCR = async (options) => {
+  const {
+    debug,
+    modelPaths: { detectionPath, recognitionPath },
+    onnxOptions,
+    logMemory
+  } = Object.assign(defaultOptions, options);
   const detectionModel = await InferenceSession.create(detectionPath, onnxOptions);
   const recognitionModel = await InferenceSession.create(recognitionPath, onnxOptions);
 
@@ -68,6 +74,11 @@ const OCR = async ({ debug, modelPaths: { detectionPath, recognitionPath }, onnx
       },
       onnxOptions
     );
+
+    if (model === detectionModel) {
+      logMemory('after model run');
+    }
+
     const output = outputs[model.outputNames[0]];
 
     return output;
@@ -76,11 +87,13 @@ const OCR = async ({ debug, modelPaths: { detectionPath, recognitionPath }, onnx
   const detect = async ({ imageBuffer }) => {
     console.info(`Preparing image...`);
     const image = await prepareImage({ imageBuffer });
+    logMemory('after image prepare');
 
     console.info(`Running detection model...`);
 
     performance.mark('model:detection:start');
     const modelOutput = await runModel({ model: detectionModel, image });
+    logMemory('after run detection model');
     performance.mark('model:detection:end');
 
     const { duration: detectionModelDuration } = performance.measure(
@@ -92,6 +105,7 @@ const OCR = async ({ debug, modelPaths: { detectionPath, recognitionPath }, onnx
 
     console.info(`Converting output to image...`);
     const outputImage = outputToImage(modelOutput, 0.03);
+    logMemory('after output to image');
 
     if (debug) {
       console.info(`Saving output image...`);
@@ -337,11 +351,10 @@ const OCR = async ({ debug, modelPaths: { detectionPath, recognitionPath }, onnx
 
   const extractText = async (imageBuffer) => {
     try {
-      console.info(`Memory usage - before detection: ${JSON.stringify(memoryUsage())}`);
       performance.mark('detection:start');
       const { lineImages } = await detect({ imageBuffer });
       performance.mark('detection:end');
-      console.info(`Memory usage - after detection: ${JSON.stringify(memoryUsage())}`);
+      logMemory('after detection');
 
       const { duration: detectionDuration } = performance.measure('detection', 'detection:start', 'detection:end');
       console.info(`Detection took ${detectionDuration}ms`);
@@ -352,8 +365,8 @@ const OCR = async ({ debug, modelPaths: { detectionPath, recognitionPath }, onnx
 
       performance.mark('recognition:start');
       const texts = await recognize(lineImages);
+      logMemory('after recognition');
       performance.mark('recognition:end');
-      console.info(`Memory usage - before recognition: ${JSON.stringify(memoryUsage())}`);
 
       const { duration: recognitionDuration } = performance.measure(
         'recognition',

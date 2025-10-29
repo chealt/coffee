@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 import OCR from './OCR.js';
-import { memoryUsage } from 'node:process';
+import { changeLogger } from './utils/memory.js';
+
+const logMemory = changeLogger({ shouldLog: true });
 
 const main = async ({ filename }) => {
   if (!filename) {
@@ -14,7 +16,7 @@ const main = async ({ filename }) => {
   const response = await fetch(path);
   performance.mark('download:end');
 
-  console.info(`Memory usage: ${JSON.stringify(memoryUsage())}`);
+  logMemory();
 
   const { duration: downloadDuration } = performance.measure('download', 'download:start', 'download:end');
   console.info(`Download took ${downloadDuration}ms`);
@@ -29,13 +31,12 @@ const main = async ({ filename }) => {
 
   console.info(`Processing file: ${filename}`);
   // eslint-disable-next-line new-cap
-  const ocr = await OCR();
+  const ocr = await OCR({ logMemory });
 
-  console.info(`Memory usage: ${JSON.stringify(memoryUsage())}`);
+  logMemory();
 
   const text = await ocr.extractText(fileBuffer);
 
-  console.info(`Memory usage: ${JSON.stringify(memoryUsage())}`);
   console.info(`Extracted text: ${text}`);
 
   return { text, filename };
