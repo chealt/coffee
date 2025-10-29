@@ -12,7 +12,11 @@
 }
 
 .picture-collection {
+  --max-image-width: 600px;
+
   padding: 0;
+  max-width: var(--max-image-width);
+  margin: 0 auto;
 }
 
 .picture-collection > .carousel {
@@ -21,6 +25,7 @@
 
 .picture-collection img {
   width: 100vw;
+  max-width: var(--max-image-width);
   display: block;
   will-change: transform;
 }
