@@ -2,6 +2,7 @@
 import { JSDOM } from 'jsdom';
 import { Agent } from 'undici';
 
+import { translate } from '../translate.js';
 import currencyCodes from './currencies.js';
 import brewingMethods from '../../../coffee.chealt.com/data/brewingMethods.json' with { type: 'json' };
 import originCountries from '../../../coffee.chealt.com/data/originCountries.json' with { type: 'json' };
@@ -499,6 +500,166 @@ const parsers = {
           originCountryId,
           originRegionId,
           originFarmId: null,
+          price,
+          pricePerGram,
+          processingMethodId,
+          tasteNoteIds,
+          varietyIds,
+          webshopItemLink,
+          weight
+        };
+      })
+    );
+
+    return coffees;
+  },
+  // Heresy
+  65: async ({ webshop }) => {
+    console.info('Fetching webshop page...');
+
+    const response = await fetch(webshop);
+    const html = await response.text();
+
+    const {
+      window: { document }
+    } = new JSDOM(html);
+
+    console.info('Parsing webshop page...');
+
+    const productLinks = Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('.product_cat-coffee a.woocommerce-loop-product__link')).map(
+          ({ href }) => href
+        )
+      )
+    );
+
+    const coffees = await Promise.all(
+      productLinks.map(async (webshopItemLink) => {
+        console.info(`Fetching item page: ${webshopItemLink}`);
+
+        const itemResponse = await fetch(webshopItemLink);
+        const itemHtml = await itemResponse.text();
+
+        console.info(`Parsing item page: ${webshopItemLink}`);
+        const {
+          window: { document: itemDocument }
+        } = new JSDOM(itemHtml);
+
+        const price = parseFloat(
+          itemDocument.querySelector('.price .woocommerce-Price-amount.amount').textContent.replaceAll(' zł', '')
+        );
+
+        const currencySymbol = itemDocument.querySelector(
+          '.summary .price .woocommerce-Price-currencySymbol'
+        ).textContent;
+        const currency = currencyCodes[currencySymbol];
+
+        if (!currency) {
+          throw new Error(`Unknown currency: ${webshopItemLink}`);
+        }
+
+        const weightElementValue = itemDocument
+          .querySelector('#waga option[selected]')
+          .textContent.replaceAll(' g', '');
+        const weight = parseFloat(weightElementValue);
+
+        const pricePerGram = Number((price / weight).toFixed(2));
+
+        const details = Array.from(itemDocument.querySelector('#tab-description p').querySelectorAll('strong')).reduce(
+          (previousValue, currentValue) => {
+            const key = currentValue.textContent.replace(':', '').trim().toLowerCase();
+            const value = currentValue.nextSibling.textContent.trim().toLowerCase();
+
+            previousValue[key] = value;
+
+            return previousValue;
+          },
+          {}
+        );
+
+        const originCountry = details['kraj pochodzenia ziarna'];
+        const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
+
+        const originRegion = details.region;
+        const originRegionId =
+          originRegions.find(({ name }) => name === originRegion)?.origin_region_id ||
+          originRegions.find(({ name }) => originRegion.includes(name))?.origin_region_id ||
+          null;
+
+        if (!originRegionId) {
+          console.info(`Missing origin region: ${originRegion}`);
+        }
+
+        const originFarm = details.farma;
+        const originFarmId = originFarms.find(({ name }) => name === originFarm)?.id || null;
+
+        if (originFarm && !originFarmId) {
+          console.info(`Missing origin farm: ${originFarm}`);
+        }
+
+        const processingMethod = details['obróbka'];
+        const processingMethodId = processingMethods.find(
+          ({ name }) => name === processingMethod
+        )?.processing_method_id;
+
+        if (!processingMethodId) {
+          console.debug(`Missing processing method: ${processingMethod}`);
+        }
+
+        const brewingMethod = itemDocument
+          .querySelector('.ct-breadcrumbs .item-1 [itemprop="name"]')
+          .textContent.trim()
+          .toLowerCase();
+        const brewingMethodId = brewingMethods.find(({ name }) => brewingMethod === name)?.brewing_method_id || null;
+
+        const description = itemDocument
+          .querySelector('.woocommerce-product-details__short-description')
+          .textContent.trim()
+          .toLowerCase();
+        const translatedDescription = await translate({ text: description, from: 'pl', to: 'en' });
+        const cleanTranslation = translatedDescription.replaceAll('-', ' ');
+
+        const tasteNotesFound = tasteNotes.filter(({ name }) => cleanTranslation.includes(name));
+        // exclude taste notes that include each other like st'raw'berry and 'raw'
+        const distinctTasteNotes = tasteNotesFound.filter(
+          ({ name }) => !tasteNotesFound.some(({ name: n }) => n !== name && n.includes(name))
+        );
+        const tasteNoteIds = distinctTasteNotes.map(({ taste_note_id: tasteNoteId }) => tasteNoteId);
+
+        if (!tasteNoteIds.length) {
+          console.debug(`No taste notes: ${cleanTranslation}, at ${webshopItemLink}`);
+        }
+
+        const varietiesStrings = details.odmiana
+          .split(', ')
+          .map((notes) => notes.split(' & '))
+          .flat();
+        const varietyIds = varieties
+          .filter(({ name }) => varietiesStrings.includes(name.toLowerCase()))
+          .map(({ id }) => id);
+        const missingVarieties = varietiesStrings.filter(
+          (variety) => !varieties.some(({ name }) => name.toLowerCase() === variety)
+        );
+
+        if (missingVarieties.length) {
+          console.debug(`Missing varieties: ${missingVarieties.join(', ')}`);
+        }
+
+        const image =
+          itemDocument.querySelectorAll('.ct-product-gallery-container figure img')[1]?.src ||
+          itemDocument.querySelectorAll('.ct-product-gallery-container figure img')[0]?.src;
+
+        if (!image) {
+          throw new Error(`No image found: ${webshopItemLink}`);
+        }
+
+        return {
+          brewingMethodId,
+          currency,
+          image,
+          originCountryId,
+          originRegionId,
           price,
           pricePerGram,
           processingMethodId,
