@@ -1,4 +1,4 @@
-/* eslint-disable camelcase, no-console */
+/* eslint-disable camelcase */
 import { createClient } from '@libsql/client';
 import { JSDOM } from 'jsdom';
 import { Agent } from 'undici';

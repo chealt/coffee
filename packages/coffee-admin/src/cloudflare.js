@@ -1,4 +1,5 @@
-/* eslint-disable no-console */
+import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+
 const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
 const apiToken = process.env.CLOUDFLARE_API_TOKEN;
 
@@ -31,4 +32,30 @@ const addSecret = async ({ scriptName, name, text }) => {
   }
 };
 
-export { addSecret };
+const getClient = () =>
+  new S3Client({
+    region: 'auto',
+    endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
+    credentials: {
+      accessKeyId: process.env.CLOUDFLARE_R2_ACCESS_KEY_ID,
+      secretAccessKey: process.env.CLOUDFLARE_R2_ACCESS_SECRET
+    }
+  });
+
+const getObject = async (filename) => {
+  const client = getClient();
+
+  const response = await client.send(
+    new GetObjectCommand({
+      Bucket: 'coffee-images',
+      Key: `collection-images/${filename}`
+    })
+  );
+
+  return {
+    ContentType: response.ContentType,
+    Body: await response.Body.transformToByteArray()
+  };
+};
+
+export { addSecret, getObject };

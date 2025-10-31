@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2';
 
 import getContent from './email-content.js';

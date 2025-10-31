@@ -2,7 +2,7 @@
 import { getClient } from './client.js';
 import { getValue } from './formData.js';
 import { getTasteNoteGroupByNoteId } from '../../components/taste-notes/utils.js';
-import { getImageUrl } from '../cloudflare/r2/storage.js';
+import { getImageUrl } from '../AWS/storage.js';
 
 const queryCollections = async (user) => {
   const client = getClient(user.name);

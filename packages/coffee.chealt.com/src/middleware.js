@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
 
 import supportedLanguages from '../data/supportedLanguages.json';
+import { getImageUrl } from './server/AWS/storage.js';
 import { sessionSecret } from './server/authentication/config.js';
 import { getUsername } from './server/authentication/cookies.js';
 import { getSessionUser } from './server/authentication/session.js';
-import { getImageUrl } from './server/cloudflare/r2/storage.js';
 import { cookieNameLocale, cookieNameCurrency, defaultCurrency } from './server/config.js';
 import { getValue } from './server/database/formData.js';
 import { getAuthenticationOptions } from './server/login.js';

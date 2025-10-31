@@ -95,7 +95,7 @@ self.addEventListener('message', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  if (event.request.method === 'GET' && url.pathname.includes('/collection-images/')) {
+  if (event.request.method === 'GET' && url.host === 'collection-images.centralbeans.com') {
     event.respondWith(
       caches.match(event.request).then((cachedResponse) => {
         if (cachedResponse) {
