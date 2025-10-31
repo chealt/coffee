@@ -65,7 +65,7 @@ self.addEventListener('message', (event) => {
                 }
               });
 
-              return cache.put(`${imageUrl}${filename}`, responseToCache);
+              return cache.put(`${imageUrl.slice(0, -5)}${filename}${imageUrl.slice(-5)}`, responseToCache);
             })
           );
         })

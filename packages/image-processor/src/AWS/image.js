@@ -2,6 +2,8 @@ import sharp from 'sharp';
 
 import { getObject, putObject } from './s3.js';
 
+const contentType = 'image/webp';
+
 const convertImage = async ({ filename }) => {
   console.info(`Fetching image ${filename}`);
   const image = await getObject({ bucketName: 'centralbeans-coffee-images', key: filename });
@@ -16,7 +18,12 @@ const convertImage = async ({ filename }) => {
   const data = await convertedImage.toBuffer();
 
   console.info(`Saving image ${filename}`);
-  await putObject({ bucketName: 'centralbeans-coffee-images-public', key: `${filename}.webp`, data });
+  await putObject({
+    bucketName: 'centralbeans-coffee-images-public',
+    key: `${filename}.webp`,
+    data,
+    contentType
+  });
 
   console.info(`Resizing image ${filename}`);
   const smallImageData = await convertedImage.resize({ width: 600 }).toBuffer();
@@ -28,12 +35,14 @@ const convertImage = async ({ filename }) => {
     putObject({
       bucketName: 'centralbeans-coffee-images-public',
       key: `600/${filename}.webp`,
-      data: smallImageData
+      data: smallImageData,
+      contentType
     }),
     putObject({
       bucketName: 'centralbeans-coffee-images-public',
       key: `1024/${filename}.webp`,
-      data: mediumImageData
+      data: mediumImageData,
+      contentType
     })
   ]);
 };
