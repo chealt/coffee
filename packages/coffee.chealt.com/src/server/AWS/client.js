@@ -15,8 +15,10 @@ const getClient = () => {
 
   client = new S3Client({
     region,
-    accessKeyId,
-    secretAccessKey
+    credentials: {
+      accessKeyId,
+      secretAccessKey
+    }
   });
 
   return client;
