@@ -18,22 +18,23 @@ import allLocaleTranslations from './locales.json';
 const t = allLocaleTranslations[Astro.currentLocale];
 
 const {
-  collectionItem: { id, details }
+  collectionItem: { id, details, extractedDetails }
 } = Astro.locals;
+console.log(extractedDetails);
 ---
 
 <section>
   <h1>{t.details}</h1>
   <Form name={`${id}.details`} data-storage="api" data-save-endpoint="/api/storage/save-form-data" data-save-on-input>
-    <Roasters selected={details?.roaster} />
+    <Roasters selected={details?.roaster || extractedDetails?.roaster} />
     <RoastingLevels selected={details?.roastingLevel} />
     <RoastingDate value={details?.roastingDate} />
-    <OriginCountries selected={details?.originCountry} />
-    <OriginRegions selected={details?.originRegion} />
-    <Varieties selected={details?.['varieties[]']} />
-    <ProcessingMethods selected={details?.processingMethod} />
-    <BrewingMethods selected={details?.brewingMethod} />
-    <TasteNotes selected={details?.['tasteNoteIds[]']} />
+    <OriginCountries selected={details?.originCountry || extractedDetails?.originCountry} />
+    <OriginRegions selected={details?.originRegion || extractedDetails?.originRegion} />
+    <Varieties selected={details?.['varieties[]'] || extractedDetails?.['varieties[]']} />
+    <ProcessingMethods selected={details?.processingMethod || extractedDetails?.processingMethod} />
+    <BrewingMethods selected={details?.brewingMethod || extractedDetails?.brewingMethod} />
+    <TasteNotes selected={details?.['tasteNoteIds[]'] || extractedDetails?.['tasteNoteIds[]']} />
     <Decaf checked={details?.isDecaf} />
   </Form>
 </section>

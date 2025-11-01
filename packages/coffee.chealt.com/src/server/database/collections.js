@@ -24,6 +24,17 @@ const queryCollectionItems = async (user) => {
   return results.rows;
 };
 
+const queryImageDetails = async (filename) => {
+  const client = getClient();
+
+  const results = await client.execute({
+    sql: 'SELECT details FROM collection_item_details WHERE filename = :filename',
+    args: { filename }
+  });
+
+  return results.rows[0];
+};
+
 const queryCollectionItemsByCollectionId = async (user, collectionId) => {
   const client = getClient(user.name);
 
@@ -148,9 +159,31 @@ const getCollections = async (user) => {
   }));
 };
 
+const getExtractedDetails = async (collectionItemImages) =>
+  Promise.all(collectionItemImages.map(({ filename }) => queryImageDetails(filename))).then((results) =>
+    results
+      .filter((result) => Boolean(result))
+      .map(({ details }) => JSON.parse(details))
+      .reduce(
+        // eslint-disable-next-line complexity
+        (previousValue, currentValue) => ({
+          brewingMethod: previousValue.brewingMethod || currentValue.brewingMethod,
+          originCountry: previousValue.originCountry || currentValue.originCountry,
+          originFarm: previousValue.originFarm || currentValue.originFarm,
+          originRegion: previousValue.originRegion || currentValue.originRegion,
+          processingMethod: previousValue.processingMethod || currentValue.processingMethod,
+          roaster: previousValue.roaster || currentValue.roaster,
+          'tasteNoteIds[]': (previousValue['tasteNoteIds[]'] || []).concat(currentValue['tasteNoteIds[]'] || []),
+          'varieties[]': (previousValue['varieties[]'] || []).concat(currentValue['varieties[]'] || [])
+        }),
+        {}
+      )
+  );
+
 const getCollectionItem = async (user, itemId) => {
   const collectionItem = await queryCollectionItem(user, itemId);
   const collectionItemImages = await queryCollectionItemImages(user, itemId);
+  const extractedDetails = await getExtractedDetails(collectionItemImages);
   const favoriteItems = await queryCollectionItemsByCollectionId(user, 'favorites');
   const details = await getValue({ user, key: `${itemId}.details` });
   const review = await getValue({ user, key: `${itemId}.review` });
@@ -166,6 +199,7 @@ const getCollectionItem = async (user, itemId) => {
       srcMedium: getImageUrl({ filename, size: 'medium' })
     })),
     details,
+    extractedDetails,
     review,
     inCollections: collectionItemLinks.map((link) => link.collection_id)
   };

@@ -3,6 +3,13 @@ import { createClient } from '@libsql/client';
 const clients = {};
 
 const getClient = (username) => {
+  if (!username) {
+    return createClient({
+      url: process.env.TURSO_DATABASE_URL || import.meta.env.TURSO_DATABASE_URL,
+      authToken: process.env.TURSO_AUTH_TOKEN || import.meta.env.TURSO_AUTH_TOKEN
+    });
+  }
+
   if (clients[username]) {
     return clients[username];
   }

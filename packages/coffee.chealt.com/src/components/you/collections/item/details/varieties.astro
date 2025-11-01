@@ -12,7 +12,8 @@ const t = allLocaleTranslations[Astro.currentLocale];
 
 const { selected } = Astro.props;
 
-const selectedVarieties = selected?.map((id) => varieties.find(({ id: varietyId }) => String(varietyId) === id)) || [];
+const selectedVarieties =
+  selected?.map((id) => varieties.find(({ id: varietyId }) => String(varietyId) === String(id))) || [];
 ---
 
 <Label for="varieties">
@@ -24,7 +25,7 @@ const selectedVarieties = selected?.map((id) => varieties.find(({ id: varietyId 
   {
     varieties.map(({ id, name }) => (
       <li>
-        <Checkbox name="varieties[]" value={id} checked={selected?.includes(String(id))}>
+        <Checkbox name="varieties[]" value={id} checked={selected?.map((id) => String(id)).includes(String(id))}>
           {name}
         </Checkbox>
       </li>
