@@ -140,7 +140,7 @@ const onRequest = async (context, next) => {
     try {
       authenticate(context);
     } catch (error) {
-      console.error(error); // eslint-disable-line no-console
+      console.error(error);
 
       return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
     }
@@ -159,7 +159,7 @@ const onRequest = async (context, next) => {
         await setCollectionItem(context, itemId);
       }
     } catch (error) {
-      console.error(error); // eslint-disable-line no-console
+      console.error(error);
 
       context.locals.shouldAuthenticate = true;
 
