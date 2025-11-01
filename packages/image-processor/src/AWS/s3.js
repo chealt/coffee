@@ -1,6 +1,8 @@
 import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
-const client = new S3Client({});
+const client = new S3Client({
+  region: 'eu-central-1'
+});
 
 const getObject = async ({ bucketName, key }) => {
   const response = await client.send(
