@@ -1,0 +1,11 @@
+---
+import Common from '../common/common.astro';
+
+import allLocaleCommonTranslations from '../common/common.json';
+
+const t = allLocaleCommonTranslations[Astro.currentLocale];
+---
+
+<Common>
+  <p>{t['404']}</p>
+</Common>
