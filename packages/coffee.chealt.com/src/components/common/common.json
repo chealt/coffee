@@ -1,6 +1,7 @@
 {
   "en": {
     "404": "The page you are looking for cannot be found",
+    "404title": "Not found",
     "allCoffees": "All Coffees",
     "cheapestCoffees": "Budget Friendly",
     "description": "Explore the world of coffee and collect your favorites.",
@@ -14,6 +15,7 @@
   },
   "pl": {
     "404": "Strona nie została znaleziona",
+    "404title": "Nie znaleziono",
     "allCoffees": "Wszystkie kawy",
     "cheapestCoffees": "Kawy najtańsze",
     "description": "Przeglądaj świat kawy i zbieraj swoje ulubione kawy",
