@@ -1,0 +1,19 @@
+name: Release
+on:
+  schedule:
+    - cron: "0 21 * * *"
+permissions:
+  contents: write
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Refresh static data
+        run: yarn workspace @chealt/coffee build:scan
+      - name: Commit changes
+        run: |
+          git config --global user.name 'Chealt GitHub automation'
+          git config --global user.email 'info@chealt.com'
+          git commit -am "Automated build"
+          git push
