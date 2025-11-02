@@ -1,7 +1,9 @@
 {
   "en": {
     "404": "The page you are looking for cannot be found",
+    "500": "Something went wrong, please try reloading the site",
     "404title": "Not found",
+    "500title": "Oops, something gone wrong",
     "allCoffees": "All Coffees",
     "cheapestCoffees": "Budget Friendly",
     "description": "Explore the world of coffee and collect your favorites.",
@@ -15,7 +17,9 @@
   },
   "pl": {
     "404": "Strona nie została znaleziona",
+    "500": "Coś poszło nie tak, spróbuj ponownie załadować stronę",
     "404title": "Nie znaleziono",
+    "500title": "Ups, coś poszło nie tak",
     "allCoffees": "Wszystkie kawy",
     "cheapestCoffees": "Kawy najtańsze",
     "description": "Przeglądaj świat kawy i zbieraj swoje ulubione kawy",

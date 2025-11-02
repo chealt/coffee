@@ -1,0 +1,12 @@
+---
+import Common from '../common/common.astro';
+
+import allLocaleCommonTranslations from '../common/common.json';
+
+const t = allLocaleCommonTranslations[Astro.currentLocale];
+---
+
+<Common>
+  <h1>{t['500title']}</h1>
+  <section>{t['500']}</section>
+</Common>
