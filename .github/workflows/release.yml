@@ -14,6 +14,6 @@ jobs:
       - name: Commit changes
         run: |
           git config --global user.name 'Chealt GitHub automation'
-          git config --global user.email 'info@chealt.com'
+          git config --global user.email 'info@centralbeans.com'
           git commit -am "Automated build"
           git push
