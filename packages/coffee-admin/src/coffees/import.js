@@ -1,4 +1,4 @@
-/* eslint-disable no-console, complexity */
+/* eslint-disable complexity */
 import { createClient } from '@libsql/client';
 
 import parsers from './parsers.js';
@@ -51,7 +51,7 @@ for (const {
   isDecaf = false,
   originCountryId,
   originFarmId = null,
-  originRegionId,
+  originRegionId = null,
   price,
   pricePerGram,
   processingMethodId = null,

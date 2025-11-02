@@ -1,4 +1,4 @@
-/* eslint-disable no-console, no-shadow, complexity */
+/* eslint-disable no-shadow, complexity */
 import { JSDOM } from 'jsdom';
 import { Agent } from 'undici';
 
@@ -811,6 +811,157 @@ const parsers = {
           processingMethodId,
           tasteNoteIds,
           varietyIds,
+          webshopItemLink,
+          weight
+        };
+      })
+    );
+
+    return coffees;
+  },
+  // Spojka
+  82: async ({ webshop }) => {
+    console.info('Fetching webshop page...');
+
+    const response = await fetch(webshop);
+    const html = await response.text();
+
+    const {
+      window: { document }
+    } = new JSDOM(html);
+
+    console.info('Parsing webshop page...');
+
+    const host = webshop.replace('/en', '');
+
+    const navLinks = Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('header nav a'))
+          .filter(({ textContent }) => ['espresso', 'filter'].includes(textContent.trim().toLowerCase()))
+          .map(({ href }) => `${host}${href}`)
+      )
+    );
+
+    const productLinks = await Promise.all(
+      navLinks.map(async (navLink) => {
+        const navLinkResponse = await fetch(navLink);
+        const navLinkHtml = await navLinkResponse.text();
+
+        const {
+          window: { document: navLinkDocument }
+        } = new JSDOM(navLinkHtml);
+
+        return Array.from(navLinkDocument.querySelectorAll('h3 a[href^="/en/products/"]:not([id^="Standard"])'))
+          .filter(({ textContent, href }) => !textContent.toLowerCase().includes('test') && !href.includes('kapsule'))
+          .map(({ href }) => `${host}${href}`);
+      })
+    ).then((links) => links.flat());
+
+    const coffees = await Promise.all(
+      productLinks.map(async (webshopItemLink) => {
+        console.info(`Fetching item page: ${webshopItemLink}`);
+
+        const itemResponse = await fetch(webshopItemLink);
+        const itemHtml = await itemResponse.text();
+
+        console.info(`Parsing item page: ${webshopItemLink}`);
+        const {
+          window: { document: itemDocument }
+        } = new JSDOM(itemHtml);
+
+        const price = parseFloat(itemDocument.querySelector('.price-item').textContent.replaceAll(' €', ''));
+
+        const currencySymbol = itemDocument.querySelector('.price-item').textContent.includes('€') ? '€' : undefined;
+        const currency = currencyCodes[currencySymbol];
+
+        if (!currency) {
+          throw new Error(`Unknown currency: ${webshopItemLink}`);
+        }
+
+        const weightElementValue =
+          itemDocument.querySelector('.metafield-number_integer')?.textContent ||
+          itemDocument.querySelector('[name=Packaging]:checked')?.value.replace('g', '') ||
+          itemDocument.querySelector('[name=balenie]:checked')?.value.replace('g', '');
+        const weight = parseFloat(weightElementValue);
+
+        const pricePerGram = Number((price / weight).toFixed(2));
+
+        const details = Array.from(itemDocument.querySelectorAll('.product__sku2')).reduce(
+          (previousValue, currentValue) => {
+            const key = currentValue.textContent.trim().toLowerCase();
+            const value = currentValue.nextElementSibling.textContent.trim().toLowerCase();
+
+            previousValue[key] = value;
+
+            return previousValue;
+          },
+          {}
+        );
+
+        const originCountry =
+          details.lokalita === 'cherry likér, jablko, hrozno, čierna ríbezľa, jahoda' // bad data
+            ? 'indonesia'
+            : details.lokalita;
+        const originCountryTranslated = await translate({ text: originCountry, from: 'cs', to: 'en' });
+        const originCountryId =
+          originCountries.find(({ name }) => name === originCountry)?.origin_country_id ||
+          originCountries.find(({ name }) => name === originCountryTranslated)?.origin_country_id ||
+          null;
+
+        if (!originCountryId) {
+          console.log(details);
+          console.info(`Missing origin country: ${originCountry}`);
+        }
+
+        const processingMethod = (await translate({ text: details.spracovanie, from: 'cs', to: 'en' }))
+          .trim()
+          .toLowerCase();
+        const processingMethodId =
+          processingMethods.find(({ name }) => name.toLowerCase() === details.spracovanie)?.processing_method_id ||
+          processingMethods.find(({ name }) => name.toLowerCase() === processingMethod)?.processing_method_id ||
+          processingMethods.find(({ name }) => processingMethod.includes(name.toLowerCase()))?.processing_method_id;
+
+        if (!processingMethodId) {
+          console.debug(`Missing processing method: ${processingMethod} for ${webshopItemLink}`);
+        }
+
+        const brewingMethodId = brewingMethods.find(({ name }) => name === 'omni')?.brewing_method_id || null;
+
+        const tasteNotesStrings = details['chuťový profil'];
+        const translatedTasteNotes = await translate({ text: tasteNotesStrings, from: 'cs', to: 'en' });
+        const cleanTranslation = translatedTasteNotes.toLowerCase().split(', ');
+
+        const tasteNotesFound = tasteNotes.filter(({ name }) => cleanTranslation.includes(name));
+        // exclude taste notes that include each other like st'raw'berry and 'raw'
+        const distinctTasteNotes = tasteNotesFound.filter(
+          ({ name }) => !tasteNotesFound.some(({ name: n }) => n !== name && n.includes(name))
+        );
+        const tasteNoteIds = distinctTasteNotes.map(({ taste_note_id: tasteNoteId }) => tasteNoteId);
+
+        if (!tasteNoteIds.length) {
+          console.debug(`No taste notes: ${cleanTranslation}, at ${webshopItemLink}`);
+        }
+
+        const isDecaf = webshopItemLink.includes('decaf');
+
+        const imageSrc = itemDocument.querySelector('img.global-media-settings')?.src;
+
+        if (!imageSrc) {
+          throw new Error(`No image found: ${webshopItemLink}`);
+        }
+
+        const image = `http:${imageSrc.slice(0, imageSrc.lastIndexOf('?')) || ''}`;
+
+        return {
+          brewingMethodId,
+          currency,
+          image,
+          isDecaf,
+          originCountryId,
+          price,
+          pricePerGram,
+          processingMethodId,
+          tasteNoteIds,
           webshopItemLink,
           weight
         };

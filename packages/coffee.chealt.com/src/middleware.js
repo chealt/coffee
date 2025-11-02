@@ -81,7 +81,7 @@ const authenticate = (context) => {
 const onRequest = async (context, next) => {
   const { page, params } = parsePath(context.url.pathname);
 
-  if (page !== 'api' && !context.params.locale) {
+  if (page !== 'api' && !context.params.locale && context.routePattern !== '/404') {
     const acceptLanguage = context.request.headers.get('accept-language')?.slice(0, 2) || defaultLocale;
     const locale = locales.find((l) => l === acceptLanguage);
 
@@ -116,7 +116,6 @@ const onRequest = async (context, next) => {
 
     savedLocaleDB = settings?.language;
   } catch {
-    // eslint-disable-next-line no-console
     console.info('Not logged in, so could not read language from DB.');
   }
 
@@ -183,7 +182,7 @@ const onRequest = async (context, next) => {
           return redirect('/registration/error?name=JsonWebTokenError');
         }
       } catch (error) {
-        console.error(error); // eslint-disable-line no-console
+        console.error(error);
 
         return redirect(`/registration/error?name=${error.name}`);
       }
@@ -197,7 +196,7 @@ const onRequest = async (context, next) => {
 
         context.locals.registrationOptions = JSON.stringify(registrationOptions);
       } catch (error) {
-        console.error(error); // eslint-disable-line no-console
+        console.error(error);
       }
     }
   }
