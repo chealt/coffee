@@ -77,6 +77,9 @@ const authenticate = (context) => {
   context.locals.loggedInUser = loggedInUser;
 };
 
+/**
+ * @type {import("astro").MiddlewareHandler}
+ */
 // eslint-disable-next-line complexity
 const onRequest = async (context, next) => {
   const { page, params } = parsePath(context.url.pathname);
