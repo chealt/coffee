@@ -1,4 +1,5 @@
 ---
+import Analytics from './analytics.astro';
 import IosPolyfills from './ios-polyfills.astro';
 import Login from '../login/login.astro';
 import Nav from './nav.astro';
@@ -34,6 +35,7 @@ const { shouldAuthenticate, redirectUrl } = Astro.props;
       <Nav />
     </chealt-data>
     <img src={loaderImage.src} class="visually-hidden" aria-hidden="true" />
+    <Analytics />
   </body>
 </html>
 
