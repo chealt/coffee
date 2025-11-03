@@ -18,6 +18,7 @@ jobs:
           TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
         run: yarn workspace @chealt/coffee build:scan:ci
       - name: Commit changes
+        continue-on-error: true
         run: |
           git config --global user.name 'Chealt GitHub automation'
           git config --global user.email 'info@centralbeans.com'
