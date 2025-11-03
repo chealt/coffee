@@ -5,9 +5,9 @@
     "build": "rm -rf dist && mkdir dist && cp -r package.json dist && cp ../../yarn.lock dist && cp .yarnrc.yml dist && cp -r src dist && cd dist && yarn workspaces focus && rm -rf .yarn && rm -rf yarn.lock && rm -rf .yarnrc.yml && zip -rq package.zip ."
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.921.0",
-    "@aws-sdk/client-s3": "^3.920.0",
-    "@aws-sdk/client-textract": "^3.921.0",
+    "@aws-sdk/client-dynamodb": "^3.922.0",
+    "@aws-sdk/client-s3": "^3.922.0",
+    "@aws-sdk/client-textract": "^3.922.0",
     "sharp": "^0.34.4"
   }
 }

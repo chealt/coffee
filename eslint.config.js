@@ -197,7 +197,8 @@ export default defineConfig([
       'packages/coffee-admin/**/*.js',
       'packages/image-text-interpreter/**/*.js',
       'packages/image-processor/**/*.js',
-      'packages/ocr-worker/**/*.js'
+      'packages/ocr-worker/**/*.js',
+      'packages/webshop-processor/**/*.js'
     ],
     languageOptions: {
       globals: {
