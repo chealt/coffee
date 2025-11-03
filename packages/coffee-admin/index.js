@@ -1,16 +1,23 @@
 import { getSecret } from './src/AWS.js';
+import recordRoasterWebshop from './src/coffees/record-roaster-webshop.js';
 import importCurrencies from './src/currencies/import.js';
 import sendRegistrationCode from './src/users/send-registration-code.js';
 
-const supportedFunctions = ['currencies:import', 'users:send-registration-code'];
+const supportedFunctions = {
+  coffeesRecordRoasterWebshop: 'coffees:record-roaster-webshop',
+  currenciesImport: 'currencies:import',
+  usersSendRegistrationCode: 'users:send-registration-code'
+};
 
 export const handler = async (event) => {
   if (!event.function) {
     throw new Error('No function specified');
   }
 
-  if (!supportedFunctions.includes(event.function)) {
-    throw new Error(`Unsupported function: ${event.function}, please choose one of ${supportedFunctions.join(', ')}`);
+  if (!Object.values(supportedFunctions).includes(event.function)) {
+    throw new Error(
+      `Unsupported function: ${event.function}, please choose one of ${Object.values(supportedFunctions).join(', ')}`
+    );
   }
 
   const secrets = await getSecret({ name: 'coffeeAdmin' });
@@ -22,19 +29,31 @@ export const handler = async (event) => {
   process.env.SESSION_SECRET = secrets.SESSION_SECRET;
 
   switch (event.function) {
-    case 'currencies:import':
+    case supportedFunctions.currenciesImport:
       await importCurrencies();
 
       break;
-    case 'users:send-registration-code':
+    case supportedFunctions.usersSendRegistrationCode:
       const username = event.username;
       const email = event.email;
 
       await sendRegistrationCode({ username, email });
 
       break;
+    case supportedFunctions.coffeesRecordRoasterWebshop:
+      const roasterId = event.roasterId;
+
+      if (!roasterId) {
+        throw new Error('No roasterId specified');
+      }
+
+      await recordRoasterWebshop({ roasterId });
+
+      break;
     default:
-      throw new Error(`Unsupported function: ${event.function}, please choose one of ${supportedFunctions.join(', ')}`);
+      throw new Error(
+        `Unsupported function: ${event.function}, please choose one of ${Object.values(supportedFunctions).join(', ')}`
+      );
   }
 
   return { success: true };

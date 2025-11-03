@@ -2,7 +2,7 @@
   "name": "@chealt/coffee-admin",
   "type": "module",
   "scripts": {
-    "build": "rm -rf dist && mkdir dist && cp index.js dist && cp -r package.json dist && cp ../../yarn.lock dist && cp .yarnrc-lambda.yml dist/.yarnrc.yml && cp -r src dist && cd dist && yarn workspaces focus && rm -rf .yarn && rm -rf yarn.lock && rm -rf .yarnrc.yml && zip -rq package.zip .",
+    "build": "rm -rf dist && mkdir dist && mkdir dist/data && cp ../coffee.chealt.com/data/*.json dist/data && cp index.js dist && cp -r package.json dist && cp ../../yarn.lock dist && cp .yarnrc-lambda.yml dist/.yarnrc.yml && cp -r src dist && cd dist && yarn workspaces focus && rm -rf .yarn && rm -rf yarn.lock && rm -rf .yarnrc.yml && zip -rq package.zip .",
     "users:create": "node --env-file=.env src/users/create-user.js",
     "users:send-registration-code": "node --env-file=.env src/users/send-registration-code.js",
     "coffees:flag-removed": "node --env-file=.env src/coffees/flag-removed.js",
