@@ -1,7 +1,7 @@
 name: Release
 on:
   schedule:
-    - cron: '40 7 * * *'
+    - cron: '0 * * * *'
 permissions:
   contents: write
 jobs:
