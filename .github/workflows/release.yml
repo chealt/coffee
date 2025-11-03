@@ -1,7 +1,7 @@
 name: Release
 on:
   schedule:
-    - cron: '10 7 * * *'
+    - cron: '40 7 * * *'
 permissions:
   contents: write
 jobs:
@@ -13,7 +13,10 @@ jobs:
       - name: Install dependencies
         run: yarn install
       - name: Refresh static data
-        run: yarn workspace @chealt/coffee build:scan
+        env:
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+        run: yarn workspace @chealt/coffee build:scan:ci
       - name: Commit changes
         run: |
           git config --global user.name 'Chealt GitHub automation'

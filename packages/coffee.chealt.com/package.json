@@ -14,6 +14,7 @@
     "dev": "AWS_PROFILE=centralbeans.com astro dev",
     "build": "astro build",
     "build:scan": "node --env-file=.env data/build.js",
+    "build:scan:ci": "node data/build.js",
     "import": "node --env-file=.env data/importData.js",
     "import:logos": "node data/importLogos.js",
     "add:logos": "node --env-file=.env data/addLogos.js",
