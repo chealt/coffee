@@ -1,4 +1,5 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
 import sharp from 'sharp';
 
 import { getContentHash } from './utils.js';
@@ -11,6 +12,20 @@ const imageExtension = 'webp';
 const client = new S3Client({
   region: 'eu-central-1'
 });
+
+const getSecret = async ({ name }) => {
+  const secretsClient = new SecretsManagerClient({
+    region: 'eu-central-1'
+  });
+
+  const response = await secretsClient.send(
+    new GetSecretValueCommand({
+      SecretId: name
+    })
+  );
+
+  return JSON.parse(response.SecretString);
+};
 
 const putObject = async ({ bucketName, key, data }) =>
   client.send(
@@ -74,4 +89,4 @@ const storeImage = async ({ url }) => {
   return `${fileHash}.${imageExtension}`;
 };
 
-export { storeImage };
+export { getSecret, storeImage };

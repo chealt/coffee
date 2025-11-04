@@ -16,7 +16,11 @@ const handler = async (event) => {
       throw new Error(`Missing details in ${JSON.stringify(event)}`);
     }
 
-    const filename = await storeImage({ url });
+    if (!details.image) {
+      throw new Error(`Missing image in ${JSON.stringify(event)}`);
+    }
+
+    const filename = await storeImage({ url: details.image });
 
     await storeDetails({ filename, details });
   }

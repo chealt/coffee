@@ -1,20 +1,6 @@
 import { createClient } from '@libsql/client';
 
-const authToken = process.env.TURSO_DEFAULT_TOKEN;
-const databaseUrl = process.env.TURSO_DATABASE_URL;
-
-if (!databaseUrl) {
-  throw new Error('TURSO_DATABASE_URL is not set');
-}
-
-if (!authToken) {
-  throw new Error('TURSO_DEFAULT_TOKEN is not set');
-}
-
-const client = createClient({
-  url: databaseUrl,
-  authToken
-});
+import { getSecret } from './AWS.js';
 
 /* eslint-disable complexity */
 const storeDetails = async ({
@@ -41,6 +27,24 @@ const storeDetails = async ({
 
     return;
   }
+
+  const secrets = await getSecret({ name: 'recordWebshopItemDetails' });
+
+  const authToken = secrets.TURSO_DEFAULT_TOKEN;
+  const databaseUrl = secrets.TURSO_DATABASE_URL;
+
+  if (!databaseUrl) {
+    throw new Error('TURSO_DATABASE_URL is not set');
+  }
+
+  if (!authToken) {
+    throw new Error('TURSO_DEFAULT_TOKEN is not set');
+  }
+
+  const client = createClient({
+    url: databaseUrl,
+    authToken
+  });
 
   console.info('Adding coffee to DB...');
   const results = await client.execute({
