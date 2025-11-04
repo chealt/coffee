@@ -1,10 +1,5 @@
 import { createClient } from '@libsql/client';
 
-import parsers from './parsers.js';
-import roasters from '../../../coffee.chealt.com/data/roasters.json' with { type: 'json' };
-import { getContentHash } from '../../../coffee.chealt.com/src/utils/file.js';
-import { writeFile } from 'node:fs/promises';
-
 const authToken = process.env.TURSO_DEFAULT_TOKEN;
 const databaseUrl = process.env.TURSO_DATABASE_URL;
 
@@ -21,52 +16,30 @@ const client = createClient({
   authToken
 });
 
-const hasRoaster = process.argv.some((arg) => arg.includes('--roasterId='));
-const roasterId =
-  hasRoaster && Number(process.argv.find((arg) => arg.includes('--roasterId=')).replace('--roasterId=', ''));
-
-if (!roasterId) {
-  throw new Error('Please provide a roasterId as an argument --roasterId=');
-}
-
-const roaster = roasters.find(({ id }) => id === roasterId);
-
-if (!roaster) {
-  throw new Error(`Roaster with id ${roasterId} not found`);
-}
-
-const parser = parsers[roasterId];
-
-if (!parser) {
-  throw new Error(`Parser for roaster ${roasterId} does NOT exist`);
-}
-
-const coffees = await parser(roaster);
-
-for (const {
-  brewingMethodId,
-  currency,
-  image,
-  isDecaf = false,
-  originCountryId,
-  originFarmId = null,
-  originRegionId = null,
-  price,
-  pricePerGram,
-  processingMethodId = null,
-  tasteNoteIds = [],
-  varietyIds = [],
-  webshopItemLink,
-  weight
-} of coffees) {
-  if (!originCountryId) {
-    continue;
+/* eslint-disable complexity */
+const storeDetails = async ({
+  filename,
+  details: {
+    brewingMethodId,
+    currency,
+    isDecaf = false,
+    originCountryId,
+    originFarmId = null,
+    originRegionId = null,
+    price,
+    pricePerGram,
+    processingMethodId = null,
+    roasterId,
+    tasteNoteIds = [],
+    varietyIds = [],
+    webshopItemLink,
+    weight
   }
+}) => {
+  if (!originCountryId || !varietyIds.length || !price || !weight || !pricePerGram) {
+    console.info(`Missing details, not saving ${filename} to database`);
 
-  if (!image) {
-    console.info(`No image for ${webshopItemLink}`);
-
-    continue;
+    return;
   }
 
   console.info('Adding coffee to DB...');
@@ -163,7 +136,7 @@ for (const {
       }
     ]);
 
-    continue;
+    return;
   }
 
   console.info('Clearing taste notes...');
@@ -211,30 +184,6 @@ for (const {
     );
   }
 
-  console.info('Fetching coffee image...');
-  const imageResponse = await fetch(image);
-
-  if (!imageResponse.ok) {
-    throw new Error(`Failed to fetch image ${image}`);
-  }
-
-  const arrayBuffer = await imageResponse.arrayBuffer();
-
-  const fileHash = await getContentHash({ arrayBuffer });
-  const imageFilename = `${fileHash}.${image.slice(image.lastIndexOf('.') + 1)}`;
-
-  console.info(`Saving coffee image for coffee ID: ${coffeeId}...`);
-
-  try {
-    await writeFile(`../coffee.chealt.com/public/coffees/${imageFilename}`, Buffer.from(arrayBuffer), {
-      flag: 'wx'
-    });
-  } catch (error) {
-    if (error.code !== 'EEXIST') {
-      throw error;
-    }
-  }
-
   console.info(`Saving coffee image into the DB for coffee ID: ${coffeeId}...`);
   await client.execute({
     sql: `INSERT OR IGNORE INTO coffee_images (
@@ -242,11 +191,13 @@ for (const {
       url
     ) VALUES (
       :coffeeId,
-      :imageFilename
+      :filename
     )`,
     args: {
       coffeeId,
-      imageFilename
+      filename
     }
   });
-}
+};
+
+export { storeDetails };
