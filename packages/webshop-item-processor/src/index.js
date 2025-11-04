@@ -44,7 +44,7 @@ const handler = async (event) => {
     return responses.missingDetails;
   }
 
-  if (!details.varieties?.length) {
+  if (!details.varietyIds?.length) {
     console.info(`No varieties found for ${key}, got details: ${JSON.stringify(details)}`);
 
     return responses.missingDetails;
