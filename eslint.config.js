@@ -199,6 +199,7 @@ export default defineConfig([
       'packages/image-processor/**/*.js',
       'packages/ocr-worker/**/*.js',
       'packages/record-webshop-item/**/*.js',
+      'packages/webshop-item-processor/**/*.js',
       'packages/webshop-processor/**/*.js'
     ],
     languageOptions: {
