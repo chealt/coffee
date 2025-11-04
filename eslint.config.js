@@ -198,6 +198,7 @@ export default defineConfig([
       'packages/image-text-interpreter/**/*.js',
       'packages/image-processor/**/*.js',
       'packages/ocr-worker/**/*.js',
+      'packages/record-webshop-item/**/*.js',
       'packages/webshop-processor/**/*.js'
     ],
     languageOptions: {

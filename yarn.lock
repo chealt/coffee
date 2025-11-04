@@ -1282,6 +1282,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@chealt/record-webshop-item@workspace:packages/record-webshop-item":
+  version: 0.0.0-use.local
+  resolution: "@chealt/record-webshop-item@workspace:packages/record-webshop-item"
+  dependencies:
+    "@aws-sdk/client-s3": "npm:^3.922.0"
+  languageName: unknown
+  linkType: soft
+
 "@chealt/webshop-processor@workspace:packages/webshop-processor":
   version: 0.0.0-use.local
   resolution: "@chealt/webshop-processor@workspace:packages/webshop-processor"
