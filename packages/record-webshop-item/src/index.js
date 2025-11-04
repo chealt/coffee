@@ -9,7 +9,7 @@ const saveHTML = ({ url, html, roasterId }) =>
     Body: html,
     ContentType: 'text/html',
     Metadata: {
-      roasterId
+      roasterId: String(roasterId)
     }
   });
 

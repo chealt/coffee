@@ -4,13 +4,14 @@ const s3 = new S3Client({
   region: 'eu-central-1'
 });
 
-const putObject = async ({ Bucket, Key, ContentType, Body }) =>
+const putObject = async ({ Bucket, Key, ContentType, Body, Metadata }) =>
   s3.send(
     new PutObjectCommand({
       Bucket,
       ContentType,
       Key,
-      Body
+      Body,
+      Metadata
     })
   );
 
