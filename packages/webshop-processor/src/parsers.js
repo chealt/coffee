@@ -1,12 +1,18 @@
 import { JSDOM } from 'jsdom';
 
-const parsers = {
-  6: (html) => {
-    const {
-      window: { document }
-    } = new JSDOM(html);
+const getDocument = (html) => {
+  const {
+    window: { document }
+  } = new JSDOM(html);
 
-    console.info('Parsing webshop page...');
+  return document;
+};
+
+const parsers = {
+  6: ({ html, url }) => {
+    console.info(`Parsing webshop page ${url}`);
+
+    const document = getDocument(html);
 
     const hiddenProductSelectors = [
       '.product_cat-akcesoria',

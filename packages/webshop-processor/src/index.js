@@ -1,6 +1,6 @@
+import { addWebshopItemUrl, getObject } from './AWS.js';
 import parsers from './parsers.js';
 import { getRoaster } from './roasters.js';
-import { getObject } from './s3.js';
 
 const handler = async (event) => {
   const { key } = event.Records[0].s3.object;
@@ -24,17 +24,9 @@ const handler = async (event) => {
     throw new Error(`No parser found for ${roaster.id}`);
   }
 
-  const productLinks = await parser(webshopHTML);
+  const productLinks = await parser({ html: webshopHTML, url: key });
 
-  if (productLinks?.length) {
-    await Promise.all(
-      productLinks.map((productLink) => {
-        console.info(productLink);
-
-        return 1;
-      })
-    );
-  }
+  await Promise.all(productLinks.map((productLink) => addWebshopItemUrl({ url: productLink, roasterId: roaster.id })));
 
   return { success: true };
 };
