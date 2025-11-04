@@ -1,6 +1,11 @@
 import { addWebshopItemDetails, getObject, getObjectMetadata } from './AWS.js';
 import parsers from './parsers.js';
 
+const responses = {
+  success: { success: true },
+  missingDetails: { success: true, missingDetails: true }
+};
+
 const handler = async (event) => {
   const { key } = event.Records[0].s3.object;
 
@@ -27,9 +32,27 @@ const handler = async (event) => {
 
   const details = await parser({ html: webshopItemHTML, url: key, roasterId });
 
+  if (!details.originCountryId) {
+    console.info(`No origin country found for ${key}, got details: ${JSON.stringify(details)}`);
+
+    return responses.missingDetails;
+  }
+
+  if (!details.image) {
+    console.info(`No image found for ${key}, got details: ${JSON.stringify(details)}`);
+
+    return responses.missingDetails;
+  }
+
+  if (!details.varieties?.length) {
+    console.info(`No varieties found for ${key}, got details: ${JSON.stringify(details)}`);
+
+    return responses.missingDetails;
+  }
+
   await addWebshopItemDetails({ url: key, details });
 
-  return { success: true };
+  return responses.success;
 };
 
 export { handler };

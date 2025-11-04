@@ -1282,6 +1282,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@chealt/record-webshop-item-details@workspace:packages/record-webshop-item-details":
+  version: 0.0.0-use.local
+  resolution: "@chealt/record-webshop-item-details@workspace:packages/record-webshop-item-details"
+  languageName: unknown
+  linkType: soft
+
 "@chealt/record-webshop-item@workspace:packages/record-webshop-item":
   version: 0.0.0-use.local
   resolution: "@chealt/record-webshop-item@workspace:packages/record-webshop-item"
