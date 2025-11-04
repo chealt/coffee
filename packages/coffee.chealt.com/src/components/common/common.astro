@@ -12,6 +12,7 @@ import allLocaleTranslations from './common.json';
 const t = allLocaleTranslations[Astro.currentLocale];
 
 const { shouldAuthenticate, redirectUrl } = Astro.props;
+const isProd = import.meta.env.PROD;
 ---
 
 <!doctype html>
@@ -35,7 +36,7 @@ const { shouldAuthenticate, redirectUrl } = Astro.props;
       <Nav />
     </chealt-data>
     <img src={loaderImage.src} class="visually-hidden" aria-hidden="true" />
-    <Analytics />
+    {isProd && <Analytics />}
   </body>
 </html>
 
