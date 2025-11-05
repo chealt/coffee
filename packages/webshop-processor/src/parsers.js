@@ -9,6 +9,7 @@ const getDocument = (html) => {
 };
 
 const parsers = {
+  // Sheep & Raven
   6: ({ html, url }) => {
     console.info(`Parsing webshop page ${url}`);
 
@@ -25,6 +26,22 @@ const parsers = {
     );
 
     return Array.from(new Set(Array.from(productLinks).map((productLink) => productLink.href)));
+  },
+  // El Cafetero
+  7: async ({ html, url }) => {
+    console.info(`Parsing webshop page ${url}`);
+
+    const document = getDocument(html);
+
+    const website = new URL(url).origin;
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll(`product-link a`)).map(
+          ({ href }) => (href.startsWith('/') ? `${website}${href}` : href) // handle relative URLs
+        )
+      )
+    );
   }
 };
 
