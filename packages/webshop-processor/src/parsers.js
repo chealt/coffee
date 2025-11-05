@@ -33,12 +33,10 @@ const parsers = {
 
     const document = getDocument(html);
 
-    const website = new URL(url).origin;
-
     return Array.from(
       new Set(
-        Array.from(document.querySelectorAll(`product-link a`)).map(
-          ({ href }) => (href.startsWith('/') ? `${website}${href}` : href) // handle relative URLs
+        Array.from(document.querySelectorAll(`.product-miniature:not(:has(.out_of_stock)) a.product-thumbnail`)).map(
+          ({ href }) => href
         )
       )
     );

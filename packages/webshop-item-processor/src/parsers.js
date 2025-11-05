@@ -126,21 +126,13 @@ const parsers = {
 
     const document = getDocument(html);
 
-    const price = parseFloat(
-      document
-        .querySelector('.js__product-price-gross .price__value')
-        .textContent.replaceAll(' zł', '')
-        .replaceAll(',', '.')
+    const price = parseFloat(document.querySelector('.current-price-value').textContent.trim().replaceAll(' PLN', ''));
+
+    const currency = 'PLN';
+
+    const weight = Number(
+      document.querySelector('select[name="group[8]"] option[selected]').textContent.replace(' g', '')
     );
-
-    const currencySymbol = 'zł';
-    const currency = currencyCodes[currencySymbol];
-
-    if (!currency) {
-      throw new Error(`Unknown currency: ${currencySymbol}`);
-    }
-
-    const weight = Number(document.querySelector('h-option').textContent.trim().replace('g', ''));
 
     if (isNaN(weight)) {
       throw new Error(`Invalid weight: ${weight}`);
@@ -148,17 +140,11 @@ const parsers = {
 
     const pricePerGram = Number((price / weight).toFixed(2));
 
-    const details = Array.from(document.querySelectorAll('product-short-description tr')).reduce((newDetails, row) => {
-      const cells = Array.from(row.querySelectorAll('td'));
+    const details = Array.from(document.querySelectorAll('.data-sheet dt')).reduce((newDetails, nameElement) => {
+      const name = nameElement.textContent.toLowerCase();
+      const value = nameElement.nextElementSibling.textContent.toLowerCase();
 
-      if (!cells?.length) {
-        return newDetails;
-      }
-
-      const key = cells[0].textContent.trim().toLowerCase().replace(':', '');
-      const value = cells[1].textContent.trim().toLowerCase();
-
-      return { ...newDetails, [key]: value };
+      return { ...newDetails, [name]: value };
     }, {});
 
     if (details['skład']?.includes('robusta')) {
@@ -171,7 +157,7 @@ const parsers = {
     const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
 
     if (!originCountryId) {
-      console.info(`Missing origin country: ${originCountry}`);
+      throw new Error(`Missing origin country: ${originCountry}`);
     }
 
     const originRegion = details.region;
@@ -198,7 +184,7 @@ const parsers = {
       console.info(`Missing processing method: ${processingMethod}`);
     }
 
-    const tasteNotesStrings = details['profil smakowy']?.split(', ').map((name) => name.trim().toLowerCase()) || [];
+    const tasteNotesStrings = details['profil smakowy']?.split('\n').map((name) => name.trim().toLowerCase()) || [];
     const tasteNoteIds = Array.from(
       new Set(tasteNotes.filter(({ name }) => tasteNotesStrings.includes(name)).map(({ taste_note_id: id }) => id))
     );
@@ -221,7 +207,7 @@ const parsers = {
       console.info(`Missing varieties: ${missingVarieties}`);
     }
 
-    const image = `${new URL(url).origin}${document.querySelector('.image .product-gallery__main-image').src}`;
+    const image = document.querySelector('.zdjecie-okragle').src;
 
     return {
       brewingMethodId,
