@@ -21,7 +21,7 @@ const isOutOfStock = ({ html, roaster_id, webshop_item_link }) => {
   }
 
   if (roaster_id === 65) {
-    return html.includes('X-Files');
+    return html.includes('X-Files') || html.includes('Out of stock');
   }
 
   if (roaster_id === 252) {
