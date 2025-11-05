@@ -84,7 +84,11 @@ const parsers = {
     const varietiesString = document.querySelector('[data-id="512fea5c"]').textContent.trim().toLowerCase();
     const varietiesStrings = varietiesString.includes(' / ') ? varietiesString.split(' / ') : [varietiesString];
     const varietyIds = varieties
-      .filter(({ name }) => varietiesStrings.includes(name.toLowerCase()))
+      .filter(
+        ({ name }) =>
+          varietiesStrings.includes(name.toLowerCase()) ||
+          (name.toLowerCase() === 'cuscatleco' && varietiesStrings.includes('cuzcatleco')) // typo
+      )
       .map(({ id }) => id);
 
     if (!varietyIds.length) {
