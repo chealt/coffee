@@ -1,11 +1,11 @@
-import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
+import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 const client = new S3Client({
   region: 'eu-central-1'
 });
 
-const dynamoClient = new DynamoDBClient({
+const lambdaClient = new LambdaClient({
   region: 'eu-central-1'
 });
 
@@ -20,15 +20,15 @@ const getObject = async ({ bucketName, key }) => {
   return response.Body.transformToString();
 };
 
-const addWebshopItemUrl = async ({ url, roasterId }) =>
-  dynamoClient.send(
-    new PutItemCommand({
-      TableName: 'webshop-item-urls',
-      Item: {
-        url: { S: url },
-        roasterId: { N: String(roasterId) }
-      }
+const callRecordWebshopItem = ({ url, roasterId }) =>
+  lambdaClient.send(
+    new InvokeCommand({
+      FunctionName: 'recordWebshopItem',
+      Payload: JSON.stringify({
+        url,
+        roasterId
+      })
     })
   );
 
-export { addWebshopItemUrl, getObject };
+export { callRecordWebshopItem, getObject };

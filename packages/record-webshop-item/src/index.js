@@ -14,16 +14,7 @@ const saveHTML = ({ url, html, roasterId }) =>
   });
 
 const handler = async (event) => {
-  const isRemove = event.Records[0].eventName === 'REMOVE';
-
-  if (isRemove) {
-    console.info('Remove event, skipping processing');
-
-    return { success: true };
-  }
-
-  const url = event.Records[0].dynamodb.NewImage.url.S;
-  const roasterId = Number(event.Records[0].dynamodb.NewImage.roasterId.N);
+  const { roasterId, url } = event;
 
   if (!roasterId) {
     throw new Error(`roasterId is missing from the event`);

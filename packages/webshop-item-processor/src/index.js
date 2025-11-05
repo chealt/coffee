@@ -7,7 +7,9 @@ const responses = {
 };
 
 const handler = async (event) => {
-  const { key } = event.Records[0].s3.object;
+  const key = decodeURIComponent(event.Records[0].s3.object.key);
+
+  console.info(`Processing ${key}`);
 
   const [webshopItemHTML, metadata] = await Promise.all([
     getObject({ bucketName: 'roaster-webshop-item', key }),

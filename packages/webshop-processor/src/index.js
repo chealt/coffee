@@ -1,10 +1,11 @@
-import { addWebshopItemUrl, getObject } from './AWS.js';
+import { callRecordWebshopItem, getObject } from './AWS.js';
 import parsers from './parsers.js';
 import { getRoaster } from './roasters.js';
 
 const handler = async (event) => {
-  const { key } = event.Records[0].s3.object;
+  const key = decodeURIComponent(event.Records[0].s3.object.key);
 
+  console.info(`Processing ${key}`);
   const [roaster, webshopHTML] = await Promise.all([
     getRoaster(key),
     getObject({ bucketName: 'roaster-webshop', key })
@@ -25,8 +26,12 @@ const handler = async (event) => {
   }
 
   const productLinks = await parser({ html: webshopHTML, url: key });
+  console.info(`Found ${productLinks.length} products for ${roaster.id} at ${key}`);
 
-  await Promise.all(productLinks.map((productLink) => addWebshopItemUrl({ url: productLink, roasterId: roaster.id })));
+  console.info(`Invoking record lambda for ${key}`);
+  await Promise.all(
+    productLinks.map((productLink) => callRecordWebshopItem({ url: productLink, roasterId: roaster.id }))
+  );
 
   return { success: true };
 };
