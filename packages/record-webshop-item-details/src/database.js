@@ -46,7 +46,7 @@ const storeDetails = async ({
     authToken
   });
 
-  console.info('Adding coffee to DB...');
+  console.info('Adding coffee to DB');
   const results = await client.execute({
     sql: `INSERT INTO coffees (
       brewing_method_id,
@@ -188,7 +188,15 @@ const storeDetails = async ({
     );
   }
 
-  console.info(`Saving coffee image into the DB for coffee ID: ${coffeeId}...`);
+  console.info(`Removing coffee images from DB for coffee ID: ${coffeeId}`);
+  await client.execute({
+    sql: 'DELETE FROM coffee_images WHERE coffee_id = :coffeeId',
+    args: {
+      coffeeId
+    }
+  });
+
+  console.info(`Saving coffee image into the DB for coffee ID: ${coffeeId}`);
   await client.execute({
     sql: `INSERT OR IGNORE INTO coffee_images (
       coffee_id,

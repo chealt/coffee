@@ -214,6 +214,152 @@ const parsers = {
       currency,
       image,
       originCountryId,
+      originFarmId: null,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
+  },
+  // BeMyBean
+  39: async ({ html, url, roasterId }) => {
+    console.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const someInStock = JSON.parse(document.querySelector('.variations_form').dataset.product_variations)
+      .map((product) => product.is_in_stock)
+      .some(Boolean);
+
+    if (!someInStock) {
+      throw new Error(`All items at ${url} are out of stock`);
+    }
+
+    const priceElement =
+      document.querySelector('.price > *:not(del) .woocommerce-Price-amount') ||
+      document.querySelector('.price .woocommerce-Price-amount');
+
+    if (!priceElement) {
+      throw new Error(`Price element not found: ${url}`);
+    }
+
+    const price = parseFloat(priceElement.textContent);
+
+    const currencySymbol = document.querySelector('.woocommerce-Price-currencySymbol').textContent;
+    const currency = currencyCodes[currencySymbol];
+
+    if (!currency) {
+      throw new Error(`Unknown currency: ${currencySymbol}`);
+    }
+
+    const weight = Number(document.querySelector('#masa-netto option:not([value=""])').value.replaceAll('g', ''));
+    console.debug(`weight for ${url}: ${weight}`);
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const details = document
+      .querySelector('[data-table_id="16f18dc"]')
+      .textContent.replace(/\s\s+/gu, ' ')
+      .trim()
+      .toLowerCase();
+
+    const originCountry = details
+      .match(/kraj (.*) region/gu)
+      .join()
+      .replace('kraj ', '')
+      .replace(' region', '')
+      .trim();
+    const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
+
+    const brewingMethodElement = document.querySelector('[data-id="a074d76"]');
+    const brewingMethodStrings = brewingMethodElement?.textContent
+      .split(', ')
+      .map((method) => method.trim().toLowerCase());
+
+    const filterBrewingMethods = ['aeropress', 'drip', 'moccamaster', 'french press', 'kalita'];
+    const isFilter = brewingMethodStrings?.some((method) =>
+      filterBrewingMethods.some((filterMethod) => filterMethod.includes(method))
+    );
+
+    const espressoBrewingMethods = ['ekspres', 'kawiarka'];
+    const isEspresso = brewingMethodStrings?.some((method) =>
+      espressoBrewingMethods.some((espressoMethod) => espressoMethod.includes(method))
+    );
+
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) =>
+          (isFilter && !isEspresso && name === 'filter') ||
+          (isEspresso && !isFilter && name === 'espresso') ||
+          name === 'omni'
+      )?.brewing_method_id || null;
+
+    const region = details
+      .match(/region (.*) odmiana/gu)
+      .join()
+      .replace('region ', '')
+      .replace(' odmiana', '')
+      .trim();
+    const originRegionId = originRegions.find(({ name }) => region.includes(name))?.origin_region_id || null;
+
+    const processingMethod = details
+      .match(/obróbka (.*)/gu)
+      .join()
+      .replace('obróbka ', '')
+      .trim();
+    const processingMethodId =
+      processingMethods.find(
+        ({ name }) =>
+          name === processingMethod.replace(' decaf', '').replace(' / ', ' ').replace('natural natural', 'natural') ||
+          (processingMethod === 'cautai, typica, bourbon, castillo' && name === 'washed') // bug in the website
+      )?.processing_method_id || null;
+
+    const tasteNotesElement = document.querySelector('[data-id="09140d8"]');
+    const tasteNotesStrings =
+      tasteNotesElement?.textContent
+        .split(', ')
+        .map((note) => note.replaceAll('\t', '').replaceAll('\n', '').trim().toLowerCase()) || [];
+    const tasteNoteIds = tasteNotesStrings
+      .map((note) => tasteNotes.find(({ name }) => name === note)?.taste_note_id)
+      .filter(Boolean);
+
+    const missingTasteNotes = tasteNotesStrings.filter((note) => !tasteNotes.some(({ name }) => name === note));
+
+    if (missingTasteNotes.length) {
+      console.info(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
+    }
+
+    const varietiesString = details
+      .match(/odmiana (.*) wysokość/gu)
+      .join()
+      .replace('odmiana ', '')
+      .replace(' wysokość', '')
+      .trim();
+    const varietiesStrings = varietiesString.includes(', ') ? varietiesString.split(', ') : [varietiesString];
+    const varietyIds = varieties
+      .filter(({ name }) => varietiesStrings.includes(name.toLowerCase()))
+      .map(({ id }) => id);
+
+    if (!varietyIds.length) {
+      console.info(`Missing varieties: ${varietiesStrings}`);
+    }
+
+    const isDecaf = processingMethod.includes('decaf');
+
+    const image = document.querySelector('.woocommerce-product-gallery__wrapper img').src;
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId: null,
       originRegionId,
       price,
       pricePerGram,
