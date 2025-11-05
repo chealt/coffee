@@ -57,7 +57,13 @@ const parsers = {
       throw new Error(`Unknown currency: ${currencySymbol}`);
     }
 
-    const weight = Number(document.querySelector('.swatch_label').dataset.value.replaceAll('g-en', ''));
+    const weightElement = document.querySelector('.swatch_label');
+
+    if (!weightElement?.dataset?.value) {
+      throw new Error(`Missing weight for ${url}`);
+    }
+
+    const weight = Number(weightElement.dataset.value.replaceAll('g-en', ''));
 
     const pricePerGram = Number((price / weight).toFixed(2));
 

@@ -4,8 +4,8 @@ import { JSDOM } from 'jsdom';
 import { Agent } from 'undici';
 
 const isOutOfStock = ({ html, roaster_id, webshop_item_link }) => {
-  // only handle BeMyBean, Father's, and Meron roaster
-  if (roaster_id !== 39 && roaster_id !== 277 && roaster_id !== 252) {
+  // only handle BeMyBean, Father's, Meron, Sheep and Raven roasters
+  if (roaster_id !== 39 && roaster_id !== 277 && roaster_id !== 252 && roaster_id !== 6) {
     return false;
   }
 
@@ -20,6 +20,10 @@ const isOutOfStock = ({ html, roaster_id, webshop_item_link }) => {
   const {
     window: { document }
   } = new JSDOM(html);
+
+  if (roaster_id === 6) {
+    return !document.querySelector('.swatch_label')?.dataset?.value;
+  }
 
   if (!document.querySelector('.variations_form')) {
     return false;
