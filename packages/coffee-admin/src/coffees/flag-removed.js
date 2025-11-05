@@ -5,13 +5,23 @@ import { Agent } from 'undici';
 
 // eslint-disable-next-line complexity
 const isOutOfStock = ({ html, roaster_id, webshop_item_link }) => {
-  // only handle BeMyBean, Father's, Meron, Sheep and Raven roasters
-  if (roaster_id !== 39 && roaster_id !== 277 && roaster_id !== 252 && roaster_id !== 6 && roaster_id !== 7) {
+  if (
+    roaster_id !== 6 &&
+    roaster_id !== 7 &&
+    roaster_id !== 39 &&
+    roaster_id !== 65 &&
+    roaster_id !== 252 &&
+    roaster_id !== 277
+  ) {
     return false;
   }
 
   if (roaster_id === 7) {
     return html.includes('Obecnie brak na stanie');
+  }
+
+  if (roaster_id === 65) {
+    return html.includes('X-Files');
   }
 
   if (roaster_id === 252) {
