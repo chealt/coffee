@@ -70,6 +70,20 @@ const parsers = {
     const productLinks = [...espressoLinks, ...alternativeLinks];
 
     return Array.from(new Set(Array.from(productLinks).map((productLink) => productLink.href)));
+  },
+  // Heresy
+  65: async ({ html, url }) => {
+    console.info(`Parsing webshop page ${url}`);
+
+    const document = getDocument(html);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('.product_cat-coffee a.woocommerce-loop-product__link')).map(
+          ({ href }) => href
+        )
+      )
+    );
   }
 };
 

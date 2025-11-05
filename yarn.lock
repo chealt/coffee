@@ -1308,6 +1308,7 @@ __metadata:
   dependencies:
     "@aws-sdk/client-dynamodb": "npm:^3.922.0"
     "@aws-sdk/client-s3": "npm:^3.922.0"
+    "@aws-sdk/client-translate": "npm:^3.922.0"
     jsdom: "npm:^27.1.0"
   languageName: unknown
   linkType: soft

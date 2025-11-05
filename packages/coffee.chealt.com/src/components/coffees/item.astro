@@ -45,7 +45,7 @@ const { currency } = Astro.locals;
 <a href={webshopItemLink} class="card" target="_blank" rel="noopener noreferrer" name={t.webshopLinkName}>
   <div class="image large">
     <img
-      src={`/coffees/${images[0]}`}
+      src={`https://coffee-images.centralbeans.com/${images[0]}`}
       alt={`${t.coffeeFrom} ${originCountry?.name}`}
       loading={highPriority ? undefined : 'lazy'}
       fetchpriority={highPriority ? 'high' : undefined}

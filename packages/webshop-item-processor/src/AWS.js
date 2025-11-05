@@ -1,11 +1,16 @@
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { GetObjectCommand, S3Client, HeadObjectCommand } from '@aws-sdk/client-s3';
+import { TranslateClient, TranslateTextCommand } from '@aws-sdk/client-translate';
 
 const client = new S3Client({
   region: 'eu-central-1'
 });
 
 const dynamoClient = new DynamoDBClient({
+  region: 'eu-central-1'
+});
+
+const translationClient = new TranslateClient({
   region: 'eu-central-1'
 });
 
@@ -37,4 +42,18 @@ const addWebshopItemDetails = async ({ url, details }) =>
     })
   );
 
-export { addWebshopItemDetails, getObject, getObjectMetadata };
+const translate = async ({ text: Text, from: SourceLanguageCode, to: TargetLanguageCode }) => {
+  const input = {
+    Text,
+    SourceLanguageCode,
+    TargetLanguageCode
+  };
+
+  const command = new TranslateTextCommand(input);
+
+  const { TranslatedText: translated } = await translationClient.send(command);
+
+  return translated;
+};
+
+export { addWebshopItemDetails, getObject, getObjectMetadata, translate };
