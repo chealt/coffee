@@ -10,9 +10,7 @@ const getDocument = (html) => {
 
 const parsers = {
   // Sheep & Raven
-  6: ({ html, url }) => {
-    console.info(`Parsing webshop page ${url}`);
-
+  6: ({ html }) => {
     const document = getDocument(html);
 
     const hiddenProductSelectors = [
@@ -28,9 +26,7 @@ const parsers = {
     return Array.from(new Set(Array.from(productLinks).map((productLink) => productLink.href)));
   },
   // El Cafetero
-  7: async ({ html, url }) => {
-    console.info(`Parsing webshop page ${url}`);
-
+  7: async ({ html }) => {
     const document = getDocument(html);
 
     return Array.from(
@@ -42,9 +38,7 @@ const parsers = {
     );
   },
   // BeMyBean
-  39: async ({ html, url }) => {
-    console.info(`Parsing webshop page ${url}`);
-
+  39: async ({ html }) => {
     const document = getDocument(html);
 
     // espresso links
@@ -72,9 +66,7 @@ const parsers = {
     return Array.from(new Set(Array.from(productLinks).map((productLink) => productLink.href)));
   },
   // Heresy
-  65: async ({ html, url }) => {
-    console.info(`Parsing webshop page ${url}`);
-
+  65: async ({ html }) => {
     const document = getDocument(html);
 
     return Array.from(
@@ -84,6 +76,14 @@ const parsers = {
         )
       )
     );
+  },
+  // Klaro
+  70: async ({ html }) => {
+    const document = getDocument(html);
+
+    return Array.from(
+      document.querySelectorAll('.instock.product_cat-coffee:not(.product_cat-dripbags) a.ast-loop-product__link')
+    ).map(({ href }) => href);
   }
 };
 

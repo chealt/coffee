@@ -1,14 +1,6 @@
 // eslint-disable-next-line import/no-unresolved
 import roasters from '../../data/roasters.json' with { type: 'json' };
-import { putObject } from '../AWS.js';
-
-const saveHTML = ({ url, html }) =>
-  putObject({
-    Bucket: 'roaster-webshop',
-    Key: url,
-    Body: html,
-    ContentType: 'text/html'
-  });
+import { invokeLambda } from '../AWS.js';
 
 const main = async ({ roasterId }) => {
   console.info(`Recording webshop for ${roasterId}`);
@@ -19,23 +11,28 @@ const main = async ({ roasterId }) => {
     throw new Error(`Roaster: "${roasterId}" not found`);
   }
 
-  if (!roaster.webshop) {
+  const url = roaster.webshop;
+
+  if (!url) {
     throw new Error(`Roaster: "${roasterId}" has no webshop`);
   }
 
-  console.info(`Fetching webshop page ${roaster.webshop}`);
+  console.info(`Fetching webshop page ${url}`);
 
-  const response = await fetch(roaster.webshop);
+  const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch webshop page ${roaster.webshop}`);
+    throw new Error(`Failed to fetch webshop page ${url}`);
   }
 
   const html = (await response.text()).match(/<body[^>]*>[\s\S]*<\/body>/giu)[0];
 
-  console.info(`Recording webshop page for ${roasterId}`);
+  console.info(`Invoke webshop processor for ${roasterId} and url: ${url}`);
 
-  await saveHTML({ url: roaster.webshop, html });
+  await invokeLambda({
+    functionName: 'webshopProcessor',
+    payload: { url, roasterId, html }
+  });
 };
 
 export default main;

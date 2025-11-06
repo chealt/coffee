@@ -1,7 +1,12 @@
+import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
 
 const s3 = new S3Client({
+  region: 'eu-central-1'
+});
+
+const lambdaClient = new LambdaClient({
   region: 'eu-central-1'
 });
 
@@ -29,4 +34,12 @@ const putObject = async ({ Bucket, Key, ContentType, Body }) =>
     })
   );
 
-export { getSecret, putObject };
+const invokeLambda = ({ functionName: FunctionName, payload }) =>
+  lambdaClient.send(
+    new InvokeCommand({
+      FunctionName,
+      Payload: JSON.stringify(payload)
+    })
+  );
+
+export { getSecret, invokeLambda, putObject };

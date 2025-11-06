@@ -1,38 +1,37 @@
-import { callRecordWebshopItem, getObject } from './AWS.js';
+import { callRecordWebshopItem } from './AWS.js';
 import parsers from './parsers.js';
-import { getRoaster } from './roasters.js';
 
 const handler = async (event) => {
-  const key = decodeURIComponent(event.Records[0].s3.object.key);
+  const { roasterId, html, url } = event;
 
-  console.info(`Processing ${key}`);
-  const [roaster, webshopHTML] = await Promise.all([
-    getRoaster(key),
-    getObject({ bucketName: 'roaster-webshop', key })
-  ]);
+  console.info(`Processing ${url}`);
 
-  if (!roaster) {
-    throw new Error(`No roaster found for ${key}`);
+  if (!url) {
+    throw new Error('No url');
   }
 
-  if (!webshopHTML) {
-    throw new Error(`No webshop HTML found for ${key}`);
+  if (!roasterId) {
+    throw new Error('No roaster id');
   }
 
-  const roasterId = roaster.id;
+  if (!html) {
+    throw new Error('No HTML');
+  }
+
   const parser = parsers[roasterId];
 
   if (!parser) {
     throw new Error(`No parser found for ${roasterId}`);
   }
 
-  const productLinks = await parser({ html: webshopHTML, url: key });
-  console.info(`Found ${productLinks.length} products for ${roasterId} at ${key}`);
+  const productLinks = await parser({ html });
+  console.info(`Found ${productLinks.length} products at ${url}`);
 
-  console.info(`Invoking record lambda for ${key}`);
   // call lambda serially so we don't run into rate limits
-  for (const url of productLinks) {
-    await callRecordWebshopItem({ url, roasterId });
+  for (const productUrl of productLinks) {
+    console.info(`Invoking record lambda for ${productUrl}`);
+
+    await callRecordWebshopItem({ url: productUrl, roasterId });
   }
 
   return { success: true };
