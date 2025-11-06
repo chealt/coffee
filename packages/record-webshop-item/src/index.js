@@ -40,7 +40,7 @@ const handler = async (event) => {
     throw new Error(`Failed to fetch webshop item page ${url}`);
   }
 
-  const html = await response.text();
+  const html = (await response.text()).match(/<body[^>]*>[\s\S]*<\/body>/giu)[0];
 
   console.info(`Recording webshop item page for "${url}" and roaster id: ${roasterId}`);
 
