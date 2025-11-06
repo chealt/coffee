@@ -151,6 +151,45 @@ const parsers = {
     );
 
     return uniqueCoffeeElements.map(({ element }) => element.querySelector('a').href);
+  },
+  // PALE
+  278: async ({ html, url }) => {
+    const document = getDocument(html);
+
+    const numberOfPages = Number(Array.from(document.querySelectorAll('.page-numbers')).pop().textContent);
+
+    if (isNaN(numberOfPages)) {
+      throw new Error('Number of pages is not a number');
+    }
+
+    const getProductLinks = (doc) =>
+      Array.from(doc.querySelectorAll('.wc-block-components-product-image a')).map((element) => element.href);
+
+    const productLinks = [];
+
+    for (let i = 1; i <= numberOfPages; i++) {
+      if (i === 1) {
+        productLinks.push(...getProductLinks(document));
+        continue;
+      }
+
+      const pageLink = `${url}/page/${i}/`;
+
+      console.info(`Fetching page ${pageLink}`);
+      const response = await fetch(pageLink);
+
+      console.info(`Getting text ${pageLink}`);
+      const nextHTML = (await response.text()).match(/<body[^>]*>[\s\S]*<\/body>/giu)[0];
+
+      console.info(`Getting document ${pageLink}`);
+      const nextDocument = getDocument(nextHTML);
+
+      console.info(`Parsing links for ${pageLink}`);
+
+      productLinks.push(...getProductLinks(nextDocument));
+    }
+
+    return productLinks;
   }
 };
 

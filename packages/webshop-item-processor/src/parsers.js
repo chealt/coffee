@@ -955,6 +955,125 @@ const parsers = {
       webshopItemLink: url,
       weight
     };
+  },
+  // PALE
+  278: async ({ html, url, roasterId }) => {
+    console.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const optionsPrice = document
+      .querySelector('.wapf-checked .wapf-pricing-hint')
+      ?.textContent.replace('(+', '')
+      .replace('zł)', '')
+      .trim();
+    const priceAmount = document.querySelector('.woocommerce-Price-amount')?.textContent;
+
+    const price = parseFloat(priceAmount) + (optionsPrice ? parseFloat(optionsPrice) : 0);
+    const currencySymbol = document.querySelector('.woocommerce-Price-currencySymbol').textContent;
+    const currency = currencyCodes[currencySymbol];
+
+    if (!currency) {
+      throw new Error(`Unknown currency: ${url}`);
+    }
+
+    if (!price) {
+      throw new Error(`Unknown price: ${url}`);
+    }
+
+    const weightSelectionValue = document
+      .querySelector('[data-wapf-price]:checked + .wapf-label-text')
+      ?.textContent.match(/\d+g/gu)?.[0];
+    const weightElementValue = document
+      .querySelector('.woocommerce-product-attributes-item--weight .woocommerce-product-attributes-item__value')
+      ?.textContent.replace(' g', '');
+    const weightDescription = Array.from(document.querySelectorAll('#tab-description p'))
+      .map((element) => element.textContent)
+      .find((text) => text.endsWith('g') || text.match(/\d+g /gu)?.length > 0);
+    const weight =
+      Number(weightDescription?.slice(0, weightDescription.indexOf('g'))) ||
+      (weightSelectionValue && Number(weightSelectionValue.replace('g', ''))) ||
+      (weightElementValue && Number(weightElementValue) * 1000) ||
+      null;
+
+    if (!weight) {
+      console.error(`Could not find weight for product: ${url}`);
+
+      return {};
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const postTitle = document.querySelector('.wp-block-post-title').textContent.toLowerCase();
+    const countryRegionOrFarm = postTitle.includes(' // ') ? postTitle.split(' // ') : postTitle.split(' | ');
+
+    let originCountryId =
+      originCountries.find(({ name }) => countryRegionOrFarm.some((item) => name === item))?.origin_country_id || null;
+
+    // if everything fails, we try the URL
+    if (!originCountryId) {
+      originCountryId = originCountries.find(({ name }) => url.includes(name))?.origin_country_id || null;
+    }
+
+    const originFarmId = originFarms.find(({ name }) => countryRegionOrFarm.some((item) => name === item))?.id || null;
+
+    const originRegionId =
+      originRegions.find(({ name }) => countryRegionOrFarm.some((item) => name === item))?.origin_region_id || null;
+
+    const brewingMethodValues = Array.from(document.querySelectorAll('.wapf-label-text')).map((element) =>
+      element.textContent.toLowerCase()
+    );
+    const isFilter =
+      brewingMethodValues.includes('filter') ||
+      postTitle.includes('filter') ||
+      Array.from(document.querySelectorAll('#tab-description p'))
+        .map((element) => element.textContent)
+        .find((text) => text.toLocaleLowerCase().includes(' for filter'))?.length > 0;
+    const isEspresso = brewingMethodValues.includes('espresso') || postTitle.includes('espresso');
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) =>
+          (isFilter && !isEspresso && name === 'filter') ||
+          (isEspresso && !isFilter && name === 'espresso') ||
+          name === 'omni'
+      )?.brewing_method_id || null;
+
+    const image = document.querySelector('[data-testid="product-image"]').src;
+
+    const description = document.querySelector('.wp-block-post-excerpt__excerpt')?.textContent.trim().toLowerCase();
+    const processingMethodId =
+      processingMethods.find(({ name }) => description.includes(name))?.processing_method_id || null;
+
+    const tasteNotesFound = tasteNotes.filter(({ name }) => description.includes(name));
+    // exclude taste notes that include each other like st'raw'berry and 'raw'
+    const distinctTasteNotes = tasteNotesFound.filter(
+      ({ name }) => !tasteNotesFound.some(({ name: n }) => n !== name && n.includes(name))
+    );
+    const uniqueTasteNoteIds = Array.from(new Set(distinctTasteNotes.map(({ taste_note_id: id }) => id)));
+
+    const varietiesFound = varieties.filter(({ name }) => description.includes(name.toLowerCase()));
+    // exclude varieties that include each other like Ruiru and Ruiru 11
+    const distinctVarieties = varietiesFound.filter(
+      ({ name }) => !varietiesFound.some(({ name: n }) => n !== name && n.includes(name))
+    );
+    const uniqueVarietyIds = Array.from(new Set(distinctVarieties.map(({ id }) => id)));
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      originCountryId,
+      originFarmId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds: uniqueTasteNoteIds,
+      varietyIds: uniqueVarietyIds,
+      webshopItemLink: url,
+      weight
+    };
   }
 };
 
