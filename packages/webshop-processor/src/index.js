@@ -19,19 +19,21 @@ const handler = async (event) => {
     throw new Error(`No webshop HTML found for ${key}`);
   }
 
-  const parser = parsers[roaster.id];
+  const roasterId = roaster.id;
+  const parser = parsers[roasterId];
 
   if (!parser) {
-    throw new Error(`No parser found for ${roaster.id}`);
+    throw new Error(`No parser found for ${roasterId}`);
   }
 
   const productLinks = await parser({ html: webshopHTML, url: key });
-  console.info(`Found ${productLinks.length} products for ${roaster.id} at ${key}`);
+  console.info(`Found ${productLinks.length} products for ${roasterId} at ${key}`);
 
   console.info(`Invoking record lambda for ${key}`);
-  await Promise.all(
-    productLinks.map((productLink) => callRecordWebshopItem({ url: productLink, roasterId: roaster.id }))
-  );
+  // call lambda serially so we don't run into rate limits
+  for (const url of productLinks) {
+    await callRecordWebshopItem({ url, roasterId });
+  }
 
   return { success: true };
 };
