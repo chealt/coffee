@@ -810,6 +810,151 @@ const parsers = {
       webshopItemLink: url,
       weight
     };
+  },
+  // Father's (Czech)
+  277: async ({ html, url, roasterId }) => {
+    console.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const price = parseFloat(
+      document
+        .querySelector('.price.nasa-single-product-price .woocommerce-Price-amount')
+        .textContent.replaceAll('€ ', '')
+    );
+
+    const currencySymbol = document.querySelector('.woocommerce-Price-currencySymbol').textContent;
+    const currency = currencyCodes[currencySymbol];
+
+    if (!currency) {
+      throw new Error(`Unknown currency: ${currencySymbol}`);
+    }
+
+    const weightElement = document.querySelector('div[data-attribute_name="attribute_pa_vaha"] .nasa-attr-text');
+
+    if (!weightElement) {
+      console.error(`No weight found at: ${url}`);
+
+      return {};
+    }
+
+    const weight = Number(weightElement.textContent.replace('g', ''));
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    let detailNames = Array.from(document.querySelectorAll('.woocommerce-product-details__short-description b')).map(
+      (element) => element.textContent.trim().toLowerCase().replace(':', '')
+    );
+
+    if (detailNames.length === 0) {
+      detailNames = Array.from(document.querySelectorAll('.woocommerce-product-details__short-description strong')).map(
+        (element) => element.textContent.trim().toLowerCase().replace(':', '')
+      );
+    }
+
+    let detailValues = Array.from(document.querySelectorAll('.woocommerce-product-details__short-description b')).map(
+      (element) => element.nextSibling?.textContent.trim().toLowerCase()
+    );
+
+    if (detailValues.length === 0) {
+      detailValues = Array.from(
+        document.querySelectorAll('.woocommerce-product-details__short-description strong')
+      ).map((element) => element.nextSibling?.textContent.trim().toLowerCase());
+    }
+
+    if (detailValues.length === 0) {
+      detailValues = Array.from(document.querySelectorAll('.woocommerce-product-details__short-description i')).map(
+        (element) => element.textContent.trim().toLowerCase()
+      );
+    }
+
+    const details = detailNames.reduce((_details, name, index) => ({ ..._details, [name]: detailValues[index] }), {});
+
+    if (Object.keys(details).length === 0 || !details.country) {
+      console.error(`No details found at: ${url}`);
+
+      return {};
+    }
+
+    const originCountry = details.country;
+    const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
+
+    const processingMethodId =
+      processingMethods.find(({ name }) => name === details.process || name === details.processing)
+        ?.processing_method_id ||
+      processingMethods.find(({ name }) => details.process?.includes(name) || details.processing?.includes(name))
+        ?.processing_method_id ||
+      null;
+
+    const brewingMethod = document.querySelector('.br_alabel_better_compatibility').textContent.trim().toLowerCase();
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) => name === brewingMethod || (brewingMethod === 'espresso / pour over' && name === 'omni')
+      )?.brewing_method_id || null;
+
+    const regionOrFarm = details.region;
+
+    const originRegionId = originRegions.find(({ name }) => regionOrFarm.includes(name))?.origin_region_id || null;
+    const originFarmId = originFarms.find(({ name }) => regionOrFarm.includes(name))?.id || null;
+
+    const tasteNotesString =
+      details['taste notes'] ||
+      details['tasting notes'] ||
+      details['taste profile'] ||
+      details['cup profile'] ||
+      details['flavour notes'] ||
+      details['flavour profile'] ||
+      details['flavor profile'];
+    const tasteNoteIds =
+      tasteNotesString
+        ?.split(', ')
+        .map((note) => note.trim().toLowerCase())
+        .map((note) => tasteNotes.find(({ name }) => name === note)?.taste_note_id)
+        .filter(Boolean) || [];
+
+    if (!tasteNotesString) {
+      console.debug(url, ': ', details);
+    }
+
+    const missingTasteNotes = tasteNotesString
+      ?.split(', ')
+      .filter((note) => !tasteNotes.some(({ name }) => name === note.trim().toLowerCase()));
+
+    if (missingTasteNotes.length) {
+      console.info(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
+    }
+
+    const varietiesString = details.variety || details.varietal;
+    const varietiesStrings = varietiesString.includes(', ') ? varietiesString.split(', ') : [varietiesString];
+    const varietyIds = varieties
+      .filter(({ name }) => varietiesStrings.includes(name.toLowerCase()))
+      .map(({ id }) => id);
+
+    if (!varietyIds.length) {
+      console.info(`Missing varieties: ${varietiesStrings}`);
+    }
+
+    const image = document.querySelector('.nasa-item-main-image-wrap .wp-post-image').src;
+
+    const isDecaf = details.processing?.includes('decaf') || details.process?.includes('decaf');
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
   }
 };
 

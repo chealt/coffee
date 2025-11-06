@@ -128,6 +128,29 @@ const parsers = {
           !href.includes('500g') && !href.includes('1kg') && !href.includes('1000g') && !href.includes('blend')
       )
       .map(({ href }) => href);
+  },
+  // Father's (Czech)
+  277: async ({ html }) => {
+    const document = getDocument(html);
+
+    const filterCoffeeElements = document.querySelectorAll('.product_cat-filter.instock');
+    const espressoCoffeeElements = document.querySelectorAll('.product_cat-espresso-en.instock');
+    const uniqueCoffeeElements = Array.from([...filterCoffeeElements, ...espressoCoffeeElements]).reduce(
+      (uniqueElements, element) => {
+        const id = Array.from(element.classList)
+          .filter((className) => className.startsWith('post-'))[0]
+          .slice(5);
+
+        if (!uniqueElements.some((uniqueElement) => uniqueElement.id === id)) {
+          uniqueElements.push({ id, element });
+        }
+
+        return uniqueElements;
+      },
+      []
+    );
+
+    return uniqueCoffeeElements.map(({ element }) => element.querySelector('a').href);
   }
 };
 

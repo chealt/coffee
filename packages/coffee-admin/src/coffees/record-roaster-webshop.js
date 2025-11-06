@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/no-unresolved
 import roasters from '../../data/roasters.json' with { type: 'json' };
 import { invokeLambda } from '../AWS.js';
+import { deflateSync } from 'node:zlib';
 
 const main = async ({ roasterId }) => {
   console.info(`Recording webshop for ${roasterId}`);
@@ -31,7 +32,7 @@ const main = async ({ roasterId }) => {
 
   await invokeLambda({
     functionName: 'webshopProcessor',
-    payload: { url, roasterId, html }
+    payload: { url, roasterId, html: deflateSync(html).toString('base64') }
   });
 };
 

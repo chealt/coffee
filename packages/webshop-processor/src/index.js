@@ -1,8 +1,10 @@
 import { callRecordWebshopItem } from './AWS.js';
 import parsers from './parsers.js';
+import { inflateSync } from 'node:zlib';
 
 const handler = async (event) => {
-  const { roasterId, html, url } = event;
+  const { roasterId, url } = event;
+  const html = inflateSync(Buffer.from(event.html, 'base64')).toString();
 
   console.info(`Processing ${url}`);
 
