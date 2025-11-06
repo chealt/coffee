@@ -31,7 +31,7 @@ const main = async ({ roasterId }) => {
     throw new Error(`Failed to fetch webshop page ${roaster.webshop}`);
   }
 
-  const html = await response.text();
+  const html = (await response.text()).match(/<body[^>]*>[\s\S]*<\/body>/giu)[0];
 
   console.info(`Recording webshop page for ${roasterId}`);
 
