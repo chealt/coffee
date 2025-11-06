@@ -24,7 +24,7 @@ const handler = async (event) => {
     throw new Error(`No parser found for ${roasterId}`);
   }
 
-  const productLinks = await parser({ html });
+  const productLinks = await parser({ html, url });
   console.info(`Found ${productLinks.length} products at ${url}`);
 
   // call lambda serially so we don't run into rate limits

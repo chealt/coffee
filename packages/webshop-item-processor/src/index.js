@@ -6,6 +6,7 @@ const responses = {
   missingDetails: { success: true, missingDetails: true }
 };
 
+// eslint-disable-next-line complexity
 const handler = async (event) => {
   const key = decodeURIComponent(event.Records[0].s3.object.key);
 
@@ -46,12 +47,15 @@ const handler = async (event) => {
     return responses.missingDetails;
   }
 
-  if (!details.varietyIds?.length) {
-    console.info(`No varieties found for ${key}, got details: ${JSON.stringify(details)}`);
+  if (!details.varietyIds?.length && !details.tasteNoteIds?.length) {
+    console.info(
+      `No varieties or taste notes found for ${key}, got details: ${JSON.stringify(details)}, skipping storing`
+    );
 
     return responses.missingDetails;
   }
 
+  console.info(`Storing details for ${key}`);
   await addWebshopItemDetails({ url: key, details });
 
   return responses.success;

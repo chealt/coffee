@@ -84,6 +84,35 @@ const parsers = {
     return Array.from(
       document.querySelectorAll('.instock.product_cat-coffee:not(.product_cat-dripbags) a.ast-loop-product__link')
     ).map(({ href }) => href);
+  },
+  // Spojka
+  82: async ({ html, url }) => {
+    const host = url.replace('/en', '');
+
+    const document = getDocument(html);
+
+    const navLinks = Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('header nav a'))
+          .filter(({ textContent }) => ['espresso', 'filter'].includes(textContent.trim().toLowerCase()))
+          .map(({ href }) => `${host}${href}`)
+      )
+    );
+
+    return await Promise.all(
+      navLinks.map(async (navLink) => {
+        const navLinkResponse = await fetch(navLink);
+        const navLinkHtml = await navLinkResponse.text();
+
+        const {
+          window: { document: navLinkDocument }
+        } = new JSDOM(navLinkHtml);
+
+        return Array.from(navLinkDocument.querySelectorAll('h3 a[href^="/en/products/"]:not([id^="Standard"])'))
+          .filter(({ textContent, href }) => !textContent.toLowerCase().includes('test') && !href.includes('kapsule'))
+          .map(({ href }) => `${host}${href}`);
+      })
+    ).then((links) => links.flat());
   }
 };
 

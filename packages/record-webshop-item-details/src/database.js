@@ -22,7 +22,7 @@ const storeDetails = async ({
     weight
   }
 }) => {
-  if (!originCountryId || !varietyIds.length || !price || !weight || !pricePerGram) {
+  if (!originCountryId || (!varietyIds.length && !tasteNoteIds.length) || !price || !weight || !pricePerGram) {
     console.info(`Missing details, not saving ${filename} to database`);
 
     return;

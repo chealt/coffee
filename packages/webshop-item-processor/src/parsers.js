@@ -608,6 +608,106 @@ const parsers = {
       webshopItemLink: url,
       weight
     };
+  },
+  // Spojka
+  82: async ({ html, url, roasterId }) => {
+    console.info(`Parsing item page: ${url}`);
+    const document = getDocument(html);
+
+    const price = parseFloat(document.querySelector('.price-item').textContent.replaceAll(' €', ''));
+
+    const currencySymbol = document.querySelector('.price-item').textContent.includes('€') ? '€' : undefined;
+    const currency = currencyCodes[currencySymbol];
+
+    if (!currency) {
+      throw new Error(`Unknown currency: ${url}`);
+    }
+
+    const weightElementValue =
+      document.querySelector('.metafield-number_integer')?.textContent ||
+      document.querySelector('[name=Packaging]:checked')?.value.replace('g', '') ||
+      document.querySelector('[name=balenie]:checked')?.value.replace('g', '');
+    const weight = parseFloat(weightElementValue);
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const details = Array.from(document.querySelectorAll('.product__sku2')).reduce((previousValue, currentValue) => {
+      const key = currentValue.textContent.trim().toLowerCase();
+      const value = currentValue.nextElementSibling.textContent.trim().toLowerCase();
+
+      previousValue[key] = value;
+
+      return previousValue;
+    }, {});
+
+    const originCountry =
+      details.lokalita === 'cherry likér, jablko, hrozno, čierna ríbezľa, jahoda' // bad data
+        ? 'indonesia'
+        : details.lokalita;
+    const originCountryTranslated = await translate({ text: originCountry, from: 'cs', to: 'en' });
+    const originCountryId =
+      originCountries.find(({ name }) => name === originCountry)?.origin_country_id ||
+      originCountries.find(({ name }) => name === originCountryTranslated)?.origin_country_id ||
+      null;
+
+    if (!originCountryId) {
+      console.log(details);
+      console.info(`Missing origin country: ${originCountry}`);
+    }
+
+    const processingMethod = (await translate({ text: details.spracovanie, from: 'cs', to: 'en' }))
+      .trim()
+      .toLowerCase();
+    const processingMethodId =
+      processingMethods.find(({ name }) => name.toLowerCase() === details.spracovanie)?.processing_method_id ||
+      processingMethods.find(({ name }) => name.toLowerCase() === processingMethod)?.processing_method_id ||
+      processingMethods.find(({ name }) => processingMethod.includes(name.toLowerCase()))?.processing_method_id;
+
+    if (!processingMethodId) {
+      console.debug(`Missing processing method: ${processingMethod} for ${url}`);
+    }
+
+    const brewingMethodId = brewingMethods.find(({ name }) => name === 'omni')?.brewing_method_id || null;
+
+    const tasteNotesStrings = details['chuťový profil'];
+    const translatedTasteNotes = await translate({ text: tasteNotesStrings, from: 'cs', to: 'en' });
+    const cleanTranslation = translatedTasteNotes.toLowerCase().split(', ');
+
+    const tasteNotesFound = tasteNotes.filter(({ name }) => cleanTranslation.includes(name));
+    // exclude taste notes that include each other like st'raw'berry and 'raw'
+    const distinctTasteNotes = tasteNotesFound.filter(
+      ({ name }) => !tasteNotesFound.some(({ name: n }) => n !== name && n.includes(name))
+    );
+    const tasteNoteIds = distinctTasteNotes.map(({ taste_note_id: tasteNoteId }) => tasteNoteId);
+
+    if (!tasteNoteIds.length) {
+      console.debug(`No taste notes: ${cleanTranslation}, at ${url}`);
+    }
+
+    const isDecaf = url.includes('decaf');
+
+    const imageSrc = document.querySelector('img.global-media-settings')?.src;
+
+    if (!imageSrc) {
+      throw new Error(`No image found: ${url}`);
+    }
+
+    const image = `http:${imageSrc.slice(0, imageSrc.lastIndexOf('?')) || ''}`;
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      webshopItemLink: url,
+      weight
+    };
   }
 };
 
