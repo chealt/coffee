@@ -708,6 +708,108 @@ const parsers = {
       webshopItemLink: url,
       weight
     };
+  },
+  // Meron
+  252: async ({ html, url, roasterId }) => {
+    console.info(`Parsing item page: ${url}`);
+    const document = getDocument(html);
+
+    const price = parseFloat(
+      document.querySelector('.price .woocommerce-Price-amount.amount').textContent.replaceAll(' €', '')
+    );
+
+    const currencySymbol = document.querySelector('.summary .price .woocommerce-Price-currencySymbol').textContent;
+    const currency = currencyCodes[currencySymbol];
+
+    if (!currency) {
+      throw new Error(`Unknown currency: ${url}`);
+    }
+
+    const details = Array.from(document.querySelectorAll('.info-tab-tabel tr')).reduce((_details, row) => {
+      const cells = Array.from(row.querySelectorAll('td'));
+
+      if (!cells?.length) {
+        return _details;
+      }
+
+      const key = cells[0].textContent.trim().toLowerCase().replace(':', '');
+      const value = cells[1].textContent.trim().toLowerCase();
+
+      return { ..._details, [key]: value };
+    }, {});
+
+    if (!details.volume) {
+      console.error(`No weight found at: ${url}`);
+
+      return {};
+    }
+
+    const weight = Number(details.volume.replace(' gr', ''));
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const originCountryId =
+      originCountries.find(({ name }) => name === details['country of origin'] || url.includes(name))
+        ?.origin_country_id || null;
+
+    const region = details.region;
+    const originRegionId = originRegions.find(({ name }) => region?.includes(name))?.origin_region_id || null;
+
+    const farm = details['farm / farmer'];
+    const originFarmId =
+      originFarms.find(
+        ({ name, origin_country_id }) => farm?.includes(name) && originCountryId === origin_country_id // eslint-disable-line camelcase
+      )?.id || null;
+
+    const isEspresso = details.recommendations.includes('espresso');
+    const isFilter = details.recommendations.includes('filter');
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) =>
+          (isEspresso && isFilter && name === 'omni') ||
+          (isEspresso && !isFilter && name === 'espresso') ||
+          (!isEspresso && isFilter && name === 'filter') ||
+          details.recommendations.includes(name)
+      )?.brewing_method_id || null;
+
+    const roastingLevelId =
+      roastingLevels.find(({ name }) => details['roasting profile'].includes(name))?.roasting_level_id || null;
+
+    const detailsTasteNotes = details['tasting notes'].split(',').map((note) => note.trim());
+
+    const tasteNoteIds = Array.from(
+      new Set(tasteNotes.filter(({ name }) => detailsTasteNotes.includes(name)).map(({ taste_note_id: id }) => id))
+    );
+
+    const description = document.querySelector('.woocommerce-Tabs-panel--description').textContent.toLowerCase();
+    const varietiesFound = varieties.filter(({ name }) => description.includes(name.toLowerCase()));
+    // exclude varieties that include each other like Ruiru and Ruiru 11
+    const distinctVarieties = varietiesFound.filter(
+      ({ name }) => !varietiesFound.some(({ name: n }) => n !== name && n.includes(name))
+    );
+    const uniqueVarietyIds = Array.from(new Set(distinctVarieties.map(({ id }) => id)));
+
+    const isDecaf = url.includes('decaf');
+
+    const image = document.querySelector('.woocommerce-product-gallery__image img').src;
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId,
+      originRegionId,
+      price,
+      pricePerGram,
+      roasterId,
+      roastingLevelId,
+      tasteNoteIds,
+      varietyIds: uniqueVarietyIds,
+      webshopItemLink: url,
+      weight
+    };
   }
 };
 

@@ -8,6 +8,7 @@ const callRecordWebshopItem = ({ url, roasterId }) =>
   lambdaClient.send(
     new InvokeCommand({
       FunctionName: 'recordWebshopItem',
+      InvocationType: 'Event',
       Payload: JSON.stringify({
         url,
         roasterId

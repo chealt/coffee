@@ -38,6 +38,7 @@ const invokeLambda = ({ functionName: FunctionName, payload }) =>
   lambdaClient.send(
     new InvokeCommand({
       FunctionName,
+      InvocationType: 'Event',
       Payload: JSON.stringify(payload)
     })
   );

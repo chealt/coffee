@@ -113,6 +113,21 @@ const parsers = {
           .map(({ href }) => `${host}${href}`);
       })
     ).then((links) => links.flat());
+  },
+  // Meron
+  252: async ({ html }) => {
+    const document = getDocument(html);
+
+    return Array.from(
+      document.querySelectorAll(
+        '.product_cat-coffee:not(.product_cat-boxes-en,.product_cat-gifts-en) a.product-image-link'
+      )
+    )
+      .filter(
+        ({ href }) =>
+          !href.includes('500g') && !href.includes('1kg') && !href.includes('1000g') && !href.includes('blend')
+      )
+      .map(({ href }) => href);
   }
 };
 
