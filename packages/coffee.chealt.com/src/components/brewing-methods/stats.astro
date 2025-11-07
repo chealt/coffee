@@ -2,6 +2,7 @@
 import { getRelativeLocaleUrl } from 'astro:i18n';
 
 import allCoffees from '../../../data/coffees.json';
+import brewingMethods from '../../../data/brewingMethods.json';
 import roasters from '../../../data/roasters.json';
 import tasteNoteGroups from '../../../data/tasteNoteGroups.json';
 
@@ -12,19 +13,19 @@ import Coffees from '../coffees/list.astro';
 import { getConvertedPrice, getDetails } from '../coffees/utils.js';
 import { getTasteNoteGroup, getTasteNoteGroupByNoteId } from '../taste-notes/utils.js';
 
-import './roaster.css';
 import '../stats/stats.css';
 
-import allLocaleTranslations from './locales.json';
+import allLocaleTranslations from '../common/common.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
 const { currency, loggedInUser, shouldAuthenticate } = Astro.locals;
 const { id } = Astro.props;
 
-const { name, logo, instagram, website } = roasters.find((roaster) => roaster.id === id);
+const { name } = brewingMethods.find((brewingMethod) => brewingMethod.brewing_method_id === id);
 const coffees = allCoffees
   .map(getDetails({ locale: Astro.currentLocale }))
+  .filter(({ brewingMethod }) => brewingMethod?.brewing_method_id === id)
   .map(({ pricePerGram, ...coffee }) => ({
     ...coffee,
     pricePerGram: getConvertedPrice({ price: pricePerGram, currency })
@@ -79,7 +80,7 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce((max, { roasters }) 
     <div>{name}</div>
     {
       loggedInUser && (
-        <Button class="ghost" href={getRelativeLocaleUrl(Astro.currentLocale, `/roasters/${name}`)}>
+        <Button class="ghost" href={getRelativeLocaleUrl(Astro.currentLocale, `/brewing-methods/${name}`)}>
           <Icon type="back" />
           <span class="visually-hidden">{t.back}</span>
         </Button>

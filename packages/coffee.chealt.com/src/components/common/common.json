@@ -8,10 +8,12 @@
     "cheapestCoffees": "Budget Friendly",
     "description": "Explore the world of coffee and collect your favorites.",
     "noCoffees": "No coffees yet",
+    "prices": "Prices",
     "priciestCoffees": "Fancy me",
     "recommended": "for you",
     "search": "Search",
     "select": "Select",
+    "tasteNotes": "Taste Notes",
     "title": "Central Beans",
     "unknown": "unknown"
   },
@@ -24,10 +26,12 @@
     "cheapestCoffees": "Kawy najtańsze",
     "description": "Przeglądaj świat kawy i zbieraj swoje ulubione kawy",
     "noCoffees": "Brak kaw",
+    "prices": "Ceny",
     "priciestCoffees": "Kawy najdroższe",
     "recommended": "polecajka",
     "search": "Szukaj",
     "select": "Wybierz",
+    "tasteNotes": "Smaki",
     "title": "Central Beans",
     "unknown": "nieznany"
   }
