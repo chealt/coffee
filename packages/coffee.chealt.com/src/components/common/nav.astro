@@ -9,9 +9,12 @@ import './nav.css';
 const t = allLocaleTranslations[Astro.currentLocale];
 
 const isActivePage = (pageName) => {
-  const firstPathParam = Astro.url.pathname.replace(`${Astro.currentLocale}`, '').slice(1);
+  const { pathname } = Astro.url;
+  const firstPathParam = pathname.replace(`${Astro.currentLocale}`, '').slice(1);
 
-  return pageName === '' ? firstPathParam === '' || firstPathParam === '/' : firstPathParam.includes(pageName);
+  return pageName === ''
+    ? firstPathParam === '' || firstPathParam === '/' || !pathname.includes('/you')
+    : firstPathParam.includes(pageName);
 };
 
 const items = [
