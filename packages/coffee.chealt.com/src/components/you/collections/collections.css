@@ -17,6 +17,15 @@
 
 .collections-list .items-list {
   padding: var(--gap);
+
+  > li > a {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+  }
 }
 
 .collections-list img {
