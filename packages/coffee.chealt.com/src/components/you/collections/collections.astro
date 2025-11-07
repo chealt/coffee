@@ -43,6 +43,7 @@ const { collections, shouldAuthenticate, username } = Astro.locals;
                       Astro.currentLocale,
                       `/you/collections/${collectionId}/items/${itemId}`
                     )}?from=collections`}
+                    id={itemId}
                   >
                     <picture>
                       <source srcset={cover.srcSmall} media="(max-width: 599px)" />

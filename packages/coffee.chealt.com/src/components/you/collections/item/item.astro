@@ -27,7 +27,7 @@ const { collectionItem, shouldAuthenticate } = Astro.locals;
   <coffee-back-navigation>
     <Button
       id="back-button"
-      href={getRelativeLocaleUrl(Astro.currentLocale, '/you/collections')}
+      href={`${getRelativeLocaleUrl(Astro.currentLocale, `/you/collections`)}#${itemId}`}
       class="small bordered"
     >
       <Icon type="back" class="icon-only" />
