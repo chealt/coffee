@@ -1,16 +1,21 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
 import allCoffees from '../../../data/coffees.json';
 import coffeeVarieties from '../../../data/coffeeVarieties.json';
 import varieties from '../../../data/varieties.json';
 
 import { getConvertedPrice, getDetails } from '../coffees/utils.js';
+import Button from '../form/button/button.astro';
 import Coffees from '../coffees/list.astro';
 import Common from '../common/common.astro';
+import Icon from '../icon/icon.astro';
 
 import allLocaleTranslations from '../common/common.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
+const { loggedInUser } = Astro.locals;
 const { id } = Astro.props;
 
 const { name } = varieties.find((variety) => variety.id === id);
@@ -35,7 +40,22 @@ const cheapestCoffees = coffees
 ---
 
 <Common>
-  <h1>{name}</h1>
+  <h1>
+    <div>
+      {name}
+    </div>
+    {
+      loggedInUser && (
+        <Button
+          class="ghost"
+          href={getRelativeLocaleUrl(Astro.currentLocale, `/varieties/${encodeURIComponent(name.toLowerCase())}/stats`)}
+        >
+          <Icon type="chart" />
+          <span class="visually-hidden">{t.chart}</span>
+        </Button>
+      )
+    }
+  </h1>
   {
     (priciestCoffees.length && coffees.length > 9 && (
       <section>

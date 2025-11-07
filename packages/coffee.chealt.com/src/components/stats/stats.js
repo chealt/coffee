@@ -16,12 +16,18 @@ class Stats extends HTMLElement {
 
   activateLabel(label) {
     this.querySelectorAll('.labels .label').forEach(({ classList }) => classList.remove('active'));
-    this.querySelector(`.label[data-part="${label}"]`).classList.add('active');
+
+    if (label) {
+      this.querySelector(`.label[data-part="${label}"]`).classList.add('active');
+    }
   }
 
   activatePart(label) {
     this.querySelectorAll('.part').forEach(({ classList }) => classList.remove('active'));
-    this.querySelectorAll(`.part[data-label="${label}"]`).forEach(({ classList }) => classList.add('active'));
+
+    if (label) {
+      this.querySelectorAll(`.part[data-label="${label}"]`).forEach(({ classList }) => classList.add('active'));
+    }
   }
 }
 

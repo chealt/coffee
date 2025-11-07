@@ -1,0 +1,14 @@
+---
+export const prerender = false;
+
+import Stats from '../../../../components/varieties/stats.astro';
+import varieties from '../../../../../data/varieties.json';
+
+const { name } = Astro.params;
+
+const id = varieties.find((variety) => variety.name.toLowerCase() === name)?.id;
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
+---
+
+<Stats id={id} />
