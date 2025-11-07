@@ -1,18 +1,20 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 
-const s3 = new S3Client({
+const lambdaClient = new LambdaClient({
   region: 'eu-central-1'
 });
 
-const putObject = async ({ Bucket, Key, ContentType, Body, Metadata }) =>
-  s3.send(
-    new PutObjectCommand({
-      Bucket,
-      ContentType,
-      Key,
-      Body,
-      Metadata
+const callWebshopItemProcessor = ({ url, html, roasterId }) =>
+  lambdaClient.send(
+    new InvokeCommand({
+      FunctionName: 'webshopItemProcessor',
+      InvocationType: 'Event',
+      Payload: JSON.stringify({
+        url,
+        html,
+        roasterId
+      })
     })
   );
 
-export { putObject };
+export { callWebshopItemProcessor };

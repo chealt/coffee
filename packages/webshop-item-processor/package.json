@@ -5,8 +5,7 @@
     "build": "rm -rf dist && mkdir dist && mkdir dist/data && cp ../coffee.chealt.com/data/*.json dist/data && cp -r package.json dist && cp ../../yarn.lock dist && cp .yarnrc-lambda.yml dist/.yarnrc.yml && cp -r src dist && cd dist && yarn workspaces focus && rm -rf .yarn && rm -rf yarn.lock && rm -rf .yarnrc.yml && zip -rq package.zip ."
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.922.0",
-    "@aws-sdk/client-s3": "^3.922.0",
+    "@aws-sdk/client-lambda": "^3.926.0",
     "@aws-sdk/client-translate": "^3.922.0",
     "jsdom": "^27.1.0"
   },

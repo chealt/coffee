@@ -1,17 +1,5 @@
-import { putObject } from './AWS.js';
-// eslint-disable-next-line import/no-unresolved
-import roasters from '../data/roasters.json' with { type: 'json' };
-
-const saveHTML = ({ url, html, roasterId }) =>
-  putObject({
-    Bucket: 'roaster-webshop-item',
-    Key: url,
-    Body: html,
-    ContentType: 'text/html',
-    Metadata: {
-      roasterId: String(roasterId)
-    }
-  });
+import { callWebshopItemProcessor } from './AWS.js';
+import { deflateSync } from 'node:zlib';
 
 const handler = async (event) => {
   const { roasterId, url } = event;
@@ -26,12 +14,6 @@ const handler = async (event) => {
 
   console.info(`Recording webshop for ${roasterId}`);
 
-  const roaster = roasters.find(({ id }) => id === roasterId);
-
-  if (!roaster) {
-    throw new Error(`Roaster: "${roasterId}" not found`);
-  }
-
   console.info(`Fetching webshop item page ${url}`);
 
   const response = await fetch(url);
@@ -44,7 +26,7 @@ const handler = async (event) => {
 
   console.info(`Recording webshop item page for "${url}" and roaster id: ${roasterId}`);
 
-  await saveHTML({ url, html, roasterId });
+  await callWebshopItemProcessor({ url, html: deflateSync(html).toString('base64'), roasterId });
 
   return { success: true };
 };
