@@ -77,6 +77,18 @@ const authenticate = (context) => {
   context.locals.loggedInUser = loggedInUser;
 };
 
+const pages = [
+  'brewing-methods',
+  'login',
+  'origin-countries',
+  'processing-methods',
+  'registration',
+  'roasters',
+  'taste-note-groups',
+  'varieties',
+  'you'
+];
+
 /**
  * @type {import("astro").MiddlewareHandler}
  */
@@ -84,15 +96,13 @@ const authenticate = (context) => {
 const onRequest = async (context, next) => {
   const { page, params } = parsePath(context.url.pathname);
 
-  if (page !== 'api' && !context.params.locale && (context.routePattern !== '/404' || page === 'registration')) {
+  if (page !== 'api' && !context.params.locale && (context.routePattern !== '/404' || pages.includes(page))) {
     const acceptLanguage = context.request.headers.get('accept-language')?.slice(0, 2) || defaultLocale;
     const locale = locales.find((l) => l === acceptLanguage);
 
     return context.rewrite(
       new Request(`${context.url.origin}/${locale}${context.url.pathname}${context.url.search}`, {
-        headers: {
-          'x-redirected-from': context.url.pathname
-        }
+        headers: context.request.headers
       })
     );
   }
