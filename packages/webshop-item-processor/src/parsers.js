@@ -96,6 +96,7 @@ const parsers = {
           varietiesStrings.includes(name.toLowerCase()) ||
           (name.toLowerCase() === 'cuscatleco' && varietiesStrings.includes('cuzcatleco')) // typo
       )
+      .filter(({ name }) => name.toLowerCase() !== originCountry)
       .map(({ id }) => id);
 
     if (!varietyIds.length) {
@@ -199,6 +200,7 @@ const parsers = {
       details['odmiana botaniczna']?.split(', ').map((name) => name.trim().toLocaleLowerCase()) || [];
     const varietyIds = varieties
       .filter(({ name }) => varietiesStrings.includes(name.toLowerCase()))
+      .filter(({ name }) => name.toLowerCase() !== originCountry)
       .map(({ id }) => id);
     const missingVarieties = varietiesStrings.filter(
       (variety) => !varieties.some(({ name }) => name.toLowerCase() === variety)
@@ -344,6 +346,7 @@ const parsers = {
     const varietiesStrings = varietiesString.includes(', ') ? varietiesString.split(', ') : [varietiesString];
     const varietyIds = varieties
       .filter(({ name }) => varietiesStrings.includes(name.toLowerCase()))
+      .filter(({ name }) => name.toLowerCase() !== originCountry)
       .map(({ id }) => id);
 
     if (!varietyIds.length) {
@@ -463,6 +466,7 @@ const parsers = {
       .flat();
     const varietyIds = varieties
       .filter(({ name }) => varietiesStrings.includes(name.toLowerCase()))
+      .filter(({ name }) => name.toLowerCase() !== originCountry)
       .map(({ id }) => id);
     const missingVarieties = varietiesStrings.filter(
       (variety) => !varieties.some(({ name }) => name.toLowerCase() === variety)
@@ -521,9 +525,8 @@ const parsers = {
 
     const pricePerGram = Number((price / weight).toFixed(2));
 
-    const originCountryId = originCountries.find(({ name }) =>
-      url.replaceAll('-', ' ').includes(name)
-    )?.origin_country_id;
+    const originCountry = originCountries.find(({ name }) => url.replaceAll('-', ' ').includes(name));
+    const originCountryId = originCountry?.origin_country_id;
 
     const originRegion = document
       .querySelector('.woocommerce-product-attributes-item--attribute_region td')
@@ -571,6 +574,7 @@ const parsers = {
           varietiesStrings.includes(name.toLowerCase()) ||
           (name.toLowerCase() === 'mundo novo' && varietiesStrings.includes('mundo movo')) // typo
       )
+      .filter(({ name }) => name.toLowerCase() !== originCountry)
       .map(({ id }) => id);
     const missingVarieties = varietiesStrings.filter(
       (variety) =>
@@ -748,9 +752,10 @@ const parsers = {
 
     const pricePerGram = Number((price / weight).toFixed(2));
 
-    const originCountryId =
-      originCountries.find(({ name }) => name === details['country of origin'] || url.includes(name))
-        ?.origin_country_id || null;
+    const originCountry = originCountries.find(
+      ({ name }) => name === details['country of origin'] || url.includes(name)
+    );
+    const originCountryId = originCountry?.origin_country_id || null;
 
     const region = details.region;
     const originRegionId = originRegions.find(({ name }) => region?.includes(name))?.origin_region_id || null;
@@ -787,7 +792,9 @@ const parsers = {
     const distinctVarieties = varietiesFound.filter(
       ({ name }) => !varietiesFound.some(({ name: n }) => n !== name && n.includes(name))
     );
-    const uniqueVarietyIds = Array.from(new Set(distinctVarieties.map(({ id }) => id)));
+    const uniqueVarietyIds = Array.from(
+      new Set(distinctVarieties.filter(({ name }) => name.toLowerCase() !== originCountry).map(({ id }) => id))
+    );
 
     const isDecaf = url.includes('decaf');
 
@@ -928,6 +935,7 @@ const parsers = {
     const varietiesStrings = varietiesString.includes(', ') ? varietiesString.split(', ') : [varietiesString];
     const varietyIds = varieties
       .filter(({ name }) => varietiesStrings.includes(name.toLowerCase()))
+      .filter(({ name }) => name.toLowerCase() !== originCountry)
       .map(({ id }) => id);
 
     if (!varietyIds.length) {
@@ -1007,13 +1015,10 @@ const parsers = {
     const postTitle = document.querySelector('.wp-block-post-title').textContent.toLowerCase();
     const countryRegionOrFarm = postTitle.includes(' // ') ? postTitle.split(' // ') : postTitle.split(' | ');
 
-    let originCountryId =
-      originCountries.find(({ name }) => countryRegionOrFarm.some((item) => name === item))?.origin_country_id || null;
-
-    // if everything fails, we try the URL
-    if (!originCountryId) {
-      originCountryId = originCountries.find(({ name }) => url.includes(name))?.origin_country_id || null;
-    }
+    const originCountry =
+      originCountries.find(({ name }) => countryRegionOrFarm.some((item) => name === item)) ||
+      originCountries.find(({ name }) => url.includes(name));
+    const originCountryId = originCountry?.origin_country_id || null;
 
     const originFarmId = originFarms.find(({ name }) => countryRegionOrFarm.some((item) => name === item))?.id || null;
 
@@ -1038,7 +1043,7 @@ const parsers = {
           name === 'omni'
       )?.brewing_method_id || null;
 
-    const image = document.querySelector('[data-testid="product-image"]').src;
+    const image = document.querySelector('noscript [data-testid="product-image"]').src;
 
     const description = document.querySelector('.wp-block-post-excerpt__excerpt')?.textContent.trim().toLowerCase();
     const processingMethodId =
@@ -1056,7 +1061,9 @@ const parsers = {
     const distinctVarieties = varietiesFound.filter(
       ({ name }) => !varietiesFound.some(({ name: n }) => n !== name && n.includes(name))
     );
-    const uniqueVarietyIds = Array.from(new Set(distinctVarieties.map(({ id }) => id)));
+    const uniqueVarietyIds = Array.from(
+      new Set(distinctVarieties.filter(({ name }) => name.toLowerCase() !== originCountry).map(({ id }) => id))
+    );
 
     return {
       brewingMethodId,
