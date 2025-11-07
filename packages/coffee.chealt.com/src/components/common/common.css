@@ -36,6 +36,7 @@
   --icon-size--s: 24px;
 
   --card-height: 300px;
+  --max-main-image-width: 600px;
 }
 
 @media (prefers-color-scheme: dark) {
