@@ -84,7 +84,7 @@ const authenticate = (context) => {
 const onRequest = async (context, next) => {
   const { page, params } = parsePath(context.url.pathname);
 
-  if (page !== 'api' && !context.params.locale && context.routePattern !== '/404') {
+  if (page !== 'api' && !context.params.locale && (context.routePattern !== '/404' || page === 'registration')) {
     const acceptLanguage = context.request.headers.get('accept-language')?.slice(0, 2) || defaultLocale;
     const locale = locales.find((l) => l === acceptLanguage);
 
