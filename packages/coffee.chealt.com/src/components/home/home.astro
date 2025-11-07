@@ -45,14 +45,6 @@ const { recommended } = Astro.locals;
       </section>
     )
   }
-  <section>
-    <h2>{t.roasters}</h2>
-    <Roasters />
-  </section>
-  <section>
-    <h2>{t.originCountries}</h2>
-    <OriginCountries />
-  </section>
   {
     (priciestCoffees.length && (
       <section>
@@ -71,6 +63,14 @@ const { recommended } = Astro.locals;
     )) ||
       null
   }
+  <section>
+    <h2>{t.roasters}</h2>
+    <Roasters />
+  </section>
+  <section>
+    <h2>{t.originCountries}</h2>
+    <OriginCountries />
+  </section>
   {
     (groups.length && (
       <section>
