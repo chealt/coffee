@@ -34,7 +34,7 @@ const handler = async (event) => {
   try {
     filename = await storeImage({ url: details.image });
   } catch (error) {
-    console.error(`Error storing details for ${url}: ${error}`);
+    console.error(`Error storing image for ${url}: ${error}`);
 
     return responses.error;
   }

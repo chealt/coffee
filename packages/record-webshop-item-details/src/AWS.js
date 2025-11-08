@@ -1,4 +1,4 @@
-import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { GetObjectCommand, NoSuchKey, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
 import sharp from 'sharp';
 
@@ -62,12 +62,22 @@ const storeImage = async ({ url }) => {
   const filename = `${fileHash}.${imageExtension}`;
 
   console.info(`Checking if image ${fileHash} already exists`);
-  const existingFileResponse = await getObject({
-    bucketName: imageBucketName,
-    key: filename
-  });
+  let existingFileResponse;
 
-  if (existingFileResponse.Body) {
+  try {
+    existingFileResponse = await getObject({
+      bucketName: imageBucketName,
+      key: filename
+    });
+  } catch (error) {
+    if (error instanceof NoSuchKey) {
+      console.info(`Image ${fileHash} does not exist, continuing`);
+    } else {
+      throw error;
+    }
+  }
+
+  if (existingFileResponse?.Body) {
     console.info(`Image ${fileHash} already exists, skipping conversion`);
 
     return filename;
