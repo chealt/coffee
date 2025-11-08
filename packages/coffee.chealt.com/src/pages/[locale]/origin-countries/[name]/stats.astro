@@ -1,0 +1,14 @@
+---
+export const prerender = false;
+
+import Stats from '../../../../components/origin-countries/stats.astro';
+import originCountries from '../../../../../data/originCountries.json';
+
+const { name } = Astro.params;
+
+const id = originCountries.find((originCountry) => originCountry.name === name)?.origin_country_id;
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
+---
+
+<Stats id={id} />

@@ -96,16 +96,20 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce((max, { roasters }) 
           <div class="chart-inner">
             <div class="dots">
               {
-                roastersWithCoffee.map(({ id: roasterId, coffees }) =>
-                  coffees.map(({ pricePerGram }, coffeeIndex) => (
-                    <Fragment>
-                      <div
+                roastersWithCoffee.map(({ id: roasterId, name: roasterName, coffees }) =>
+                  coffees.map(
+                    ({ pricePerGram, originCountry: { name: originCountryName }, webshopItemLink }, coffeeIndex) => (
+                      <a
                         class={`part dot ${roasterId === id ? 'active' : ''}`}
                         style={`bottom: ${pricePerGram / (maxPricePerGram / 100)}%; left: ${coffeeIndex / (coffees.length / 100)}%`}
                         data-label={roasterId}
+                        aria-label={`${roasterName} ${originCountryName}`}
+                        href={webshopItemLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
                       />
-                    </Fragment>
-                  ))
+                    )
+                  )
                 )
               }
             </div>

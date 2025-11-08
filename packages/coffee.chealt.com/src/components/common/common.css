@@ -166,7 +166,7 @@ a {
   position: relative;
   border: 2px solid transparent;
 
-  &:active {
+  &:active:not(.dot) {
     top: 2px;
   }
 
