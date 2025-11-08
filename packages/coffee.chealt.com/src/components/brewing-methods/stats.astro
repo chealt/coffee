@@ -38,6 +38,7 @@ const roastersWithCoffee = Array.from(new Set(allCoffees.map(({ roaster_id }) =>
     ...roaster,
     coffees: coffees.filter(({ roaster: { id: roasterId } }) => roasterId === roaster.id)
   }))
+  .filter(({ coffees }) => coffees.length)
   .map((roaster) => ({
     ...roaster,
     tasteNoteGroups: roaster.coffees.reduce((stats, { tasteNotes }) => {

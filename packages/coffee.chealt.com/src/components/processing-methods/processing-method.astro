@@ -1,15 +1,20 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
 import processingMethods from '../../../data/processingMethods.json';
 import allCoffees from '../../../data/coffees.json';
 
 import { getConvertedPrice } from '../coffees/utils.js';
+import Button from '../form/button/button.astro';
 import Coffees from '../coffees/list.astro';
 import Common from '../common/common.astro';
+import Icon from '../icon/icon.astro';
 
 import allLocaleTranslations from '../common/common.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
+const { loggedInUser } = Astro.locals;
 const { id } = Astro.props;
 
 const { name } = processingMethods.find(
@@ -33,7 +38,17 @@ const cheapestCoffees = coffees
 ---
 
 <Common>
-  <h1>{name}</h1>
+  <h1>
+    <div>{name}</div>
+    {
+      loggedInUser && (
+        <Button class="ghost" href={getRelativeLocaleUrl(Astro.currentLocale, `/processing-methods/${name}/stats`)}>
+          <Icon type="chart" />
+          <span class="visually-hidden">{t.chart}</span>
+        </Button>
+      )
+    }
+  </h1>
   {
     (priciestCoffees.length && (
       <section>

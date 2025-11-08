@@ -38,7 +38,8 @@ const roastersWithCoffee = Array.from(new Set(allCoffees.map(({ roaster_id }) =>
   .map((roaster) => ({
     ...roaster,
     coffees: coffees.filter(({ roaster: { id: roasterId } }) => roasterId === roaster.id)
-  }));
+  }))
+  .filter(({ coffees }) => coffees.length);
 ---
 
 <Common shouldAuthenticate={shouldAuthenticate}>
