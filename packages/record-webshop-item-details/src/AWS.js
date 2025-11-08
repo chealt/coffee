@@ -1,4 +1,4 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
 import sharp from 'sharp';
 
@@ -38,6 +38,14 @@ const putObject = async ({ bucketName, key, data }) =>
     })
   );
 
+const getObject = async ({ bucketName, key }) =>
+  client.send(
+    new GetObjectCommand({
+      Bucket: bucketName,
+      Key: key
+    })
+  );
+
 const storeImage = async ({ url }) => {
   console.info(`Storing image ${url}`);
 
@@ -51,6 +59,19 @@ const storeImage = async ({ url }) => {
   const arrayBuffer = await imageResponse.arrayBuffer();
 
   const fileHash = await getContentHash({ arrayBuffer });
+  const filename = `${fileHash}.${imageExtension}`;
+
+  console.info(`Checking if image ${fileHash} already exists`);
+  const existingFileResponse = await getObject({
+    bucketName: imageBucketName,
+    key: filename
+  });
+
+  if (existingFileResponse.Body) {
+    console.info(`Image ${fileHash} already exists, skipping conversion`);
+
+    return filename;
+  }
 
   console.info(`Converting image ${url}`);
   const convertedImage = await sharp(arrayBuffer).webp({
@@ -64,7 +85,7 @@ const storeImage = async ({ url }) => {
   console.info(`Saving image ${fileHash}`);
   await putObject({
     bucketName: imageBucketName,
-    key: `${fileHash}.${imageExtension}`,
+    key: filename,
     data
   });
 
@@ -76,17 +97,17 @@ const storeImage = async ({ url }) => {
   await Promise.all([
     putObject({
       bucketName: imageBucketName,
-      key: `600/${fileHash}.${imageExtension}`,
+      key: `600/${filename}`,
       data: smallImageData
     }),
     putObject({
       bucketName: imageBucketName,
-      key: `1024/${fileHash}.${imageExtension}`,
+      key: `1024/${filename}`,
       data: mediumImageData
     })
   ]);
 
-  return `${fileHash}.${imageExtension}`;
+  return `${filename}`;
 };
 
 export { getSecret, storeImage };

@@ -2,6 +2,24 @@ import { createClient } from '@libsql/client';
 
 import { getSecret } from './AWS.js';
 
+const secrets = await getSecret({ name: 'recordWebshopItemDetails' });
+
+const authToken = secrets.TURSO_DEFAULT_TOKEN;
+const databaseUrl = secrets.TURSO_DATABASE_URL;
+
+if (!databaseUrl) {
+  throw new Error('TURSO_DATABASE_URL is not set');
+}
+
+if (!authToken) {
+  throw new Error('TURSO_DEFAULT_TOKEN is not set');
+}
+
+const client = createClient({
+  url: databaseUrl,
+  authToken
+});
+
 /* eslint-disable complexity */
 const storeDetails = async ({
   filename,
@@ -27,24 +45,6 @@ const storeDetails = async ({
 
     return;
   }
-
-  const secrets = await getSecret({ name: 'recordWebshopItemDetails' });
-
-  const authToken = secrets.TURSO_DEFAULT_TOKEN;
-  const databaseUrl = secrets.TURSO_DATABASE_URL;
-
-  if (!databaseUrl) {
-    throw new Error('TURSO_DATABASE_URL is not set');
-  }
-
-  if (!authToken) {
-    throw new Error('TURSO_DEFAULT_TOKEN is not set');
-  }
-
-  const client = createClient({
-    url: databaseUrl,
-    authToken
-  });
 
   console.info('Adding coffee to DB');
   const results = await client.execute({
@@ -144,14 +144,12 @@ const storeDetails = async ({
   }
 
   console.info('Clearing taste notes...');
-
   await client.execute({
-    sql: `DELETE FROM coffee_taste_notes WHERE coffee_id = :coffeeId`,
+    sql: `DELETE FROM coffee_taste_notes WHERE coffee_id = :coffeeId AND taste_note_id NOT IN (${tasteNoteIds.join(',')})`,
     args: { coffeeId }
   });
 
   console.info('Adding taste notes to DB...');
-
   await client.batch(
     tasteNoteIds.map((tasteNoteId) => ({
       sql: `INSERT OR IGNORE INTO coffee_taste_notes (
@@ -169,8 +167,13 @@ const storeDetails = async ({
   );
 
   if (varietyIds.length) {
-    console.info('Adding varieties to DB...');
+    console.info('Clearing varieties...');
+    await client.execute({
+      sql: `DELETE FROM coffee_varieties WHERE coffee_id = :coffeeId AND variety_id NOT IN (${varietyIds.join(',')})`,
+      args: { coffeeId }
+    });
 
+    console.info('Adding varieties to DB...');
     await client.batch(
       varietyIds.map((varietyId) => ({
         sql: `INSERT OR IGNORE INTO coffee_varieties (
@@ -188,11 +191,12 @@ const storeDetails = async ({
     );
   }
 
-  console.info(`Removing coffee images from DB for coffee ID: ${coffeeId}`);
+  console.info(`Removing unnecessary coffee images from DB for coffee ID: ${coffeeId}`);
   await client.execute({
-    sql: 'DELETE FROM coffee_images WHERE coffee_id = :coffeeId',
+    sql: 'DELETE FROM coffee_images WHERE coffee_id = :coffeeId AND url != :filename',
     args: {
-      coffeeId
+      coffeeId,
+      filename
     }
   });
 
