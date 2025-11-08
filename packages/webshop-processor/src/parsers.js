@@ -190,6 +190,15 @@ const parsers = {
     }
 
     return productLinks;
+  },
+  // Bani Beans
+  285: async ({ html, url }) => {
+    const document = getDocument(html);
+    const { origin } = new URL(url);
+
+    return Array.from(document.querySelectorAll('.product-card-wrapper .full-unstyled-link[id^="CardLink"]')).map(
+      ({ href }) => `${origin}${href}`
+    );
   }
 };
 
