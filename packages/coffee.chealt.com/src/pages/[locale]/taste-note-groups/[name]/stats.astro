@@ -1,0 +1,14 @@
+---
+export const prerender = false;
+
+import Stats from '../../../../components/taste-notes/taste-note-groups/stats.astro';
+import tasteNoteGroups from '../../../../../data/tasteNoteGroups.json';
+
+const { name } = Astro.params;
+
+const id = tasteNoteGroups.find((group) => group.name === decodeURIComponent(name))?.taste_note_group_id;
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
+---
+
+<Stats id={id} />

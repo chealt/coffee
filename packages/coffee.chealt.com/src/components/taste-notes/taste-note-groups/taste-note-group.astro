@@ -1,11 +1,15 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
 import coffees from '../../../../data/coffees.json';
 import tasteNoteGroups from '../../../../data/tasteNoteGroups.json';
 
 import { getTasteNoteGroup } from '../utils.js';
 import { convertToUSD } from '../../coffees/utils.js';
+import Button from '../../form/button/button.astro';
 import Common from '../../common/common.astro';
 import Coffees from '../../coffees/list.astro';
+import Icon from '../../icon/icon.astro';
 
 import './taste-note-group.css';
 
@@ -13,6 +17,7 @@ import allLocaleTranslations from '../../common/common.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
+const { loggedInUser } = Astro.locals;
 const { id } = Astro.props;
 
 const group = tasteNoteGroups.find((tasteNoteGroup) => tasteNoteGroup.taste_note_group_id === id);
@@ -31,7 +36,20 @@ const coffeesWithTasteNoteGroup = coffees
 
 <Common>
   <h1 class="title" style={`background-color: ${group.color};color: ${group.text_color}`}>
-    {group.name}
+    <div>
+      {group.name}
+    </div>
+    {
+      loggedInUser && (
+        <Button
+          class="ghost"
+          href={getRelativeLocaleUrl(Astro.currentLocale, `/taste-note-groups/${encodeURIComponent(group.name)}/stats`)}
+        >
+          <Icon type="chart" />
+          <span class="visually-hidden">{t.chart}</span>
+        </Button>
+      )
+    }
   </h1>
   <section>
     {
