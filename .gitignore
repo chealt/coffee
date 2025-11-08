@@ -38,3 +38,6 @@ playwright/.auth/
 .wrangler/
 *.log
 .dev.vars
+
+# Testing
+packages/webshop-item-processor/data
