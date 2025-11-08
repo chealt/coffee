@@ -1103,7 +1103,7 @@ const parsers = {
     }
 
     const currency = 'EUR';
-    const weightElement = document.querySelector('#template--16352732086538__main-1-0[checked]');
+    const weightElement = document.querySelector('variant-radios input[checked]');
     const weight = Number(weightElement?.value.replace('g', ''));
 
     if (!weight || isNaN(weight)) {
