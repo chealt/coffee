@@ -5,8 +5,6 @@
     "build": "rm -rf dist && mkdir dist && mkdir dist/data && cp ../coffee.chealt.com/data/*.json dist/data && cp index.js dist && cp -r package.json dist && cp ../../yarn.lock dist && cp .yarnrc-lambda.yml dist/.yarnrc.yml && cp -r src dist && cd dist && yarn workspaces focus && rm -rf .yarn && rm -rf yarn.lock && rm -rf .yarnrc.yml && zip -rq package.zip .",
     "users:create": "node --env-file=.env src/users/create-user.js",
     "users:send-registration-code": "node --env-file=.env src/users/send-registration-code.js",
-    "coffees:flag-removed": "node --env-file=.env src/coffees/flag-removed.js",
-    "coffees:import": "node --env-file=.env src/coffees/import.js",
     "coffees:import:CQI": "node --env-file=.env ../../node_modules/playwright/cli.js test",
     "coffees:import:varieties": "node --env-file=.env src/coffees/varieties.js",
     "currencies:import": "node --env-file=.env src/currencies/import.js",
