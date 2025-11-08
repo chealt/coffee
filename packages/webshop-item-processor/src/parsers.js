@@ -1147,8 +1147,8 @@ const parsers = {
       brewingMethods.find(
         ({ name }) =>
           (isFilter && isEspresso && name === 'omni') ||
-          (isFilter && name === 'filter') ||
-          (isEspresso && name === 'espresso')
+          (isFilter && !isEspresso && name === 'filter') ||
+          (isEspresso && !isFilter && name === 'espresso')
       )?.brewing_method_id || null;
 
     const processingMethod = details['process type'];
