@@ -1138,7 +1138,10 @@ const parsers = {
     const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
 
     const originRegion = details.region;
-    const originRegionId = originRegions.find(({ name }) => name === originRegion)?.origin_region_id || null;
+    const originRegionId =
+      originRegions.find(({ name }) => name === originRegion)?.origin_region_id ||
+      originRegions.find(({ name }) => originRegion.includes(name))?.origin_region_id ||
+      null;
 
     const brewingMethod = details['recommended preparation'];
     const isFilter = brewingMethod.includes('filter');
