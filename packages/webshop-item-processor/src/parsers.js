@@ -22,6 +22,12 @@ const getDocument = (html) => {
   return document;
 };
 
+const errors = {
+  priceMissing: 'Missing price',
+  weightMissing: 'Missing weight',
+  currencyMissing: 'Missing currency'
+};
+
 const parsers = {
   // Sheep & Raven
   6: ({ html, url, roasterId }) => {
@@ -1078,6 +1084,99 @@ const parsers = {
       roasterId,
       tasteNoteIds: uniqueTasteNoteIds,
       varietyIds: uniqueVarietyIds,
+      webshopItemLink: url,
+      weight
+    };
+  },
+  // Bani Beans
+  285: async ({ html, url, roasterId }) => {
+    console.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const price = parseFloat(
+      document.querySelector('.price-item--regular').textContent.trim().replace('€', '').replace(' EUR', '')
+    );
+
+    if (!price || isNaN(price)) {
+      throw new Error(errors.priceMissing);
+    }
+
+    const currency = 'EUR';
+    const weightElement = document.querySelector('#template--16352732086538__main-1-0[checked]');
+    const weight = Number(weightElement?.value.replace('g', ''));
+
+    if (!weight || isNaN(weight)) {
+      console.error('weight element: ', weightElement);
+      console.error('weight value: ', weightElement?.value);
+
+      throw new Error(errors.weightMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const details = Array.from(document.querySelectorAll('.product__description h5')).reduce((_details, row) => {
+      if (!row.textContent?.trim()) {
+        return _details;
+      }
+
+      const keyAndValue = row.textContent.toLowerCase().split(': ');
+
+      if (keyAndValue.length !== 2) {
+        return _details;
+      }
+
+      const key = keyAndValue[0].trim();
+      const value = keyAndValue[1].trim();
+
+      _details[key] = value;
+
+      return _details;
+    }, {});
+
+    const originCountry = details.country;
+    const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
+
+    const originRegion = details.region;
+    const originRegionId = originRegions.find(({ name }) => name === originRegion)?.origin_region_id || null;
+
+    const brewingMethod = details['recommended preparation'];
+    const isFilter = brewingMethod.includes('filter');
+    const isEspresso = brewingMethod.includes('espresso');
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) =>
+          (isFilter && isEspresso && name === 'omni') ||
+          (isFilter && name === 'filter') ||
+          (isEspresso && name === 'espresso')
+      )?.brewing_method_id || null;
+
+    const processingMethod = details['process type'];
+    const processingMethodId =
+      processingMethods.find(({ name }) => name === processingMethod)?.processing_method_id || null;
+
+    const variety = details['botanical variety'];
+    const varietyIds = varieties.filter(({ name }) => name.toLowerCase() === variety).map(({ id }) => id);
+
+    const tasteNotesString = details['coffee notes'];
+    const tasteNoteIds = tasteNotes
+      .filter(({ name }) => tasteNotesString.includes(name))
+      .map(({ taste_note_id: id }) => id);
+
+    const image = document.querySelector('.product__media img')?.src;
+
+    return {
+      brewingMethodId,
+      currency,
+      image: image ? `${new URL(url).protocol}${image}` : null,
+      originCountryId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
       webshopItemLink: url,
       weight
     };
