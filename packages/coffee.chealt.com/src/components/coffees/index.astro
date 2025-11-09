@@ -1,0 +1,34 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+import Button from '../form/button/button.astro';
+import coffees from '../../../data/coffees.json';
+import Common from '../common/common.astro';
+import Coffees from './list.astro';
+import Icon from '../icon/icon.astro';
+
+import allLocaleTranslations from './locales.json';
+import allLocaleCommonTranslations from '../common/common.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+const tc = allLocaleCommonTranslations[Astro.currentLocale];
+
+const { loggedInUser } = Astro.locals;
+---
+
+<Common>
+  <h1>
+    <div>{t.coffees}</div>
+    {
+      loggedInUser && (
+        <Button class="ghost" href={getRelativeLocaleUrl(Astro.currentLocale, `/coffees/stats`)}>
+          <Icon type="chart" />
+          <span class="visually-hidden">{tc.chart}</span>
+        </Button>
+      )
+    }
+  </h1>
+  <section>
+    <Coffees coffees={coffees} />
+  </section>
+</Common>

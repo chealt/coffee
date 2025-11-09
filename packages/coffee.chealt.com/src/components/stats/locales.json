@@ -1,0 +1,12 @@
+{
+  "en": {
+    "priceByRoaster": "Price - by Roaster",
+    "priceByOriginCountry": "Price - by Origin Country",
+    "countByTasteNoteGroup": "Taste Notes - by Roaster"
+  },
+  "pl": {
+    "priceByRoaster": "Cena - przez rostlinę",
+    "priceByOriginCountry": "Cena - przez kraj pochodzenia",
+    "countByTasteNoteGroup": "Smaki - przez rostlinę"
+  }
+}

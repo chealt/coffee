@@ -1,0 +1,9 @@
+---
+export const prerender = false;
+
+import Stats from '../../../components/coffees/stats.astro';
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
+---
+
+<Stats />

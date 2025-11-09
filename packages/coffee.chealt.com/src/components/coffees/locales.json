@@ -1,6 +1,7 @@
 {
   "en": {
     "brewingMethod": "Brewing method",
+    "coffees": "Coffees",
     "coffeeFrom": "coffee from",
     "decaf": "Decaf",
     "height": "Height",
@@ -20,6 +21,7 @@
   },
   "pl": {
     "brewingMethod": "Sposób zaparzania",
+    "coffees": "Kawy",
     "coffeeFrom": "Kawa z",
     "decaf": "Bezkofeinowy",
     "height": "Wysokość",
