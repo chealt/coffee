@@ -2,8 +2,8 @@
 import { JSDOM } from 'jsdom';
 
 import { translate } from './AWS.js';
-/* eslint-disable import/no-unresolved */
 import currencyCodes from './currencies.js';
+/* eslint-disable import/no-unresolved */
 import brewingMethods from '../data/brewingMethods.json' with { type: 'json' };
 import originCountries from '../data/originCountries.json' with { type: 'json' };
 import originFarms from '../data/originFarms.json' with { type: 'json' };
@@ -23,9 +23,10 @@ const getDocument = (html) => {
 };
 
 const errors = {
+  currencyMissing: 'Missing currency',
+  originCountryMissing: 'Missing origin country',
   priceMissing: 'Missing price',
-  weightMissing: 'Missing weight',
-  currencyMissing: 'Missing currency'
+  weightMissing: 'Missing weight'
 };
 
 const parsers = {
@@ -35,9 +36,53 @@ const parsers = {
 
     const document = getDocument(html);
 
-    const price = parseFloat(
+    const price = Number(
       document.querySelector('.price .woocommerce-Price-amount').textContent.replaceAll(' zł', '').replaceAll(',', '.')
-    );
+    ).toFixed(2);
+
+    if (!price || isNaN(price)) {
+      throw new Error(errors.priceMissing);
+    }
+
+    const currencySymbol = document.querySelector('.woocommerce-Price-currencySymbol').textContent;
+    const currency = currencyCodes[currencySymbol];
+
+    if (!currency) {
+      throw new Error(errors.currencyMissing);
+    }
+
+    const weightElement = document.querySelector('.swatch_label');
+    const weight = Number(weightElement.dataset.value.replaceAll('g-en', ''));
+
+    if (!weight || isNaN(weight)) {
+      throw new Error(errors.weightMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const originCountry = document.querySelector('[data-id="4cb216da"]').textContent.trim().toLowerCase();
+    const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
+
+    if (!originCountryId) {
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const brewingMethod = document.querySelector('[data-id="4af2f61c"]').textContent.trim().toLowerCase();
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) => name === brewingMethod || (brewingMethod === 'espresso / pour over' && name === 'omni')
+      )?.brewing_method_id || null;
+
+    const regionOrFarm = document.querySelector('[data-id="15362af"]').textContent.trim().toLowerCase();
+
+    const originRegionId = originRegions.find(({ name }) => regionOrFarm.includes(name))?.origin_region_id || null;
+    const originFarmId = originFarms.find(({ name }) => regionOrFarm.includes(name))?.id || null;
+
+    const processingMethod = document.querySelector('[data-id="16e90837"]').textContent.trim().toLowerCase();
+    const processingMethodId =
+      processingMethods.find(({ name }) => name === processingMethod)?.processing_method_id ||
+      processingMethods.find(({ name }) => processingMethod.includes(name))?.processing_method_id ||
+      null;
 
     const tasteNotesText = document.querySelector('.woocommerce-product-details__short-description')?.textContent;
 
@@ -56,43 +101,6 @@ const parsers = {
     const tasteNoteIds = Array.from(
       new Set(tasteNotes.filter(({ name }) => detailsTasteNotes.includes(name)).map(({ taste_note_id: id }) => id))
     );
-
-    const currencySymbol = document.querySelector('.woocommerce-Price-currencySymbol').textContent;
-    const currency = currencyCodes[currencySymbol];
-
-    if (!currency) {
-      throw new Error(`Unknown currency: ${currencySymbol}`);
-    }
-
-    const weightElement = document.querySelector('.swatch_label');
-
-    if (!weightElement?.dataset?.value) {
-      throw new Error(`Missing weight for ${url}`);
-    }
-
-    const weight = Number(weightElement.dataset.value.replaceAll('g-en', ''));
-
-    const pricePerGram = Number((price / weight).toFixed(2));
-
-    const originCountry = document.querySelector('[data-id="4cb216da"]').textContent.trim().toLowerCase();
-    const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
-
-    const brewingMethod = document.querySelector('[data-id="4af2f61c"]').textContent.trim().toLowerCase();
-    const brewingMethodId =
-      brewingMethods.find(
-        ({ name }) => name === brewingMethod || (brewingMethod === 'espresso / pour over' && name === 'omni')
-      )?.brewing_method_id || null;
-
-    const regionOrFarm = document.querySelector('[data-id="15362af"]').textContent.trim().toLowerCase();
-
-    const originRegionId = originRegions.find(({ name }) => regionOrFarm.includes(name))?.origin_region_id || null;
-    const originFarmId = originFarms.find(({ name }) => regionOrFarm.includes(name))?.id || null;
-
-    const processingMethod = document.querySelector('[data-id="16e90837"]').textContent.trim().toLowerCase();
-    const processingMethodId =
-      processingMethods.find(({ name }) => name === processingMethod)?.processing_method_id ||
-      processingMethods.find(({ name }) => processingMethod.includes(name))?.processing_method_id ||
-      null;
 
     const varietiesString = document.querySelector('[data-id="512fea5c"]').textContent.trim().toLowerCase();
     const varietiesStrings = varietiesString.includes(' / ') ? varietiesString.split(' / ') : [varietiesString];
@@ -134,7 +142,13 @@ const parsers = {
 
     const document = getDocument(html);
 
-    const price = parseFloat(document.querySelector('.current-price-value').textContent.trim().replaceAll(' PLN', ''));
+    const price = Number(
+      document.querySelector('.current-price-value').textContent.trim().replaceAll(' PLN', '').replace(',', '.')
+    ).toFixed(2);
+
+    if (!price || isNaN(price)) {
+      throw new Error(errors.priceMissing);
+    }
 
     const currency = 'PLN';
 
@@ -142,8 +156,8 @@ const parsers = {
       document.querySelector('select[name="group[8]"] option[selected]').textContent.replace(' g', '')
     );
 
-    if (isNaN(weight)) {
-      throw new Error(`Invalid weight: ${weight}`);
+    if (!weight || isNaN(weight)) {
+      throw new Error(errors.weightMissing);
     }
 
     const pricePerGram = Number((price / weight).toFixed(2));
@@ -165,7 +179,7 @@ const parsers = {
     const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
 
     if (!originCountryId) {
-      throw new Error(`Missing origin country: ${originCountry}`);
+      throw new Error(errors.originCountryMissing);
     }
 
     const originRegion = details.region;
@@ -252,12 +266,11 @@ const parsers = {
     const priceElement =
       document.querySelector('.price > *:not(del) .woocommerce-Price-amount') ||
       document.querySelector('.price .woocommerce-Price-amount');
+    const price = Number(priceElement.textContent.replace(',', '.')).toFixed(2);
 
-    if (!priceElement) {
-      throw new Error(`Price element not found: ${url}`);
+    if (!price || isNaN(price)) {
+      throw new Error(errors.priceMissing);
     }
-
-    const price = parseFloat(priceElement.textContent);
 
     const currencySymbol = document.querySelector('.woocommerce-Price-currencySymbol').textContent;
     const currency = currencyCodes[currencySymbol];
@@ -267,7 +280,10 @@ const parsers = {
     }
 
     const weight = Number(document.querySelector('#masa-netto option:not([value=""])').value.replaceAll('g', ''));
-    console.debug(`weight for ${url}: ${weight}`);
+
+    if (!weight || isNaN(weight)) {
+      throw new Error(errors.weightMissing);
+    }
 
     const pricePerGram = Number((price / weight).toFixed(2));
 
@@ -284,6 +300,10 @@ const parsers = {
       .replace(' region', '')
       .trim();
     const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
+
+    if (!originCountryId) {
+      throw new Error(errors.originCountryMissing);
+    }
 
     const brewingMethodElement = document.querySelector('[data-id="a074d76"]');
     const brewingMethodStrings = brewingMethodElement?.textContent
@@ -387,9 +407,16 @@ const parsers = {
 
     const document = getDocument(html);
 
-    const price = parseFloat(
-      document.querySelector('.price .woocommerce-Price-amount.amount').textContent.replaceAll(' zł', '')
-    );
+    const price = Number(
+      document
+        .querySelector('.price .woocommerce-Price-amount.amount')
+        .textContent.replaceAll(' zł', '')
+        .replace(',', '.')
+    ).toFixed(2);
+
+    if (!price || isNaN(price)) {
+      throw new Error(errors.priceMissing);
+    }
 
     const currencySymbol = document.querySelector('.summary .price .woocommerce-Price-currencySymbol').textContent;
     const currency = currencyCodes[currencySymbol];
@@ -400,6 +427,10 @@ const parsers = {
 
     const weightElementValue = document.querySelector('#waga option[selected]').textContent.replaceAll(' g', '');
     const weight = parseFloat(weightElementValue);
+
+    if (!weight || isNaN(weight)) {
+      throw new Error(errors.weightMissing);
+    }
 
     const pricePerGram = Number((price / weight).toFixed(2));
 
@@ -417,6 +448,10 @@ const parsers = {
 
     const originCountry = details['kraj pochodzenia ziarna'];
     const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
+
+    if (!originCountryId) {
+      throw new Error(errors.originCountryMissing);
+    }
 
     const originRegion = details.region;
     const originRegionId =
@@ -512,9 +547,16 @@ const parsers = {
 
     const document = getDocument(html);
 
-    const price = parseFloat(
-      document.querySelector('.price .woocommerce-Price-amount.amount').textContent.replaceAll(' zł', '')
-    );
+    const price = Number(
+      document
+        .querySelector('.price .woocommerce-Price-amount.amount')
+        .textContent.replaceAll(' zł', '')
+        .replace(',', '.')
+    ).toFixed(2);
+
+    if (!price || isNaN(price)) {
+      throw new Error(errors.priceMissing);
+    }
 
     const currencySymbol = document.querySelector('.summary .price .woocommerce-Price-currencySymbol').textContent;
     const currency = currencyCodes[currencySymbol];
@@ -529,10 +571,18 @@ const parsers = {
       .replaceAll(',', '.');
     const weight = parseFloat(weightElementValue) * 1000; // convert to grams
 
+    if (!weight || isNaN(weight)) {
+      throw new Error(errors.weightMissing);
+    }
+
     const pricePerGram = Number((price / weight).toFixed(2));
 
     const originCountry = originCountries.find(({ name }) => url.replaceAll('-', ' ').includes(name));
     const originCountryId = originCountry?.origin_country_id;
+
+    if (!originCountryId) {
+      throw new Error(errors.originCountryMissing);
+    }
 
     const originRegion = document
       .querySelector('.woocommerce-product-attributes-item--attribute_region td')
@@ -624,7 +674,13 @@ const parsers = {
     console.info(`Parsing item page: ${url}`);
     const document = getDocument(html);
 
-    const price = parseFloat(document.querySelector('.price-item').textContent.replaceAll(' €', ''));
+    const price = Number(
+      document.querySelector('.price-item').textContent.replaceAll(' €', '').replace(',', '.')
+    ).toFixed(2);
+
+    if (!price || isNaN(price)) {
+      throw new Error(errors.priceMissing);
+    }
 
     const currencySymbol = document.querySelector('.price-item').textContent.includes('€') ? '€' : undefined;
     const currency = currencyCodes[currencySymbol];
@@ -638,6 +694,10 @@ const parsers = {
       document.querySelector('[name=Packaging]:checked')?.value.replace('g', '') ||
       document.querySelector('[name=balenie]:checked')?.value.replace('g', '');
     const weight = parseFloat(weightElementValue);
+
+    if (!weight || isNaN(weight)) {
+      throw new Error(errors.weightMissing);
+    }
 
     const pricePerGram = Number((price / weight).toFixed(2));
 
@@ -661,8 +721,7 @@ const parsers = {
       null;
 
     if (!originCountryId) {
-      console.log(details);
-      console.info(`Missing origin country: ${originCountry}`);
+      throw new Error(errors.originCountryMissing);
     }
 
     const processingMethod = (await translate({ text: details.spracovanie, from: 'cs', to: 'en' }))
@@ -722,17 +781,25 @@ const parsers = {
   // Meron
   252: async ({ html, url, roasterId }) => {
     console.info(`Parsing item page: ${url}`);
+
     const document = getDocument(html);
 
-    const price = parseFloat(
-      document.querySelector('.price .woocommerce-Price-amount.amount').textContent.replaceAll(' €', '')
-    );
+    const price = Number(
+      document
+        .querySelector('.price .woocommerce-Price-amount.amount')
+        .textContent.replaceAll(' €', '')
+        .replace(',', '.')
+    ).toFixed(2);
+
+    if (!price || isNaN(price)) {
+      throw new Error(errors.priceMissing);
+    }
 
     const currencySymbol = document.querySelector('.summary .price .woocommerce-Price-currencySymbol').textContent;
     const currency = currencyCodes[currencySymbol];
 
     if (!currency) {
-      throw new Error(`Unknown currency: ${url}`);
+      throw new Error(errors.currencyMissing);
     }
 
     const details = Array.from(document.querySelectorAll('.info-tab-tabel tr')).reduce((_details, row) => {
@@ -748,13 +815,11 @@ const parsers = {
       return { ..._details, [key]: value };
     }, {});
 
-    if (!details.volume) {
-      console.error(`No weight found at: ${url}`);
-
-      return {};
-    }
-
     const weight = Number(details.volume.replace(' gr', ''));
+
+    if (!weight || isNaN(weight)) {
+      throw new Error(errors.weightMissing);
+    }
 
     const pricePerGram = Number((price / weight).toFixed(2));
 
@@ -762,6 +827,10 @@ const parsers = {
       ({ name }) => name === details['country of origin'] || url.includes(name)
     );
     const originCountryId = originCountry?.origin_country_id || null;
+
+    if (!originCountryId) {
+      throw new Error(errors.originCountryMissing);
+    }
 
     const region = details.region;
     const originRegionId = originRegions.find(({ name }) => region?.includes(name))?.origin_region_id || null;
@@ -830,28 +899,31 @@ const parsers = {
 
     const document = getDocument(html);
 
-    const price = parseFloat(
+    const price = Number(
       document
         .querySelector('.price.nasa-single-product-price .woocommerce-Price-amount')
         .textContent.replaceAll('€ ', '')
-    );
+        .replace(',', '.')
+    ).toFixed(2);
 
     const currencySymbol = document.querySelector('.woocommerce-Price-currencySymbol').textContent;
     const currency = currencyCodes[currencySymbol];
 
     if (!currency) {
-      throw new Error(`Unknown currency: ${currencySymbol}`);
+      throw new Error(errors.currencyMissing);
     }
 
     const weightElement = document.querySelector('div[data-attribute_name="attribute_pa_vaha"] .nasa-attr-text');
 
     if (!weightElement) {
-      console.error(`No weight found at: ${url}`);
-
-      return {};
+      throw new Error(errors.weightMissing);
     }
 
     const weight = Number(weightElement.textContent.replace('g', ''));
+
+    if (!weight || isNaN(weight)) {
+      throw new Error(errors.weightMissing);
+    }
 
     const pricePerGram = Number((price / weight).toFixed(2));
 
@@ -980,19 +1052,21 @@ const parsers = {
       .querySelector('.wapf-checked .wapf-pricing-hint')
       ?.textContent.replace('(+', '')
       .replace('zł)', '')
+      .replace(',', '.')
       .trim();
     const priceAmount = document.querySelector('.woocommerce-Price-amount')?.textContent;
 
-    const price = parseFloat(priceAmount) + (optionsPrice ? parseFloat(optionsPrice) : 0);
+    const price = Number(priceAmount) + (optionsPrice ? Number(optionsPrice).toFixed(2) : 0).toFixed(2);
+
+    if (!price || isNaN(price)) {
+      throw new Error(errors.priceMissing);
+    }
+
     const currencySymbol = document.querySelector('.woocommerce-Price-currencySymbol').textContent;
     const currency = currencyCodes[currencySymbol];
 
     if (!currency) {
-      throw new Error(`Unknown currency: ${url}`);
-    }
-
-    if (!price) {
-      throw new Error(`Unknown price: ${url}`);
+      throw new Error(errors.currencyMissing);
     }
 
     const weightSelectionValue = document
@@ -1010,10 +1084,8 @@ const parsers = {
       (weightElementValue && Number(weightElementValue) * 1000) ||
       null;
 
-    if (!weight) {
-      console.error(`Could not find weight for product: ${url}`);
-
-      return {};
+    if (!weight || isNaN(weight)) {
+      throw new Error(errors.weightMissing);
     }
 
     const pricePerGram = Number((price / weight).toFixed(2));
@@ -1025,6 +1097,10 @@ const parsers = {
       originCountries.find(({ name }) => countryRegionOrFarm.some((item) => name === item)) ||
       originCountries.find(({ name }) => url.includes(name));
     const originCountryId = originCountry?.origin_country_id || null;
+
+    if (!originCountryId) {
+      throw new Error(errors.originCountryMissing);
+    }
 
     const originFarmId = originFarms.find(({ name }) => countryRegionOrFarm.some((item) => name === item))?.id || null;
 
@@ -1094,9 +1170,14 @@ const parsers = {
 
     const document = getDocument(html);
 
-    const price = parseFloat(
-      document.querySelector('.price-item--regular').textContent.trim().replace('€', '').replace(' EUR', '')
-    );
+    const price = Number(
+      document
+        .querySelector('.price-item--regular')
+        .textContent.trim()
+        .replace('€', '')
+        .replace(' EUR', '')
+        .replace(',', '.')
+    ).toFixed(2);
 
     if (!price || isNaN(price)) {
       throw new Error(errors.priceMissing);
@@ -1108,9 +1189,6 @@ const parsers = {
     const weight = Number(weightElement?.value.replace('g', ''));
 
     if (!weight || isNaN(weight)) {
-      console.error('weight element: ', weightElement);
-      console.error('weight value: ', weightElement?.value);
-
       throw new Error(errors.weightMissing);
     }
 
@@ -1137,6 +1215,10 @@ const parsers = {
 
     const originCountry = details.country;
     const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
+
+    if (!originCountryId) {
+      throw new Error(errors.originCountryMissing);
+    }
 
     const originRegion = details.region;
     const originRegionId =
@@ -1250,6 +1332,10 @@ const parsers = {
 
     const originCountry = originDetails.country;
     const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
+
+    if (!originCountryId) {
+      throw new Error(errors.originCountryMissing);
+    }
 
     const originFarm = originDetails.estate;
     const foundOriginFarm = originFarms.find(({ name }) => name === originFarm);
