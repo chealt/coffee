@@ -1,0 +1,174 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+import allCoffees from '../../../data/coffees.json';
+import countries from '../../../data/countries.json';
+import roasters from '../../../data/roasters.json';
+import tasteNoteGroups from '../../../data/tasteNoteGroups.json';
+
+import Button from '../form/button/button.astro';
+import Icon from '../icon/icon.astro';
+import Common from '../common/common.astro';
+import Coffees from '../coffees/list.astro';
+import { getConvertedPrice, getDetails } from '../coffees/utils.js';
+import { getTasteNoteGroup, getTasteNoteGroupByNoteId } from '../taste-notes/utils.js';
+
+import '../stats/stats.css';
+
+import allLocaleTranslations from '../common/common.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+
+const { currency, loggedInUser, shouldAuthenticate } = Astro.locals;
+const { id } = Astro.props;
+
+const { name } = countries.find((country) => country.country_id === id);
+const coffees = allCoffees
+  .map(getDetails({ locale: Astro.currentLocale }))
+  .filter(({ roaster }) => roaster?.country?.country_id === id)
+  .map(({ pricePerGram, ...coffee }) => ({
+    ...coffee,
+    pricePerGram: getConvertedPrice({ price: pricePerGram, currency })
+  }))
+  .sort((a, b) => a.pricePerGram - b.pricePerGram);
+const maxPricePerGram = coffees[coffees.length - 1].pricePerGram;
+const roastersWithCoffee = Array.from(new Set(allCoffees.map(({ roaster_id }) => roaster_id)))
+  .map((roasterId) => roasters.find(({ id }) => id === roasterId))
+  .map((roaster) => ({
+    ...roaster,
+    coffees: coffees.filter(({ roaster: { id: roasterId } }) => roasterId === roaster.id)
+  }))
+  .filter(({ coffees }) => coffees.length)
+  .map((roaster) => ({
+    ...roaster,
+    tasteNoteGroups: roaster.coffees.reduce((stats, { tasteNotes }) => {
+      tasteNotes.forEach(({ taste_note_id: tasteNoteId }) => {
+        const { taste_note_group_id: tasteNoteGroupId } = getTasteNoteGroupByNoteId(tasteNoteId);
+
+        if (!stats[tasteNoteGroupId]) {
+          stats[tasteNoteGroupId] = 1;
+        } else {
+          stats[tasteNoteGroupId]++;
+        }
+      });
+
+      return stats;
+    }, {})
+  }));
+const tasteNoteGroupsLocale = tasteNoteGroups
+  .filter(({ name, language_code: languageCode }) => languageCode === Astro.currentLocale && name !== 'other')
+  .map(({ name, taste_note_group_id: tasteNoteGroupId, ...rest }) =>
+    name.includes('/') ? { tasteNoteGroupId, name: name.split(' / ')[0], ...rest } : { tasteNoteGroupId, name, ...rest }
+  )
+  .map(({ tasteNoteGroupId, ...rest }) => ({
+    ...rest,
+    tasteNoteGroupId,
+    roasters: roastersWithCoffee
+      .filter(({ tasteNoteGroups }) => tasteNoteGroups[tasteNoteGroupId])
+      .map(({ id, name, tasteNoteGroups }) => ({
+        id,
+        name,
+        count: tasteNoteGroups[tasteNoteGroupId]
+      }))
+      .sort((a, b) => b.count - a.count)
+  }))
+  .filter(({ roasters }) => roasters.length);
+const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce((max, { roasters }) => Math.max(max, roasters[0].count), 0);
+---
+
+<Common shouldAuthenticate={shouldAuthenticate}>
+  <h1>
+    <div>{name}</div>
+    {
+      loggedInUser && (
+        <Button class="ghost" href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${name}`)}>
+          <Icon type="back" />
+          <span class="visually-hidden">{t.back}</span>
+        </Button>
+      )
+    }
+  </h1>
+  <section>
+    <h2>{t.prices}</h2>
+    <div class="card">
+      <coffee-stats>
+        <div class="stats">
+          <div class="chart-inner">
+            <div class="dots">
+              {
+                roastersWithCoffee.map(({ id: roasterId, name: roasterName, coffees }) =>
+                  coffees.map(
+                    ({ pricePerGram, originCountry: { name: originCountryName }, webshopItemLink }, coffeeIndex) => (
+                      <a
+                        class={`part dot ${roasterId === id ? 'active' : ''}`}
+                        style={`bottom: ${pricePerGram / (maxPricePerGram / 100)}%; left: ${coffeeIndex / (coffees.length / 100)}%`}
+                        data-label={roasterId}
+                        aria-label={`${roasterName} ${originCountryName}`}
+                        href={webshopItemLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      />
+                    )
+                  )
+                )
+              }
+            </div>
+            <div class="labels">
+              {
+                roastersWithCoffee.map(({ id: roasterId, name, coffees }) => (
+                  <Fragment>
+                    <div class={`label x ${roasterId === id ? 'active' : ''}`} data-part={roasterId}>
+                      {name}
+                    </div>
+                  </Fragment>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </coffee-stats>
+    </div>
+  </section>
+  <section>
+    <h2>{t.tasteNotes}</h2>
+    <div class="card">
+      <coffee-stats>
+        <div class="stats">
+          <div class="chart-inner">
+            <ul class="bars">
+              {
+                tasteNoteGroupsLocale.map(({ name, color, tasteNoteGroupId, roasters }) => (
+                  <li class="bar-container">
+                    {roasters.map(({ id: roasterId, name, count }) => (
+                      <div
+                        class={`part bar ${roasterId === id ? 'active' : ''}`}
+                        style={`height: ${count / (maxTasteNoteGroupCount / 100)}%`}
+                        data-label={roasterId}
+                      />
+                    ))}
+                    <div class="bar-label" style={`color: ${color}`}>
+                      {name}
+                    </div>
+                  </li>
+                ))
+              }
+            </ul>
+            <div class="labels">
+              {
+                tasteNoteGroupsLocale.map(({ name, color, tasteNoteGroupId, roasters }) =>
+                  roasters.map(({ id: roasterId, name, count }) => (
+                    <div class={`label x ${roasterId === id ? 'active' : ''}`} data-part={roasterId}>
+                      {name}
+                    </div>
+                  ))
+                )
+              }
+            </div>
+          </div>
+        </div>
+      </coffee-stats>
+    </div>
+  </section>
+</Common>
+
+<script src="../stats/stats.js"></script>

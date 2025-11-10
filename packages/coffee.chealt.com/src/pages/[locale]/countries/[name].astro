@@ -1,0 +1,14 @@
+---
+export const prerender = false;
+
+import Countries from '../../../components/countries/country.astro';
+import countries from '../../../../data/countries.json';
+
+const { name } = Astro.params;
+
+const id = countries.find((country) => country.name === name)?.country_id;
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
+---
+
+<Countries id={id} />

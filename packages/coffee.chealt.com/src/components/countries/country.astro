@@ -1,0 +1,81 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+import countries from '../../../data/countries.json';
+import allCoffees from '../../../data/coffees.json';
+import roastersWithCoffees from '../../../data/roastersWithCoffees.json';
+
+import { getConvertedPrice } from '../coffees/utils.js';
+import Button from '../form/button/button.astro';
+import Coffees from '../coffees/list.astro';
+import Common from '../common/common.astro';
+import Icon from '../icon/icon.astro';
+
+import allLocaleTranslations from '../common/common.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+
+const { loggedInUser } = Astro.locals;
+const { id } = Astro.props;
+
+const { name } = countries.find(
+  ({ country_id, language_code }) => country_id === id && language_code === Astro.currentLocale
+);
+const countryRoasters = roastersWithCoffees.filter(({ country_id }) => country_id === id).map(({ id }) => id);
+const coffees = allCoffees.filter(({ roaster_id: roasterId }) => countryRoasters.includes(roasterId));
+const priciestCoffees = coffees
+  .sort(
+    (a, b) =>
+      getConvertedPrice({ currency: b.currency, price: b.price_per_gram }) -
+      getConvertedPrice({ currency: a.currency, price: a.price_per_gram })
+  )
+  .slice(0, 10);
+const cheapestCoffees = coffees
+  .sort(
+    (a, b) =>
+      getConvertedPrice({ currency: a.currency, price: a.price_per_gram }) -
+      getConvertedPrice({ currency: b.currency, price: b.price_per_gram })
+  )
+  .slice(0, 10);
+---
+
+<Common>
+  <h1>
+    <div>{name}</div>
+    {
+      loggedInUser && (
+        <Button class="ghost" href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${name}/stats`)}>
+          <Icon type="chart" />
+          <span class="visually-hidden">{t.chart}</span>
+        </Button>
+      )
+    }
+  </h1>
+  {
+    (priciestCoffees.length && (
+      <section>
+        <h2>{t.priciestCoffees}</h2>
+        <Coffees coffees={priciestCoffees} />
+      </section>
+    )) ||
+      null
+  }
+  {
+    (cheapestCoffees.length && (
+      <section>
+        <h2>{t.cheapestCoffees}</h2>
+        <Coffees coffees={cheapestCoffees} />
+      </section>
+    )) ||
+      null
+  }
+  {
+    (coffees.length && (
+      <section>
+        <h2>{t.allCoffees}</h2>
+        <Coffees coffees={coffees} />
+      </section>
+    )) ||
+      null
+  }
+</Common>

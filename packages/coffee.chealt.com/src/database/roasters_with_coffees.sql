@@ -4,7 +4,8 @@ SELECT
   r.name,
   r.website,
   r.instagram,
-  r.logo
+  r.logo,
+  r.country_id
 FROM
   roasters r
   JOIN coffees c ON c.roaster_id = r.id
