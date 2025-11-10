@@ -29,6 +29,7 @@ const {
   originCountry,
   originFarm,
   originRegion,
+  roaster,
   roastingDate,
   price,
   pricePerGram,
@@ -58,6 +59,28 @@ const { currency } = Astro.locals;
 </a>
 <section class="not-padded coffee-details">
   <dl>
+    <dt>{t.roaster}</dt>
+    <dd>
+      {
+        (
+          <Fragment>
+            <a
+              href={getRelativeLocaleUrl(Astro.currentLocale, `/roasters/${encodeURIComponent(roaster.name)}`)}
+              class="chip bordered"
+            >
+              {roaster.name}
+            </a>
+            {' - '}
+            <a
+              href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${encodeURIComponent(roaster.country.name)}`)}
+              class="chip bordered"
+            >
+              {roaster.country.code}
+            </a>
+          </Fragment>
+        )
+      }
+    </dd>
     <dt>{t.originCountry}</dt>
     <dd>
       {
