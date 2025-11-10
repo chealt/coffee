@@ -75,7 +75,7 @@ const { currency } = Astro.locals;
               href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${encodeURIComponent(roaster.country.name)}`)}
               class="chip bordered"
             >
-              {roaster.country.code}
+              {roaster.country.code.toUpperCase()}
             </a>
           </Fragment>
         )

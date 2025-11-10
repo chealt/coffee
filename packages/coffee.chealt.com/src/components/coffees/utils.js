@@ -2,6 +2,7 @@ import brewingMethods from '../../../data/brewingMethods.json';
 import coffeeImages from '../../../data/coffeeImages.json';
 import coffeeTasteNotes from '../../../data/coffeeTasteNotes.json';
 import coffeeVarieties from '../../../data/coffeeVarieties.json';
+import countries from '../../../data/countries.json';
 import exchangeRates from '../../../data/exchangeRates.json';
 import originCountries from '../../../data/originCountries.json';
 import originFarms from '../../../data/originFarms.json';
@@ -11,13 +12,13 @@ import roasters from '../../../data/roasters.json';
 import roastingLevels from '../../../data/roastingLevels.json';
 import tasteNotes from '../../../data/tasteNotes.json';
 import varieties from '../../../data/varieties.json';
+import logger from '../errors/utils.js';
 
 const getConvertedPrice = ({ currency, price }) => {
   const exchangeRate = exchangeRates.find(({ currency_code: code }) => code === currency).rate;
 
   if (!exchangeRate) {
-    // eslint-disable-next-line no-console
-    console.error(`No exchange rate found for currency ${currency}`);
+    logger.error(new Error(`No exchange rate found for currency ${currency}`));
 
     return undefined;
   }
@@ -29,13 +30,30 @@ const convertToUSD = ({ currency, price }) => {
   const exchangeRate = exchangeRates.find(({ currency_code: code }) => code === currency).rate;
 
   if (!exchangeRate) {
-    // eslint-disable-next-line no-console
-    console.error(`No exchange rate found for currency ${currency}`);
+    logger.error(new Error(`No exchange rate found for currency ${currency}`));
 
     return undefined;
   }
 
   return price / exchangeRate;
+};
+
+const getRoasterDetails = ({ id, locale }) => {
+  const roaster = roasters.find(({ id: roasterId }) => roasterId === id);
+
+  if (!roaster) {
+    logger.error(new Error(`No roaster found for id ${id}`));
+
+    return undefined;
+  }
+
+  return {
+    ...roaster,
+    country: countries.find(
+      ({ country_id: countryId, language_code: languageCode }) =>
+        countryId === roaster.country_id && languageCode === locale
+    )
+  };
 };
 
 const getDetails =
@@ -70,7 +88,7 @@ const getDetails =
       ({ processing_method_id: id, language_code: languageCode }) =>
         coffee.processing_method_id === id && languageCode === locale
     ),
-    roaster: roasters.find((roaster) => roaster.id === coffee.roaster_id),
+    roaster: getRoasterDetails({ id: coffee.roaster_id, locale }),
     roastingDate: coffee.roasting_date,
     roastingLevel: roastingLevels.find(
       (roastingLevel) =>
