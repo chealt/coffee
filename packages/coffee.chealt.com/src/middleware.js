@@ -9,8 +9,11 @@ import { cookieNameLocale, cookieNameCurrency, defaultCurrency } from './server/
 import { getValue } from './server/database/formData.js';
 import { getAuthenticationOptions } from './server/login.js';
 import { createRegistrationOptions } from './server/registration.js';
+import { init as initSentry } from './server/sentry.js';
 import { setCollections, setCollectionItem } from './server/you/collections.js';
 import { setRecommended } from './server/you/recommendations.js';
+
+initSentry();
 
 const locales = supportedLanguages.map(({ locale }) => locale);
 const defaultLocale = supportedLanguages.find(({ isDefault }) => isDefault).locale;

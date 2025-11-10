@@ -1,4 +1,5 @@
 import cloudflare from '@astrojs/cloudflare';
+import sentry from '@sentry/astro';
 import { defineConfig } from 'astro/config';
 
 // import { visualizer } from 'rollup-plugin-visualizer';
@@ -36,6 +37,13 @@ export default defineConfig({
       assetsInlineLimit: 0
     }
   },
+  integrations: [
+    sentry({
+      project: 'javascript-astro',
+      org: 'central-beans',
+      authToken: process.env.SENTRY_AUTH_TOKEN
+    })
+  ],
   adapter: cloudflare({
     imageService: 'passthrough'
   })
