@@ -407,7 +407,7 @@ sup {
   margin-right: var(--gap--s);
   background-color: var(--color-text);
   color: var(--color-background);
-  border: 2px solid transparent;
+  border: 1px solid transparent;
 
   svg {
     fill: var(--color-background);
