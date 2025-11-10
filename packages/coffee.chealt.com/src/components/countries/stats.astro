@@ -11,6 +11,7 @@ import Icon from '../icon/icon.astro';
 import Common from '../common/common.astro';
 import Coffees from '../coffees/list.astro';
 import { getConvertedPrice, getDetails } from '../coffees/utils.js';
+import { titleCase } from '../../utils/string.js';
 import { getTasteNoteGroup, getTasteNoteGroupByNoteId } from '../taste-notes/utils.js';
 
 import '../stats/stats.css';
@@ -25,23 +26,22 @@ const { id } = Astro.props;
 const { name } = countries.find((country) => country.country_id === id);
 const coffees = allCoffees
   .map(getDetails({ locale: Astro.currentLocale }))
-  .filter(({ roaster }) => roaster?.country?.country_id === id)
   .map(({ pricePerGram, ...coffee }) => ({
     ...coffee,
     pricePerGram: getConvertedPrice({ price: pricePerGram, currency })
   }))
   .sort((a, b) => a.pricePerGram - b.pricePerGram);
 const maxPricePerGram = coffees[coffees.length - 1].pricePerGram;
-const roastersWithCoffee = Array.from(new Set(allCoffees.map(({ roaster_id }) => roaster_id)))
-  .map((roasterId) => roasters.find(({ id }) => id === roasterId))
-  .map((roaster) => ({
-    ...roaster,
-    coffees: coffees.filter(({ roaster: { id: roasterId } }) => roasterId === roaster.id)
+const countriesWithCoffee = Array.from(new Set(countries.map(({ country_id: countryId }) => countryId)))
+  .map((countryId) => countries.find((country) => country.country_id === countryId))
+  .map((country) => ({
+    ...country,
+    coffees: coffees.filter(({ roaster: { country_id: countryId } }) => countryId === country.country_id)
   }))
   .filter(({ coffees }) => coffees.length)
-  .map((roaster) => ({
-    ...roaster,
-    tasteNoteGroups: roaster.coffees.reduce((stats, { tasteNotes }) => {
+  .map((country) => ({
+    ...country,
+    tasteNoteGroups: country.coffees.reduce((stats, { tasteNotes }) => {
       tasteNotes.forEach(({ taste_note_id: tasteNoteId }) => {
         const { taste_note_group_id: tasteNoteGroupId } = getTasteNoteGroupByNoteId(tasteNoteId);
 
@@ -63,17 +63,20 @@ const tasteNoteGroupsLocale = tasteNoteGroups
   .map(({ tasteNoteGroupId, ...rest }) => ({
     ...rest,
     tasteNoteGroupId,
-    roasters: roastersWithCoffee
+    countries: countriesWithCoffee
       .filter(({ tasteNoteGroups }) => tasteNoteGroups[tasteNoteGroupId])
-      .map(({ id, name, tasteNoteGroups }) => ({
+      .map(({ country_id: id, name, tasteNoteGroups }) => ({
         id,
         name,
         count: tasteNoteGroups[tasteNoteGroupId]
       }))
       .sort((a, b) => b.count - a.count)
   }))
-  .filter(({ roasters }) => roasters.length);
-const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce((max, { roasters }) => Math.max(max, roasters[0].count), 0);
+  .filter(({ countries }) => countries.length);
+const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce(
+  (max, { countries }) => Math.max(max, countries[0].count),
+  0
+);
 ---
 
 <Common shouldAuthenticate={shouldAuthenticate}>
@@ -91,18 +94,29 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce((max, { roasters }) 
   <section>
     <h2>{t.prices}</h2>
     <div class="card">
-      <coffee-stats>
+      <coffee-stats data-default-label={id}>
         <div class="stats">
           <div class="chart-inner">
             <div class="dots">
               {
-                roastersWithCoffee.map(({ id: roasterId, name: roasterName, coffees }) =>
+                countriesWithCoffee.map(({ coffees }) =>
                   coffees.map(
-                    ({ pricePerGram, originCountry: { name: originCountryName }, webshopItemLink }, coffeeIndex) => (
+                    (
+                      {
+                        pricePerGram,
+                        originCountry: { name: originCountryName },
+                        webshopItemLink,
+                        roaster: {
+                          name: roasterName,
+                          country: { country_id: countryId }
+                        }
+                      },
+                      coffeeIndex
+                    ) => (
                       <a
-                        class={`part dot ${roasterId === id ? 'active' : ''}`}
+                        class={`part dot ${countryId === id ? 'active' : ''}`}
                         style={`bottom: ${pricePerGram / (maxPricePerGram / 100)}%; left: ${coffeeIndex / (coffees.length / 100)}%`}
-                        data-label={roasterId}
+                        data-label={countryId}
                         aria-label={`${roasterName} ${originCountryName}`}
                         href={webshopItemLink}
                         target="_blank"
@@ -115,10 +129,10 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce((max, { roasters }) 
             </div>
             <div class="labels">
               {
-                roastersWithCoffee.map(({ id: roasterId, name, coffees }) => (
+                countriesWithCoffee.map(({ country_id: countryId, name, coffees }) => (
                   <Fragment>
-                    <div class={`label x ${roasterId === id ? 'active' : ''}`} data-part={roasterId}>
-                      {name}
+                    <div class={`label x ${countryId === id ? 'active' : ''}`} data-part={countryId}>
+                      {titleCase(name)}
                     </div>
                   </Fragment>
                 ))
@@ -132,18 +146,18 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce((max, { roasters }) 
   <section>
     <h2>{t.tasteNotes}</h2>
     <div class="card">
-      <coffee-stats>
+      <coffee-stats data-default-label={id}>
         <div class="stats">
           <div class="chart-inner">
             <ul class="bars">
               {
-                tasteNoteGroupsLocale.map(({ name, color, tasteNoteGroupId, roasters }) => (
+                tasteNoteGroupsLocale.map(({ name, color, tasteNoteGroupId, countries }) => (
                   <li class="bar-container">
-                    {roasters.map(({ id: roasterId, name, count }) => (
+                    {countries.map(({ id: countryId, name, count }) => (
                       <div
-                        class={`part bar ${roasterId === id ? 'active' : ''}`}
+                        class={`part bar ${countryId === id ? 'active' : ''}`}
                         style={`height: ${count / (maxTasteNoteGroupCount / 100)}%`}
-                        data-label={roasterId}
+                        data-label={countryId}
                       />
                     ))}
                     <div class="bar-label" style={`color: ${color}`}>
@@ -155,10 +169,10 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce((max, { roasters }) 
             </ul>
             <div class="labels">
               {
-                tasteNoteGroupsLocale.map(({ name, color, tasteNoteGroupId, roasters }) =>
-                  roasters.map(({ id: roasterId, name, count }) => (
-                    <div class={`label x ${roasterId === id ? 'active' : ''}`} data-part={roasterId}>
-                      {name}
+                tasteNoteGroupsLocale.map(({ name, color, tasteNoteGroupId, countries }) =>
+                  countries.map(({ id: countryId, name, count }) => (
+                    <div class={`label x ${countryId === id ? 'active' : ''}`} data-part={countryId}>
+                      {titleCase(name)}
                     </div>
                   ))
                 )
