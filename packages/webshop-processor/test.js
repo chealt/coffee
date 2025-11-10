@@ -3,8 +3,8 @@ import { deflateSync } from 'node:zlib';
 
 const invokeLambda = async ({ payload }) => handler(payload);
 
-const url = 'https://banibeans.si/pages/shop';
-const roasterId = 285;
+const url = 'https://stow.si/en/shop/specialty-coffee';
+const roasterId = 286;
 
 const response = await fetch(url);
 

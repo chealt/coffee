@@ -1103,6 +1103,7 @@ const parsers = {
     }
 
     const currency = 'EUR';
+
     const weightElement = document.querySelector('variant-radios input[checked]');
     const weight = Number(weightElement?.value.replace('g', ''));
 
@@ -1174,6 +1175,139 @@ const parsers = {
       image: image ? `${new URL(url).protocol}${image}` : null,
       originCountryId,
       originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
+  },
+  // Stow
+  286: async ({ html, url, roasterId }) => {
+    console.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const variationsData = document.querySelector('.variations_form')?.dataset?.product_variations;
+    const variations = variationsData
+      ? JSON.parse(variationsData).sort((a, b) =>
+          a.weight && b.weight
+            ? Number(a.weight) - Number(b.weight)
+            : Number(a.attributes?.attribute_pa_teza?.replace('-grams', '')) -
+              Number(b.attributes?.attribute_pa_teza?.replace('-grams', ''))
+        )
+      : undefined;
+    const productDetails = variations?.[0];
+
+    const price =
+      productDetails?.display_price ||
+      Number(
+        document.querySelector('.woocommerce-Price-amount').textContent.trim().replace(' €', '').replace(',', '.')
+      ).toFixed(2);
+
+    if (!price || isNaN(price)) {
+      throw new Error(errors.priceMissing);
+    }
+
+    const currency = 'EUR';
+
+    const weight = productDetails
+      ? Number(productDetails.weight || productDetails.attributes?.attribute_pa_teza?.replace('-grams', ''))
+      : Number(
+          Array.from(document.querySelector('section .block').querySelectorAll('p'))
+            .filter(
+              ({ textContent }) => textContent.includes('Teža') || textContent.toLowerCase().includes('weight')
+            )[0]
+            .textContent.toLowerCase()
+            .match(/(weight|teža): \d*g/giu)[0]
+            .replace('weight: ', '')
+            .replace('teža: ', '')
+            .replace('g', '')
+        );
+
+    if (!weight || isNaN(weight)) {
+      throw new Error(errors.weightMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const originDetails = Array.from(document.querySelectorAll('.shop-single-info .is-offset-2 .block h5')).reduce(
+      (_details, element) => {
+        const key = element.textContent.toLowerCase().trim();
+        const value = element.nextElementSibling.textContent.toLowerCase().trim();
+
+        if (key === 'country' || key === 'estate') {
+          _details[key] = value;
+        }
+
+        return _details;
+      },
+      {}
+    );
+
+    const originCountry = originDetails.country;
+    const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
+
+    const originFarm = originDetails.estate;
+    const foundOriginFarm = originFarms.find(({ name }) => name === originFarm);
+    const originFarmId = foundOriginFarm?.id || null;
+
+    if (originFarm && !originFarmId) {
+      console.info(`Missing origin farm: ${originFarm}`);
+    }
+
+    const originRegionId = foundOriginFarm ? foundOriginFarm.origin_region_id : null;
+
+    const tasteNotesElement = document.querySelector('.shop-single-details .is-offset-1 h5.title + p');
+    const tasteNotesStrings = tasteNotesElement?.textContent.toLowerCase().trim().split(', ');
+    const tasteNoteIds = tasteNotesStrings
+      .filter((note) => tasteNotes.find(({ name }) => name === note))
+      .map((note) => tasteNotes.find(({ name }) => name === note).taste_note_id);
+    const missingTasteNotes = tasteNotesStrings.filter((note) => !tasteNotes.find(({ name }) => name === note));
+
+    if (missingTasteNotes.length) {
+      console.info(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
+    }
+
+    const subtitle = document.querySelector('h6').textContent.toLowerCase().trim();
+
+    const varietyIds = varieties.filter(({ name }) => subtitle.includes(name.toLowerCase())).map(({ id }) => id);
+
+    const processingMethodId =
+      processingMethods.filter(({ name }) => subtitle.includes(name)).sort((a, b) => b.name.length - a.name.length)?.[0]
+        ?.processing_method_id || null;
+
+    const isEspresso = Boolean(document.querySelector('[data-target="modal-ESPRESSO"]'));
+    const isFilter =
+      Boolean(document.querySelector('[data-target="modal-V60"]')) ||
+      Boolean(document.querySelector('[data-target="modal-CHEMEX"]'));
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) =>
+          (isEspresso && isFilter && name === 'omni') ||
+          (isFilter && !isEspresso && name === 'filter') ||
+          (isEspresso && !isFilter && name === 'espresso')
+      )?.brewing_method_id || null;
+
+    if (!brewingMethodId) {
+      console.info(`Missing brewing method`);
+    }
+
+    const isDecaf = url.includes('decaf') || subtitle.includes('decaf');
+
+    const image = document.querySelector('.swiper-wrapper img')?.src;
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originRegionId,
+      originFarmId,
       price,
       pricePerGram,
       processingMethodId,

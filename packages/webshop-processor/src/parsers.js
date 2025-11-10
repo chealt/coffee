@@ -199,6 +199,14 @@ const parsers = {
     return Array.from(document.querySelectorAll('.product-card-wrapper .full-unstyled-link[id^="CardLink"]')).map(
       ({ href }) => `${origin}${href}`
     );
+  },
+  // Stow
+  286: async ({ html }) => {
+    const document = getDocument(html);
+
+    return Array.from(document.querySelectorAll('section:not([id="cascara"]) .produkt a'))
+      .filter(({ href }) => !href.includes('cold-brew') && !href.includes('blend'))
+      .map(({ href }) => href);
   }
 };
 

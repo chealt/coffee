@@ -1,8 +1,8 @@
 import { handler } from './src/index.js';
 import { deflateSync } from 'node:zlib';
 
-const url = 'https://banibeans.si/products/ethiopia-shakiso-natural';
-const roasterId = 285;
+const url = 'https://stow.si/en/izdelek/finca-el-morito/';
+const roasterId = 286;
 
 const response = await fetch(url);
 
