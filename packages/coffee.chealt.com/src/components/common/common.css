@@ -226,6 +226,11 @@ svg {
   fill: var(--color-text);
 }
 
+sup {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
