@@ -5,10 +5,10 @@
     "build": "rm -rf dist && mkdir dist && cp -r package.json dist && cp ../../yarn.lock dist && cp .yarnrc-lambda.yml dist/.yarnrc.yml && cp -r src dist && cd dist && yarn workspaces focus && rm -rf .yarn && rm -rf yarn.lock && rm -rf .yarnrc.yml && zip -rq package.zip ."
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.922.0",
-    "@aws-sdk/client-s3": "^3.922.0",
-    "@aws-sdk/client-secrets-manager": "^3.922.0",
+    "@aws-sdk/client-dynamodb": "^3.927.0",
+    "@aws-sdk/client-s3": "^3.927.0",
+    "@aws-sdk/client-secrets-manager": "^3.927.0",
     "@libsql/client": "^0.15.15",
-    "sharp": "^0.34.4"
+    "sharp": "^0.34.5"
   }
 }

@@ -23,22 +23,22 @@
   "devDependencies": {
     "@astrojs/cloudflare": "^12.6.10",
     "@libsql/client": "^0.15.15",
-    "eslint": "^9.39.0",
-    "eslint-plugin-astro": "^1.4.0",
+    "eslint": "^9.39.1",
+    "eslint-plugin-astro": "^1.5.0",
     "prettier": "3.6.2",
     "rollup-plugin-visualizer": "^6.0.5",
-    "vite": "^7.1.12",
+    "vite": "^7.2.2",
     "vite-plugin-wasm": "^3.5.0",
-    "wrangler": "^4.45.3"
+    "wrangler": "^4.46.0"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.922.0",
-    "@aws-sdk/client-s3": "^3.922.0",
-    "@aws-sdk/s3-request-presigner": "^3.922.0",
+    "@aws-sdk/client-lambda": "^3.927.0",
+    "@aws-sdk/client-s3": "^3.927.0",
+    "@aws-sdk/s3-request-presigner": "^3.927.0",
     "@sentry/astro": "^10.23.0",
     "@simplewebauthn/browser": "13.1.2",
     "@simplewebauthn/server": "13.1.2",
-    "astro": "^5.15.3",
+    "astro": "^5.15.4",
     "jsonwebtoken": "^9.0.2"
   }
 }
