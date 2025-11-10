@@ -23,11 +23,18 @@ const getDocument = (html) => {
 };
 
 const errors = {
+  brewingMethodMissing: 'Missing brewing method',
   currencyMissing: 'Missing currency',
+  imageMissing: 'Missing image',
   originCountryMissing: 'Missing origin country',
+  originRegionMissing: 'Missing origin region',
   priceMissing: 'Missing price',
+  processingMethodMissing: 'Missing processing method',
   weightMissing: 'Missing weight'
 };
+
+const cleanPrice = ({ priceElement, currencySymbol = '€' }) =>
+  Number(priceElement.textContent.replaceAll(currencySymbol, '').replaceAll(',', '.').trim()).toFixed(2);
 
 const parsers = {
   // Sheep & Raven
@@ -1394,6 +1401,132 @@ const parsers = {
       originCountryId,
       originRegionId,
       originFarmId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
+  },
+  // kava family
+  287: async ({ html, url, roasterId }) => {
+    console.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const price = cleanPrice({ priceElement: document.querySelector('.product__price--original') });
+
+    if (!price || isNaN(price)) {
+      throw new Error(errors.priceMissing);
+    }
+
+    const weight =
+      Number(
+        Array.from(document.querySelectorAll('.product__description p'))
+          .filter(({ textContent }) => textContent.toLowerCase().includes('weight'))[0]
+          ?.textContent.toLowerCase()
+          .replace('weight:', '')
+          .match(/\d+g/giu)[0]
+          .replace('g', '')
+      ) || 250;
+
+    if (!weight || isNaN(weight)) {
+      throw new Error(errors.weightMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const originCountry = document.querySelector('.product__title').textContent.toLowerCase();
+    const originCountryId = originCountries.find(({ name }) => originCountry.includes(name))?.origin_country_id || null;
+
+    if (!originCountryId) {
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const details = Array.from(
+      document.querySelectorAll('.product__description p b, .product__description p strong')
+    ).reduce((_details, row) => {
+      const key = row.textContent.toLowerCase().trim().replace(':', '');
+
+      if (!row.nextSibling) {
+        return _details;
+      }
+
+      const valueElement = row.nextSibling.tagName === 'B' ? row.nextSibling.nextSibling : row.nextSibling;
+      const value = valueElement.textContent.toLowerCase().trim();
+
+      _details[key] = value;
+
+      return _details;
+    }, {});
+
+    const processingMethodId =
+      processingMethods.find(({ name }) => name === details.process) ||
+      processingMethods.find(({ name }) => details.process.includes(name))?.processing_method_id ||
+      null;
+
+    if (!processingMethodId) {
+      console.debug(errors.processingMethodMissing, ': ', details.process);
+    }
+
+    const originRegionId = originRegions.find(({ name }) => name === details.region)?.origin_region_id || null;
+
+    if (!originRegionId) {
+      console.debug(errors.originRegionMissing, ': ', details.region);
+    }
+
+    const varietyIds = varieties.filter(({ name }) => details.variety.includes(name.toLowerCase())).map(({ id }) => id);
+    const missingVarieties = details.variety
+      .split(', ')
+      .filter((name) => !varieties.map((variety) => variety.name.toLowerCase()).includes(name));
+
+    if (missingVarieties.length) {
+      console.debug(`Missing varieties: ${missingVarieties}`);
+    }
+
+    const tasteNoteStrings = (details.notes || details['taste notes']).split(', ');
+    const tasteNoteIds = tasteNoteStrings
+      .filter((note) => tasteNotes.find(({ name }) => name === note))
+      .map((note) => tasteNotes.find(({ name }) => name === note).taste_note_id);
+    const missingTasteNotes = tasteNoteStrings.filter((note) => !tasteNotes.find(({ name }) => name === note));
+
+    if (missingTasteNotes.length) {
+      console.debug(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
+    }
+
+    const variants = Array.from(document.querySelectorAll('#productSelect option')).map(({ textContent }) =>
+      textContent.trim().toLowerCase()
+    );
+    const isEspresso = variants.some((name) => name.includes('espresso'));
+    const isFilter = variants.some((name) => name.includes('filter'));
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) =>
+          (((isFilter && isEspresso) || variants.length === 1) && name === 'omni') ||
+          (isEspresso && !isFilter && name === 'espresso') ||
+          (!isEspresso && isFilter && name === 'filter')
+      )?.brewing_method_id || null;
+
+    if (!brewingMethodId) {
+      console.debug(errors.brewingMethodMissing);
+      console.debug(variants);
+    }
+
+    const image = document.querySelector('.product__gallery img')?.src;
+
+    if (!image) {
+      throw new Error(errors.imageMissing);
+    }
+
+    return {
+      brewingMethodId,
+      currency: 'EUR',
+      image: `${new URL(url).protocol}${image}`,
+      originCountryId,
+      originRegionId,
       price,
       pricePerGram,
       processingMethodId,

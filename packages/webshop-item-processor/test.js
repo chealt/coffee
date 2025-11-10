@@ -1,8 +1,8 @@
 import { handler } from './src/index.js';
 import { deflateSync } from 'node:zlib';
 
-const url = 'https://stow.si/en/izdelek/finca-el-morito/';
-const roasterId = 286;
+const url = 'https://kava.family/collections/coffee/products/panama-geisha-finca-deborah';
+const roasterId = 287;
 
 const response = await fetch(url);
 

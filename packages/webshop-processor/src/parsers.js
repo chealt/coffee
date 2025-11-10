@@ -207,6 +207,14 @@ const parsers = {
     return Array.from(document.querySelectorAll('section:not([id="cascara"]) .produkt a'))
       .filter(({ href }) => !href.includes('cold-brew') && !href.includes('blend'))
       .map(({ href }) => href);
+  },
+  // kava family
+  287: async ({ html, url }) => {
+    const document = getDocument(html);
+
+    return Array.from(document.querySelectorAll('.product-item a'))
+      .map(({ href }) => `${new URL(url).origin}${href}`)
+      .filter((href) => !href.includes('blend'));
   }
 };
 
