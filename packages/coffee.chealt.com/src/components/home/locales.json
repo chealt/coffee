@@ -1,6 +1,7 @@
 {
   "en": {
     "cheapestCoffees": "Budget Friendly",
+    "countries": "Countries",
     "originCountries": "Origin Countries",
     "priciestCoffees": "Fancy me",
     "roasters": "Roasters",
@@ -10,6 +11,7 @@
   },
   "pl": {
     "cheapestCoffees": "Kawy najtańsze",
+    "countries": "Kraje",
     "originCountries": "Kraje pochodzenia",
     "priciestCoffees": "Kawy najdroższe",
     "roasters": "Palacze",
