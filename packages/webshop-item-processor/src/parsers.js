@@ -1478,6 +1478,8 @@ const parsers = {
       console.debug(errors.originRegionMissing, ': ', details.region);
     }
 
+    const originFarmId = originFarms.find(({ name }) => details.producer?.includes(name))?.id || null;
+
     const varietyIds = varieties.filter(({ name }) => details.variety.includes(name.toLowerCase())).map(({ id }) => id);
     const missingVarieties = details.variety
       .split(', ')
@@ -1526,6 +1528,7 @@ const parsers = {
       currency: 'EUR',
       image: `${new URL(url).protocol}${image}`,
       originCountryId,
+      originFarmId,
       originRegionId,
       price,
       pricePerGram,
