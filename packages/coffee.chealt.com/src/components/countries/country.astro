@@ -10,6 +10,7 @@ import Button from '../form/button/button.astro';
 import Coffees from '../coffees/list.astro';
 import Common from '../common/common.astro';
 import Icon from '../icon/icon.astro';
+import Roasters from '../roasters/list.astro';
 
 import allLocaleTranslations from '../common/common.json';
 
@@ -37,6 +38,7 @@ const cheapestCoffees = coffees
       getConvertedPrice({ currency: b.currency, price: b.price_per_gram })
   )
   .slice(0, 10);
+const roastersInCountry = roastersWithCoffees.filter(({ country_id }) => country_id === id);
 ---
 
 <Common>
@@ -77,5 +79,13 @@ const cheapestCoffees = coffees
       </section>
     )) ||
       null
+  }
+  {
+    roastersInCountry.length && (
+      <section>
+        <h2>{t.roasters}</h2>
+        <Roasters roasters={roastersInCountry} />
+      </section>
+    )
   }
 </Common>

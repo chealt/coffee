@@ -5,6 +5,7 @@ import tasteNoteGroups from '../../../data/tasteNoteGroups.json';
 import { convertToUSD } from '../coffees/utils.js';
 import Coffees from '../coffees/list.astro';
 import Common from '../common/common.astro';
+import Countries from './countries/countries.astro';
 import OriginCountries from './origin-countries/origin-countries.astro';
 import Roasters from './roasters/roasters.astro';
 import TasteNoteGroups from './taste-note-groups/taste-note-groups.astro';
@@ -70,6 +71,10 @@ const { recommended } = Astro.locals;
   <section>
     <h2>{t.originCountries}</h2>
     <OriginCountries />
+  </section>
+  <section>
+    <h2>{t.countries}</h2>
+    <Countries />
   </section>
   {
     (groups.length && (

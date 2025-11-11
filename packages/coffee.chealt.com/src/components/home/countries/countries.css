@@ -1,0 +1,8 @@
+.list.countries {
+  .image {
+    img {
+      width: auto;
+      height: 100%;
+    }
+  }
+}
