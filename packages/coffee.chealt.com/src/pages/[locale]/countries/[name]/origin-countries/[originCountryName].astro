@@ -1,0 +1,16 @@
+---
+export const prerender = false;
+
+import OriginCountry from '../../../../../components/origin-countries/origin-country.astro';
+import countries from '../../../../../../data/countries.json';
+import originCountries from '../../../../../../data/originCountries.json';
+
+const { name, originCountryName } = Astro.params;
+
+const countryId = countries.find((country) => country.name === name)?.country_id;
+const id = originCountries.find((country) => country.name === originCountryName)?.origin_country_id;
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
+---
+
+<OriginCountry id={id} countryId={countryId} />

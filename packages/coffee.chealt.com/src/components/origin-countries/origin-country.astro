@@ -1,8 +1,10 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
 
-import originCountries from '../../../data/originCountries.json';
 import allCoffees from '../../../data/coffees.json';
+import countries from '../../../data/countries.json';
+import originCountries from '../../../data/originCountries.json';
+import roasters from '../../../data/roasters.json';
 
 import { convertToUSD } from '../coffees/utils.js';
 import Button from '../form/button/button.astro';
@@ -15,12 +17,19 @@ import allLocaleTranslations from '../common/common.json';
 const t = allLocaleTranslations[Astro.currentLocale];
 
 const { loggedInUser } = Astro.locals;
-const { id } = Astro.props;
+const { id, countryId } = Astro.props;
 
 const { name } = originCountries.find(
   ({ origin_country_id, language_code }) => origin_country_id === id && language_code === Astro.currentLocale
 );
-const coffees = allCoffees.filter(({ origin_country_id }) => origin_country_id === id);
+const country =
+  countryId &&
+  countries.find(({ country_id, language_code }) => country_id === countryId && language_code === Astro.currentLocale);
+const coffees = allCoffees
+  .filter(({ origin_country_id }) => origin_country_id === id)
+  .filter(({ roaster_id: roasterId }) =>
+    countryId ? roasters.find((roaster) => roaster.id === roasterId).country_id === countryId : true
+  );
 const priciestCoffees = coffees
   .sort(
     (a, b) =>
@@ -42,7 +51,15 @@ const cheapestCoffees = coffees
     <div>{name}</div>
     {
       loggedInUser && (
-        <Button class="ghost" href={getRelativeLocaleUrl(Astro.currentLocale, `/origin-countries/${name}/stats`)}>
+        <Button
+          class="ghost"
+          href={getRelativeLocaleUrl(
+            Astro.currentLocale,
+            country?.name
+              ? `/countries/${country.name}/origin-countries/${name}/stats`
+              : `/origin-countries/${name}/stats`
+          )}
+        >
           <Icon type="chart" />
           <span class="visually-hidden">{t.chart}</span>
         </Button>
