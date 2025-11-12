@@ -5,7 +5,7 @@ import importPlugin from 'eslint-plugin-import';
 import globals from 'globals';
 
 export default defineConfig([
-  globalIgnores(['.yarn/*', '.*', '**/dist/*', '**/.astro/*']),
+  globalIgnores(['.yarn/*', '.*', '**/dist/*', '**/dev-dist/*', '**/.astro/*']),
   importPlugin.flatConfigs.recommended,
   // lint CSS files
   {
@@ -15,7 +15,8 @@ export default defineConfig([
     extends: ['css/recommended'],
     rules: {
       'css/no-invalid-at-rules': 'off',
-      'css/no-invalid-properties': 'off'
+      'css/no-invalid-properties': 'off',
+      'css/use-baseline': 'off'
     }
   },
   {
