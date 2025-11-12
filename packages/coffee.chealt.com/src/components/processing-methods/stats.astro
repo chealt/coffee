@@ -10,7 +10,7 @@ import Button from '../form/button/button.astro';
 import Icon from '../icon/icon.astro';
 import Common from '../common/common.astro';
 import Coffees from '../coffees/list.astro';
-import { getConvertedPrice, getDetails } from '../coffees/utils.js';
+import { convertToUSD, getDetails } from '../coffees/utils.js';
 import { getTasteNoteGroup, getTasteNoteGroupByNoteId } from '../taste-notes/utils.js';
 
 import '../stats/stats.css';
@@ -28,7 +28,7 @@ const coffees = allCoffees
   .filter(({ processingMethod }) => processingMethod?.processing_method_id === id)
   .map(({ pricePerGram, ...coffee }) => ({
     ...coffee,
-    pricePerGram: getConvertedPrice({ price: pricePerGram, currency })
+    pricePerGram: convertToUSD({ price: pricePerGram, currency })
   }))
   .sort((a, b) => a.pricePerGram - b.pricePerGram);
 const maxPricePerGram = coffees[coffees.length - 1].pricePerGram;

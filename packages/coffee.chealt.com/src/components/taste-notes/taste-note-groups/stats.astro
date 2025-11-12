@@ -10,7 +10,7 @@ import Button from '../../form/button/button.astro';
 import Icon from '../../icon/icon.astro';
 import Common from '../../common/common.astro';
 import Coffees from '../../coffees/list.astro';
-import { getConvertedPrice, getDetails } from '../../coffees/utils.js';
+import { convertToUSD, getDetails } from '../../coffees/utils.js';
 
 import '../../stats/stats.css';
 import './taste-note-group.css';
@@ -27,7 +27,7 @@ const coffees = allCoffees
   .map(getDetails({ locale: Astro.currentLocale }))
   .map(({ pricePerGram, ...coffee }) => ({
     ...coffee,
-    pricePerGram: getConvertedPrice({ price: pricePerGram, currency }),
+    pricePerGram: convertToUSD({ price: pricePerGram, currency }),
     tasteNoteGroup: getTasteNoteGroup(coffee.id)
   }))
   .filter(({ tasteNoteGroup }) => tasteNoteGroup?.taste_note_group_id === id)

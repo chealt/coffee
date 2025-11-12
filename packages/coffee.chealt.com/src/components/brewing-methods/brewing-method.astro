@@ -4,7 +4,7 @@ import { getRelativeLocaleUrl } from 'astro:i18n';
 import brewingMethods from '../../../data/brewingMethods.json';
 import allCoffees from '../../../data/coffees.json';
 
-import { getConvertedPrice } from '../coffees/utils.js';
+import { convertToUSD } from '../coffees/utils.js';
 import Button from '../form/button/button.astro';
 import Coffees from '../coffees/list.astro';
 import Common from '../common/common.astro';
@@ -24,15 +24,15 @@ const coffees = allCoffees.filter(({ brewing_method_id }) => brewing_method_id =
 const priciestCoffees = coffees
   .sort(
     (a, b) =>
-      getConvertedPrice({ currency: b.currency, price: b.price_per_gram }) -
-      getConvertedPrice({ currency: a.currency, price: a.price_per_gram })
+      convertToUSD({ currency: b.currency, price: b.price_per_gram }) -
+      convertToUSD({ currency: a.currency, price: a.price_per_gram })
   )
   .slice(0, 10);
 const cheapestCoffees = coffees
   .sort(
     (a, b) =>
-      getConvertedPrice({ currency: a.currency, price: a.price_per_gram }) -
-      getConvertedPrice({ currency: b.currency, price: b.price_per_gram })
+      convertToUSD({ currency: a.currency, price: a.price_per_gram }) -
+      convertToUSD({ currency: b.currency, price: b.price_per_gram })
   )
   .slice(0, 10);
 ---
