@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { captureException } from '@sentry/astro';
 
-const logger = () => {
+const logger = (() => {
   const debug = (message) => {
     console.debug(message);
   };
@@ -31,6 +31,6 @@ const logger = () => {
     log,
     warn
   };
-};
+})();
 
 export default logger;
