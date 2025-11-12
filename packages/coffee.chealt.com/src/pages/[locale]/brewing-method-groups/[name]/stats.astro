@@ -1,0 +1,14 @@
+---
+export const prerender = false;
+
+import Stats from '../../../../components/brewing-method-groups/stats.astro';
+import brewingMethodGroups from '../../../../../data/brewingMethodGroups.json';
+
+const { name } = Astro.params;
+
+const id = brewingMethodGroups.find((group) => group.name === name)?.id;
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
+---
+
+<Stats id={id} />
