@@ -1,3 +1,4 @@
+import brewingMethodGroups from '../../../data/brewingMethodGroups.json';
 import brewingMethods from '../../../data/brewingMethods.json';
 import coffeeImages from '../../../data/coffeeImages.json';
 import coffeeTasteNotes from '../../../data/coffeeTasteNotes.json';
@@ -56,14 +57,29 @@ const getRoasterDetails = ({ id, locale }) => {
   };
 };
 
+const getBrewingMethod = ({ id, locale }) => {
+  const method = brewingMethods.find(
+    ({ brewing_method_id: brewingMethodId, language_code: languageCode }) =>
+      brewingMethodId === id && languageCode === locale
+  );
+
+  if (!method) {
+    logger.error(new Error(`No brewing method found for id ${id}`));
+
+    return undefined;
+  }
+
+  return {
+    ...method,
+    group: brewingMethodGroups.find((group) => group.id === method.brewing_method_group_id)
+  };
+};
+
 const getDetails =
   ({ locale }) =>
   (coffee) => ({
     id: coffee.id,
-    brewingMethod: brewingMethods.find(
-      (brewingMethod) =>
-        brewingMethod.brewing_method_id === coffee.brewing_method_id && brewingMethod.language_code === locale
-    ),
+    brewingMethod: coffee.brewing_method_id ? getBrewingMethod({ id: coffee.brewing_method_id, locale }) : undefined,
     images: coffeeImages.filter(({ coffee_id: id }) => id === coffee.id).map((coffeeImage) => coffeeImage.url),
     tasteNotes: coffeeTasteNotes
       .filter(({ coffee_id: id }) => id === coffee.id)

@@ -1,7 +1,7 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
 
-import { getConvertedPrice } from './utils';
+import { getConvertedPrice } from './utils.js';
 import TasteNotes from '../taste-notes/taste-notes.astro';
 import Varieties from '../varieties/list.astro';
 
@@ -110,7 +110,9 @@ const { currency } = Astro.locals;
             <a
               href={getRelativeLocaleUrl(
                 Astro.currentLocale,
-                `/brewing-methods/${encodeURIComponent(brewingMethod.name)}`
+                brewingMethod.group?.name
+                  ? `/brewing-method-groups/${brewingMethod.group.name}`
+                  : `/brewing-methods/${encodeURIComponent(brewingMethod.name)}`
               )}
               class="chip"
             >
