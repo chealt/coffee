@@ -61,25 +61,19 @@ const { currency } = Astro.locals;
   <dl>
     <dt>{t.roaster}</dt>
     <dd>
-      {
-        (
-          <Fragment>
-            <a
-              href={getRelativeLocaleUrl(Astro.currentLocale, `/roasters/${encodeURIComponent(roaster.name)}`)}
-              class="chip bordered"
-            >
-              {roaster.name}
-            </a>
-            {' - '}
-            <a
-              href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${encodeURIComponent(roaster.country.name)}`)}
-              class="chip bordered"
-            >
-              {roaster.country.code.toUpperCase()}
-            </a>
-          </Fragment>
-        )
-      }
+      <a
+        href={getRelativeLocaleUrl(Astro.currentLocale, `/roasters/${encodeURIComponent(roaster.name)}`)}
+        class="chip bordered"
+      >
+        {roaster.name}
+      </a>
+      <span>{' - '}</span>
+      <a
+        href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${encodeURIComponent(roaster.country.name)}`)}
+        class="chip bordered"
+      >
+        {roaster.country.code.toUpperCase()}
+      </a>
     </dd>
     <dt>{t.originCountry}</dt>
     <dd>
