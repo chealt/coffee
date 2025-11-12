@@ -7,6 +7,18 @@ const turso = createClient({
   authToken: process.env.TURSO_AUTH_TOKEN
 });
 
+const saveBrewingMethods = async () => {
+  const results = await turso.execute('SELECT * FROM brewing_methods_all ORDER BY name ASC');
+
+  return writeFile('./data/brewingMethods.json', JSON.stringify(results.rows), { flag: 'w+' });
+};
+
+const saveBrewingMethodGroups = async () => {
+  const results = await turso.execute('SELECT * FROM brewing_method_groups ORDER BY name ASC');
+
+  return writeFile('./data/brewingMethodGroups.json', JSON.stringify(results.rows), { flag: 'w+' });
+};
+
 const saveRoasters = async () => {
   const results = await turso.execute('SELECT * FROM roasters ORDER BY name COLLATE nocase ASC');
 
@@ -53,12 +65,6 @@ const saveMiscellaneousCoffeeProperties = async () => {
   const results = await turso.execute('SELECT * FROM miscellaneous_coffee_properties_all ORDER BY name ASC');
 
   return writeFile('./data/miscellaneousCoffeeProperties.json', JSON.stringify(results.rows), { flag: 'w+' });
-};
-
-const saveBrewingMethods = async () => {
-  const results = await turso.execute('SELECT * FROM brewing_methods_all ORDER BY name ASC');
-
-  return writeFile('./data/brewingMethods.json', JSON.stringify(results.rows), { flag: 'w+' });
 };
 
 const saveCountries = async () => {
@@ -149,6 +155,7 @@ const saveVarieties = async () => {
 
 await Promise.all([
   saveBrewingMethods(),
+  saveBrewingMethodGroups(),
   saveCoffees(),
   saveCoffeeImages(),
   saveCoffeeTasteNotes(),
