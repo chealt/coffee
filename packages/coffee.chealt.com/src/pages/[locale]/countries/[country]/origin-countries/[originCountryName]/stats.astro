@@ -5,10 +5,10 @@ import Stats from '../../../../../../components/origin-countries/stats.astro';
 import countries from '../../../../../../../data/countries.json';
 import originCountries from '../../../../../../../data/originCountries.json';
 
-const { name, originCountryName } = Astro.params;
+const { country, originCountryName } = Astro.params;
 
-const countryId = countries.find((country) => country.name === name)?.country_id;
-const id = originCountries.find((country) => country.name === originCountryName)?.origin_country_id;
+const countryId = countries.find(({ name }) => name === country)?.country_id;
+const id = originCountries.find(({ name }) => name === originCountryName)?.origin_country_id;
 
 Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---

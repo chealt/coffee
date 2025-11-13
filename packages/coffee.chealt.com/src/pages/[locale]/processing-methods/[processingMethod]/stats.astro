@@ -4,9 +4,9 @@ export const prerender = false;
 import Stats from '../../../../components/processing-methods/stats.astro';
 import processingMethods from '../../../../../data/processingMethods.json';
 
-const { name } = Astro.params;
+const { processingMethod } = Astro.params;
 
-const id = processingMethods.find((processingMethod) => processingMethod.name === name)?.processing_method_id;
+const id = processingMethods.find(({ name }) => name === processingMethod)?.processing_method_id;
 
 Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---

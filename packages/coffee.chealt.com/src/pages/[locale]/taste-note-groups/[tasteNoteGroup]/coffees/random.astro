@@ -13,10 +13,10 @@ import allLocaleTranslations from './_locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
-const { name } = Astro.params;
+const { tasteNoteGroup } = Astro.params;
 
-const tasteNoteGroupId = tasteNoteGroups.find((group) =>
-  group.name.includes(decodeURIComponent(name))
+const tasteNoteGroupId = tasteNoteGroups.find(({ name }) =>
+  name.includes(decodeURIComponent(tasteNoteGroup))
 )?.taste_note_group_id;
 const selectedTasteNoteSubGroupIds = tasteNoteSubGroups
   .filter((subGroup) => subGroup.taste_note_group_id === tasteNoteGroupId)

@@ -4,9 +4,9 @@ export const prerender = false;
 import Stats from '../../../../components/brewing-methods/stats.astro';
 import brewingMethods from '../../../../../data/brewingMethods.json';
 
-const { name } = Astro.params;
+const { brewingMethod } = Astro.params;
 
-const id = brewingMethods.find((brewingMethod) => brewingMethod.name === name)?.brewing_method_id;
+const id = brewingMethods.find(({ name }) => name === brewingMethod)?.brewing_method_id;
 
 Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---

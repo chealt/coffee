@@ -4,9 +4,9 @@ export const prerender = false;
 import Stats from '../../../../components/varieties/stats.astro';
 import varieties from '../../../../../data/varieties.json';
 
-const { name } = Astro.params;
+const { variety } = Astro.params;
 
-const id = varieties.find((variety) => variety.name.toLowerCase() === name)?.id;
+const id = varieties.find(({ name }) => name.toLowerCase() === variety)?.id;
 
 Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---

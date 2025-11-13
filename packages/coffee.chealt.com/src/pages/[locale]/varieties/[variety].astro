@@ -5,9 +5,9 @@ import varieties from '../../../../data/varieties.json';
 
 import Varieties from '../../../components/varieties/variety.astro';
 
-const { name } = Astro.params;
+const { variety } = Astro.params;
 
-const id = varieties.find((variety) => variety.name.toLowerCase() === decodeURIComponent(name))?.id;
+const id = varieties.find(({ name }) => name.toLowerCase() === decodeURIComponent(variety))?.id;
 
 Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---

@@ -4,9 +4,9 @@ export const prerender = false;
 import Stats from '../../../../components/countries/stats.astro';
 import countries from '../../../../../data/countries.json';
 
-const { name } = Astro.params;
+const { country } = Astro.params;
 
-const id = countries.find((country) => country.name === name)?.country_id;
+const id = countries.find(({ name }) => name === country)?.country_id;
 
 Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---

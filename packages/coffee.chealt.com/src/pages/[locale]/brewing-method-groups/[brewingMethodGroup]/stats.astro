@@ -4,9 +4,9 @@ export const prerender = false;
 import Stats from '../../../../components/brewing-method-groups/stats.astro';
 import brewingMethodGroups from '../../../../../data/brewingMethodGroups.json';
 
-const { name } = Astro.params;
+const { brewingMethodGroup } = Astro.params;
 
-const id = brewingMethodGroups.find((group) => group.name === name)?.id;
+const id = brewingMethodGroups.find(({ name }) => name === brewingMethodGroup)?.id;
 
 Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---
