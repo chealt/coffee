@@ -1,6 +1,7 @@
 const currencyCodes = {
   '€': 'EUR',
-  zł: 'PLN'
+  zł: 'PLN',
+  kč: 'CZK'
 };
 
 export default currencyCodes;

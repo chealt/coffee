@@ -78,6 +78,7 @@ const storeDetails = async ({
       brewing_method_id = excluded.brewing_method_id,
       currency = excluded.currency,
       is_decaf = excluded.is_decaf,
+      is_removed = false,
       origin_country_id = excluded.origin_country_id,
       origin_farm_id = excluded.origin_farm_id,
       origin_region_id = excluded.origin_region_id,

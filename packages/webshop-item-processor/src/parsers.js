@@ -1539,6 +1539,135 @@ const parsers = {
       webshopItemLink: url,
       weight
     };
+  },
+  // nordbeans
+  288: async ({ html, url, roasterId }) => {
+    console.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const currencySymbol = 'Kč';
+    const price = cleanPrice({ priceElement: document.querySelector('.product-price-block .price'), currencySymbol });
+
+    if (!price || isNaN(price)) {
+      throw new Error(errors.priceMissing);
+    }
+
+    const currency = currencyCodes[currencySymbol.toLowerCase()];
+
+    const weight = Number(document.querySelector('.product-variations option').textContent.trim().replace('g', ''));
+
+    if (!weight || isNaN(weight)) {
+      throw new Error(errors.weightMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const details = Array.from(document.querySelectorAll('.product-params ul li strong')).reduce((_details, row) => {
+      const key = row.textContent.toLowerCase().trim();
+
+      if (!row.nextSibling) {
+        return _details;
+      }
+
+      const valueElement = row.nextElementSibling;
+
+      if (!row.nextElementSibling) {
+        return _details;
+      }
+
+      const value = valueElement.textContent.toLowerCase().trim().replace(/\s+/giu, ' ');
+
+      _details[key] = value;
+
+      return _details;
+    }, {});
+
+    const originCountry = details.origin;
+    const originCountryId = originCountries.find(({ name }) => originCountry.includes(name))?.origin_country_id || null;
+
+    if (!originCountryId) {
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const originRegionId = originRegions.find(({ name }) => name === details.region)?.origin_region_id || null;
+
+    if (!originRegionId) {
+      console.debug(errors.originRegionMissing);
+      console.debug(details.region);
+    }
+
+    const originFarmId = originFarms.find(({ name }) => details.farm.includes(name))?.id || null;
+
+    const processingMethodId =
+      processingMethods.find(({ name }) => name === details.processing)?.processing_method_id ||
+      processingMethods.find(({ name }) => details.processing.includes(name))?.processing_method_id ||
+      null;
+
+    if (!processingMethodId) {
+      console.debug(errors.processingMethodMissing, ': ', details.processing);
+    }
+
+    const varietyIds = varieties.filter(({ name }) => details.variety.includes(name.toLowerCase())).map(({ id }) => id);
+    const missingVarieties = details.variety
+      .split(', ')
+      .filter((name) => !varieties.map((variety) => variety.name.toLowerCase()).includes(name));
+
+    if (missingVarieties.length) {
+      console.debug(`Missing varieties: ${missingVarieties}`);
+    }
+
+    const tasteNoteStrings = details.taste.split(', ');
+    const tasteNoteIds = tasteNoteStrings
+      .filter((note) => tasteNotes.find(({ name }) => name === note))
+      .map((note) => tasteNotes.find(({ name }) => name === note).taste_note_id);
+    const missingTasteNotes = tasteNoteStrings.filter((note) => !tasteNotes.find(({ name }) => name === note));
+
+    if (missingTasteNotes.length) {
+      console.debug(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
+    }
+
+    const isEspresso = details.preparation.includes('espresso');
+    const isFilter = details.preparation.includes('filter');
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) =>
+          (isFilter && isEspresso && name === 'omni') ||
+          (isEspresso && !isFilter && name === 'espresso') ||
+          (!isEspresso && isFilter && name === 'filter')
+      )?.brewing_method_id || null;
+
+    if (!brewingMethodId) {
+      console.debug(errors.brewingMethodMissing);
+    }
+
+    const roastingLevelId =
+      roastingLevels.find(({ name }) => details['degree of roasting'].toLowerCase().includes(name))
+        ?.roasting_level_id || null;
+
+    const image = document.querySelector('.gallery-item img')?.src;
+
+    if (!image) {
+      throw new Error(errors.imageMissing);
+    }
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      originCountryId,
+      originFarmId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      roastingLevelId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
   }
 };
 

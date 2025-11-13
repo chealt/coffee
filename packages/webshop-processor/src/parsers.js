@@ -215,6 +215,32 @@ const parsers = {
     return Array.from(document.querySelectorAll('.product-item a'))
       .map(({ href }) => `${new URL(url).origin}${href}`)
       .filter((href) => !href.includes('blend'));
+  },
+  // nordbeans
+  288: async ({ html, url }) => {
+    const { origin } = new URL(url);
+    const document = getDocument(html);
+
+    const typePageUrls = Array.from(
+      document.querySelectorAll(
+        '.subsection-item-inner[title^="Espresso"],.subsection-item-inner[title^="Filter"],.subsection-item-inner[title^="Decaf"]'
+      )
+    ).map(({ href }) => `${origin}${href}`);
+
+    const productLinks = [];
+
+    for (const page of typePageUrls) {
+      const response = await fetch(page);
+      const pageHTML = await response.text();
+
+      const pageDocument = getDocument(pageHTML);
+
+      productLinks.push(
+        ...Array.from(pageDocument.querySelectorAll('a.product-link')).map(({ href }) => `${origin}${href}`)
+      );
+    }
+
+    return productLinks;
   }
 };
 

@@ -1,8 +1,8 @@
 import { handler } from './src/index.js';
 import { deflateSync } from 'node:zlib';
 
-const url = 'https://kava.family/collections/coffee/products/panama-geisha-finca-deborah';
-const roasterId = 287;
+const url = 'https://www.nordbeans.com/miguel-tabora-honey_z3800/';
+const roasterId = 288;
 
 const response = await fetch(url);
 
