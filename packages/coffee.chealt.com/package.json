@@ -38,7 +38,7 @@
     "@sentry/astro": "^10.23.0",
     "@simplewebauthn/browser": "13.1.2",
     "@simplewebauthn/server": "13.1.2",
-    "astro": "^5.15.4",
+    "astro": "^5.15.6",
     "jsonwebtoken": "^9.0.2"
   }
 }
