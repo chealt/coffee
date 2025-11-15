@@ -50,7 +50,7 @@ jobs:
         run: |
           yarn workspace @chealt/webshop-processor build
           yarn workspace @chealt/webshop-processor deploy
-      - name: webshop-processor
+      - name: webshop-item-processor
         if: steps.changed-files-yaml.outputs.webshop-item-processor_any_changed == 'true'
         run: |
           yarn workspace @chealt/webshop-item-processor build
