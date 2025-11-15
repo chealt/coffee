@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { createClient } from '@libsql/client';
 
 const main = async () => {
