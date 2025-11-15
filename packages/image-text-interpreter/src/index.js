@@ -48,7 +48,7 @@ const handler = async (event) => {
         processingMethod: processingMethod?.processing_method_id || '',
         roaster: roaster?.id || '',
         'tasteNoteIds[]': tasteNotes?.map(({ taste_note_id: id }) => id) || '',
-        'varieties[]': varieties?.map(({ id }) => id) || ''
+        'varieties[]': cleanVarieties?.map(({ id }) => id) || ''
       }
     });
   }
