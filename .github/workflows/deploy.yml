@@ -8,6 +8,10 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v6
@@ -24,12 +28,17 @@ jobs:
               - packages/coffee-admin/.yarnrc-lambda.yml
               - packages/coffee-admin/src/**
               - packages/coffee.chealt.com/data/roasters.json
+            webshop-processor
+              - packages/coffee-admin/package.json
+              - packages/coffee-admin/.yarnrc-lambda.yml
+              - packages/coffee-admin/src/**
       - name: coffee-admin
         if: steps.changed-files-yaml.outputs.coffee-admin_any_changed == 'true'
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
         run: |
           yarn workspace @chealt/coffee-admin build
           yarn workspace @chealt/coffee-admin deploy
+      - name: webshop-processor
+        if: steps.changed-files-yaml.outputs.webshop-processor_any_changed == 'true'
+        run: |
+          yarn workspace @chealt/webshop-processor build
+          yarn workspace @chealt/webshop-processor deploy
