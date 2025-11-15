@@ -39,7 +39,6 @@ const setCurrency = async (context) => {
 
     currencyDB = settings?.currency;
   } catch {
-    // eslint-disable-next-line no-console
     console.info('Not logged in, so could not read currency from DB.');
   }
 
