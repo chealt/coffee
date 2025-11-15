@@ -5,7 +5,7 @@
     "build": "rm -rf dist && mkdir dist && cp -r package.json dist && cp ../../yarn.lock dist && cp .yarnrc.yml dist && cp -r src dist && cd dist && yarn workspaces focus && rm -rf .yarn && rm -rf yarn.lock && rm -rf .yarnrc.yml && zip -rq package.zip ."
   },
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.927.0",
+    "@aws-sdk/client-secrets-manager": "^3.932.0",
     "@libsql/client": "^0.15.15"
   }
 }

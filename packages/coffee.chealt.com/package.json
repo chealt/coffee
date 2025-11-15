@@ -29,16 +29,16 @@
     "rollup-plugin-visualizer": "^6.0.5",
     "vite": "^7.2.2",
     "vite-plugin-wasm": "^3.5.0",
-    "wrangler": "^4.46.0"
+    "wrangler": "^4.47.0"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.927.0",
-    "@aws-sdk/client-s3": "^3.927.0",
-    "@aws-sdk/s3-request-presigner": "^3.927.0",
-    "@sentry/astro": "^10.23.0",
+    "@aws-sdk/client-lambda": "^3.932.0",
+    "@aws-sdk/client-s3": "^3.932.0",
+    "@aws-sdk/s3-request-presigner": "^3.932.0",
+    "@sentry/astro": "^10.25.0",
     "@simplewebauthn/browser": "13.1.2",
     "@simplewebauthn/server": "13.1.2",
-    "astro": "^5.15.4",
+    "astro": "^5.15.8",
     "jsonwebtoken": "^9.0.2"
   }
 }
