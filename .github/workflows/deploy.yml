@@ -28,7 +28,7 @@ jobs:
               - packages/coffee-admin/.yarnrc-lambda.yml
               - packages/coffee-admin/src/**
               - packages/coffee.chealt.com/data/roasters.json
-            webshop-processor
+            webshop-processor:
               - packages/coffee-admin/package.json
               - packages/coffee-admin/.yarnrc-lambda.yml
               - packages/coffee-admin/src/**
