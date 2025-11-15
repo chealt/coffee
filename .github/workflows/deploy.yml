@@ -15,6 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v6
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
       - name: Install dependencies
         run: yarn install --immutable
       - name: Check changed files
@@ -29,9 +32,14 @@ jobs:
               - packages/coffee-admin/src/**
               - packages/coffee.chealt.com/data/roasters.json
             webshop-processor:
-              - packages/coffee-admin/package.json
-              - packages/coffee-admin/.yarnrc-lambda.yml
-              - packages/coffee-admin/src/**
+              - packages/webshop-processor/package.json
+              - packages/webshop-processor/.yarnrc-lambda.yml
+              - packages/webshop-processor/src/**
+            webshop-item-processor:
+              - packages/coffee.chealt.com/data/**
+              - packages/webshop-item-processor/package.json
+              - packages/webshop-item-processor/.yarnrc-lambda.yml
+              - packages/webshop-item-processor/src/**
       - name: coffee-admin
         if: steps.changed-files-yaml.outputs.coffee-admin_any_changed == 'true'
         run: |
@@ -42,3 +50,8 @@ jobs:
         run: |
           yarn workspace @chealt/webshop-processor build
           yarn workspace @chealt/webshop-processor deploy
+      - name: webshop-processor
+        if: steps.changed-files-yaml.outputs.webshop-item-processor_any_changed == 'true'
+        run: |
+          yarn workspace @chealt/webshop-item-processor build
+          yarn workspace @chealt/webshop-item-processor deploy

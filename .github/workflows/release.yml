@@ -10,6 +10,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v6
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
       - name: Install dependencies
         run: yarn install --immutable
       - name: Refresh static data
