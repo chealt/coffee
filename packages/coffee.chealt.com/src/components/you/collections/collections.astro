@@ -38,19 +38,21 @@ const { collections, shouldAuthenticate, username } = Astro.locals;
             {items.length ? (
               items.map(({ id: itemId, cover }) => (
                 <li>
-                  <a
-                    href={`${getRelativeLocaleUrl(
-                      Astro.currentLocale,
-                      `/you/collections/${collectionId}/items/${itemId}`
-                    )}?from=collections`}
-                    id={itemId}
-                  >
-                    <picture>
-                      <source srcset={cover.srcSmall} media="(max-width: 599px)" />
-                      <source srcset={cover.srcMedium} media="(max-width: 1023px)" />
-                      <img src={cover.src} />
-                    </picture>
-                  </a>
+                  <chealt-animated-link>
+                    <a
+                      href={`${getRelativeLocaleUrl(
+                        Astro.currentLocale,
+                        `/you/collections/${collectionId}/items/${itemId}`
+                      )}?from=collections`}
+                      id={itemId}
+                    >
+                      <picture>
+                        <source srcset={cover.srcSmall} media="(max-width: 599px)" />
+                        <source srcset={cover.srcMedium} media="(max-width: 1023px)" />
+                        <img src={cover.src} />
+                      </picture>
+                    </a>
+                  </chealt-animated-link>
                 </li>
               ))
             ) : (
@@ -63,3 +65,5 @@ const { collections, shouldAuthenticate, username } = Astro.locals;
   </ul>
   <NewCollection />
 </Common>
+
+<script src="../../chealt-animated-link.js"></script>
