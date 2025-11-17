@@ -31,27 +31,63 @@ jobs:
               - packages/coffee-admin/.yarnrc-lambda.yml
               - packages/coffee-admin/src/**
               - packages/coffee.chealt.com/data/roasters.json
-            webshop-processor:
-              - packages/webshop-processor/package.json
-              - packages/webshop-processor/.yarnrc-lambda.yml
-              - packages/webshop-processor/src/**
+            image-processor:
+              - packages/image-processor/package.json
+              - packages/image-processor/.yarnrc-lambda.yml
+              - packages/image-processor/src/**
+            image-text-interpreter:
+              - packages/image-text-interpreter/package.json
+              - packages/image-text-interpreter/.yarnrc-lambda.yml
+              - packages/image-text-interpreter/src/**
+            record-webshop-item:
+              - packages/record-webshop-item/package.json
+              - packages/record-webshop-item/.yarnrc-lambda.yml
+              - packages/record-webshop-item/src/**
+            record-webshop-item-details:
+              - packages/record-webshop-item-details/package.json
+              - packages/record-webshop-item-details/.yarnrc-lambda.yml
+              - packages/record-webshop-item-details/src/**
             webshop-item-processor:
               - packages/coffee.chealt.com/data/**
               - packages/webshop-item-processor/package.json
               - packages/webshop-item-processor/.yarnrc-lambda.yml
               - packages/webshop-item-processor/src/**
+            webshop-processor:
+              - packages/webshop-processor/package.json
+              - packages/webshop-processor/.yarnrc-lambda.yml
+              - packages/webshop-processor/src/**
       - name: coffee-admin
         if: steps.changed-files-yaml.outputs.coffee-admin_any_changed == 'true'
         run: |
           yarn workspace @chealt/coffee-admin build
           yarn workspace @chealt/coffee-admin deploy
-      - name: webshop-processor
-        if: steps.changed-files-yaml.outputs.webshop-processor_any_changed == 'true'
+      - name: image-processor
+        if: steps.changed-files-yaml.outputs.image-processor_any_changed == 'true'
         run: |
-          yarn workspace @chealt/webshop-processor build
-          yarn workspace @chealt/webshop-processor deploy
+          yarn workspace @chealt/image-processor build
+          yarn workspace @chealt/image-processor deploy
+      - name: image-text-interpreter
+        if: steps.changed-files-yaml.outputs.image-text-interpreter_any_changed == 'true'
+        run: |
+          yarn workspace @chealt/image-text-interpreter build
+          yarn workspace @chealt/image-text-interpreter deploy
+      - name: record-webshop-item
+        if: steps.changed-files-yaml.outputs.record-webshop-item_any_changed == 'true'
+        run: |
+          yarn workspace @chealt/record-webshop-item build
+          yarn workspace @chealt/record-webshop-item deploy
+      - name: record-webshop-item-details
+        if: steps.changed-files-yaml.outputs.record-webshop-item-details_any_changed == 'true'
+        run: |
+          yarn workspace @chealt/record-webshop-item-details build
+          yarn workspace @chealt/record-webshop-item-details deploy
       - name: webshop-item-processor
         if: steps.changed-files-yaml.outputs.webshop-item-processor_any_changed == 'true'
         run: |
           yarn workspace @chealt/webshop-item-processor build
           yarn workspace @chealt/webshop-item-processor deploy
+      - name: webshop-processor
+        if: steps.changed-files-yaml.outputs.webshop-processor_any_changed == 'true'
+        run: |
+          yarn workspace @chealt/webshop-processor build
+          yarn workspace @chealt/webshop-processor deploy
