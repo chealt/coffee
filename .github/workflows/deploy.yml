@@ -63,7 +63,7 @@ jobs:
         run: |
           yarn workspace @chealt/coffee-admin build
           version=$(yarn workspace @chealt/coffee-admin deploy | jq '.Version')
-          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release coffee-admin
         if: steps.changed-files-yaml.outputs.coffee-admin_any_changed == 'true'
         uses: actions/create-release@v1
