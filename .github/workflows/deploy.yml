@@ -62,10 +62,12 @@ jobs:
         if: steps.changed-files-yaml.outputs.coffee-admin_any_changed == 'true'
         run: |
           yarn workspace @chealt/coffee-admin build
-          yarn workspace @chealt/coffee-admin deploy >> "$GITHUB_OUTPUT"
+          yarn workspace @chealt/coffee-admin deploy
+          version=$(yarn workspace @chealt/coffee-admin deploy | jq '.Version')
+          echo "::set-output name=version::$version"
       - name: Release coffee-admin
         if: steps.changed-files-yaml.outputs.coffee-admin_any_changed == 'true'
-        run: echo ${{ fromJSON(steps.coffee-admin.outputs).Version }}
+        run: echo ${{ steps.coffee-admin.outputs.version }}
         # uses: actions/create-release@v1
         # env:
         #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
