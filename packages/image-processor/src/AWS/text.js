@@ -33,7 +33,7 @@ const extractText = async ({ filename }) => {
   if (texts.length) {
     console.info(`Calling text interpreter for ${filename}`);
     await invokeLambda({
-      functionName: 'saveTexts',
+      functionName: 'imageTextInterpreter',
       payload: { filename, texts }
     });
   }
