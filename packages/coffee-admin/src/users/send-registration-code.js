@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { createClient } from '@libsql/client';
 import { createClient as createPlatformClient } from '@tursodatabase/api';
 import jwt from 'jsonwebtoken';

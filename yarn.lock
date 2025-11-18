@@ -284,7 +284,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-lambda@npm:^3.932.0":
+"@aws-sdk/client-lambda@npm:^3.932.0, @aws-sdk/client-lambda@npm:^3.933.0":
   version: 3.933.0
   resolution: "@aws-sdk/client-lambda@npm:3.933.0"
   dependencies:
@@ -1375,6 +1375,7 @@ __metadata:
   resolution: "@chealt/image-processor@workspace:packages/image-processor"
   dependencies:
     "@aws-sdk/client-dynamodb": "npm:^3.932.0"
+    "@aws-sdk/client-lambda": "npm:^3.933.0"
     "@aws-sdk/client-s3": "npm:^3.932.0"
     "@aws-sdk/client-textract": "npm:^3.932.0"
     sharp: "npm:^0.34.5"

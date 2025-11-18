@@ -1,17 +1,17 @@
-import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
+import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import { TextractClient, DetectDocumentTextCommand } from '@aws-sdk/client-textract';
 
 const client = new TextractClient({});
-const dynamoClient = new DynamoDBClient({});
+const lambdaClient = new LambdaClient({
+  region: 'eu-central-1'
+});
 
-const saveTexts = async ({ filename, texts }) =>
-  dynamoClient.send(
-    new PutItemCommand({
-      TableName: 'collection-item-image-texts',
-      Item: {
-        filename: { S: filename },
-        texts: { S: JSON.stringify(texts) }
-      }
+const invokeLambda = ({ functionName: FunctionName, payload }) =>
+  lambdaClient.send(
+    new InvokeCommand({
+      FunctionName,
+      InvocationType: 'Event',
+      Payload: JSON.stringify(payload)
     })
   );
 
@@ -31,8 +31,11 @@ const extractText = async ({ filename }) => {
   const texts = Blocks.filter(({ Confidence }) => Confidence > 90).map(({ Text: text }) => text);
 
   if (texts.length) {
-    console.info(`Saving texts from ${filename}`);
-    await saveTexts({ filename, texts });
+    console.info(`Calling text interpreter for ${filename}`);
+    await invokeLambda({
+      functionName: 'saveTexts',
+      payload: { filename, texts }
+    });
   }
 };
 
