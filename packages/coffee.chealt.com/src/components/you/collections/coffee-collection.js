@@ -17,6 +17,7 @@ class CoffeeCollection extends HTMLElement {
 
     links.forEach((element) => element.addEventListener('click', this.addInProgressClass.bind(this)));
     links.forEach((element) => element.addEventListener('mousedown', this.selectItemWhenHeld.bind(this)));
+    links.forEach((element) => element.addEventListener('contextmenu', (event) => event.preventDefault()));
 
     this.clearSelection.addEventListener('click', () => {
       links.forEach((element) => element.classList.remove('selected'));
