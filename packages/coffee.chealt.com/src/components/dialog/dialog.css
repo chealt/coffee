@@ -1,4 +1,5 @@
-dialog {
+dialog,
+[popover] {
   display: none;
   margin: 0;
   padding: 0;
@@ -8,44 +9,50 @@ dialog {
   border-width: 0;
   color: inherit;
   box-sizing: border-box;
-}
 
-dialog::backdrop {
-  background-color: rgba(0, 0, 0, 0.8);
-}
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
 
-dialog.fading {
-  opacity: 0;
-  translate: 0 40px;
-  transition-property: display opacity;
-  transition-duration: 0.4s;
-  transition-timing-function: ease-in-out;
-  transition-behavior: allow-discrete;
-}
-
-dialog[open] {
-  display: block;
-  opacity: 1;
-  translate: 0 0px;
-
-  @starting-style {
+  &.fading {
     opacity: 0;
-    translate: 0 -40px;
+    translate: 0 40px;
+    transition-property: display opacity;
+    transition-duration: 0.4s;
+    transition-timing-function: ease-in-out;
+    transition-behavior: allow-discrete;
+  }
+
+  &[open] {
+    display: block;
+    opacity: 1;
+    translate: 0 0px;
+
+    @starting-style {
+      opacity: 0;
+      translate: 0 -40px;
+    }
+  }
+
+  & [data-close-button] {
+    width: auto;
+    position: fixed;
+    top: var(--gap);
+    right: var(--gap);
   }
 }
 
-dialog [data-close-button] {
-  width: auto;
-  position: fixed;
-  top: var(--gap);
-  right: var(--gap);
+[popover] {
+  &::backdrop {
+    display: none;
+  }
 }
 
 body:has(dialog[open]:not(.inline)) {
   overflow: hidden;
 }
 
-dialog.drawer {
+.drawer {
   opacity: 0;
   top: auto;
   bottom: 0;
@@ -60,9 +67,16 @@ dialog.drawer {
   &.fixed {
     height: 80vh;
   }
+
+  &.top {
+    top: 0;
+    bottom: auto;
+    translate: 0 -100%;
+  }
 }
 
-dialog.drawer[open] {
+.drawer[open],
+.drawer:popover-open {
   display: block;
   opacity: 1;
   translate: 0 0px;
@@ -71,5 +85,13 @@ dialog.drawer[open] {
   @starting-style {
     opacity: 0;
     translate: 0 100%;
+  }
+
+  &.top {
+    translate: 0 0px;
+
+    @starting-style {
+      translate: 0 -100%;
+    }
   }
 }

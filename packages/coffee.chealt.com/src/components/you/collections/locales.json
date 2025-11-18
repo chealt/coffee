@@ -1,5 +1,7 @@
 {
   "en": {
+    "clearSelection": "Clear selection",
+    "editCollection": "Edit collection",
     "title": "Collections",
     "originCountry": "Origin country",
     "originRegion": "Origin region",
@@ -25,6 +27,8 @@
     "logout": "logout"
   },
   "pl": {
+    "clearSelection": "Wyczyść zaznaczenie",
+    "editCollection": "Edytuj kolekcję",
     "title": "Kolekcje",
     "originCountry": "Kraj pochodzenia",
     "originRegion": "Region pochodzenia",

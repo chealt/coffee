@@ -2,7 +2,9 @@
 import { getRelativeLocaleUrl } from 'astro:i18n';
 
 import Button from '../../form/button/button.astro';
+import Checkbox from '../../form/checkbox/checkbox.astro';
 import Common from '../../common/common.astro';
+import Dialog from '../../dialog/dialog.astro';
 import Icon from '../../icon/icon.astro';
 import Header from './header/header.astro';
 import NewCollection from './new-collection.astro';
@@ -29,22 +31,22 @@ const { collections, shouldAuthenticate, username } = Astro.locals;
       <span class="visually-hidden">{username}</span>
     </Button>
   </header>
-  <ul class="collections-list" data-delete-confirm-message={t.deleteCollection.confirm}>
-    {
-      collections?.map(({ id: collectionId, name, items, isBuiltIn }) => (
-        <li id={collectionId} data-type="collection">
-          <Header collectionId={collectionId} name={t[collectionId] || name} isBuiltIn={isBuiltIn} />
-          <ul class="tiles items-list">
-            {items.length ? (
-              items.map(({ id: itemId, cover }) => (
-                <li>
-                  <chealt-animated-link>
+  <coffee-collection>
+    <ul class="collections-list" data-delete-confirm-message={t.deleteCollection.confirm}>
+      {
+        collections?.map(({ id: collectionId, name, items, isBuiltIn }) => (
+          <li id={collectionId} data-type="collection">
+            <Header collectionId={collectionId} name={t[collectionId] || name} isBuiltIn={isBuiltIn} />
+            <ul class="tiles items-list">
+              {items.length ? (
+                items.map(({ id: itemId, cover }) => (
+                  <li>
                     <a
                       href={`${getRelativeLocaleUrl(
                         Astro.currentLocale,
                         `/you/collections/${collectionId}/items/${itemId}`
                       )}?from=collections`}
-                      id={itemId}
+                      id={`item-id-${itemId}`}
                     >
                       <picture>
                         <source srcset={cover.srcSmall} media="(max-width: 599px)" />
@@ -52,18 +54,47 @@ const { collections, shouldAuthenticate, username } = Astro.locals;
                         <img src={cover.src} />
                       </picture>
                     </a>
-                  </chealt-animated-link>
-                </li>
-              ))
-            ) : (
-              <NewItem collectionId={collectionId} />
-            )}
-          </ul>
+                  </li>
+                ))
+              ) : (
+                <NewItem collectionId={collectionId} />
+              )}
+            </ul>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="drawer top" id="batch-update" popover="manual">
+      <ul>
+        <li>
+          <Button class="ghost column" data-dialog-id="edit-collections">
+            <Icon type="edit" />
+            {t.editCollection}
+          </Button>
         </li>
-      ))
-    }
-  </ul>
+        <li>
+          <Button class="ghost column" data-clear-trigger>
+            <Icon type="close" />
+            {t.clearSelection}
+          </Button>
+        </li>
+      </ul>
+    </div>
+    <Dialog class="drawer" id="edit-collections" reloadOnChange>
+      <ul>
+        {
+          collections.map(({ id, name }) => (
+            <li>
+              <Checkbox name={id} value={id}>
+                {name}
+              </Checkbox>
+            </li>
+          ))
+        }
+      </ul>
+    </Dialog>
+  </coffee-collection>
   <NewCollection />
 </Common>
 
-<script src="../../chealt-animated-link.js"></script>
+<script src="./coffee-collection.js"></script>
