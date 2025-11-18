@@ -62,20 +62,18 @@ jobs:
         if: steps.changed-files-yaml.outputs.coffee-admin_any_changed == 'true'
         run: |
           yarn workspace @chealt/coffee-admin build
-          yarn workspace @chealt/coffee-admin deploy
           version=$(yarn workspace @chealt/coffee-admin deploy | jq '.Version')
-          echo "::set-output name=version::$version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
       - name: Release coffee-admin
         if: steps.changed-files-yaml.outputs.coffee-admin_any_changed == 'true'
-        run: echo ${{ steps.coffee-admin.outputs.version }}
-        # uses: actions/create-release@v1
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # with:
-        #   tag_name: ${{ github.ref }}
-        #   release_name: Release ${{ github.ref }}
-        #   draft: false
-        #   prerelease: false
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: '@chealt/coffee-admin@${{ steps.coffee-admin.outputs.version }}'
+          release_name: Release @chealt/coffee-admin v${{ steps.coffee-admin.outputs.version }}
+          draft: false
+          prerelease: false
       - name: image-processor
         if: steps.changed-files-yaml.outputs.image-processor_any_changed == 'true'
         run: |
