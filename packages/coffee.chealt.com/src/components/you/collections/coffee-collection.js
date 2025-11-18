@@ -56,7 +56,7 @@ class CoffeeCollection extends HTMLElement {
     link.setAttribute('is-held', false);
 
     if (!isSelected && !hasSelected) {
-      setTimeout(() => {
+      this.timeout = setTimeout(() => {
         link.setAttribute('is-held', true);
         link.classList.add('selected');
         this.batchUpdatePopover.showPopover();
@@ -112,6 +112,12 @@ class CoffeeCollection extends HTMLElement {
           })
         )
       );
+    }
+  }
+
+  disconnectedCallback() {
+    if (this.timeout) {
+      clearTimeout(this.timeout);
     }
   }
 }
