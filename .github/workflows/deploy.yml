@@ -26,6 +26,7 @@ jobs:
         with:
           files_yaml: |
             coffee-admin:
+              - .github/workflows/deploy.yml
               - packages/coffee-admin/package.json
               - packages/coffee-admin/index.js
               - packages/coffee-admin/.yarnrc-lambda.yml
@@ -57,10 +58,22 @@ jobs:
               - packages/webshop-processor/.yarnrc-lambda.yml
               - packages/webshop-processor/src/**
       - name: coffee-admin
+        id: coffee-admin
         if: steps.changed-files-yaml.outputs.coffee-admin_any_changed == 'true'
         run: |
           yarn workspace @chealt/coffee-admin build
-          yarn workspace @chealt/coffee-admin deploy
+          yarn workspace @chealt/coffee-admin deploy >> "$GITHUB_OUTPUT"
+      - name: Release coffee-admin
+        if: steps.changed-files-yaml.outputs.coffee-admin_any_changed == 'true'
+        run: echo ${{ fromJSON(steps.coffee-admin.outputs).Version }}
+        # uses: actions/create-release@v1
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # with:
+        #   tag_name: ${{ github.ref }}
+        #   release_name: Release ${{ github.ref }}
+        #   draft: false
+        #   prerelease: false
       - name: image-processor
         if: steps.changed-files-yaml.outputs.image-processor_any_changed == 'true'
         run: |
