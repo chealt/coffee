@@ -26,6 +26,8 @@ class CoffeeCollection extends HTMLElement {
 
     this.collectionCheckboxes.forEach((element) => element.addEventListener('click', this.toggleCollection.bind(this)));
     this.editCollectionsTrigger.addEventListener('click', this.updateCollectionCheckboxes.bind(this));
+
+    window.addEventListener('beforeunload', this.clearTimer.bind(this));
   }
 
   addInProgressClass(event) {
@@ -115,10 +117,14 @@ class CoffeeCollection extends HTMLElement {
     }
   }
 
-  disconnectedCallback() {
+  clearTimer() {
     if (this.timeout) {
       clearTimeout(this.timeout);
     }
+  }
+
+  disconnectedCallback() {
+    this.clearTimer();
   }
 }
 
