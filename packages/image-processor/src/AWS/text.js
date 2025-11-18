@@ -31,6 +31,10 @@ const extractText = async ({ filename }) => {
   const texts = Blocks.filter(({ Confidence }) => Confidence > 90).map(({ Text: text }) => text);
 
   if (texts.length) {
+    console.info(`Extracted texts: ${texts.join(', ')} from ${filename}`);
+  }
+
+  if (texts.length) {
     console.info(`Calling text interpreter for ${filename}`);
     await invokeLambda({
       functionName: 'imageTextInterpreter',
