@@ -1,3 +1,7 @@
+body {
+  -webkit-touch-callout: none; /* disable context menu on iOS */
+}
+
 .collections-page h1,
 .collections-page h2,
 .collections-page h3 {
