@@ -176,20 +176,24 @@ a {
   }
 }
 
-a[href],
-.in-progress {
+a[href].in-progress,
+button.in-progress {
   &::after {
     content: ' ';
     position: absolute;
     inset: 0;
     background: center no-repeat url(./loader.svg) var(--color-background--subtle);
-    display: none;
-    opacity: 0;
+    display: block;
+    opacity: 1;
     transition-property: display opacity;
     transition-duration: 0.4s;
     transition-timing-function: ease-in-out;
     transition-behavior: allow-discrete;
     transition-delay: 200ms;
+
+    @starting-style {
+      opacity: 0;
+    }
   }
 
   &:not(button)::after {
@@ -198,27 +202,6 @@ a[href],
 
   &.button::after {
     background-color: var(--color-background);
-  }
-
-  &:active::after {
-    display: block;
-    opacity: 1;
-
-    @starting-style {
-      opacity: 0;
-    }
-  }
-}
-
-a[href].in-progress,
-button.in-progress {
-  &::after {
-    display: block;
-    opacity: 1;
-
-    @starting-style {
-      opacity: 0;
-    }
   }
 }
 
