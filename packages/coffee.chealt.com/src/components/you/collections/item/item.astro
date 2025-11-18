@@ -24,16 +24,14 @@ const { collectionItem, shouldAuthenticate } = Astro.locals;
   shouldAuthenticate={shouldAuthenticate}
   redirectUrl={getRelativeLocaleUrl(Astro.currentLocale, `/you/collections/${collectionId}/items/${itemId}`)}
 >
-  <coffee-back-navigation>
-    <Button
-      id="back-button"
-      href={`${getRelativeLocaleUrl(Astro.currentLocale, `/you/collections`)}#${itemId}`}
-      class="small bordered"
-    >
-      <Icon type="back" class="icon-only" />
-      <span class="visually-hidden">{t.back}</span>
-    </Button>
-  </coffee-back-navigation>
+  <Button
+    id="back-button"
+    href={`${getRelativeLocaleUrl(Astro.currentLocale, `/you/collections`)}#${itemId}`}
+    class="small bordered"
+  >
+    <Icon type="back" class="icon-only" />
+    <span class="visually-hidden">{t.back}</span>
+  </Button>
   <div
     id={collectionItem?.id}
     class="item-details"
@@ -59,5 +57,3 @@ const { collectionItem, shouldAuthenticate } = Astro.locals;
     </section>
   </div>
 </Common>
-
-<script src="./back-navigation.js"></script>
