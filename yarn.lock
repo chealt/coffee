@@ -1374,7 +1374,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@chealt/image-processor@workspace:packages/image-processor"
   dependencies:
-    "@aws-sdk/client-dynamodb": "npm:^3.932.0"
     "@aws-sdk/client-lambda": "npm:^3.933.0"
     "@aws-sdk/client-s3": "npm:^3.932.0"
     "@aws-sdk/client-textract": "npm:^3.932.0"
