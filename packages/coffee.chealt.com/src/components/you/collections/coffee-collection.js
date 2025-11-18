@@ -21,7 +21,7 @@ class CoffeeCollection extends HTMLElement {
       element.addEventListener('contextmenu', (event) => {
         event.preventDefault();
 
-        this.selectItemWhenHeld(event).bind(this);
+        this.selectItemWhenHeld.bind(this)(event);
       })
     );
 
