@@ -9,7 +9,8 @@ const init = () => {
       // Adds request headers and IP for users, for more info visit:
       // https://docs.sentry.io/platforms/javascript/guides/astro/configuration/options/#sendDefaultPii
       sendDefaultPii: true,
-      environment: import.meta.env.MODE
+      environment: import.meta.env.MODE,
+      tracesSampleRate: 1.0
     });
   } catch (error) {
     // eslint-disable-next-line no-console
