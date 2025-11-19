@@ -12,7 +12,7 @@ import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
-const { collectionId, isBuiltIn } = Astro.props;
+const { collectionId, isBuiltIn, isFirst, isLast } = Astro.props;
 ---
 
 <div class="controls">
@@ -30,6 +30,26 @@ const { collectionId, isBuiltIn } = Astro.props;
   </Button>
   <Dialog class="drawer" id={`collection-menu-${collectionId}`}>
     <ul>
+      <li>
+        {
+          !isFirst && (
+            <Button class="ghost column" data-move-up-trigger>
+              <Icon type="arrow-up" />
+              {t.moveUp}
+            </Button>
+          )
+        }
+      </li>
+      <li>
+        {
+          !isLast && (
+            <Button class="ghost column" data-move-down-trigger>
+              <Icon type="arrow-down" />
+              {t.moveDown}
+            </Button>
+          )
+        }
+      </li>
       <li>
         <Button class="ghost column" disabled={isBuiltIn} data-rename-trigger>
           <Icon type="edit" />

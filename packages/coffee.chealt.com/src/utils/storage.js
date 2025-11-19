@@ -1,3 +1,12 @@
+const setItems = async (key, value) => {
+  const response = await fetch('/api/storage/set-items.json', {
+    method: 'POST',
+    body: JSON.stringify({ key, value })
+  });
+
+  return response.json();
+};
+
 const setItem = async (key, value) => {
   const response = await fetch('/api/storage/set-item.json', {
     method: 'POST',
@@ -16,4 +25,4 @@ const deleteItem = async (key, value) => {
   return response.json();
 };
 
-export { deleteItem, setItem };
+export { deleteItem, setItem, setItems };

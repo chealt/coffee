@@ -2,11 +2,15 @@
   "en": {
     "add": "add coffee",
     "rename": "rename",
-    "delete": "delete"
+    "delete": "delete",
+    "moveUp": "move up",
+    "moveDown": "move down"
   },
   "pl": {
     "add": "dodaj kawa",
     "rename": "rename",
-    "delete": "delete"
+    "delete": "delete",
+    "moveUp": "w górę",
+    "moveDown": "w dół"
   }
 }

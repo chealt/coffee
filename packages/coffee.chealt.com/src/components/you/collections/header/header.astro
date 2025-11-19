@@ -4,13 +4,13 @@ import Name from './name.astro';
 
 import './header.css';
 
-const { collectionId, isBuiltIn, name } = Astro.props;
+const { collectionId, isBuiltIn, isFirst, isLast, name } = Astro.props;
 ---
 
 <coffee-collection-header data-collection-id={collectionId}>
   <header class="item-header">
     <Name isBuiltIn={isBuiltIn} name={name} collectionId={collectionId} />
-    <Controls collectionId={collectionId} isBuiltIn={isBuiltIn} />
+    <Controls collectionId={collectionId} isBuiltIn={isBuiltIn} isFirst={isFirst} isLast={isLast} />
   </header>
 </coffee-collection-header>
 

@@ -8,7 +8,7 @@ const queryCollections = async (user) => {
   const client = getClient(user.name);
 
   const results = await client.execute({
-    sql: 'SELECT id, name, is_built_in FROM collections'
+    sql: 'SELECT id, name, is_built_in FROM collections ORDER BY rank ASC'
   });
 
   return results.rows;
@@ -374,6 +374,17 @@ const addCollectionItemImages = async ({ user, itemId, filename }) => {
   });
 };
 
+const updateRanks = async ({ user, items }) => {
+  const client = getClient(user.name);
+
+  const collections_batch_commands = items.map(({ rank, id }) => ({
+    sql: 'UPDATE collections SET rank = :rank WHERE id = :id',
+    args: { rank, id }
+  }));
+
+  return await client.batch(collections_batch_commands);
+};
+
 export {
   addCollection,
   addCollectionItem,
@@ -388,5 +399,6 @@ export {
   getRecommendedRoasterIds,
   getRecommendedTasteNoteGroupIds,
   getRecommendedTasteNoteIds,
-  updateCollectionName
+  updateCollectionName,
+  updateRanks
 };

@@ -34,9 +34,15 @@ const { collections, shouldAuthenticate, username } = Astro.locals;
   <coffee-collection>
     <ul class="collections-list" data-delete-confirm-message={t.deleteCollection.confirm}>
       {
-        collections?.map(({ id: collectionId, name, items, isBuiltIn }) => (
+        collections?.map(({ id: collectionId, name, items, isBuiltIn }, index) => (
           <li id={collectionId} data-type="collection">
-            <Header collectionId={collectionId} name={t[collectionId] || name} isBuiltIn={isBuiltIn} />
+            <Header
+              collectionId={collectionId}
+              name={t[collectionId] || name}
+              isBuiltIn={isBuiltIn}
+              isFirst={index === 0}
+              isLast={index === collections.length - 1}
+            />
             <ul class="tiles items-list">
               {items.length ? (
                 items.map(({ id: itemId, cover }) => (
