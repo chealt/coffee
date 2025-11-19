@@ -38,10 +38,11 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: packages/coffee.chealt.com/playwright-report
+          name: playwright-report
           path: packages/coffee.chealt.com/playwright-report/
           retention-days: 30
       - uses: aws-actions/configure-aws-credentials@v4
+        if: always()
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
