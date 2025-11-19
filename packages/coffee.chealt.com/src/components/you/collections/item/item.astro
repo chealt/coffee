@@ -26,7 +26,7 @@ const { collectionItem, shouldAuthenticate } = Astro.locals;
 >
   <Button
     id="back-button"
-    href={`${getRelativeLocaleUrl(Astro.currentLocale, `/you/collections`)}#${itemId}`}
+    href={`${getRelativeLocaleUrl(Astro.currentLocale, `/you/collections`)}#item-id-${itemId}`}
     class="small bordered"
   >
     <Icon type="back" class="icon-only" />
