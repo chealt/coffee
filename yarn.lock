@@ -1356,6 +1356,7 @@ __metadata:
     "@aws-sdk/s3-request-presigner": "npm:^3.932.0"
     "@libsql/client": "npm:^0.15.15"
     "@sentry/astro": "npm:^10.25.0"
+    "@sentry/cloudflare": "npm:^10.26.0"
     "@simplewebauthn/browser": "npm:13.1.2"
     "@simplewebauthn/server": "npm:13.1.2"
     astro: "npm:^5.15.8"
@@ -3779,10 +3780,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/cloudflare@npm:^10.26.0":
+  version: 10.26.0
+  resolution: "@sentry/cloudflare@npm:10.26.0"
+  dependencies:
+    "@opentelemetry/api": "npm:^1.9.0"
+    "@sentry/core": "npm:10.26.0"
+  peerDependencies:
+    "@cloudflare/workers-types": ^4.x
+  peerDependenciesMeta:
+    "@cloudflare/workers-types":
+      optional: true
+  checksum: 10c0/fd7905181c785e643e78f1782bea273f604e9ceeb9cf85c277937db401d6d2145387e629a91108dbe8e279f8ce1ac1646a04c0388e100324dbbe57bbe9cc64bf
+  languageName: node
+  linkType: hard
+
 "@sentry/core@npm:10.25.0":
   version: 10.25.0
   resolution: "@sentry/core@npm:10.25.0"
   checksum: 10c0/7c3313d6bde9f45eff819b01ab2fb0e9c187b24d4e2ac345b25857dc75c4f33a81e02e1c425d6bbf9f90df94723df9a7abd10fb7545b2f4339a865d35e496b5d
+  languageName: node
+  linkType: hard
+
+"@sentry/core@npm:10.26.0":
+  version: 10.26.0
+  resolution: "@sentry/core@npm:10.26.0"
+  checksum: 10c0/629c991a2373228483f7ca804f0a13b8df0d5f672874c88b370e085e4e03b0330c64354ad502ead105e81c139cd8d1013b39fbc44ee879eb4b49c55aae62462c
   languageName: node
   linkType: hard
 

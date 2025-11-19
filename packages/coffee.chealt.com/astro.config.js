@@ -39,7 +39,7 @@ export default defineConfig({
   },
   integrations: [
     sentry({
-      project: 'javascript-astro',
+      project: 'website',
       org: 'central-beans',
       authToken: process.env.SENTRY_AUTH_TOKEN
     })

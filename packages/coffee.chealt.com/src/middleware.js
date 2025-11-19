@@ -1,3 +1,4 @@
+import { sentryPagesPlugin } from '@sentry/cloudflare';
 import jwt from 'jsonwebtoken';
 
 import supportedLanguages from '../data/supportedLanguages.json';
@@ -9,11 +10,8 @@ import { cookieNameLocale, cookieNameCurrency, defaultCurrency } from './server/
 import { getValue } from './server/database/formData.js';
 import { getAuthenticationOptions } from './server/login.js';
 import { createRegistrationOptions } from './server/registration.js';
-import { init as initSentry } from './server/sentry.js';
 import { setCollections, setCollectionItem } from './server/you/collections.js';
 import { setRecommended } from './server/you/recommendations.js';
-
-initSentry();
 
 const locales = supportedLanguages.map(({ locale }) => locale);
 const defaultLocale = supportedLanguages.find(({ isDefault }) => isDefault).locale;
@@ -96,6 +94,11 @@ const pages = [
  */
 // eslint-disable-next-line complexity
 const onRequest = async (context, next) => {
+  sentryPagesPlugin(() => ({
+    dsn: 'https://c03ded959e579ac5f500b11c23ad7b1c@o4510340291821568.ingest.de.sentry.io/4510340393140304',
+    tracesSampleRate: 1.0
+  }));
+
   const { page, params } = parsePath(context.url.pathname);
 
   if (page !== 'api' && !context.params.locale && (context.routePattern !== '/404' || pages.includes(page))) {
