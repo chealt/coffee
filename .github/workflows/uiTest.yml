@@ -14,6 +14,7 @@ jobs:
           cache: 'yarn'
       - name: Get Playwright version
         id: playwright_version
+        working-directory: packages/coffee.chealt.com
         shell: bash
         run: |
           version=$(yarn info @playwright/test --json | jq -r '.children.Version')
