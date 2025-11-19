@@ -193,6 +193,7 @@ export default defineConfig([
     files: [
       'packages/coffee.chealt.com/data/**/*.js',
       'packages/coffee.chealt.com/astro.config.js',
+      'packages/coffee.chealt.com/playwright.config.js',
       'packages/coffee.chealt.com/src/server/**/*.js',
       'packages/coffee.chealt.com/src/middleware.js',
       'packages/coffee-admin/**/*.js',
