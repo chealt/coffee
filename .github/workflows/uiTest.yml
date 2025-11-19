@@ -12,6 +12,8 @@ jobs:
         with:
           node-version-file: 'package.json'
           cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --immutable
       - name: Get Playwright version
         id: playwright_version
         working-directory: packages/coffee.chealt.com
