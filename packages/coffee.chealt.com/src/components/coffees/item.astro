@@ -4,6 +4,7 @@ import { getRelativeLocaleUrl } from 'astro:i18n';
 import { getConvertedPrice } from './utils.js';
 import TasteNotes from '../taste-notes/taste-notes.astro';
 import Varieties from '../varieties/list.astro';
+import newCoffeeIds from '../../../data/newCoffeeIds.json';
 
 import './item.css';
 
@@ -39,6 +40,7 @@ const {
   webshopItemLink,
   weight
 } = Astro.props;
+const isNew = newCoffeeIds.includes(id);
 
 const { currency } = Astro.locals;
 ---
@@ -52,10 +54,9 @@ const { currency } = Astro.locals;
       fetchpriority={highPriority ? 'high' : undefined}
     />
   </div>
-  {
-    (isRecommended && <span class="tag primary left">{tc.recommended}</span>) ||
-      (isDecaf && <span class="decaf-tag">{t.decaf}</span>)
-  }
+  {isNew && <span class="tag good left">{tc.new}</span>}
+  {!isNew && isRecommended && <span class="tag primary left">{tc.recommended}</span>}
+  {isDecaf && <span class="decaf-tag">{t.decaf}</span>}
 </a>
 <section class="not-padded coffee-details">
   <dl>
