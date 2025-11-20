@@ -3,11 +3,15 @@
     "currency": "Currency",
     "language": "Language",
     "logout": "logout",
+    "newCoffee": "new coffees",
+    "notifications": "Notifications",
     "sendRegistrationCode": "Send new registration code",
     "title": "Profile"
   },
   "pl": {
     "currency": "Waluta",
+    "newCoffee": "nowe kawy",
+    "notifications": "Powiadomienia",
     "language": "Język",
     "logout": "wyloguj",
     "sendRegistrationCode": "Wyślij nowy kod rejestracji",

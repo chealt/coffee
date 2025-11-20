@@ -24,7 +24,6 @@ const setRecommended = async (context) => {
       tasteNoteGroups = await getRecommendedTasteNoteGroupIds({ name: user.username });
     }
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.info(error);
 
     coffees = await getRecommendedCoffees({ locale: context.currentLocale });

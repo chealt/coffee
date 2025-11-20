@@ -45,6 +45,16 @@ const setCurrency = async (context) => {
   context.locals.currency = currency;
 };
 
+const setSettings = async (context) => {
+  try {
+    const settings = await getValue({ user: { name: getSessionUser(context.request)?.username }, key: 'settings' });
+
+    context.locals.settings = settings;
+  } catch {
+    console.info('Not logged in, so could not read settings from DB.');
+  }
+};
+
 const parsePath = (pathname) => {
   const pathParams = pathname.split('/');
   let language = defaultLocale;
@@ -112,7 +122,7 @@ const onRequest = async (context, next) => {
     );
   }
 
-  await setCurrency(context);
+  await Promise.all([setCurrency(context), setSettings(context)]);
   setGetSignedUrl(context);
   setImageUploadUrls(context);
 
