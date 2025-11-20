@@ -6,7 +6,14 @@ fieldset {
 
 fieldset legend {
   font-size: 1.2rem;
-  margin-bottom: var(--gap);
+
+  &:not(:has(.name)) {
+    margin-bottom: var(--gap);
+  }
+
+  .name {
+    padding: var(--gap);
+  }
 }
 
 input,

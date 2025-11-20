@@ -50,10 +50,14 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
           }
         </Select>
       </Label>
-      <h2>{t.notifications}</h2>
-      <Checkbox name="newCoffeeNotification" value="on" checked={settings?.newCoffeeNotification === 'on'}>
-        {t.newCoffee}
-      </Checkbox>
+      <fieldset>
+        <legend>
+          <div class="name">{t.notifications}</div>
+        </legend>
+        <Checkbox name="newCoffeeNotification" value="on" checked={settings?.newCoffeeNotification === 'on'}>
+          {t.newCoffee}
+        </Checkbox>
+      </fieldset>
     </Form>
   </section>
   <section>
