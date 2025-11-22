@@ -32,29 +32,36 @@ jobs:
               - packages/coffee-admin/index.js
               - packages/coffee-admin/.yarnrc-lambda.yml
               - packages/coffee-admin/src/**
+              - packages/coffee.chealt.com/data/newCoffeeIds.json
               - packages/coffee.chealt.com/data/roasters.json
             image-processor:
+              - .github/workflows/deploy.yml
               - packages/image-processor/package.json
               - packages/image-processor/.yarnrc-lambda.yml
               - packages/image-processor/src/**
             image-text-interpreter:
+              - .github/workflows/deploy.yml
               - packages/image-text-interpreter/package.json
               - packages/image-text-interpreter/.yarnrc-lambda.yml
               - packages/image-text-interpreter/src/**
             record-webshop-item:
+              - .github/workflows/deploy.yml
               - packages/record-webshop-item/package.json
               - packages/record-webshop-item/.yarnrc-lambda.yml
               - packages/record-webshop-item/src/**
             record-webshop-item-details:
+              - .github/workflows/deploy.yml
               - packages/record-webshop-item-details/package.json
               - packages/record-webshop-item-details/.yarnrc-lambda.yml
               - packages/record-webshop-item-details/src/**
             webshop-item-processor:
+              - .github/workflows/deploy.yml
               - packages/coffee.chealt.com/data/**
               - packages/webshop-item-processor/package.json
               - packages/webshop-item-processor/.yarnrc-lambda.yml
               - packages/webshop-item-processor/src/**
             webshop-processor:
+              - .github/workflows/deploy.yml
               - packages/webshop-processor/package.json
               - packages/webshop-processor/.yarnrc-lambda.yml
               - packages/webshop-processor/src/**
