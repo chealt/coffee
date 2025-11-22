@@ -76,32 +76,104 @@ jobs:
           draft: false
           prerelease: false
       - name: image-processor
+        id: image-processor
         if: steps.changed-files-yaml.outputs.image-processor_any_changed == 'true'
         run: |
           yarn workspace @chealt/image-processor build
-          yarn workspace @chealt/image-processor deploy
+          version=$(yarn workspace @chealt/image-processor deploy | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release image-processor
+        if: steps.changed-files-yaml.outputs.image-processor_any_changed == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: '@chealt/image-processor@${{ steps.image-processor.outputs.version }}'
+          release_name: Release @chealt/image-processor v${{ steps.image-processor.outputs.version }}
+          draft: false
+          prerelease: false
       - name: image-text-interpreter
+        id: image-text-interpreter
         if: steps.changed-files-yaml.outputs.image-text-interpreter_any_changed == 'true'
         run: |
           yarn workspace @chealt/image-text-interpreter build
-          yarn workspace @chealt/image-text-interpreter deploy
+          version=$(yarn workspace @chealt/image-text-interpreter deploy | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release image-text-interpreter
+        if: steps.changed-files-yaml.outputs.image-text-interpreter_any_changed == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: '@chealt/image-text-interpreter@${{ steps.image-text-interpreter.outputs.version }}'
+          release_name: Release @chealt/image-text-interpreter v${{ steps.image-text-interpreter.outputs.version }}
+          draft: false
+          prerelease: false
       - name: record-webshop-item
+        id: record-webshop-item
         if: steps.changed-files-yaml.outputs.record-webshop-item_any_changed == 'true'
         run: |
           yarn workspace @chealt/record-webshop-item build
-          yarn workspace @chealt/record-webshop-item deploy
+          version=$(yarn workspace @chealt/record-webshop-item deploy | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release record-webshop-item
+        if: steps.changed-files-yaml.outputs.record-webshop-item_any_changed == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: '@chealt/record-webshop-item@${{ steps.record-webshop-item.outputs.version }}'
+          release_name: Release @chealt/record-webshop-item v${{ steps.record-webshop-item.outputs.version }}
+          draft: false
+          prerelease: false
       - name: record-webshop-item-details
+        id: record-webshop-item-details
         if: steps.changed-files-yaml.outputs.record-webshop-item-details_any_changed == 'true'
         run: |
           yarn workspace @chealt/record-webshop-item-details build
-          yarn workspace @chealt/record-webshop-item-details deploy
+          version=$(yarn workspace @chealt/record-webshop-item-details deploy | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release record-webshop-item-details
+        if: steps.changed-files-yaml.outputs.record-webshop-item-details_any_changed == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: '@chealt/record-webshop-item-details@${{ steps.record-webshop-item-details.outputs.version }}'
+          release_name: Release @chealt/record-webshop-item-details v${{ steps.record-webshop-item-details.outputs.version }}
+          draft: false
+          prerelease: false
       - name: webshop-item-processor
+        id: webshop-item-processor
         if: steps.changed-files-yaml.outputs.webshop-item-processor_any_changed == 'true'
         run: |
           yarn workspace @chealt/webshop-item-processor build
-          yarn workspace @chealt/webshop-item-processor deploy
+          version=$(yarn workspace @chealt/webshop-item-processor deploy | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release webshop-item-processor
+        if: steps.changed-files-yaml.outputs.webshop-item-processor_any_changed == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: '@chealt/webshop-item-processor@${{ steps.webshop-item-processor.outputs.version }}'
+          release_name: Release @chealt/webshop-item-processor v${{ steps.webshop-item-processor.outputs.version }}
+          draft: false
+          prerelease: false
       - name: webshop-processor
+        id: webshop-processor
         if: steps.changed-files-yaml.outputs.webshop-processor_any_changed == 'true'
         run: |
           yarn workspace @chealt/webshop-processor build
-          yarn workspace @chealt/webshop-processor deploy
+          version=$(yarn workspace @chealt/webshop-processor deploy | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release webshop-processor
+        if: steps.changed-files-yaml.outputs.webshop-processor_any_changed == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: '@chealt/webshop-processor@${{ steps.webshop-processor.outputs.version }}'
+          release_name: Release @chealt/webshop-processor v${{ steps.webshop-processor.outputs.version }}
+          draft: false
+          prerelease: false
