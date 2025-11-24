@@ -37,7 +37,7 @@
     "@aws-sdk/s3-request-presigner": "^3.932.0",
     "@playwright-testing-library/test": "^4.5.0",
     "@playwright/test": "^1.56.1",
-    "@sentry/astro": "^10.25.0",
+    "@sentry/astro": "^10.27.0",
     "@sentry/cloudflare": "^10.26.0",
     "@simplewebauthn/browser": "13.1.2",
     "@simplewebauthn/server": "13.1.2",
