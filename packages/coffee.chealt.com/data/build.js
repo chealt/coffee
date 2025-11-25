@@ -75,10 +75,25 @@ const saveCountriesWithCoffees = async () => {
   return writeFile('./data/countriesWithCoffees.json', JSON.stringify(results.rows), { flag: 'w+' });
 };
 
+const currentCoffeeIds = JSON.parse(await readFile('./data/coffees.json')).map(({ id }) => id);
+const saveNewCoffees = async (newCoffees) => {
+  const newCoffeeIds = newCoffees.map(({ id }) => id).filter((id) => !currentCoffeeIds.includes(id));
+
+  if (!newCoffeeIds.length) {
+    console.info(`No new coffees found.`);
+
+    return undefined;
+  }
+
+  return writeFile('./data/newCoffeeIds.json', JSON.stringify(newCoffeeIds), { flag: 'w+' });
+};
+
 const saveCoffees = async () => {
   const results = await turso.execute('SELECT * FROM coffees_all WHERE NOT is_removed');
 
-  return writeFile('./data/coffees.json', JSON.stringify(results.rows), { flag: 'w+' });
+  await writeFile('./data/coffees.json', JSON.stringify(results.rows), { flag: 'w+' });
+
+  return saveNewCoffees(results.rows);
 };
 
 const saveCoffeeImages = async () => {
@@ -123,21 +138,6 @@ const saveMiscellaneousCoffeeProperties = async () => {
   return writeFile('./data/miscellaneousCoffeeProperties.json', JSON.stringify(results.rows), { flag: 'w+' });
 };
 
-const currentCoffeeIds = JSON.parse(await readFile('./data/coffees.json')).map(({ id }) => id);
-const saveNewCoffees = async () => {
-  const newCoffeeIds = JSON.parse(await readFile('./data/coffees.json'))
-    .map(({ id }) => id)
-    .filter((id) => !currentCoffeeIds.includes(id));
-
-  if (!newCoffeeIds.length) {
-    console.info(`No new coffees found.`);
-
-    return undefined;
-  }
-
-  return writeFile('./data/newCoffeeIds.json', JSON.stringify(newCoffeeIds), { flag: 'w+' });
-};
-
 const saveOriginCountriesWithCoffees = async () => {
   const results = await turso.execute('SELECT * FROM origin_countries_all_with_coffees ORDER BY name ASC');
 
@@ -180,7 +180,6 @@ await Promise.all([
   saveExchangeRates(),
   saveFarms(),
   saveMiscellaneousCoffeeProperties(),
-  saveNewCoffees(),
   saveOriginCountries(),
   saveOriginCountriesWithCoffees(),
   saveOriginRegions(),
