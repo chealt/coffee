@@ -4,6 +4,7 @@
   "scripts": {
     "build": "rm -rf dist && mkdir dist && mkdir dist/data && cp ../coffee.chealt.com/data/*.json dist/data && cp index.js dist && cp -r package.json dist && cp ../../yarn.lock dist && cp .yarnrc-lambda.yml dist/.yarnrc.yml && cp -r src dist && cd dist && yarn workspaces focus && rm -rf .yarn && rm -rf yarn.lock && rm -rf .yarnrc.yml && zip -rq package.zip .",
     "deploy": "aws lambda update-function-code --function-name coffeeAdmin --zip-file fileb://dist/package.zip --publish",
+    "test": "yarn build && node --env-file=.env ./test.js",
     "users:create": "node --env-file=.env src/users/create-user.js",
     "users:send-registration-code": "node --env-file=.env src/users/send-registration-code.js",
     "coffees:import:CQI": "node --env-file=.env ../../node_modules/playwright/cli.js test",
@@ -14,15 +15,15 @@
     "taste-notes:translate": "node --env-file=.env src/taste-notes/translate.js"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.932.0",
-    "@aws-sdk/client-s3": "^3.932.0",
-    "@aws-sdk/client-secrets-manager": "^3.932.0",
-    "@aws-sdk/client-sesv2": "^3.932.0",
-    "@aws-sdk/client-translate": "^3.932.0",
+    "@aws-sdk/client-lambda": "^3.939.0",
+    "@aws-sdk/client-s3": "^3.939.0",
+    "@aws-sdk/client-secrets-manager": "^3.939.0",
+    "@aws-sdk/client-sesv2": "^3.939.0",
+    "@aws-sdk/client-translate": "^3.939.0",
     "@libsql/client": "^0.15.15",
     "@playwright/test": "^1.56.1",
-    "@tursodatabase/api": "^1.9.0",
-    "jsdom": "^27.1.0",
+    "@tursodatabase/api": "^1.9.2",
+    "jsdom": "^27.2.0",
     "jsonwebtoken": "^9.0.2",
     "undici": "^7.16.0"
   },
