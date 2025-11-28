@@ -11,20 +11,22 @@ const { groups } = Astro.props;
 const { recommended } = Astro.locals;
 ---
 
-<ul class="list">
-  {
-    groups.map(({ taste_note_group_id: id, name, color, text_color }) => (
-      <li class="item">
-        <a
-          href={getRelativeLocaleUrl(Astro.currentLocale, `/taste-note-groups/${encodeURIComponent(name)}`)}
-          class="card"
-        >
-          <div class="name" style={`background-color: ${color}; color: ${text_color}`}>
-            {name}
-          </div>
-          {recommended?.tasteNoteGroups?.includes(id) && <span class="tag primary left">{tc.recommended}</span>}
-        </a>
-      </li>
-    ))
-  }
-</ul>
+<div class="list-container">
+  <ul class="list">
+    {
+      groups.map(({ taste_note_group_id: id, name, color, text_color }) => (
+        <li class="item">
+          <a
+            href={getRelativeLocaleUrl(Astro.currentLocale, `/taste-note-groups/${encodeURIComponent(name)}`)}
+            class="card"
+          >
+            <div class="name" style={`background-color: ${color}; color: ${text_color}`}>
+              {name}
+            </div>
+            {recommended?.tasteNoteGroups?.includes(id) && <span class="tag primary left">{tc.recommended}</span>}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>

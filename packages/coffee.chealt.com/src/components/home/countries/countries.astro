@@ -16,22 +16,24 @@ const countries = allCountries.filter(({ language_code }) => language_code === A
 const { recommended } = Astro.locals;
 ---
 
-<ul class="list countries">
-  {
-    countries.map(({ country_id: id, name }, index) => (
-      <li class="item">
-        <a href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${name}`)}>
-          <div class="image card">
-            <img
-              src={`/countries/${id}.svg`}
-              alt={`${t.country} ${name}`}
-              loading={index >= 2 ? 'lazy' : undefined}
-              fetchpriority={index >= 2 ? undefined : 'high'}
-            />
-          </div>
-          <div class="name">{name}</div>
-        </a>
-      </li>
-    ))
-  }
-</ul>
+<div class="list-container">
+  <ul class="list countries">
+    {
+      countries.map(({ country_id: id, name }, index) => (
+        <li class="item">
+          <a href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${name}`)}>
+            <div class="image card">
+              <img
+                src={`/countries/${id}.svg`}
+                alt={`${t.country} ${name}`}
+                loading={index >= 2 ? 'lazy' : undefined}
+                fetchpriority={index >= 2 ? undefined : 'high'}
+              />
+            </div>
+            <div class="name">{name}</div>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>
