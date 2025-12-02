@@ -32,8 +32,7 @@ jobs:
               - packages/coffee-admin/index.js
               - packages/coffee-admin/.yarnrc-lambda.yml
               - packages/coffee-admin/src/**
-              - packages/coffee.chealt.com/data/newCoffeeIds.json
-              - packages/coffee.chealt.com/data/roasters.json
+              - packages/coffee.chealt.com/data/**
             image-processor:
               - .github/workflows/deploy.yml
               - packages/image-processor/package.json

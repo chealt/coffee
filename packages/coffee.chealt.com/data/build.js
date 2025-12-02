@@ -75,9 +75,24 @@ const saveCountriesWithCoffees = async () => {
   return writeFile('./data/countriesWithCoffees.json', JSON.stringify(results.rows), { flag: 'w+' });
 };
 
-const currentCoffeeIds = JSON.parse(await readFile('./data/coffees.json')).map(({ id }) => id);
+const coffees = JSON.parse(await readFile('./data/coffees.json'));
+const currentCoffeeIds = coffees.map(({ id }) => id);
+const currentNewCoffeeIds = JSON.parse(await readFile('./data/newCoffeeIds.json'));
 const saveNewCoffees = async (newCoffees) => {
   const newCoffeeIds = newCoffees.map(({ id }) => id).filter((id) => !currentCoffeeIds.includes(id));
+  const removedNewCoffeeIds = currentNewCoffeeIds.filter(
+    (id) => coffees.find(({ id: coffeeId }) => coffeeId === id)?.is_removed
+  );
+
+  if (removedNewCoffeeIds.length) {
+    console.info(`Removing ${removedNewCoffeeIds.length} coffees from new coffee list.`);
+
+    await writeFile(
+      './data/newCoffeeIds.json',
+      JSON.stringify(newCoffeeIds.filter((id) => !removedNewCoffeeIds.includes(id))),
+      { flag: 'w+' }
+    );
+  }
 
   if (!newCoffeeIds.length) {
     console.info(`No new coffees found.`);
@@ -85,7 +100,11 @@ const saveNewCoffees = async (newCoffees) => {
     return undefined;
   }
 
-  return writeFile('./data/newCoffeeIds.json', JSON.stringify(newCoffeeIds), { flag: 'w+' });
+  return writeFile(
+    './data/newCoffeeIds.json',
+    JSON.stringify(newCoffeeIds.filter((id) => coffees.find(({ id: coffeeId }) => coffeeId === id)?.is_removed)),
+    { flag: 'w+' }
+  );
 };
 
 const saveCoffees = async () => {

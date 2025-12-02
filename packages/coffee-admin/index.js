@@ -3,6 +3,7 @@ import flagRemoved from './src/coffees/flag-removed.js';
 import invokeFlagRemoved from './src/coffees/invoke-flag-removed.js';
 import recordRoasterWebshop from './src/coffees/record-roaster-webshop.js';
 import importCurrencies from './src/currencies/import.js';
+import sendNewCoffees from './src/notifications/send-new-coffees.js';
 import sendRegistrationCode from './src/users/send-registration-code.js';
 
 const supportedFunctions = {
@@ -10,6 +11,7 @@ const supportedFunctions = {
   coffeesInvokeFlagRemoved: 'coffees:invoke-flag-removed',
   coffeesRecordRoasterWebshop: 'coffees:record-roaster-webshop',
   currenciesImport: 'currencies:import',
+  notificationsSendNewCoffees: 'notifications:send-new-coffees',
   usersSendRegistrationCode: 'users:send-registration-code'
 };
 
@@ -42,6 +44,10 @@ export const handler = async (event) => {
       const email = event.email;
 
       await sendRegistrationCode({ username, email });
+
+      break;
+    case supportedFunctions.notificationsSendNewCoffees:
+      await sendNewCoffees();
 
       break;
     case supportedFunctions.coffeesRecordRoasterWebshop:

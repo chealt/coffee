@@ -2,7 +2,8 @@ import { createClient } from '@libsql/client';
 import { createClient as createPlatformClient } from '@tursodatabase/api';
 import jwt from 'jsonwebtoken';
 
-import { sendEmail } from './email.js';
+import getContent from './email-content.js';
+import { sendEmail } from '../AWS.js';
 
 const main = async ({ username, email }) => {
   if (!username) {
@@ -58,7 +59,11 @@ const main = async ({ username, email }) => {
   });
 
   console.info(`sending email with registration code: ${registrationCode} to email: ${email}`);
-  await sendEmail({ to: email, username, registrationCode });
+  await sendEmail({
+    to: email,
+    content: getContent({ username, registrationCode }),
+    subject: 'Registration email from centralbeans.com'
+  });
 };
 
 export default main;
