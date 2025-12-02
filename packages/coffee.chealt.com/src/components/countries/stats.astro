@@ -32,8 +32,8 @@ const coffees = allCoffees
   }))
   .sort((a, b) => a.pricePerGram - b.pricePerGram);
 const maxPricePerGram = coffees[coffees.length - 1].pricePerGram;
-const countriesWithCoffee = Array.from(new Set(countries.map(({ country_id: countryId }) => countryId)))
-  .map((countryId) => countries.find((country) => country.country_id === countryId))
+const countriesWithCoffee = countries
+  .filter(({ language_code: languageCode }) => languageCode === Astro.currentLocale)
   .map((country) => ({
     ...country,
     coffees: coffees.filter(({ roaster: { country_id: countryId } }) => countryId === country.country_id)
@@ -146,7 +146,7 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce(
   <section>
     <h2>{t.tasteNotes}</h2>
     <div class="card">
-      <coffee-stats data-default-label={id}>
+      <coffee-stats>
         <div class="stats">
           <div class="chart-inner">
             <ul class="bars">
@@ -155,7 +155,7 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce(
                   <li class="bar-container">
                     {countries.map(({ id: countryId, name, count }) => (
                       <div
-                        class={`part bar ${countryId === id ? 'active' : ''}`}
+                        class="part bar"
                         style={`height: ${count / (maxTasteNoteGroupCount / 100)}%`}
                         data-label={countryId}
                       />
@@ -171,7 +171,7 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce(
               {
                 tasteNoteGroupsLocale.map(({ name, color, tasteNoteGroupId, countries }) =>
                   countries.map(({ id: countryId, name, count }) => (
-                    <div class={`label x ${countryId === id ? 'active' : ''}`} data-part={countryId}>
+                    <div class="label x" data-part={countryId}>
                       {titleCase(name)}
                     </div>
                   ))
