@@ -89,7 +89,7 @@ const { collections, shouldAuthenticate, username } = Astro.locals;
     <Dialog class="drawer" id="edit-collections" reloadOnChange>
       <ul>
         {
-          collections.map(({ id, name }) => (
+          collections?.map(({ id, name }) => (
             <li>
               <Checkbox name={id} value={id}>
                 {name}
