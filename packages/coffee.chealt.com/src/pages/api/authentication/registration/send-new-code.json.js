@@ -4,7 +4,7 @@ import { getUser } from '../../../../server/database/user.js';
 
 const POST = async (context) => {
   try {
-    const { username } = getSessionUser(context.request);
+    const { username } = getSessionUser(context);
     const { email } = await getUser(username);
 
     await invoke({ name: 'coffeeAdmin', payload: { function: 'users:send-registration-code', username, email } });

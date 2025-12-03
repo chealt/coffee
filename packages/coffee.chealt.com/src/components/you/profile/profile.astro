@@ -25,7 +25,13 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
 <Common shouldAuthenticate={shouldAuthenticate} redirectUrl={getRelativeLocaleUrl(Astro.currentLocale, '/you/profile')}>
   <h1>{t.title}</h1>
   <section>
-    <Form name="settings" data-storage="api" data-save-endpoint="/api/storage/save-form-data" data-save-on-input>
+    <Form
+      name="settings"
+      data-storage="api"
+      data-save-endpoint="/api/storage/save-form-data"
+      data-save-on-input
+      data-exclude-from-local-storage
+    >
       <Label>
         <div class="name">{t.language}</div>
         <Select name="language">

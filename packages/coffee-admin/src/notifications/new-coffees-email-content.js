@@ -1,6 +1,7 @@
 /* eslint-disable complexity */
 import { getDetails } from '../coffees/utils.js';
 import { titleCase } from '../utils.js';
+import { unsubscribeLink } from './common-content.js';
 
 const content = ({ newCoffees, localeContent, locale }) => `
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -70,6 +71,7 @@ const content = ({ newCoffees, localeContent, locale }) => `
       <tr>
         <td class="footer" style="padding: 20px; text-align: center; font-size: 12px; color: #37352c; background-color: rgba(250, 250, 250, 0.4);">
           <p style="margin: 0;">&copy; ${new Date().getFullYear()} Central Beans. All rights reserved.</p>
+          <p style="margin: 5px 0;">${unsubscribeLink({ localeContent, notificationType: 'newCoffeeNotification' })}</p>
         </td>
       </tr>
     </table>

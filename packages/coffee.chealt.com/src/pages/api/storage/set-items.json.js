@@ -1,14 +1,14 @@
 import { getSessionUser } from '../../../server/authentication/session.js';
 import { updateRanks } from '../../../server/database/collections.js';
 
-const POST = async ({ request }) => {
-  const loggedInUser = getSessionUser(request);
+const POST = async (context) => {
+  const loggedInUser = getSessionUser(context);
 
   if (!loggedInUser) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }
 
-  const { key, value } = await request.json();
+  const { key, value } = await context.request.json();
   const user = { name: loggedInUser.username, id: loggedInUser.userID };
 
   try {

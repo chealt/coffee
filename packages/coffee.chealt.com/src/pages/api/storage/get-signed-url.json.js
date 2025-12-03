@@ -1,11 +1,11 @@
 import { generateUploadUrl } from '../../../server/AWS/storage.js';
 import { getSessionUser } from '../../../server/authentication/session.js';
 
-const POST = async ({ request }) => {
+const POST = async (context) => {
   // check if user is logged in
-  getSessionUser(request);
+  getSessionUser(context);
 
-  const { filename, contentType } = await request.json();
+  const { filename, contentType } = await context.request.json();
 
   try {
     const url = await generateUploadUrl({ filename, contentType });

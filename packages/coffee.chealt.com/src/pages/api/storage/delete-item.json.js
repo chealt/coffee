@@ -1,14 +1,14 @@
 import { getSessionUser } from '../../../server/authentication/session.js';
 import { deleteCollection, deleteCollectionItem } from '../../../server/database/collections.js';
 
-const DELETE = async ({ request }) => {
-  const loggedInUser = getSessionUser(request);
+const DELETE = async (context) => {
+  const loggedInUser = getSessionUser(context);
 
   if (!loggedInUser) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }
 
-  const { key, value } = await request.json();
+  const { key, value } = await context.request.json();
 
   try {
     switch (key) {

@@ -7,7 +7,7 @@ import { sessionSecret } from './server/authentication/config.js';
 import { getUsername } from './server/authentication/cookies.js';
 import { getSessionUser } from './server/authentication/session.js';
 import { cookieNameLocale, cookieNameCurrency, defaultCurrency } from './server/config.js';
-import { getValue } from './server/database/formData.js';
+import { getValue, insert } from './server/database/formData.js';
 import { getAuthenticationOptions } from './server/login.js';
 import { createRegistrationOptions } from './server/registration.js';
 import { setCollections, setCollectionItem } from './server/you/collections.js';
@@ -28,12 +28,25 @@ const setImageUploadUrls = (context) => {
   };
 };
 
+const unsubscribe = async ({ user, notificationType }) => {
+  const settings = await getValue({ user, key: 'settings' });
+
+  return insert({
+    user,
+    key: 'settings',
+    value: {
+      ...settings,
+      [notificationType]: undefined
+    }
+  });
+};
+
 const setCurrency = async (context) => {
   const cookieCurrency = context.cookies.get(cookieNameCurrency)?.value;
   let currencyDB;
 
   try {
-    const settings = await getValue({ user: { name: getSessionUser(context.request)?.username }, key: 'settings' });
+    const settings = await getValue({ user: { name: getSessionUser(context)?.username }, key: 'settings' });
 
     currencyDB = settings?.currency;
   } catch {
@@ -47,7 +60,7 @@ const setCurrency = async (context) => {
 
 const setSettings = async (context) => {
   try {
-    const settings = await getValue({ user: { name: getSessionUser(context.request)?.username }, key: 'settings' });
+    const settings = await getValue({ user: { name: getSessionUser(context)?.username }, key: 'settings' });
 
     context.locals.settings = settings;
   } catch {
@@ -82,7 +95,7 @@ const redirect = (url) =>
   });
 
 const authenticate = (context) => {
-  const loggedInUser = getSessionUser(context.request);
+  const loggedInUser = getSessionUser(context);
 
   context.locals.loggedInUser = loggedInUser;
 };
@@ -140,7 +153,7 @@ const onRequest = async (context, next) => {
   let savedLocaleDB;
 
   try {
-    const settings = await getValue({ user: { name: getSessionUser(context.request)?.username }, key: 'settings' });
+    const settings = await getValue({ user: { name: getSessionUser(context)?.username }, key: 'settings' });
 
     savedLocaleDB = settings?.language;
   } catch {
@@ -175,7 +188,7 @@ const onRequest = async (context, next) => {
 
   if (page === 'you') {
     try {
-      const loggedInUser = getSessionUser(context.request);
+      const loggedInUser = getSessionUser(context);
 
       context.locals.username = loggedInUser?.username;
 
@@ -185,12 +198,21 @@ const onRequest = async (context, next) => {
         await setCollections(context); // to enable the 'add to collection' feature
         await setCollectionItem(context, itemId);
       }
+
+      if (params[0] === 'unsubscribe' && loggedInUser) {
+        if (context.params.notificationType) {
+          await unsubscribe({
+            user: { name: loggedInUser.username },
+            notificationType: context.params.notificationType
+          });
+        }
+      }
     } catch (error) {
       console.error(error);
 
       context.locals.shouldAuthenticate = true;
 
-      const username = getUsername(context.request);
+      const username = getUsername(context);
 
       if (username) {
         context.locals.authenticationOptions = JSON.stringify(await getAuthenticationOptions(username));

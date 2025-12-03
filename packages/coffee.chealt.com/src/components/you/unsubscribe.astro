@@ -1,0 +1,14 @@
+---
+import Common from '../common/common.astro';
+
+import allLocales from './locales.json';
+
+const t = allLocales[Astro.currentLocale];
+
+const { shouldAuthenticate } = Astro.locals;
+---
+
+<Common shouldAuthenticate={shouldAuthenticate}>
+  <h1>{t.unsubscribedTitle}</h1>
+  <section>{t.unsubscribed}</section>
+</Common>

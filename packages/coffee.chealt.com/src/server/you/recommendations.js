@@ -15,7 +15,7 @@ const setRecommended = async (context) => {
   context.locals.recommended = {};
 
   try {
-    const user = getSessionUser(context.request);
+    const user = getSessionUser(context);
 
     if (user) {
       coffees = await getRecommendedCoffees({ user: { name: user.username }, locale: context.currentLocale });

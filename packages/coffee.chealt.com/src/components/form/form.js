@@ -126,13 +126,15 @@ const saveFormData =
     const data = formDataToObject(formData);
     const savedFormData = getAllFormsData(storage);
 
-    localStorage.setItem(
-      storageKey,
-      JSON.stringify({
-        ...savedFormData, // this is to keep the data of other forms' on the page
-        [form.name]: data
-      })
-    );
+    if (!form.dataset.excludeFromLocalStorage) {
+      localStorage.setItem(
+        storageKey,
+        JSON.stringify({
+          ...savedFormData, // this is to keep the data of other forms' on the page
+          [form.name]: data
+        })
+      );
+    }
 
     if (storage === 'api') {
       try {

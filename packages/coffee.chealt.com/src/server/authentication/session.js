@@ -8,8 +8,8 @@ const getSessionJWT = ({ user }) =>
 
 const verifySessionID = (sessionID) => jwt.verify(sessionID, sessionSecret);
 
-const getSessionUser = (request) => {
-  const sessionID = getSessionID(request);
+const getSessionUser = (context) => {
+  const sessionID = getSessionID(context);
 
   if (!sessionID) {
     throw new Error('Session ID not found');

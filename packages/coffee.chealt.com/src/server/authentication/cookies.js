@@ -1,16 +1,6 @@
 import { cookieNameSession, cookieNameUsername } from './config.js';
-import { parseCookie } from '../utils/request.js';
 
-const getSessionID = (request) => {
-  const cookies = parseCookie(request);
-
-  return cookies?.[cookieNameSession];
-};
-
-const getUsername = (request) => {
-  const cookies = parseCookie(request);
-
-  return cookies?.[cookieNameUsername];
-};
+const getSessionID = (context) => context.cookies.get(cookieNameSession)?.value;
+const getUsername = (context) => context.cookies.get(cookieNameUsername)?.value;
 
 export { getSessionID, getUsername };

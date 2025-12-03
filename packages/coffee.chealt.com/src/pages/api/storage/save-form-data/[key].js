@@ -2,8 +2,8 @@ import { getSessionUser } from '../../../../server/authentication/session.js';
 import { cookieNameCurrency, cookieNameLocale } from '../../../../server/config.js';
 import { insert } from '../../../../server/database/formData.js';
 
-const POST = async ({ params, request }) => {
-  const loggedInUser = getSessionUser(request);
+const POST = async (context) => {
+  const loggedInUser = getSessionUser(context);
 
   if (!loggedInUser) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
@@ -11,11 +11,11 @@ const POST = async ({ params, request }) => {
 
   const user = { name: loggedInUser.username, id: loggedInUser.userID };
 
-  if (!params.key) {
+  if (!context.params.key) {
     return new Response(JSON.stringify({ error: 'Missing key!' }), { status: 400 });
   }
 
-  const formData = await request.formData();
+  const formData = await context.request.formData();
   const data = {};
 
   formData.forEach((value, key) => {
@@ -35,9 +35,9 @@ const POST = async ({ params, request }) => {
     let redirectUrl;
     const headers = [];
 
-    await insert({ user, key: params.key, value: data });
+    await insert({ user, key: context.params.key, value: data });
 
-    if (params.key === 'settings' && data.language) {
+    if (context.params.key === 'settings' && data.language) {
       redirectUrl = `/${data.language}/you/profile`;
       headers.push([
         'Set-Cookie',
@@ -45,7 +45,7 @@ const POST = async ({ params, request }) => {
       ]);
     }
 
-    if (params.key === 'settings' && data.currency) {
+    if (context.params.key === 'settings' && data.currency) {
       headers.push([
         'Set-Cookie',
         `${cookieNameCurrency}=${data.currency}; Path=/; HttpOnly; SameSite=Strict; Secure; Max-Age=${60 * 60 * 24 * 365}`
