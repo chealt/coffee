@@ -87,8 +87,6 @@ const main = async () => {
     const localeContent = locales[locale] || locales.en;
     const content = getEmailContent({ newCoffees, localeContent, locale });
 
-    console.log(content);
-
     await sendEmail({
       to: email,
       content,

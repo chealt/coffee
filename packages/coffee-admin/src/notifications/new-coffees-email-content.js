@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { getDetails } from '../coffees/utils.js';
 import { titleCase } from '../utils.js';
 
@@ -9,19 +10,19 @@ const content = ({ newCoffees, localeContent, locale }) => `
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>${localeContent.newCoffeesEmailTitle}</title>
   <style type="text/css">
-    body { margin: 0; padding: 0; min-width: 100%; font-family: Arial, sans-serif; font-size: 16px; line-height: 1.5; color: #333333; background-color: #f4f4f4; }
-    a { color: #007bff; text-decoration: none; }
+    body { margin: 0; padding: 0; min-width: 100%; font-family: Arial, sans-serif; font-size: 16px; line-height: 1.5; color: #37352c; background-color: #ffffff; }
+    a { color: #f8b64d; text-decoration: none; }
     img { display: block; max-width: 100%; height: auto; border: 0; }
-    .wrapper { width: 100%; table-layout: fixed; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #f4f4f4; }
-    .main-table { margin: 0 auto; width: 100%; max-width: 600px; border-spacing: 0; font-family: sans-serif; color: #333333; background-color: #ffffff; border-radius: 8px; overflow: hidden; }
-    .button { display: inline-block; padding: 10px 20px; background-color: #007bff; color: #ffffff; border-radius: 4px; text-decoration: none; font-weight: bold; }
+    .wrapper { width: 100%; table-layout: fixed; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #d4d4d4; }
+    .main-table { margin: 0 auto; width: 100%; max-width: 600px; border-spacing: 0; font-family: sans-serif; color: #37352c; background-color: #f1e3cd; border-radius: 8px; overflow: hidden; }
+    .button { display: inline-block; padding: 10px 20px; background-color: #f8b64d; color: #37352c; border-radius: 4px; text-decoration: none; font-weight: bold; }
   </style>
 </head>
-<body style="margin: 0; padding: 0; min-width: 100%; font-family: Arial, sans-serif; font-size: 16px; line-height: 1.5; color: #333333; background-color: #f4f4f4;">
-  <div class="wrapper" style="width: 100%; table-layout: fixed; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #f4f4f4; padding: 20px 0;">
-    <table class="main-table" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 0 auto; width: 100%; max-width: 600px; border-spacing: 0; font-family: sans-serif; color: #333333; background-color: #ffffff; border-radius: 8px; overflow: hidden;">
+<body style="margin: 0; padding: 0; min-width: 100%; font-family: Arial, sans-serif; font-size: 16px; line-height: 1.5; color: #37352c; background-color: #ffffff;">
+  <div class="wrapper" style="width: 100%; table-layout: fixed; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #ffffff; padding: 20px 0;">
+    <table class="main-table" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 0 auto; width: 100%; max-width: 600px; border-spacing: 0; font-family: sans-serif; color: #333333; background-color: #f1e3cd; border-radius: 8px; overflow: hidden;">
       <tr>
-        <td class="header" style="padding: 20px; text-align: center; background-color: #222222; color: #ffffff;">
+        <td class="header" style="padding: 20px; text-align: center; background-color: #37352c; color: #f1e3cd;">
           <h1 style="margin: 0; font-size: 24px;">${localeContent.newCoffeesEmailTitle}</h1>
         </td>
       </tr>
@@ -49,12 +50,15 @@ const content = ({ newCoffees, localeContent, locale }) => `
               <tr>
                 <td align="center" style="padding-bottom: 10px;">
                   <h2 style="margin: 0; font-size: 20px;">${roasterName} - ${titleCase(originCountryName)}</h2>
-                  <p style="margin: 5px 0; color: #666666;">${titleCase(originCountryName)} - ${varieties?.map((variety) => titleCase(variety.name)).join(', ')} - ${tasteNotes?.map((note) => titleCase(note.name)).join(', ')} - ${titleCase(brewingMethod?.name)} - ${titleCase(processingMethod?.name)}</p>
+                  ${brewingMethod?.name && `<p style="margin: 5px 0; color: #666666;">${titleCase(brewingMethod.name)}</p>`}
+                  ${processingMethod?.name && `<p style="margin: 5px 0; color: #666666;">${titleCase(processingMethod.name)}</p>`}
+                  ${varieties?.length && `<p style="margin: 5px 0; color: #666666;">${varieties?.map(({ name }) => titleCase(name)).join(', ')}</p>`}
+                  ${tasteNotes?.length && `<p style="margin: 5px 0; color: #666666;">${tasteNotes?.map(({ name }) => titleCase(name)).join(', ')}</p>`}
                 </td>
               </tr>
               <tr>
                 <td align="center" style="padding-bottom: 20px;">
-                  <a href="${webshopItemLink}" class="button" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #ffffff; border-radius: 4px; text-decoration: none; font-weight: bold;">Check it out</a>
+                  <a href="${webshopItemLink}" class="button" style="display: inline-block; padding: 10px 20px; background-color: #f8b64d; color: #272727; border-radius: 4px; text-decoration: none; font-weight: bold;">Check it out</a>
                 </td>
               </tr>
             </table>
@@ -64,7 +68,7 @@ const content = ({ newCoffees, localeContent, locale }) => `
         </td>
       </tr>
       <tr>
-        <td class="footer" style="padding: 20px; text-align: center; font-size: 12px; color: #999999; background-color: #f4f4f4;">
+        <td class="footer" style="padding: 20px; text-align: center; font-size: 12px; color: #37352c; background-color: rgba(250, 250, 250, 0.4);">
           <p style="margin: 0;">&copy; ${new Date().getFullYear()} Central Beans. All rights reserved.</p>
         </td>
       </tr>
