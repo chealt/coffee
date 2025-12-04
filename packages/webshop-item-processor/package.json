@@ -7,8 +7,8 @@
     "test": "rm -rf data && mkdir data && cp ../coffee.chealt.com/data/*.json data && node --env-file=../coffee-admin/.env test.js"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.939.0",
-    "@aws-sdk/client-translate": "^3.939.0",
+    "@aws-sdk/client-lambda": "^3.943.0",
+    "@aws-sdk/client-translate": "^3.943.0",
     "jsdom": "^27.2.0"
   },
   "resolutions": {
