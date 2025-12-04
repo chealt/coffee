@@ -235,74 +235,8 @@ sup {
   font-size: 1.5rem;
 }
 
-.carousel {
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-  scroll-marker-group: before;
-  min-height: 440px;
-  max-height: 50vh;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  overflow-y: hidden;
-}
-
-.carousel > * {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-}
-
-.carousel::scroll-marker-group {
-  z-index: var(--z-index--xs); /* view-transition hides it otherwise */
-  display: flex;
-  justify-content: center;
-  gap: var(--gap);
-  position: absolute;
-  top: var(--gap);
-  justify-self: anchor-center;
-}
-
-.carousel > *::scroll-marker {
-  content: '';
-  border: 2px solid var(--color-primary);
-  border-radius: 50%;
-  width: 1em;
-  height: 1em;
-  background-color: transparent;
-  transition: background-color 0.8s ease-out;
-}
-
-.carousel > *::scroll-marker:target-current {
-  background-color: var(--color-background);
-}
-
 .hidden {
   display: none;
-}
-
-.tiles {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: var(--gap);
-  overflow: hidden;
-  align-items: center;
-}
-
-.tiles > * {
-  height: var(--tile-height);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: var(--border-radius);
-  background-color: var(--color-background--alternative);
-}
-
-.tiles img {
-  display: block;
-  width: 100%;
-  height: auto;
 }
 
 .list-container {

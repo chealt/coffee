@@ -54,3 +54,27 @@ header.title {
     margin-right: var(--gap);
   }
 }
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--gap);
+  overflow: hidden;
+  align-items: center;
+}
+
+.tiles > * {
+  height: var(--tile-height);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--border-radius);
+  background-color: var(--color-background--alternative);
+}
+
+.tiles img {
+  display: block;
+  width: 100%;
+  height: auto;
+}

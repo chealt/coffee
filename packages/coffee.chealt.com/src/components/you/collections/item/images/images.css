@@ -1,3 +1,45 @@
+.carousel {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scroll-marker-group: before;
+  min-height: 440px;
+  max-height: 50vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow-y: hidden;
+}
+
+.carousel > * {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.carousel::scroll-marker-group {
+  z-index: var(--z-index--xs); /* view-transition hides it otherwise */
+  display: flex;
+  justify-content: center;
+  gap: var(--gap);
+  position: absolute;
+  top: var(--gap);
+  justify-self: anchor-center;
+}
+
+.carousel > *::scroll-marker {
+  content: '';
+  border: 2px solid var(--color-primary);
+  border-radius: 50%;
+  width: 1em;
+  height: 1em;
+  background-color: transparent;
+  transition: background-color 0.8s ease-out;
+}
+
+.carousel > *::scroll-marker:target-current {
+  background-color: var(--color-background);
+}
+
 dialog.full-size-image {
   align-items: center;
 
