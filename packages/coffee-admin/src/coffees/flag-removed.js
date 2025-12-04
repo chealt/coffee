@@ -63,7 +63,7 @@ const flagRemoved = async ({ id, webshopItemLink, roasterId }) => {
   try {
     response = await fetch(webshopItemLink, {
       dispatcher: new Agent({
-        connectTimeout: 60 * 1000 // 1 minute
+        connectTimeout: 10 * 1000 * 1000 // 10 seconds
       })
     });
   } catch {
