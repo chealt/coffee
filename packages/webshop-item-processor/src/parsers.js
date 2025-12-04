@@ -113,8 +113,9 @@ const parsers = {
     const varietiesStrings = varietiesString.includes(' / ') ? varietiesString.split(' / ') : [varietiesString];
     const varietyIds = varieties
       .filter(
-        ({ name }) =>
+        ({ name, alias }) =>
           varietiesStrings.includes(name.toLowerCase()) ||
+          (alias && varietiesStrings.includes(alias.toLowerCase())) ||
           (name.toLowerCase() === 'cuscatleco' && varietiesStrings.includes('cuzcatleco')) // typo
       )
       .filter(({ name }) => name.toLowerCase() !== originCountry)
@@ -226,11 +227,16 @@ const parsers = {
     const varietiesStrings =
       details['odmiana botaniczna']?.split(', ').map((name) => name.trim().toLocaleLowerCase()) || [];
     const varietyIds = varieties
-      .filter(({ name }) => varietiesStrings.includes(name.toLowerCase()))
+      .filter(
+        ({ name, alias }) =>
+          varietiesStrings.includes(name.toLowerCase()) || (alias && varietiesStrings.includes(alias.toLowerCase()))
+      )
       .filter(({ name }) => name.toLowerCase() !== originCountry)
       .map(({ id }) => id);
     const missingVarieties = varietiesStrings.filter(
-      (variety) => !varieties.some(({ name }) => name.toLowerCase() === variety)
+      (variety) =>
+        !varieties.some(({ name }) => name.toLowerCase() === variety) &&
+        !varieties.some(({ alias }) => alias?.toLowerCase() === variety)
     );
 
     if (missingVarieties.length) {
@@ -378,7 +384,10 @@ const parsers = {
       .trim();
     const varietiesStrings = varietiesString.includes(', ') ? varietiesString.split(', ') : [varietiesString];
     const varietyIds = varieties
-      .filter(({ name }) => varietiesStrings.includes(name.toLowerCase()))
+      .filter(
+        ({ name, alias }) =>
+          varietiesStrings.includes(name.toLowerCase()) || (alias && varietiesStrings.includes(alias.toLowerCase()))
+      )
       .filter(({ name }) => name.toLowerCase() !== originCountry)
       .map(({ id }) => id);
 
@@ -513,11 +522,16 @@ const parsers = {
       .map((notes) => notes.split(' & '))
       .flat();
     const varietyIds = varieties
-      .filter(({ name }) => varietiesStrings.includes(name.toLowerCase()))
+      .filter(
+        ({ name, alias }) =>
+          varietiesStrings.includes(name.toLowerCase()) || (alias && varietiesStrings.includes(alias.toLowerCase()))
+      )
       .filter(({ name }) => name.toLowerCase() !== originCountry)
       .map(({ id }) => id);
     const missingVarieties = varietiesStrings.filter(
-      (variety) => !varieties.some(({ name }) => name.toLowerCase() === variety)
+      (variety) =>
+        !varieties.some(({ name }) => name.toLowerCase() === variety) &&
+        !varieties.some(({ alias }) => alias?.toLowerCase() === variety)
     );
 
     if (missingVarieties.length) {
@@ -633,8 +647,9 @@ const parsers = {
       .split(', ');
     const varietyIds = varieties
       .filter(
-        ({ name }) =>
+        ({ name, alias }) =>
           varietiesStrings.includes(name.toLowerCase()) ||
+          (alias && varietiesStrings.includes(alias.toLowerCase())) ||
           (name.toLowerCase() === 'mundo novo' && varietiesStrings.includes('mundo movo')) // typo
       )
       .filter(({ name }) => name.toLowerCase() !== originCountry)
@@ -642,8 +657,10 @@ const parsers = {
     const missingVarieties = varietiesStrings.filter(
       (variety) =>
         !varieties.some(
-          ({ name }) =>
-            name.toLowerCase() === variety || (name.toLowerCase() === 'mundo novo' && variety === 'mundo movo')
+          ({ name, alias }) =>
+            name.toLowerCase() === variety ||
+            (alias && alias.toLowerCase() === variety) ||
+            (name.toLowerCase() === 'mundo novo' && variety === 'mundo movo') // typo
         )
     );
 
@@ -869,7 +886,10 @@ const parsers = {
     );
 
     const description = document.querySelector('.woocommerce-Tabs-panel--description').textContent.toLowerCase();
-    const varietiesFound = varieties.filter(({ name }) => description.includes(name.toLowerCase()));
+    const varietiesFound = varieties.filter(
+      ({ name, alias }) =>
+        description.includes(name.toLowerCase()) || (alias && description.includes(alias.toLowerCase()))
+    );
     // exclude varieties that include each other like Ruiru and Ruiru 11
     const distinctVarieties = varietiesFound.filter(
       ({ name }) => !varietiesFound.some(({ name: n }) => n !== name && n.includes(name))
@@ -1019,7 +1039,10 @@ const parsers = {
     const varietiesString = details.variety || details.varietal;
     const varietiesStrings = varietiesString.includes(', ') ? varietiesString.split(', ') : [varietiesString];
     const varietyIds = varieties
-      .filter(({ name }) => varietiesStrings.includes(name.toLowerCase()))
+      .filter(
+        ({ name, alias }) =>
+          varietiesStrings.includes(name.toLowerCase()) || (alias && varietiesStrings.includes(alias.toLowerCase()))
+      )
       .filter(({ name }) => name.toLowerCase() !== originCountry)
       .map(({ id }) => id);
 
@@ -1145,7 +1168,10 @@ const parsers = {
     );
     const uniqueTasteNoteIds = Array.from(new Set(distinctTasteNotes.map(({ taste_note_id: id }) => id)));
 
-    const varietiesFound = varieties.filter(({ name }) => description.includes(name.toLowerCase()));
+    const varietiesFound = varieties.filter(
+      ({ name, alias }) =>
+        description.includes(name.toLowerCase()) || (alias && description.includes(alias.toLowerCase()))
+    );
     // exclude varieties that include each other like Ruiru and Ruiru 11
     const distinctVarieties = varietiesFound.filter(
       ({ name }) => !varietiesFound.some(({ name: n }) => n !== name && n.includes(name))
@@ -1249,7 +1275,9 @@ const parsers = {
       processingMethods.find(({ name }) => name === processingMethod)?.processing_method_id || null;
 
     const variety = details['botanical variety'];
-    const varietyIds = varieties.filter(({ name }) => name.toLowerCase() === variety).map(({ id }) => id);
+    const varietyIds = varieties
+      .filter(({ name, alias }) => name.toLowerCase() === variety || (alias && alias.toLowerCase() === variety))
+      .map(({ id }) => id);
 
     const tasteNotesString = details['coffee notes'];
     const tasteNoteIds = tasteNotes
@@ -1367,7 +1395,11 @@ const parsers = {
 
     const subtitle = document.querySelector('h6').textContent.toLowerCase().trim();
 
-    const varietyIds = varieties.filter(({ name }) => subtitle.includes(name.toLowerCase())).map(({ id }) => id);
+    const varietyIds = varieties
+      .filter(
+        ({ name, alias }) => subtitle.includes(name.toLowerCase()) || (alias && subtitle.includes(alias.toLowerCase()))
+      )
+      .map(({ id }) => id);
 
     const processingMethodId =
       processingMethods.filter(({ name }) => subtitle.includes(name)).sort((a, b) => b.name.length - a.name.length)?.[0]
@@ -1480,10 +1512,19 @@ const parsers = {
 
     const originFarmId = originFarms.find(({ name }) => details.producer?.includes(name))?.id || null;
 
-    const varietyIds = varieties.filter(({ name }) => details.variety.includes(name.toLowerCase())).map(({ id }) => id);
+    const varietyIds = varieties
+      .filter(
+        ({ name, alias }) =>
+          details.variety.includes(name.toLowerCase()) || (alias && details.variety.includes(alias.toLowerCase()))
+      )
+      .map(({ id }) => id);
     const missingVarieties = details.variety
       .split(', ')
-      .filter((name) => !varieties.map((variety) => variety.name.toLowerCase()).includes(name));
+      .filter(
+        (name) =>
+          !varieties.map((variety) => variety.name.toLowerCase()).includes(name) &&
+          !varieties.map((variety) => variety.alias.toLowerCase()).includes(name)
+      );
 
     if (missingVarieties.length) {
       console.debug(`Missing varieties: ${missingVarieties}`);
@@ -1608,10 +1649,19 @@ const parsers = {
       console.debug(errors.processingMethodMissing, ': ', details.processing);
     }
 
-    const varietyIds = varieties.filter(({ name }) => details.variety.includes(name.toLowerCase())).map(({ id }) => id);
+    const varietyIds = varieties
+      .filter(
+        ({ name, alias }) =>
+          details.variety.includes(name.toLowerCase()) || (alias && details.variety.includes(alias.toLowerCase()))
+      )
+      .map(({ id }) => id);
     const missingVarieties = details.variety
       .split(', ')
-      .filter((name) => !varieties.map((variety) => variety.name.toLowerCase()).includes(name));
+      .filter(
+        (name) =>
+          !varieties.map((variety) => variety.name.toLowerCase()).includes(name) &&
+          !varieties.map((variety) => variety.alias.toLowerCase()).includes(name)
+      );
 
     if (missingVarieties.length) {
       console.debug(`Missing varieties: ${missingVarieties}`);
