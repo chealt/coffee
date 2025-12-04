@@ -47,26 +47,28 @@ const calculateSumOnInput = (sumGroup) => {
 };
 
 const addChangeEvent = ({ form, callback }) => {
-  form.querySelectorAll('input:not([data-exclude]),select:not([data-exclude])').forEach((element) => {
-    element.addEventListener('input', (event) => {
-      if (event.isTrusted || element.getAttribute('type') === 'hidden') {
-        callback(form); // eslint-disable-line callback-return
+  form
+    .querySelectorAll('input:not([data-exclude]),select:not([data-exclude]),textarea:not([data-exclude])')
+    .forEach((element) => {
+      element.addEventListener('input', (event) => {
+        if (event.isTrusted || element.getAttribute('type') === 'hidden') {
+          callback(form); // eslint-disable-line callback-return
 
-        form.dispatchEvent(
-          new CustomEvent('chealt-form:change', {
-            bubbles: true,
-            detail: {
-              formName: form.name
-            }
-          })
-        );
+          form.dispatchEvent(
+            new CustomEvent('chealt-form:change', {
+              bubbles: true,
+              detail: {
+                formName: form.name
+              }
+            })
+          );
 
-        return true;
-      }
+          return true;
+        }
 
-      return undefined;
+        return undefined;
+      });
     });
-  });
 };
 
 const getFormData = ({ form, storage }) => {
@@ -234,6 +236,12 @@ class ChealtForm extends HTMLElement {
         addChangeEvent({
           form: this.form,
           callback: saveFormData({ storage: this.storage, saveEndpoint: this.saveEndpoint })
+        });
+      } else {
+        this.form.addEventListener('submit', async (event) => {
+          event.preventDefault();
+
+          await saveFormData({ storage: this.storage, saveEndpoint: this.saveEndpoint })(this.form);
         });
       }
 
