@@ -1,1 +1,5 @@
-<textarea {...Astro.props}></textarea>
+---
+const { value, ...props } = Astro.props;
+---
+
+<textarea {...props}>{value}</textarea>
