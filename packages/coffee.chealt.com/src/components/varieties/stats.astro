@@ -25,23 +25,21 @@ const { id } = Astro.props;
 const { name } = varieties.find((variety) => variety.id === id);
 const coffees = allCoffees
   .map(getDetails({ locale: Astro.currentLocale }))
-  .filter(({ varieties }) => varieties?.some((variety) => variety.id === id))
   .map(({ pricePerGram, ...coffee }) => ({
     ...coffee,
     pricePerGram: convertToUSD({ price: pricePerGram, currency })
   }))
   .sort((a, b) => a.pricePerGram - b.pricePerGram);
 const maxPricePerGram = coffees[coffees.length - 1].pricePerGram;
-const roastersWithCoffee = Array.from(new Set(allCoffees.map(({ roaster_id }) => roaster_id)))
-  .map((roasterId) => roasters.find(({ id }) => id === roasterId))
-  .map((roaster) => ({
-    ...roaster,
-    coffees: coffees.filter(({ roaster: { id: roasterId } }) => roasterId === roaster.id)
+const varietiesWithCoffee = varieties
+  .map((variety) => ({
+    ...variety,
+    coffees: coffees.filter(({ varieties }) => varieties?.some(({ id: varietyId }) => varietyId === variety.id))
   }))
   .filter(({ coffees }) => coffees.length)
-  .map((roaster) => ({
-    ...roaster,
-    tasteNoteGroups: roaster.coffees.reduce((stats, { tasteNotes }) => {
+  .map((variety) => ({
+    ...variety,
+    tasteNoteGroups: variety.coffees.reduce((stats, { tasteNotes }) => {
       tasteNotes.forEach(({ taste_note_id: tasteNoteId }) => {
         const { taste_note_group_id: tasteNoteGroupId } = getTasteNoteGroupByNoteId(tasteNoteId);
 
@@ -63,7 +61,7 @@ const tasteNoteGroupsLocale = tasteNoteGroups
   .map(({ tasteNoteGroupId, ...rest }) => ({
     ...rest,
     tasteNoteGroupId,
-    roasters: roastersWithCoffee
+    varieties: varietiesWithCoffee
       .filter(({ tasteNoteGroups }) => tasteNoteGroups[tasteNoteGroupId])
       .map(({ id, name, tasteNoteGroups }) => ({
         id,
@@ -72,8 +70,11 @@ const tasteNoteGroupsLocale = tasteNoteGroups
       }))
       .sort((a, b) => b.count - a.count)
   }))
-  .filter(({ roasters }) => roasters.length);
-const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce((max, { roasters }) => Math.max(max, roasters[0].count), 0);
+  .filter(({ varieties }) => varieties.length);
+const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce(
+  (max, { varieties }) => Math.max(max, varieties[0].count),
+  0
+);
 ---
 
 <Common shouldAuthenticate={shouldAuthenticate}>
@@ -94,19 +95,19 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce((max, { roasters }) 
   <section>
     <h2>{t.prices}</h2>
     <div class="card">
-      <coffee-stats>
+      <coffee-stats data-default-label={id}>
         <div class="stats">
           <div class="chart-inner">
             <div class="dots">
               {
-                roastersWithCoffee.map(({ id: roasterId, name: roasterName, coffees }) =>
+                varietiesWithCoffee.map(({ id: varietyId, name: varietyName, coffees }) =>
                   coffees.map(
                     ({ pricePerGram, originCountry: { name: originCountryName }, webshopItemLink }, coffeeIndex) => (
                       <a
-                        class={`part dot ${roasterId === id ? 'active' : ''}`}
+                        class={`part dot ${varietyId === id ? 'active' : ''}`}
                         style={`bottom: ${pricePerGram / (maxPricePerGram / 100)}%; left: ${coffeeIndex / (coffees.length / 100)}%`}
-                        data-label={roasterId}
-                        aria-label={`${roasterName} ${originCountryName}`}
+                        data-label={varietyId}
+                        aria-label={`${varietyName} ${originCountryName}`}
                         href={webshopItemLink}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -118,10 +119,10 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce((max, { roasters }) 
             </div>
             <div class="labels">
               {
-                roastersWithCoffee.map(({ id: roasterId, name, coffees }) => (
+                varietiesWithCoffee.map(({ id: varietyId, name: varietyName, coffees }) => (
                   <Fragment>
-                    <div class={`label x ${roasterId === id ? 'active' : ''}`} data-part={roasterId}>
-                      {name}
+                    <div class={`label x ${varietyId === id ? 'active' : ''}`} data-part={varietyId}>
+                      {varietyName}
                     </div>
                   </Fragment>
                 ))
@@ -140,13 +141,13 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce((max, { roasters }) 
           <div class="chart-inner">
             <ul class="bars">
               {
-                tasteNoteGroupsLocale.map(({ name, color, tasteNoteGroupId, roasters }) => (
+                tasteNoteGroupsLocale.map(({ name, color, tasteNoteGroupId, varieties }) => (
                   <li class="bar-container">
-                    {roasters.map(({ id: roasterId, name, count }) => (
+                    {varieties.map(({ id: varietyId, name, count }) => (
                       <div
-                        class={`part bar ${roasterId === id ? 'active' : ''}`}
+                        class={`part bar ${varietyId === id ? 'active' : ''}`}
                         style={`height: ${count / (maxTasteNoteGroupCount / 100)}%`}
-                        data-label={roasterId}
+                        data-label={varietyId}
                       />
                     ))}
                     <div class="bar-label" style={`color: ${color}`}>
@@ -158,9 +159,9 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce((max, { roasters }) 
             </ul>
             <div class="labels">
               {
-                tasteNoteGroupsLocale.map(({ name, color, tasteNoteGroupId, roasters }) =>
-                  roasters.map(({ id: roasterId, name, count }) => (
-                    <div class={`label x ${roasterId === id ? 'active' : ''}`} data-part={roasterId}>
+                tasteNoteGroupsLocale.map(({ name, color, tasteNoteGroupId, varieties }) =>
+                  varieties.map(({ id: varietyId, name, count }) => (
+                    <div class={`label x ${varietyId === id ? 'active' : ''}`} data-part={varietyId}>
                       {name}
                     </div>
                   ))
