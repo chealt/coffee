@@ -1,4 +1,6 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
 import Common from '../common/common.astro';
 
 import allLocales from './locales.json';
@@ -6,9 +8,13 @@ import allLocales from './locales.json';
 const t = allLocales[Astro.currentLocale];
 
 const { shouldAuthenticate } = Astro.locals;
+const { notificationType } = Astro.params;
 ---
 
-<Common shouldAuthenticate={shouldAuthenticate}>
+<Common
+  shouldAuthenticate={shouldAuthenticate}
+  redirectUrl={getRelativeLocaleUrl(Astro.currentLocale, `/you/unsubscribe/${notificationType}`)}
+>
   <h1>{t.unsubscribedTitle}</h1>
   <section>{t.unsubscribed}</section>
 </Common>
