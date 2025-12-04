@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 import { getClient } from './client.js';
 import { getValue } from './formData.js';
-import { getTasteNoteGroupByNoteId } from '../../components/taste-notes/utils.js';
 import { getImageUrl } from '../AWS/storage.js';
 
 const queryCollections = async (user) => {
@@ -95,36 +94,6 @@ const queryCollectionItemLinks = async (user, itemId) => {
   return results.rows;
 };
 
-const queryRecommendedRoasterIds = async (user) => {
-  const client = getClient(user.name);
-
-  const results = await client.execute({
-    sql: 'SELECT * FROM recommended_roaster_ids'
-  });
-
-  return results.rows;
-};
-
-const queryRecommendedOriginCountryIds = async (user) => {
-  const client = getClient(user.name);
-
-  const results = await client.execute({
-    sql: 'SELECT * FROM recommended_origin_country_ids'
-  });
-
-  return results.rows;
-};
-
-const queryRecommendedTasteNoteIds = async (user) => {
-  const client = getClient(user.name);
-
-  const results = await client.execute({
-    sql: 'SELECT * FROM recommended_taste_note_ids'
-  });
-
-  return results.rows;
-};
-
 const getCollections = async (user) => {
   const collections = await queryCollections(user);
   const collectionItems = await queryCollectionItems(user);
@@ -203,57 +172,6 @@ const getCollectionItem = async (user, itemId) => {
     review,
     inCollections: collectionItemLinks.map((link) => link.collection_id)
   };
-};
-
-const getRecommendedRoasterIds = async (user) => {
-  const recommendedRoasterIds = await queryRecommendedRoasterIds(user);
-
-  return recommendedRoasterIds?.map(({ roaster_id: roasterId }) => roasterId) || [];
-};
-
-const getRecommendedOriginCountryIds = async (user) => {
-  const recommendedOriginCountryIds = await queryRecommendedOriginCountryIds(user);
-
-  return (
-    recommendedOriginCountryIds?.map(({ origin_country_id: originCountryId }) => originCountryId).slice(0, 2) || []
-  );
-};
-
-const getRecommendedTasteNoteIds = async (user) => {
-  const recommendedTasteNoteIds = await queryRecommendedTasteNoteIds(user);
-
-  return Array.from(
-    new Set(
-      recommendedTasteNoteIds
-        ?.map(({ taste_note_ids: ids }) => JSON.parse(ids))
-        .flat()
-        .map((id) => Number(id)) || []
-    )
-  );
-};
-
-const getRecommendedTasteNoteGroupIds = async (user) => {
-  const recommendedTasteNoteIds = await getRecommendedTasteNoteIds(user);
-  const recommendedTasteNoteGroupIds = recommendedTasteNoteIds
-    ? Object.entries(
-        recommendedTasteNoteIds
-          .map((tasteNoteId) => getTasteNoteGroupByNoteId(tasteNoteId))
-          .reduce((previousValue, currentValue) => {
-            if (!previousValue[currentValue.taste_note_group_id]) {
-              previousValue[currentValue.taste_note_group_id] = 1;
-            } else {
-              previousValue[currentValue.taste_note_group_id]++;
-            }
-
-            return previousValue;
-          }, {})
-      )
-        .sort(([, valueA], [, valueB]) => valueB - valueA)
-        .map(([tasteNoteGroupId]) => Number(tasteNoteGroupId))
-        .slice(0, 1)
-    : [];
-
-  return recommendedTasteNoteGroupIds;
 };
 
 const deleteCollection = async ({ user, id }) => {
@@ -395,10 +313,6 @@ export {
   deleteCollectionItem,
   getCollections,
   getCollectionItem,
-  getRecommendedOriginCountryIds,
-  getRecommendedRoasterIds,
-  getRecommendedTasteNoteGroupIds,
-  getRecommendedTasteNoteIds,
   updateCollectionName,
   updateRanks
 };

@@ -1422,6 +1422,7 @@ __metadata:
     "@sentry/cloudflare": "npm:^10.28.0"
     "@simplewebauthn/browser": "npm:13.1.2"
     "@simplewebauthn/server": "npm:13.1.2"
+    "@tursodatabase/api": "npm:^1.9.2"
     astro: "npm:^5.16.4"
     eslint: "npm:^9.39.1"
     eslint-plugin-astro: "npm:^1.5.0"

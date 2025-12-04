@@ -12,8 +12,6 @@ const t = allLocaleTranslations[Astro.currentLocale];
 const tc = allLocaleCommonTranslations[Astro.currentLocale];
 
 const countries = allCountries.filter(({ language_code }) => language_code === Astro.currentLocale);
-
-const { recommended } = Astro.locals;
 ---
 
 <div class="list-container">

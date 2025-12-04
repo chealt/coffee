@@ -6,7 +6,12 @@ const { coffees, isRecommendedList } = Astro.props;
 
 await import.meta.glob('/public/coffees/*.*', { eager: true });
 
-const { recommended } = Astro.locals;
+const recommendationsData = import.meta.glob('../../../data/recommendations/*.json', { eager: true });
+const { loggedInUser } = Astro.locals;
+const recommendedKey = Object.keys(recommendationsData).find(
+  (key) => key === `../../../data/recommendations/${loggedInUser ? loggedInUser.username : 'anonymous'}.json`
+);
+const recommended = recommendationsData[recommendedKey];
 
 const coffeesWithDetails = coffees.map(getDetails({ locale: Astro.currentLocale })).map(({ id, ...rest }) => ({
   id,

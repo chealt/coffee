@@ -11,8 +11,13 @@ const tc = allLocaleCommonTranslations[Astro.currentLocale];
 
 await import.meta.glob('/public/roasters/*.{jpeg,jpg,png,gif,svg,webp}', { eager: true });
 
-const { recommended } = Astro.locals;
 const { roasters } = Astro.props;
+const recommendationsData = import.meta.glob('../../../data/recommendations/*.json', { eager: true });
+const { loggedInUser } = Astro.locals;
+const recommendedKey = Object.keys(recommendationsData).find(
+  (key) => key === `../../../data/recommendations/${loggedInUser ? loggedInUser.username : 'anonymous'}.json`
+);
+const recommended = recommendationsData[recommendedKey];
 ---
 
 <div class="list-container">

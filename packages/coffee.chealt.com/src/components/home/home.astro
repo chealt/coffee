@@ -33,7 +33,12 @@ const cheapestCoffees = coffees
   .slice(0, 10);
 const groups = tasteNoteGroups.filter(({ language_code }) => language_code === Astro.currentLocale);
 
-const { recommended } = Astro.locals;
+const recommendationsData = import.meta.glob('../../../data/recommendations/*.json', { eager: true });
+const { loggedInUser } = Astro.locals;
+const recommendedKey = Object.keys(recommendationsData).find(
+  (key) => key === `../../../data/recommendations/${loggedInUser ? loggedInUser.username : 'anonymous'}.json`
+);
+const recommended = recommendationsData[recommendedKey];
 ---
 
 <Common>

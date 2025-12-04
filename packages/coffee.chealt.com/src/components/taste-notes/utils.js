@@ -1,7 +1,7 @@
-import coffeeTasteNotes from '../../../data/coffeeTasteNotes.json';
-import tasteNoteGroups from '../../../data/tasteNoteGroups.json';
-import tasteNoteSubGroups from '../../../data/tasteNoteSubGroups.json';
-import tasteNotes from '../../../data/tasteNotes.json';
+import coffeeTasteNotes from '../../../data/coffeeTasteNotes.json' with { type: 'json' };
+import tasteNoteGroups from '../../../data/tasteNoteGroups.json' with { type: 'json' };
+import tasteNoteSubGroups from '../../../data/tasteNoteSubGroups.json' with { type: 'json' };
+import tasteNotes from '../../../data/tasteNotes.json' with { type: 'json' };
 
 const getTasteNoteGroup = (coffeeId) => {
   const tasteNoteId = coffeeTasteNotes.find((coffeeTasteNote) => coffeeTasteNote.coffee_id === coffeeId)?.taste_note_id;

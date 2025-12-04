@@ -13,7 +13,12 @@ const tc = allLocaleCommonTranslations[Astro.currentLocale];
 
 const countries = originCountries.filter(({ language_code }) => language_code === Astro.currentLocale);
 
-const { recommended } = Astro.locals;
+const recommendationsData = import.meta.glob('../../../../data/recommendations/*.json', { eager: true });
+const { loggedInUser } = Astro.locals;
+const recommendedKey = Object.keys(recommendationsData).find(
+  (key) => key === `../../../../data/recommendations/${loggedInUser ? loggedInUser.username : 'anonymous'}.json`
+);
+const recommended = recommendationsData[recommendedKey];
 ---
 
 <div class="list-container">

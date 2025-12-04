@@ -11,7 +11,6 @@ import { getValue, insert } from './server/database/formData.js';
 import { getAuthenticationOptions } from './server/login.js';
 import { createRegistrationOptions } from './server/registration.js';
 import { setCollections, setCollectionItem } from './server/you/collections.js';
-import { setRecommended } from './server/you/recommendations.js';
 
 const locales = supportedLanguages.map(({ locale }) => locale);
 const defaultLocale = supportedLanguages.find(({ isDefault }) => isDefault).locale;
@@ -145,8 +144,6 @@ const onRequest = async (context, next) => {
   } catch {
     // DO NOTHING
   }
-
-  await setRecommended(context);
 
   const { itemId, collectionId, locale } = context.params;
 
