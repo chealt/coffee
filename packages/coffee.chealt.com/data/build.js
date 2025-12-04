@@ -182,7 +182,7 @@ const saveTasteNoteSubGroups = async () => {
 };
 
 const saveVarieties = async () => {
-  const results = await turso.execute('SELECT * FROM varieties ORDER BY name ASC');
+  const results = await turso.execute('SELECT * FROM varieties_all ORDER BY name ASC');
 
   return writeFile('./data/varieties.json', JSON.stringify(results.rows), { flag: 'w+' });
 };

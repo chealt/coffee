@@ -1,4 +1,4 @@
-CREATE VIEW variteties_all AS
+CREATE VIEW varieties_all AS
 SELECT
   v.id,
   v.name,
