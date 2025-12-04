@@ -28,12 +28,7 @@ const recommended = recommendationsData[recommendedKey];
         <li class="item">
           <a href={getRelativeLocaleUrl(Astro.currentLocale, `/origin-countries/${name}`)}>
             <div class="image card">
-              <img
-                src={`/origin-countries/${id}.svg`}
-                alt={`${t.originCountry} ${name}`}
-                loading={index >= 2 ? 'lazy' : undefined}
-                fetchpriority={index >= 2 ? undefined : 'high'}
-              />
+              <img src={`/origin-countries/${id}.svg`} alt={`${t.originCountry} ${name}`} loading="lazy" />
             </div>
             <div class="name">{name}</div>
             {recommended?.originCountries?.includes(id) && <span class="tag primary left">{tc.recommended}</span>}

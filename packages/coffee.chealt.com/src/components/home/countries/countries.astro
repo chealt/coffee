@@ -21,12 +21,7 @@ const countries = allCountries.filter(({ language_code }) => language_code === A
         <li class="item">
           <a href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${name}`)}>
             <div class="image card">
-              <img
-                src={`/countries/${id}.svg`}
-                alt={`${t.country} ${name}`}
-                loading={index >= 2 ? 'lazy' : undefined}
-                fetchpriority={index >= 2 ? undefined : 'high'}
-              />
+              <img src={`/countries/${id}.svg`} alt={`${t.country} ${name}`} loading="lazy" />
             </div>
             <div class="name">{name}</div>
           </a>
