@@ -1,0 +1,14 @@
+{
+  "en": {
+    "title": "Feedback",
+    "liked": "Liked",
+    "disliked": "Disliked",
+    "submit": "Submit"
+  },
+  "pl": {
+    "title": "Opinie",
+    "liked": "Co Cię zadowoliło?",
+    "disliked": "Co Cię zadowoliło?",
+    "submit": "Wyślij"
+  }
+}

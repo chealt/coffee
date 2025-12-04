@@ -206,6 +206,10 @@ const onRequest = async (context, next) => {
             notificationType: context.params.notificationType
           });
         }
+      } else if (params[0] === 'feedback' && loggedInUser) {
+        const feedback = await getValue({ user: { name: loggedInUser.username }, key: 'feedback' });
+
+        context.locals.feedback = feedback;
       }
     } catch (error) {
       console.error(error);
