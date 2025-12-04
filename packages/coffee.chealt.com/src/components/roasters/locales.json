@@ -4,6 +4,7 @@
     "chart": "Chart",
     "coffees": "Coffees",
     "prices": "Prices",
+    "roasterLogo": "Roaster Logo",
     "tasteNotes": "Taste Notes"
   },
   "pl": {
@@ -11,6 +12,7 @@
     "chart": "Wykres",
     "coffees": "Kawy",
     "prices": "Ceny",
+    "roasterLogo": "Logo Roastera",
     "tasteNotes": "Smaki"
   }
 }

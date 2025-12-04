@@ -1,8 +1,10 @@
 {
   "en": {
-    "countries": "roaster country"
+    "countries": "roaster country",
+    "country": "country"
   },
   "pl": {
-    "countries": "kraj palarnia"
+    "countries": "kraj palarnia",
+    "country": "kraj"
   }
 }
