@@ -14,6 +14,7 @@ const handler = {
 
       if (response.status === 200) {
         response = new Response(response.body, response);
+        response.headers.set('Access-Control-Allow-Origin', '*');
         response.headers.set('Cache-Control', 'public, max-age=31556952, immutable');
 
         ctx.waitUntil(cache.put(request, response.clone()));
