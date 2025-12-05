@@ -6,7 +6,7 @@ const handler = {
     let response = await cache.match(request);
 
     if (!response) {
-      const cloudfrontUrl = new URL(url.pathname, `https://${env.CLOUDFRONT_DOMAIN}`);
+      const cloudfrontUrl = new URL(url.pathname.replace('/images', ''), `https://${env.CLOUDFRONT_DOMAIN}`);
 
       response = await fetch(new Request(cloudfrontUrl, request));
 
