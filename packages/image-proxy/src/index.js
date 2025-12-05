@@ -17,6 +17,8 @@ const handler = {
         response.headers.set('Access-Control-Allow-Origin', '*');
         response.headers.set('Cache-Control', 'public, max-age=31556952, immutable');
 
+        console.info(`Header Access-Control-Allow-Origin: ${response.headers.get('Access-Control-Allow-Origin')}`);
+
         ctx.waitUntil(cache.put(request, response.clone()));
       }
     }
