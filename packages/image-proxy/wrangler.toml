@@ -1,0 +1,9 @@
+name = "image-proxy"
+main = "src/index.js"
+
+[[routes]]
+pattern = "centralbeans.com/images/*"
+zone_name = "centralbeans.com"
+
+[vars]
+CLOUDFRONT_DOMAIN = "d1id4xyh4xfwh3.cloudfront.net"
