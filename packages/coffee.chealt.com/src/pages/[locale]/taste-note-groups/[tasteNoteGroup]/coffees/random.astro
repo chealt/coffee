@@ -39,7 +39,7 @@ const details = !noCoffeeFound && getDetails({ locale: Astro.currentLocale })(ra
   (noCoffeeFound && <p style="color: var(--color-text--primary)">{t.noCoffeeFound}</p>) || (
     <a href={details?.webshopItemLink} target="_blank" rel="noopener noreferrer">
       <div class="image large">
-        <img src={`https://coffee-images.centralbeans.com/${details?.images[0]}`} />
+        <img src={`https://centralbeans.com/images/600/${details?.images[0]}`} />
       </div>
     </a>
   )

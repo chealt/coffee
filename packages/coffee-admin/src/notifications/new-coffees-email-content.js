@@ -45,7 +45,7 @@ const content = ({ newCoffees, localeContent, locale }) => `
             <table class="coffee-item" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-bottom: 1px solid #eeeeee; margin-bottom: 20px;">
               <tr>
                 <td align="center" style="padding-bottom: 15px;">
-                  <img src="https://coffee-images.centralbeans.com/${images[0]}" alt="Coffee Image" width="300" style="display: block; max-width: 100%; height: auto; border: 0; border-radius: 8px;" />
+                  <img src="https://centralbeans.com/images/600/${images[0]}" alt="Coffee Image" width="300" style="display: block; max-width: 100%; height: auto; border: 0; border-radius: 8px;" />
                 </td>
               </tr>
               <tr>
