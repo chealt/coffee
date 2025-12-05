@@ -15,9 +15,8 @@ const handler = {
       if (response.status === 200) {
         response = new Response(response.body, response);
         response.headers.set('Access-Control-Allow-Origin', '*');
+        response.headers.set('Cross-Origin-Resource-Policy', 'cross-origin');
         response.headers.set('Cache-Control', 'public, max-age=31556952, immutable');
-
-        console.info(`Header Access-Control-Allow-Origin: ${response.headers.get('Access-Control-Allow-Origin')}`);
 
         ctx.waitUntil(cache.put(request, response.clone()));
       }
