@@ -1445,6 +1445,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@chealt/image-proxy@workspace:packages/image-proxy":
+  version: 0.0.0-use.local
+  resolution: "@chealt/image-proxy@workspace:packages/image-proxy"
+  dependencies:
+    wrangler: "npm:^4.52.1"
+  languageName: unknown
+  linkType: soft
+
 "@chealt/image-text-interpreter@workspace:packages/image-text-interpreter":
   version: 0.0.0-use.local
   resolution: "@chealt/image-text-interpreter@workspace:packages/image-text-interpreter"
