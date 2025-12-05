@@ -1,5 +1,6 @@
 name = "image-proxy"
 main = "src/index.js"
+compatibility_date = "2025-12-05"
 
 [[routes]]
 pattern = "centralbeans.com/images/*"
