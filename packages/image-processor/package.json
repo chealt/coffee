@@ -6,7 +6,7 @@
     "deploy": "aws lambda update-function-code --function-name imageProcessor --zip-file fileb://dist/package.zip --publish"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.943.0",
+    "@aws-sdk/client-lambda": "^3.945.0",
     "@aws-sdk/client-s3": "^3.943.0",
     "@aws-sdk/client-textract": "^3.943.0",
     "sharp": "^0.34.5"

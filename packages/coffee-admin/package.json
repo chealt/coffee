@@ -15,7 +15,7 @@
     "taste-notes:translate": "node --env-file=.env src/taste-notes/translate.js"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.943.0",
+    "@aws-sdk/client-lambda": "^3.945.0",
     "@aws-sdk/client-s3": "^3.943.0",
     "@aws-sdk/client-secrets-manager": "^3.943.0",
     "@aws-sdk/client-sesv2": "^3.943.0",
