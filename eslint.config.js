@@ -199,6 +199,7 @@ export default defineConfig([
       'packages/coffee-admin/**/*.js',
       'packages/image-text-interpreter/**/*.js',
       'packages/image-processor/**/*.js',
+      'packages/image-proxy/**/*.js',
       'packages/ocr-worker/**/*.js',
       'packages/record-webshop-item/**/*.js',
       'packages/record-webshop-item-details/**/*.js',
