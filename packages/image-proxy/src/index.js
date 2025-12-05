@@ -12,7 +12,7 @@ const handler = {
 
       if (response.status === 200) {
         response = new Response(response.body, response);
-        response.headers.set('Cache-Control', 'public, max-age=2592000');
+        response.headers.set('Cache-Control', 'public, max-age=31556952, immutable');
 
         ctx.waitUntil(cache.put(request, response.clone()));
       }
