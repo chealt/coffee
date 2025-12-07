@@ -4,7 +4,7 @@ import roasters from '../../../../data/roasters.json';
 
 const { roaster } = Astro.params;
 
-const id = roasters.find(({ name }) => name === roaster)?.id;
+const id = roasters.find(({ name }) => name === decodeURIComponent(roaster))?.id;
 
 Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---

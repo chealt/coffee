@@ -34,7 +34,10 @@ const coffees = allCoffees
     <div>{name}</div>
     {
       loggedInUser && (
-        <Button class="ghost" href={getRelativeLocaleUrl(Astro.currentLocale, `/roasters/${name}/stats`)}>
+        <Button
+          class="ghost"
+          href={getRelativeLocaleUrl(Astro.currentLocale, `/roasters/${encodeURIComponent(name)}/stats`)}
+        >
           <Icon type="chart" />
           <span class="visually-hidden">{t.chart}</span>
         </Button>
