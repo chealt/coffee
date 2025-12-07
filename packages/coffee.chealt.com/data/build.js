@@ -1,6 +1,5 @@
 import { createClient } from '@libsql/client';
 
-import { saveUserRecommendations } from './recommendations/index.js';
 import { readFile, writeFile } from 'node:fs/promises';
 
 const turso = createClient({
@@ -211,6 +210,5 @@ await Promise.all([
   saveTasteNotes(),
   saveTasteNoteGroups(),
   saveTasteNoteSubGroups(),
-  saveVarieties(),
-  saveUserRecommendations()
+  saveVarieties()
 ]);
