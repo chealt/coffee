@@ -8,8 +8,6 @@ const handler = {
     if (!response) {
       const cloudfrontUrl = new URL(url.pathname.replace('/images', ''), `https://${env.CLOUDFRONT_DOMAIN}`);
 
-      console.info(`Fetching ${cloudfrontUrl}`);
-
       response = await fetch(new Request(cloudfrontUrl, request));
 
       if (response.status === 200) {
