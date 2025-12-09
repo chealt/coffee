@@ -13,10 +13,10 @@ const { collectionId } = Astro.props;
       (collectionItem?.images.length && (
         <div class="carousel">
           {collectionItem?.images.map(({ src, srcSmall, srcMedium, filename }, index) => (
-            <picture data-dialog-id={`image-dialog-${index}`}>
+            <picture>
               <source srcset={srcSmall} media="(max-width: 599px)" />
               <source srcset={srcMedium} media="(max-width: 1023px)" />
-              <img id={filename} src={src} />
+              <img id={filename} data-dialog-id={`image-dialog-${index}`} src={src} />
             </picture>
           ))}
         </div>
