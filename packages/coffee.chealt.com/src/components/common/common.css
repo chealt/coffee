@@ -168,10 +168,6 @@ a {
   position: relative;
   border: 2px solid transparent;
 
-  &:active:not(.dot) {
-    top: 2px;
-  }
-
   &:focus-visible {
     border-color: var(--color-primary) !important;
     outline: none;
