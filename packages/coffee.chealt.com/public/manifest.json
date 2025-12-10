@@ -71,11 +71,11 @@
   "shortcuts": [
     {
       "name": "Collections",
-      "url": "/collections"
+      "url": "/you/collections"
     },
     {
-      "name": "Settings",
-      "url": "/settings"
+      "name": "Profile",
+      "url": "/you/profile"
     }
   ]
 }
