@@ -40,6 +40,11 @@
       "sizes": "1024x1024"
     },
     {
+      "src": "/favicons/favicon-1024x1024.png",
+      "type": "image/png",
+      "sizes": "1024x1024"
+    },
+    {
       "src": "/favicons/favicon-maskable.png",
       "type": "image/png",
       "sizes": "1864x1864",
