@@ -38,6 +38,12 @@
       "src": "/favicons/favicon-1024x1024.svg",
       "type": "image/svg+xml",
       "sizes": "1024x1024"
+    },
+    {
+      "src": "/favicons/favicon-maskable.png",
+      "type": "image/png",
+      "sizes": "1864x1864",
+      "purpose": "maskable"
     }
   ],
   "screenshots": [
