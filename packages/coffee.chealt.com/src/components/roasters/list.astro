@@ -2,6 +2,7 @@
 import { getRelativeLocaleUrl } from 'astro:i18n';
 
 import countries from '../../../data/countries.json';
+import { encodeSafeURL } from '../../utils/string.js';
 
 import allLocaleTranslations from './locales.json';
 import allLocaleCommonTranslations from '../common/common.json';
@@ -32,7 +33,7 @@ const recommended = recommendationsData[recommendedKey];
         }))
         .map(({ id, name, country_id, isRecommended, logo, website, instagram }, index) => (
           <li data-country-id={country_id} class="item">
-            <a href={getRelativeLocaleUrl(Astro.currentLocale, `/roasters/${encodeURIComponent(name)}`)}>
+            <a href={getRelativeLocaleUrl(Astro.currentLocale, `/roasters/${encodeSafeURL(name)}`)}>
               <div class="image card" style={`view-transition-name: roaster-${id}`}>
                 <img src={`/roasters/${logo}`} alt={`${t.roasterLogo} ${name}`} loading="lazy" />
               </div>

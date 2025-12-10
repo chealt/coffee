@@ -10,6 +10,7 @@ import Icon from '../icon/icon.astro';
 import Common from '../common/common.astro';
 import Coffees from '../coffees/list.astro';
 import { convertToUSD, getDetails } from '../coffees/utils.js';
+import { encodeSafeURL } from '../../utils/string.js';
 import { getTasteNoteGroup, getTasteNoteGroupByNoteId } from '../taste-notes/utils.js';
 
 import './roaster.css';
@@ -79,7 +80,7 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce((max, { roasters }) 
     <div>{name}</div>
     {
       loggedInUser && (
-        <Button class="ghost" href={getRelativeLocaleUrl(Astro.currentLocale, `/roasters/${name}`)}>
+        <Button class="ghost" href={getRelativeLocaleUrl(Astro.currentLocale, `/roasters/${encodeSafeURL(name)}`)}>
           <Icon type="back" />
           <span class="visually-hidden">{t.back}</span>
         </Button>

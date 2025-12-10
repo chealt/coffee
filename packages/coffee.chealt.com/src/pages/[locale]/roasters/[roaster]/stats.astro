@@ -1,10 +1,11 @@
 ---
 import Roaster from '../../../../components/roasters/stats.astro';
 import roasters from '../../../../../data/roasters.json';
+import { decodeSafeURL } from '../../../../utils/string.js';
 
 const { roaster } = Astro.params;
 
-const id = roasters.find(({ name }) => name === decodeURIComponent(roaster))?.id;
+const id = roasters.find(({ name }) => name === decodeSafeURL(roaster))?.id;
 
 Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---
