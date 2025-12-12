@@ -2,6 +2,7 @@
 import { getRelativeLocaleUrl } from 'astro:i18n';
 
 import allCoffees from '../../../data/coffees.json';
+import brewingMethods from '../../../data/brewingMethods.json';
 import countries from '../../../data/countries.json';
 import originCountries from '../../../data/originCountries.json';
 import roasters from '../../../data/roasters.json';
@@ -22,12 +23,18 @@ import allLocaleTranslations from '../common/common.json';
 const t = allLocaleTranslations[Astro.currentLocale];
 
 const { currency, loggedInUser, shouldAuthenticate } = Astro.locals;
-const { id, countryId } = Astro.props;
+const { id, brewingMethodId, countryId } = Astro.props;
 
 const { name } = originCountries.find((originCountry) => originCountry.origin_country_id === id);
 const country =
   countryId &&
   countries.find(({ country_id, language_code }) => country_id === countryId && language_code === Astro.currentLocale);
+const brewingMethod =
+  brewingMethodId &&
+  brewingMethods.find(
+    ({ brewing_method_id, language_code }) =>
+      brewing_method_id === brewingMethodId && language_code === Astro.currentLocale
+  );
 const coffees = allCoffees
   .map(getDetails({ locale: Astro.currentLocale }))
   .map(({ pricePerGram, ...coffee }) => ({
@@ -40,9 +47,16 @@ const originCountriesWithCoffee = originCountries
   .filter(({ language_code }) => language_code === Astro.currentLocale)
   .map((originCountry) => ({
     ...originCountry,
-    coffees: coffees.filter(
-      ({ originCountry: { origin_country_id } }) => origin_country_id === originCountry.origin_country_id
-    )
+    coffees: coffees
+      .filter(({ originCountry: { origin_country_id } }) => origin_country_id === originCountry.origin_country_id)
+      .filter(
+        ({
+          roaster: {
+            country: { id: roasterCountryId }
+          }
+        }) => (countryId ? roasterCountryId === countryId : true)
+      )
+      .filter(({ brewingMethod }) => (brewingMethodId ? brewingMethod?.brewing_method_id === brewingMethodId : true))
   }))
   .filter(({ coffees }) => coffees.length)
   .map((originCountry) => ({
@@ -83,6 +97,23 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce(
   (max, { originCountries }) => Math.max(max, originCountries[0].count),
   0
 );
+
+let backLink;
+if (!brewingMethod?.name && !country?.name) {
+  backLink = getRelativeLocaleUrl(Astro.currentLocale, `/origin-countries/${name}`);
+} else if (brewingMethod?.name && country?.name) {
+  backLink = getRelativeLocaleUrl(
+    Astro.currentLocale,
+    `/countries/${country.name}/origin-countries/${name}/brewing-methods/${brewingMethod.name}`
+  );
+} else if (brewingMethod?.name) {
+  backLink = getRelativeLocaleUrl(
+    Astro.currentLocale,
+    `/origin-countries/${name}/brewing-methods/${brewingMethod.name}`
+  );
+} else if (country?.name) {
+  backLink = getRelativeLocaleUrl(Astro.currentLocale, `/countries/${country.name}/origin-countries/${name}`);
+}
 ---
 
 <Common shouldAuthenticate={shouldAuthenticate}>
@@ -90,13 +121,7 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce(
     <div>{name}</div>
     {
       loggedInUser && (
-        <Button
-          class="ghost"
-          href={getRelativeLocaleUrl(
-            Astro.currentLocale,
-            country?.name ? `countries/${country.name}/origin-countries/${name}` : `/origin-countries/${name}`
-          )}
-        >
+        <Button class="ghost" href={backLink}>
           <Icon type="back" />
           <span class="visually-hidden">{t.back}</span>
         </Button>
