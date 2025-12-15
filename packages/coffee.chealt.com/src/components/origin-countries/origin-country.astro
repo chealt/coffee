@@ -12,10 +12,13 @@ import Button from '../form/button/button.astro';
 import Coffees from '../coffees/list.astro';
 import Common from '../common/common.astro';
 import Icon from '../icon/icon.astro';
+import { capitalize } from '../../utils/string.js';
 
-import allLocaleTranslations from '../common/common.json';
+import allLocaleTranslationsCommon from '../common/common.json';
+import allLocaleTranslations from './locales.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
+const tc = allLocaleTranslationsCommon[Astro.currentLocale];
 
 const { loggedInUser } = Astro.locals;
 const { id, brewingMethodId, countryId } = Astro.props;
@@ -71,14 +74,14 @@ if (!brewingMethod?.name && !country?.name) {
 }
 ---
 
-<Common>
+<Common title={`${t.title} ${capitalize(name)}`}>
   <h1>
     <div>{name}</div>
     {
       loggedInUser && (
         <Button class="ghost" href={statsLink}>
           <Icon type="chart" />
-          <span class="visually-hidden">{t.chart}</span>
+          <span class="visually-hidden">{tc.chart}</span>
         </Button>
       )
     }
@@ -86,7 +89,7 @@ if (!brewingMethod?.name && !country?.name) {
   {
     (priciestCoffees.length && (
       <section>
-        <h2>{t.priciestCoffees}</h2>
+        <h2>{tc.priciestCoffees}</h2>
         <Coffees coffees={priciestCoffees} />
       </section>
     )) ||
@@ -95,7 +98,7 @@ if (!brewingMethod?.name && !country?.name) {
   {
     (cheapestCoffees.length && (
       <section>
-        <h2>{t.cheapestCoffees}</h2>
+        <h2>{tc.cheapestCoffees}</h2>
         <Coffees coffees={cheapestCoffees} />
       </section>
     )) ||
@@ -104,7 +107,7 @@ if (!brewingMethod?.name && !country?.name) {
   {
     (coffees.length && (
       <section>
-        <h2>{t.allCoffees}</h2>
+        <h2>{tc.allCoffees}</h2>
         <Coffees coffees={coffees} />
       </section>
     )) ||

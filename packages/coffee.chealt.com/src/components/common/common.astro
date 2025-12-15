@@ -11,7 +11,7 @@ import allLocaleTranslations from './common.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
-const { shouldAuthenticate, redirectUrl } = Astro.props;
+const { shouldAuthenticate, redirectUrl, title } = Astro.props;
 const isProd = import.meta.env.PROD;
 ---
 
@@ -25,7 +25,7 @@ const isProd = import.meta.env.PROD;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="apple-touch-icon" href="/favicons/favicon-192x192.svg" />
-    <title>{t.title}</title>
+    <title>{title ? `${title} | ${t.title}` : t.title}</title>
     {Astro.locals.isIOS && <IosPolyfills />}
   </head>
   <body>
