@@ -45,13 +45,29 @@ const isNew = newCoffeeIds.includes(id);
 const { currency } = Astro.locals;
 ---
 
-<a href={webshopItemLink} class="card" target="_blank" rel="noopener noreferrer" name={t.webshopLinkName}>
+<meta
+  itemprop="name"
+  content={`${roaster.name} ${originCountry?.name}${originRegion ? ` ${originRegion.name}` : ''}${originFarm ? ` ${originFarm.name}` : ''}${varieties?.length ? ` ${varieties.map(({ name }) => name).join(', ')}` : ''}${processingMethod?.name ? ` ${processingMethod.name}` : ''}`}
+/>
+<meta
+  itemprop="description"
+  content={`${roaster.name} ${originCountry?.name}${originRegion ? ` ${originRegion.name}` : ''}${originFarm ? ` ${originFarm.name}` : ''}${varieties?.length ? ` ${varieties.map(({ name }) => name).join(', ')}` : ''}${processingMethod?.name ? ` ${processingMethod.name}` : ''}${brewingMethod?.name ? ` ${brewingMethod.name}` : ''}${tasteNotes?.length ? ` ${tasteNotes.map(({ name }) => name).join(', ')}` : ''}`}
+/>
+<a
+  href={webshopItemLink}
+  class="card"
+  target="_blank"
+  rel="noopener noreferrer"
+  name={t.webshopLinkName}
+  itemprop="url"
+>
   <div class="image large">
     <img
       src={`https://centralbeans.com/images/600/${images[0]}`}
       alt={`${t.coffeeFrom} ${originCountry?.name}`}
       loading={highPriority ? undefined : 'lazy'}
       fetchpriority={highPriority ? 'high' : undefined}
+      itemprop="image"
     />
   </div>
   {isNew && <span class="tag good left">{tc.new}</span>}
@@ -61,7 +77,9 @@ const { currency } = Astro.locals;
 <section class="not-padded coffee-details">
   <dl>
     <dt>{t.roaster}</dt>
-    <dd>
+    <dd itemtype="https://schema.org/Brand" itemprop="brand" itemscope>
+      <meta itemprop="name" content={roaster.name} />
+      {roaster.website && <meta itemprop="url" content={roaster.website} />}
       <a
         href={getRelativeLocaleUrl(Astro.currentLocale, `/roasters/${encodeURIComponent(roaster.name)}`)}
         class="chip bordered"
@@ -186,10 +204,16 @@ const { currency } = Astro.locals;
     {
       (weight && price && (
         <Fragment>
-          <dt>
+          <dt itemtype="https://schema.org/QuantitativeValue" itemprop="weight" itemscope>
+            <meta itemprop="value" content={weight} />
+            <meta itemprop="unitCode" content="GRM" />
             {t.weight} - {t.price}
           </dt>
-          <dd>
+          <dd itemtype="https://schema.org/Offer" itemprop="offers" itemscope>
+            <link itemprop="availability" href="https://schema.org/InStock" />
+            <meta itemprop="url" content={webshopItemLink} />
+            <meta itemprop="priceCurrency" content={currency} />
+            <meta itemprop="price" content={price} />
             <span>
               {`${Intl.NumberFormat(Astro.currentLocale, {
                 style: 'currency',

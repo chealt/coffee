@@ -24,7 +24,7 @@ const coffeesWithDetails = coffees.map(getDetails({ locale: Astro.currentLocale 
   <ul class="list">
     {
       coffeesWithDetails.map((details, index) => (
-        <li class="item">
+        <li class="item" itemtype="https://schema.org/Product" itemscope>
           <Item {...details} highPriority={index < 1 && isRecommendedList} />
         </li>
       ))
