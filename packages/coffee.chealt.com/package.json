@@ -39,7 +39,6 @@
     "@playwright-testing-library/test": "^4.5.0",
     "@playwright/test": "^1.57.0",
     "@sentry/astro": "^10.29.0",
-    "@sentry/cloudflare": "^10.29.0",
     "@simplewebauthn/browser": "13.1.2",
     "@simplewebauthn/server": "13.1.2",
     "@tursodatabase/api": "^1.9.2",

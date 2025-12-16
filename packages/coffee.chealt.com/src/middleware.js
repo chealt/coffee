@@ -1,4 +1,5 @@
-import { sentryPagesPlugin } from '@sentry/cloudflare';
+import { handleRequest } from '@sentry/astro';
+import { sequence } from 'astro:middleware';
 import jwt from 'jsonwebtoken';
 
 import supportedLanguages from '../data/supportedLanguages.json';
@@ -115,12 +116,7 @@ const pages = [
  * @type {import("astro").MiddlewareHandler}
  */
 // eslint-disable-next-line complexity
-const onRequest = async (context, next) => {
-  sentryPagesPlugin(() => ({
-    dsn: 'https://c03ded959e579ac5f500b11c23ad7b1c@o4510340291821568.ingest.de.sentry.io/4510340393140304',
-    tracesSampleRate: 1.0
-  }));
-
+const middleware = async (context, next) => {
   const { page, params } = parsePath(context.url.pathname);
 
   if (page !== 'api' && !context.params.locale && (context.routePattern !== '/404' || pages.includes(page))) {
@@ -255,4 +251,4 @@ const onRequest = async (context, next) => {
   return next();
 };
 
-export { onRequest };
+export const onRequest = sequence(handleRequest(), middleware);
