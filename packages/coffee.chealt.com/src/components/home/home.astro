@@ -38,7 +38,7 @@ const { loggedInUser } = Astro.locals;
 const recommendedKey = Object.keys(recommendationsData).find(
   (key) => key === `../../../data/recommendations/${loggedInUser ? loggedInUser.username : 'anonymous'}.json`
 );
-const recommended = recommendationsData[recommendedKey];
+const recommended = recommendationsData[recommendedKey] || {};
 ---
 
 <Common>
