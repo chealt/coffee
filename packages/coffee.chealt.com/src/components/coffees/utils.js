@@ -75,12 +75,24 @@ const getBrewingMethod = ({ id, locale }) => {
   };
 };
 
+const getCoffeeImages = (coffeeId) => {
+  const images = coffeeImages.filter(({ coffee_id: id }) => id === coffeeId);
+
+  if (!images.length) {
+    logger.error(new Error(`No images found for coffee id ${coffeeId}`));
+
+    return [];
+  }
+
+  return images.map((coffeeImage) => coffeeImage.url);
+};
+
 const getDetails =
   ({ locale }) =>
   (coffee) => ({
     id: coffee.id,
     brewingMethod: coffee.brewing_method_id ? getBrewingMethod({ id: coffee.brewing_method_id, locale }) : undefined,
-    images: coffeeImages.filter(({ coffee_id: id }) => id === coffee.id).map((coffeeImage) => coffeeImage.url),
+    images: getCoffeeImages(coffee.id),
     tasteNotes: coffeeTasteNotes
       .filter(({ coffee_id: id }) => id === coffee.id)
       .map(({ taste_note_id: tasteNoteId }) =>
