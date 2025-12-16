@@ -1,5 +1,3 @@
-import { handleRequest } from '@sentry/astro';
-import { sequence } from 'astro:middleware';
 import jwt from 'jsonwebtoken';
 
 import supportedLanguages from '../data/supportedLanguages.json';
@@ -251,4 +249,4 @@ const middleware = async (context, next) => {
   return next();
 };
 
-export const onRequest = sequence(handleRequest(), middleware);
+export const onRequest = middleware;
