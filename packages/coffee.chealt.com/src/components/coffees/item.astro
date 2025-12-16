@@ -4,6 +4,7 @@ import { getRelativeLocaleUrl } from 'astro:i18n';
 import { getConvertedPrice } from './utils.js';
 import TasteNotes from '../taste-notes/taste-notes.astro';
 import Varieties from '../varieties/list.astro';
+import { encodeSafeURL } from '../../utils/string.js';
 import newCoffeeIds from '../../../data/newCoffeeIds.json';
 
 import './item.css';
@@ -81,7 +82,7 @@ const { currency } = Astro.locals;
       <meta itemprop="name" content={roaster.name} />
       {roaster.website && <meta itemprop="url" content={roaster.website} />}
       <a
-        href={getRelativeLocaleUrl(Astro.currentLocale, `/roasters/${encodeURIComponent(roaster.name)}`)}
+        href={getRelativeLocaleUrl(Astro.currentLocale, `/roasters/${encodeSafeURL(roaster.name)}`)}
         class="chip bordered"
       >
         {roaster.name}
