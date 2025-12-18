@@ -1,11 +1,13 @@
 import cloudflare from '@astrojs/cloudflare';
 import sentry from '@sentry/astro';
 import { defineConfig } from 'astro/config';
-
 // import { visualizer } from 'rollup-plugin-visualizer';
+import { loadEnv } from 'vite';
+
 import supportedLanguages from './data/supportedLanguages.json';
 
 const locales = supportedLanguages.map(({ locale }) => locale);
+const env = loadEnv(process.env.NODE_ENV ?? 'development', process.cwd(), '');
 
 export default defineConfig({
   output: 'server',
@@ -41,7 +43,7 @@ export default defineConfig({
     sentry({
       project: 'website',
       org: 'central-beans',
-      authToken: process.env.SENTRY_AUTH_TOKEN,
+      authToken: env.SENTRY_AUTH_TOKEN,
       clientInitPath: 'sentry.client.config.js',
       serverInitPath: null,
       autoInstrumentServer: false
