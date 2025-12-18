@@ -35,6 +35,9 @@ export default defineConfig({
     build: {
       sourcemap: true,
       assetsInlineLimit: 0
+    },
+    ssr: {
+      external: ['buffer', 'crypto', 'fs', 'node:async_hooks', 'stream', 'util']
     }
   },
   integrations: [
