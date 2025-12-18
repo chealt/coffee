@@ -1,3 +1,5 @@
+import { wrapRequestHandler, captureException } from '@sentry/cloudflare';
+import { defineMiddleware, sequence } from 'astro:middleware';
 import jwt from 'jsonwebtoken';
 
 import supportedLanguages from '../data/supportedLanguages.json';
@@ -249,4 +251,27 @@ const middleware = async (context, next) => {
   return next();
 };
 
-export const onRequest = middleware;
+const sentryMiddleware = defineMiddleware((context, next) =>
+  wrapRequestHandler(
+    {
+      options: {
+        dsn: context.locals.runtime.env.SENTRY_DSN,
+        environment: import.meta.env.MODE,
+        tracesSampleRate: 1.0
+      },
+      request: context.request,
+      context: context.locals.runtime.ctx
+    },
+    async () => {
+      try {
+        return await next();
+      } catch (err) {
+        captureException(err);
+
+        throw err;
+      }
+    }
+  )
+);
+
+export const onRequest = sequence(sentryMiddleware, middleware);

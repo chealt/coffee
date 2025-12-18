@@ -41,7 +41,10 @@ export default defineConfig({
     sentry({
       project: 'website',
       org: 'central-beans',
-      authToken: process.env.SENTRY_AUTH_TOKEN
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      clientInitPath: 'sentry.client.config.js',
+      serverInitPath: null,
+      autoInstrumentServer: false
     })
   ],
   adapter: cloudflare({

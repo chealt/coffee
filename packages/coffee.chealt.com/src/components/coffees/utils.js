@@ -13,7 +13,7 @@ import roasters from '../../../data/roasters.json' with { type: 'json' };
 import roastingLevels from '../../../data/roastingLevels.json' with { type: 'json' };
 import tasteNotes from '../../../data/tasteNotes.json' with { type: 'json' };
 import varieties from '../../../data/varieties.json' with { type: 'json' };
-import logger from '../errors/utils.js';
+import logger from '../../server/utils/logger.js';
 
 const getConvertedPrice = ({ currency, price }) => {
   const exchangeRate = exchangeRates.find(({ currency_code: code }) => code === currency).rate;
