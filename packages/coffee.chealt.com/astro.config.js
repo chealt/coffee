@@ -37,7 +37,38 @@ export default defineConfig({
       assetsInlineLimit: 0
     },
     ssr: {
-      external: ['buffer', 'crypto', 'fs', 'node:async_hooks', 'stream', 'util']
+      external: [
+        'async_hooks',
+        'buffer',
+        'child_process',
+        'crypto',
+        'diagnostics_channel',
+        'events',
+        'fs',
+        'module',
+        'node:async_hooks',
+        'node:child_process',
+        'node:diagnostics_channel',
+        'node:events',
+        'node:fs',
+        'node:http',
+        'node:https',
+        'node:inspector',
+        'node:module',
+        'node:net',
+        'node:os',
+        'node:path',
+        'node:readline',
+        'node:stream',
+        'node:tls',
+        'node:util',
+        'node:worker_threads',
+        'path',
+        'stream',
+        'url',
+        'util',
+        'worker_threads'
+      ]
     }
   },
   integrations: [
