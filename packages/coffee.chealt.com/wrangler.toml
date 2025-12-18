@@ -3,6 +3,7 @@ main = "./dist/_worker.js/index.js"
 upload_source_maps = true
 compatibility_date = "2025-04-08"
 compatibility_flags = ["nodejs_compat"]
+route = { pattern: "centralbeans.com", zone_name: "centralbeans.com", custom_domain: true }
 version_metadata = { binding = "CF_VERSION_METADATA" }
 
 [assets]
@@ -14,5 +15,6 @@ enabled = true
 
 [vars]
 AWS_REGION = "eu-central-1"
+NODE_ENV = "production"
 ORIGIN = "https://centralbeans.com"
 RELYING_PARTY_ID = "centralbeans.com"
