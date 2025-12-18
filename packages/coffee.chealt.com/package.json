@@ -15,6 +15,7 @@
     "build": "astro build",
     "build:scan": "node --env-file=.env data/build.js",
     "build:scan:ci": "node data/build.js",
+    "recommendations": "node --env-file=.env data/recommendations/generate.js",
     "recommendations:ci": "node data/recommendations/generate.js",
     "import": "node --env-file=.env data/importData.js",
     "import:logos": "node data/importLogos.js",
