@@ -27,6 +27,7 @@ jobs:
         with:
           files_yaml: |
             coffee-admin:
+              - yarn.lock
               - .github/workflows/deploy.yml
               - packages/coffee-admin/package.json
               - packages/coffee-admin/index.js
@@ -34,42 +35,50 @@ jobs:
               - packages/coffee-admin/src/**
               - packages/coffee.chealt.com/data/**
             create-user:
+              - yarn.lock
               - .github/workflows/deploy.yml
               - packages/create-user/package.json
               - packages/create-user/.yarnrc-lambda.yml
               - packages/create-user/src/**
             delete-user:
+              - yarn.lock
               - .github/workflows/deploy.yml
               - packages/delete-user/package.json
               - packages/delete-user/.yarnrc-lambda.yml
               - packages/delete-user/src/**
             image-processor:
+              - yarn.lock
               - .github/workflows/deploy.yml
               - packages/image-processor/package.json
               - packages/image-processor/.yarnrc-lambda.yml
               - packages/image-processor/src/**
             image-text-interpreter:
+              - yarn.lock
               - .github/workflows/deploy.yml
               - packages/image-text-interpreter/package.json
               - packages/image-text-interpreter/.yarnrc-lambda.yml
               - packages/image-text-interpreter/src/**
             record-webshop-item:
+              - yarn.lock
               - .github/workflows/deploy.yml
               - packages/record-webshop-item/package.json
               - packages/record-webshop-item/.yarnrc-lambda.yml
               - packages/record-webshop-item/src/**
             record-webshop-item-details:
+              - yarn.lock
               - .github/workflows/deploy.yml
               - packages/record-webshop-item-details/package.json
               - packages/record-webshop-item-details/.yarnrc-lambda.yml
               - packages/record-webshop-item-details/src/**
             webshop-item-processor:
+              - yarn.lock
               - .github/workflows/deploy.yml
               - packages/coffee.chealt.com/data/**
               - packages/webshop-item-processor/package.json
               - packages/webshop-item-processor/.yarnrc-lambda.yml
               - packages/webshop-item-processor/src/**
             webshop-processor:
+              - yarn.lock
               - .github/workflows/deploy.yml
               - packages/webshop-processor/package.json
               - packages/webshop-processor/.yarnrc-lambda.yml
