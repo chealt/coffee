@@ -33,6 +33,11 @@ jobs:
               - packages/coffee-admin/.yarnrc-lambda.yml
               - packages/coffee-admin/src/**
               - packages/coffee.chealt.com/data/**
+            create-user:
+              - .github/workflows/deploy.yml
+              - packages/create-user/package.json
+              - packages/create-user/.yarnrc-lambda.yml
+              - packages/create-user/src/**
             image-processor:
               - .github/workflows/deploy.yml
               - packages/image-processor/package.json
@@ -64,6 +69,23 @@ jobs:
               - packages/webshop-processor/package.json
               - packages/webshop-processor/.yarnrc-lambda.yml
               - packages/webshop-processor/src/**
+      - name: create-user
+        id: create-user
+        if: steps.changed-files-yaml.outputs.create-user_any_changed == 'true'
+        run: |
+          yarn workspace @centralbeans/create-user build
+          version=$(yarn workspace @centralbeans/create-user deploy | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release create-user
+        if: steps.changed-files-yaml.outputs.create-user_any_changed == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: '@centralbeans/create-user@${{ steps.create-user.outputs.version }}'
+          release_name: Release @centralbeans/create-user v${{ steps.create-user.outputs.version }}
+          draft: false
+          prerelease: false
       - name: coffee-admin
         id: coffee-admin
         if: steps.changed-files-yaml.outputs.coffee-admin_any_changed == 'true'
