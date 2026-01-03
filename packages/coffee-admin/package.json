@@ -22,6 +22,7 @@
     "@aws-sdk/client-translate": "^3.953.0",
     "@libsql/client": "^0.15.15",
     "@playwright/test": "^1.57.0",
+    "@sentry/aws-serverless": "^10.32.1",
     "@tursodatabase/api": "^1.9.2",
     "jsdom": "^27.3.0",
     "jsonwebtoken": "^9.0.3",

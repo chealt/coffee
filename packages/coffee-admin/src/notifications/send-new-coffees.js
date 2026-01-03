@@ -10,6 +10,7 @@ import { sendEmail } from '../AWS.js';
 import client from '../turso.js';
 import { getContentHash } from '../utils.js';
 import getEmailContent from './new-coffees-email-content.js';
+import logger from '../Sentry/logger.js';
 
 const notificationType = 'newCoffees';
 
@@ -19,7 +20,7 @@ const main = async () => {
   const newCoffees = coffees.filter(({ id }) => newCoffeeIds.includes(id));
 
   if (!newCoffees.length) {
-    console.info('No new coffees to send.');
+    logger.info('No new coffees to send.');
 
     return undefined;
   }
@@ -30,7 +31,7 @@ const main = async () => {
   });
 
   if (!users.length) {
-    console.info('No new coffees to send.');
+    logger.info('No new coffees to send.');
 
     return undefined;
   }
@@ -51,7 +52,7 @@ const main = async () => {
 
     const url = `libsql://${hostname}`;
 
-    console.info(`creating user DB token for: ${username}`);
+    logger.info(`creating user DB token for: ${username}`);
     const { jwt: authToken } = await platformClient.databases.createToken(username, {
       authorization: 'full-access'
     });
@@ -67,22 +68,20 @@ const main = async () => {
     const settings = JSON.parse(results.rows[0]?.value || '{}');
 
     if (settings?.newCoffeeNotification !== 'on') {
-      console.info(
-        `Skipping sending notification for user ${username} with email ${email} because notification is off`
-      );
+      logger.info(`Skipping sending notification for user ${username} with email ${email} because notification is off`);
 
       continue;
     }
 
-    console.info(`Preparing new coffee notification to ${username} with email ${email}`);
+    logger.info(`Preparing new coffee notification to ${username} with email ${email}`);
 
-    console.info(`Saving notification to DB for user: ${username} with email: ${email}`);
+    logger.info(`Saving notification to DB for user: ${username} with email: ${email}`);
     await client.execute({
       sql: 'INSERT INTO notifications (username, email, type, data_hash) VALUES (:username, :email, :notificationType, :dataHash)',
       args: { username, email, notificationType, dataHash }
     });
 
-    console.info(`Sending notification to user ${username} with email: ${email}`);
+    logger.info(`Sending notification to user ${username} with email: ${email}`);
     const locale = settings.language || 'en';
     const localeContent = locales[locale] || locales.en;
     const content = getEmailContent({ newCoffees, localeContent, locale });

@@ -1,5 +1,7 @@
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 
+import logger from './Sentry/logger.js';
+
 const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
 const apiToken = process.env.CLOUDFLARE_API_TOKEN;
 
@@ -26,7 +28,7 @@ const addSecret = async ({ scriptName, name, text }) => {
       throw new Error(response.statusText);
     }
 
-    console.info('✅ Success! Secret added.', response.data);
+    logger.info('✅ Success! Secret added.', response.data);
   } catch (error) {
     throw new Error(error);
   }

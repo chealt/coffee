@@ -3,6 +3,8 @@ import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
 import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2';
 
+import logger from './Sentry/logger.js';
+
 const s3 = new S3Client({
   region: process.env.AWS_REGION
 });
@@ -72,9 +74,9 @@ const createSendEmailParams = ({ to, content, subject, attachments = [] }) => {
   }
 
   // Build multipart email with inline attachments
-  const boundary = `----=_Part_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+  const boundary = `----=_Part_${Date.now()}_${Math.random().toString(36).substring(7)}`; // eslint-disable-line no-restricted-properties
 
-  let rawMessage = [
+  const rawMessage = [
     `From: info@centralbeans.com`,
     `To: ${to}`,
     `Subject: ${subject}`,
@@ -124,11 +126,11 @@ const sendEmail = async ({ to, content, subject, attachments }) => {
   try {
     const result = await sesClient.send(sendEmailCommand);
 
-    console.log('✅ Email sent successfully! Message ID:', result.MessageId);
+    logger.info('✅ Email sent successfully! Message ID:', result.MessageId);
 
     return result;
   } catch (error) {
-    console.error('❌ Failed to send email.', error);
+    logger.error('❌ Failed to send email.', error);
 
     throw error;
   }

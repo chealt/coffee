@@ -1,4 +1,5 @@
 import { getSecret } from './src/AWS.js';
+import logger from './src/Sentry/logger.js';
 import flagRemoved from './src/coffees/flag-removed.js';
 import invokeFlagRemoved from './src/coffees/invoke-flag-removed.js';
 import recordRoasterWebshop from './src/coffees/record-roaster-webshop.js';
@@ -17,10 +18,16 @@ const supportedFunctions = {
 
 export const handler = async (event) => {
   if (!event.function) {
+    logger.error('No function specified');
+
     throw new Error('No function specified');
   }
 
   if (!Object.values(supportedFunctions).includes(event.function)) {
+    logger.error(
+      `Unsupported function: ${event.function}, please choose one of ${Object.values(supportedFunctions).join(', ')}`
+    );
+
     throw new Error(
       `Unsupported function: ${event.function}, please choose one of ${Object.values(supportedFunctions).join(', ')}`
     );
@@ -52,6 +59,8 @@ export const handler = async (event) => {
       break;
     case supportedFunctions.coffeesRecordRoasterWebshop:
       if (!event.roasterId) {
+        logger.error('No roasterId specified');
+
         throw new Error('No roasterId specified');
       }
 
@@ -71,6 +80,10 @@ export const handler = async (event) => {
 
       break;
     default:
+      logger.error(
+        `Unsupported function: ${event.function}, please choose one of ${Object.values(supportedFunctions).join(', ')}`
+      );
+
       throw new Error(
         `Unsupported function: ${event.function}, please choose one of ${Object.values(supportedFunctions).join(', ')}`
       );

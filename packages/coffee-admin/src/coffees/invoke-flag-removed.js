@@ -1,4 +1,5 @@
 import { invokeLambda } from '../AWS.js';
+import logger from '../Sentry/logger.js';
 import client from '../turso.js';
 
 const invokeFlagRemoved = async () => {
@@ -7,7 +8,8 @@ const invokeFlagRemoved = async () => {
   });
 
   for (const { id, webshop_item_link: webshopItemLink, roaster_id: roasterId } of results.rows) {
-    console.info(`Invoking flag-removed for coffee with id ${id}, and link ${webshopItemLink}`);
+    logger.info(`Invoking flag-removed for coffee with id ${id}, and link ${webshopItemLink}`);
+
     await invokeLambda({
       functionName: 'coffeeAdmin',
       payload: {

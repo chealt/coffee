@@ -1,10 +1,11 @@
 // eslint-disable-next-line import/no-unresolved
 import roasters from '../../data/roasters.json' with { type: 'json' };
 import { invokeLambda } from '../AWS.js';
+import logger from '../Sentry/logger.js';
 import { deflateSync } from 'node:zlib';
 
 const main = async ({ roasterId }) => {
-  console.info(`Recording webshop for ${roasterId}`);
+  logger.info(`Recording webshop for ${roasterId}`);
 
   const roaster = roasters.find(({ id }) => id === roasterId);
 
@@ -18,7 +19,7 @@ const main = async ({ roasterId }) => {
     throw new Error(`Roaster: "${roasterId}" has no webshop`);
   }
 
-  console.info(`Fetching webshop page ${url}`);
+  logger.info(`Fetching webshop page ${url}`);
 
   const response = await fetch(url);
 
@@ -28,7 +29,7 @@ const main = async ({ roasterId }) => {
 
   const html = (await response.text()).match(/<body[^>]*>[\s\S]*<\/body>/giu)[0];
 
-  console.info(`Invoke webshop processor for ${roasterId} and url: ${url}`);
+  logger.info(`Invoke webshop processor for ${roasterId} and url: ${url}`);
 
   await invokeLambda({
     functionName: 'webshopProcessor',

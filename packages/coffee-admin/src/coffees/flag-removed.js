@@ -1,6 +1,7 @@
 import { JSDOM } from 'jsdom';
 import { Agent } from 'undici';
 
+import logger from '../Sentry/logger.js';
 import client from '../turso.js';
 
 // eslint-disable-next-line complexity
@@ -49,14 +50,14 @@ const isOutOfStock = ({ html, roasterId, webshopItemLink }) => {
     .some(Boolean);
 
   if (!someInStock) {
-    console.info(`Item at ${webshopItemLink} is out of stock`);
+    logger.info(`Item at ${webshopItemLink} is out of stock`);
   }
 
   return !someInStock;
 };
 
 const flagRemoved = async ({ id, webshopItemLink, roasterId }) => {
-  console.info(`Checking coffee: ${webshopItemLink}`);
+  logger.info(`Checking coffee: ${webshopItemLink}`);
 
   let response;
 
@@ -67,7 +68,7 @@ const flagRemoved = async ({ id, webshopItemLink, roasterId }) => {
       })
     });
   } catch {
-    console.error(`Fetch failed for ${webshopItemLink}`);
+    logger.error(`Fetch failed for ${webshopItemLink}`);
 
     return;
   }
@@ -78,14 +79,14 @@ const flagRemoved = async ({ id, webshopItemLink, roasterId }) => {
     response.status === 301 ||
     isOutOfStock({ html: await response.text(), roasterId, webshopItemLink })
   ) {
-    console.info(`Flagging coffee with id ${id} as removed...`);
+    logger.info(`Flagging coffee with id ${id} as removed...`);
 
     await client.execute({
       sql: 'UPDATE coffees SET is_removed = true WHERE id = :id',
       args: { id }
     });
 
-    console.info(`Coffee with id ${id} is flagged as removed.`);
+    logger.info(`Coffee with id ${id} is flagged as removed.`);
   }
 };
 

@@ -1,5 +1,7 @@
 import { createClient } from '@libsql/client';
 
+import logger from '../Sentry/logger.js';
+
 const main = async () => {
   const appId = process.env.OPEN_CURRENCY_EXCHANGE_APP_ID;
 
@@ -18,7 +20,7 @@ const main = async () => {
     throw new Error('TURSO_DEFAULT_TOKEN is not set');
   }
 
-  console.info('Fetching latest rates...');
+  logger.info('Fetching latest rates...');
   const response = await fetch('https://openexchangerates.org/api/latest.json', {
     headers: {
       Authorization: `Token ${appId}`
@@ -37,7 +39,7 @@ const main = async () => {
   });
 
   try {
-    console.info('Adding rates to DB...');
+    logger.info('Adding rates to DB...');
     await client.batch(
       Object.keys(rates).map((currencyCode) => ({
         sql: `INSERT INTO exchange_rates (currency_code, rate)
@@ -51,7 +53,7 @@ const main = async () => {
     throw error;
   }
 
-  console.info('Added rates to the DB');
+  logger.info('Added rates to the DB');
 };
 
 export default main;
