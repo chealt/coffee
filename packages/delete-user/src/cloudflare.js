@@ -22,7 +22,7 @@ const deleteSecret = async ({ scriptName, name }) => {
       throw new Error(response.statusText);
     }
 
-    logger.info('✅ Success! Secret added.', response.data);
+    logger.info('✅ Success! Secret deleted.', response.data);
   } catch (error) {
     logger.error(error);
 
