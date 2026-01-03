@@ -38,6 +38,11 @@ jobs:
               - packages/create-user/package.json
               - packages/create-user/.yarnrc-lambda.yml
               - packages/create-user/src/**
+            delete-user:
+              - .github/workflows/deploy.yml
+              - packages/delete-user/package.json
+              - packages/delete-user/.yarnrc-lambda.yml
+              - packages/delete-user/src/**
             image-processor:
               - .github/workflows/deploy.yml
               - packages/image-processor/package.json
@@ -84,6 +89,23 @@ jobs:
         with:
           tag_name: '@centralbeans/create-user@${{ steps.create-user.outputs.version }}'
           release_name: Release @centralbeans/create-user v${{ steps.create-user.outputs.version }}
+          draft: false
+          prerelease: false
+      - name: delete-user
+        id: delete-user
+        if: steps.changed-files-yaml.outputs.delete-user_any_changed == 'true'
+        run: |
+          yarn workspace @centralbeans/delete-user build
+          version=$(yarn workspace @centralbeans/delete-user deploy | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release delete-user
+        if: steps.changed-files-yaml.outputs.delete-user_any_changed == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: '@centralbeans/delete-user@${{ steps.delete-user.outputs.version }}'
+          release_name: Release @centralbeans/delete-user v${{ steps.delete-user.outputs.version }}
           draft: false
           prerelease: false
       - name: coffee-admin
