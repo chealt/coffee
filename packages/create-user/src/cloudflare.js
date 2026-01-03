@@ -1,5 +1,3 @@
-import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
-
 import logger from './Sentry/logger.js';
 
 const addSecret = async ({ scriptName, name, text }) => {
@@ -38,30 +36,4 @@ const addSecret = async ({ scriptName, name, text }) => {
   }
 };
 
-const getClient = () =>
-  new S3Client({
-    region: 'auto',
-    endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
-    credentials: {
-      accessKeyId: process.env.CLOUDFLARE_R2_ACCESS_KEY_ID,
-      secretAccessKey: process.env.CLOUDFLARE_R2_ACCESS_SECRET
-    }
-  });
-
-const getObject = async (filename) => {
-  const client = getClient();
-
-  const response = await client.send(
-    new GetObjectCommand({
-      Bucket: 'coffee-images',
-      Key: `collection-images/${filename}`
-    })
-  );
-
-  return {
-    ContentType: response.ContentType,
-    Body: await response.Body.transformToByteArray()
-  };
-};
-
-export { addSecret, getObject };
+export { addSecret };

@@ -88,7 +88,7 @@ export const handler = async (event) => {
     authToken: defaultToken
   });
 
-  logger.info('creating user...');
+  logger.info(`creating user '${username}'`);
   await client.execute({
     sql: 'INSERT INTO users (username, email) VALUES (:username, :email) ON CONFLICT(username) DO NOTHING ON CONFLICT(email) DO NOTHING',
     args: {
@@ -104,13 +104,11 @@ export const handler = async (event) => {
 
   try {
     await platformClient.databases.delete(username);
-  } catch (error) {
-    logger.error(error);
-
+  } catch {
     logger.info('User database does not exist, skipping deletion');
   }
 
-  logger.info('creating user database...');
+  logger.info(`creating user database '${username}'`);
   const { hostname } = await platformClient.databases.create(username, {
     group: 'users',
     seed: {
@@ -121,7 +119,7 @@ export const handler = async (event) => {
 
   const url = `libsql://${hostname}`;
 
-  logger.info('creating user DB token...');
+  logger.info(`creating user DB token for '${username}'`);
   const { jwt: authToken } = await platformClient.databases.createToken(username, {
     authorization: 'full-access'
   });
@@ -131,26 +129,26 @@ export const handler = async (event) => {
     authToken
   });
 
-  logger.info('creating registration code...');
+  logger.info(`creating registration code for '${username}'`);
   const registrationCode = jwt.sign({ username }, sessionSecret, { expiresIn: '24h' });
 
-  logger.info('updating DB registration code...');
+  logger.info(`updating DB registration code for '${username}'`);
   await userClient.execute({
     sql: 'INSERT INTO users (name, registration_code, email) VALUES (:name, :registration_code, :email)',
     args: { name: username, registration_code: registrationCode, email } // eslint-disable-line camelcase
   });
 
-  logger.info('adding Cloudflare secret...');
+  logger.info(`adding Cloudflare secret for '${username}'`);
   await Promise.all([
     addSecret({ scriptName: 'coffee', name: `TURSO_AUTH_TOKEN_${username.toUpperCase()}`, text: authToken }),
     addSecret({ scriptName: 'coffee', name: `TURSO_DATABASE_URL_${username.toUpperCase()}`, text: url })
   ]).catch((error) => {
-    logger.error('Failed to add Cloudflare secret, please add manually');
+    logger.error(`Failed to add Cloudflare secret for '${username}', please add manually`);
 
-    throw new Error(error);
+    throw error;
   });
 
-  logger.info(`sending email with registration code: ${registrationCode} to email: ${email}`);
+  logger.info(`sending email with registration code for '${username}' to email: ${email}`);
   const localeContent = locales[locale] || locales.en;
   await sendEmail({
     to: email,
