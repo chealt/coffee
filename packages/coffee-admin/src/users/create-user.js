@@ -121,7 +121,3 @@ await sendEmail({
   content: content({ username, registrationCode }),
   subject: localeContent.registrationEmailSubject
 });
-
-// DEV setup (optional)
-console.info(`add token: TURSO_AUTH_TOKEN_${username.toUpperCase()}=${authToken} to dev env`);
-console.info(`add url: TURSO_DATABASE_URL_${username.toUpperCase()}=${url} to dev env`);
