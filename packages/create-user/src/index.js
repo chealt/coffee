@@ -1,0 +1,160 @@
+import { createClient } from '@libsql/client';
+import { createClient as createPlatformClient } from '@tursodatabase/api';
+import jwt from 'jsonwebtoken';
+
+import { getSecret, sendEmail } from './AWS.js';
+import logger from './Sentry/logger.js';
+import { addSecret } from './cloudflare.js';
+import content from './email-content.js';
+import locales from './locales.json' with { type: 'json' };
+
+// eslint-disable-next-line complexity
+export const handler = async (event) => {
+  const locale = event?.locale || 'en';
+
+  if (!event?.username) {
+    logger.error('Username is not set');
+
+    throw new Error('Username is not set');
+  }
+
+  if (!event?.email) {
+    logger.error('Email is not set');
+
+    throw new Error('Email is not set');
+  }
+
+  if (!event?.locale) {
+    logger.info('Locale is not set, defaulting to en');
+  }
+
+  const username = event.username;
+  const email = event.email;
+
+  const secrets = await getSecret({ name: 'createUser' });
+
+  process.env.CLOUDFLARE_ACCOUNT_ID = secrets.CLOUDFLARE_ACCOUNT_ID;
+  process.env.CLOUDFLARE_API_TOKEN = secrets.CLOUDFLARE_API_TOKEN;
+
+  if (!secrets.CLOUDFLARE_ACCOUNT_ID) {
+    logger.error('CLOUDFLARE_ACCOUNT_ID is not set');
+
+    throw new Error('CLOUDFLARE_ACCOUNT_ID is not set');
+  }
+
+  if (!secrets.CLOUDFLARE_API_TOKEN) {
+    logger.error('CLOUDFLARE_API_TOKEN is not set');
+
+    throw new Error('CLOUDFLARE_API_TOKEN is not set');
+  }
+
+  if (!secrets.AWS_REGION) {
+    logger.error('AWS_REGION is not set');
+
+    throw new Error('AWS_REGION is not set');
+  }
+
+  if (!secrets.TURSO_API_TOKEN) {
+    logger.error('TURSO_API_TOKEN is not set');
+
+    throw new Error('TURSO_API_TOKEN is not set');
+  }
+
+  if (!secrets.TURSO_DEFAULT_TOKEN) {
+    logger.error('TURSO_DEFAULT_TOKEN is not set');
+
+    throw new Error('TURSO_DEFAULT_TOKEN is not set');
+  }
+
+  if (!secrets.SESSION_SECRET) {
+    logger.error('SESSION_SECRET is not set');
+
+    throw new Error('SESSION_SECRET is not set');
+  }
+
+  process.env.AWS_REGION = secrets.AWS_REGION;
+  process.env.SESSION_SECRET = secrets.SESSION_SECRET;
+  process.env.TURSO_API_TOKEN = secrets.TURSO_API_TOKEN;
+  process.env.TURSO_DATABASE_URL = secrets.TURSO_DATABASE_URL;
+  process.env.TURSO_DEFAULT_TOKEN = secrets.TURSO_DEFAULT_TOKEN;
+
+  const token = process.env.TURSO_API_TOKEN;
+  const defaultToken = process.env.TURSO_DEFAULT_TOKEN;
+  const defaultDatabaseUrl = process.env.TURSO_DATABASE_URL;
+  const sessionSecret = process.env.SESSION_SECRET;
+
+  const client = createClient({
+    url: defaultDatabaseUrl,
+    authToken: defaultToken
+  });
+
+  logger.info('creating user...');
+  await client.execute({
+    sql: 'INSERT INTO users (username, email) VALUES (:username, :email) ON CONFLICT(username) DO NOTHING ON CONFLICT(email) DO NOTHING',
+    args: {
+      username,
+      email
+    }
+  });
+
+  const platformClient = createPlatformClient({
+    org: 'chealt',
+    token
+  });
+
+  try {
+    await platformClient.databases.delete(username);
+  } catch (error) {
+    logger.error(error);
+
+    logger.info('User database does not exist, skipping deletion');
+  }
+
+  logger.info('creating user database...');
+  const { hostname } = await platformClient.databases.create(username, {
+    group: 'users',
+    seed: {
+      type: 'database',
+      name: 'empty'
+    }
+  });
+
+  const url = `libsql://${hostname}`;
+
+  logger.info('creating user DB token...');
+  const { jwt: authToken } = await platformClient.databases.createToken(username, {
+    authorization: 'full-access'
+  });
+
+  const userClient = createClient({
+    url,
+    authToken
+  });
+
+  logger.info('creating registration code...');
+  const registrationCode = jwt.sign({ username }, sessionSecret, { expiresIn: '24h' });
+
+  logger.info('updating DB registration code...');
+  await userClient.execute({
+    sql: 'INSERT INTO users (name, registration_code, email) VALUES (:name, :registration_code, :email)',
+    args: { name: username, registration_code: registrationCode, email } // eslint-disable-line camelcase
+  });
+
+  logger.info('adding Cloudflare secret...');
+  await Promise.all([
+    addSecret({ scriptName: 'coffee', name: `TURSO_AUTH_TOKEN_${username.toUpperCase()}`, text: authToken }),
+    addSecret({ scriptName: 'coffee', name: `TURSO_DATABASE_URL_${username.toUpperCase()}`, text: url })
+  ]).catch((error) => {
+    logger.error('Failed to add Cloudflare secret, please add manually');
+
+    throw new Error(error);
+  });
+
+  logger.info(`sending email with registration code: ${registrationCode} to email: ${email}`);
+  const localeContent = locales[locale] || locales.en;
+  await sendEmail({
+    to: email,
+    content: content({ username, registrationCode }),
+    subject: localeContent.registrationEmailSubject
+  });
+};

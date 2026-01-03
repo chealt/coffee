@@ -197,6 +197,7 @@ export default defineConfig([
       'packages/coffee.chealt.com/src/server/**/*.js',
       'packages/coffee.chealt.com/src/middleware.js',
       'packages/coffee-admin/**/*.js',
+      'packages/create-user/**/*.js',
       'packages/image-text-interpreter/**/*.js',
       'packages/image-processor/**/*.js',
       'packages/image-proxy/**/*.js',
