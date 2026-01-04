@@ -12,7 +12,8 @@ const isOutOfStock = ({ html, roasterId, webshopItemLink }) => {
     roasterId !== 39 &&
     roasterId !== 65 &&
     roasterId !== 252 &&
-    roasterId !== 277
+    roasterId !== 277 &&
+    roasterId !== 288
   ) {
     return false;
   }
@@ -31,6 +32,10 @@ const isOutOfStock = ({ html, roasterId, webshopItemLink }) => {
 
   if (roasterId === 277) {
     return html.includes('This product is currently out of stock and unavailable.');
+  }
+
+  if (roasterId === 288) {
+    return html.includes('This product is out of stock for the foreseeable future.');
   }
 
   const {
