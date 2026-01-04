@@ -2,7 +2,7 @@
   "name": "@centralbeans/create-user",
   "type": "module",
   "scripts": {
-    "build": "cp .yarnrc-lambda.yml .yarnrc.yml && yarn workspaces focus --production && zip -rq package.zip . && rm .yarnrc.yml",
+    "build": "cp .yarnrc-lambda.yml .yarnrc.yml && yarn workspaces focus --production && zip -rq package.zip . -x .yarnrc.yml .yarnrc-lambda.yml && rm .yarnrc.yml",
     "deploy": "aws lambda update-function-code --function-name createUser --zip-file fileb://package.zip --publish"
   },
   "dependencies": {
