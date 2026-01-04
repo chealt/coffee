@@ -590,7 +590,8 @@ const parsers = {
       .querySelector('.woocommerce-product-attributes-item--weight td')
       .textContent.replaceAll(' kg', '')
       .replaceAll(',', '.');
-    const weight = parseFloat(weightElementValue) * 1000; // convert to grams
+    // convert to grams, sometimes the weight element is incorrect so we check the url first
+    const weight = url.includes('1-kg') ? 1000 : parseFloat(weightElementValue) * 1000;
 
     if (!weight || isNaN(weight)) {
       throw new Error(errors.weightMissing);
