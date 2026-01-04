@@ -11,3 +11,4 @@ supportedArchitectures: {
     "musl"
   ]
 }
+nmHoistingLimits: workspaces
