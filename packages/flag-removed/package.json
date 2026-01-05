@@ -10,9 +10,7 @@
     "@libsql/client": "^0.15.15",
     "@sentry/aws-serverless": "^10.32.1",
     "jsdom": "27.3.0",
+    "parse5": "7.3.0",
     "undici": "^7.16.0"
-  },
-  "resolutions": {
-    "parse5": "7.3.0"
   }
 }
