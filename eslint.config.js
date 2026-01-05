@@ -203,6 +203,7 @@ export default defineConfig([
       'packages/image-text-interpreter/**/*.js',
       'packages/image-processor/**/*.js',
       'packages/image-proxy/**/*.js',
+      'packages/invoke-flag-removed/**/*.js',
       'packages/ocr-worker/**/*.js',
       'packages/record-webshop-item/**/*.js',
       'packages/record-webshop-item-details/**/*.js',
