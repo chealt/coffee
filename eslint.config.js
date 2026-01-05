@@ -199,6 +199,7 @@ export default defineConfig([
       'packages/coffee-admin/**/*.js',
       'packages/create-user/**/*.js',
       'packages/delete-user/**/*.js',
+      'packages/flag-removed/**/*.js',
       'packages/image-text-interpreter/**/*.js',
       'packages/image-processor/**/*.js',
       'packages/image-proxy/**/*.js',

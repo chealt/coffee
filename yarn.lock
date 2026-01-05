@@ -1430,6 +1430,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@centralbeans/flag-removed@workspace:packages/flag-removed":
+  version: 0.0.0-use.local
+  resolution: "@centralbeans/flag-removed@workspace:packages/flag-removed"
+  dependencies:
+    "@aws-sdk/client-secrets-manager": "npm:^3.962.0"
+    "@libsql/client": "npm:^0.15.15"
+    "@sentry/aws-serverless": "npm:^10.32.1"
+    jsdom: "npm:^27.4.0"
+    undici: "npm:^7.16.0"
+  languageName: unknown
+  linkType: soft
+
 "@chealt/coffee-admin@workspace:packages/coffee-admin":
   version: 0.0.0-use.local
   resolution: "@chealt/coffee-admin@workspace:packages/coffee-admin"

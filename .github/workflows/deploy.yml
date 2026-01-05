@@ -46,6 +46,12 @@ jobs:
               - packages/delete-user/package.json
               - packages/delete-user/.yarnrc-lambda.yml
               - packages/delete-user/src/**
+            flag-removed:
+              - yarn.lock
+              - .github/workflows/deploy.yml
+              - packages/flag-removed/package.json
+              - packages/flag-removed/.yarnrc-lambda.yml
+              - packages/flag-removed/src/**
             image-processor:
               - yarn.lock
               - .github/workflows/deploy.yml
@@ -132,6 +138,23 @@ jobs:
         with:
           tag_name: '@chealt/coffee-admin@${{ steps.coffee-admin.outputs.version }}'
           release_name: Release @chealt/coffee-admin v${{ steps.coffee-admin.outputs.version }}
+          draft: false
+          prerelease: false
+      - name: flag-removed
+        id: flag-removed
+        if: steps.changed-files-yaml.outputs.flag-removed_any_changed == 'true'
+        run: |
+          yarn workspace @centralbeans/flag-removed build
+          version=$(yarn workspace @centralbeans/flag-removed deploy | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release flag-removed
+        if: steps.changed-files-yaml.outputs.flag-removed_any_changed == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: '@centralbeans/flag-removed@${{ steps.flag-removed.outputs.version }}'
+          release_name: Release @centralbeans/flag-removed v${{ steps.flag-removed.outputs.version }}
           draft: false
           prerelease: false
       - name: image-processor
