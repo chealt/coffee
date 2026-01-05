@@ -64,6 +64,12 @@ jobs:
               - packages/image-text-interpreter/package.json
               - packages/image-text-interpreter/.yarnrc-lambda.yml
               - packages/image-text-interpreter/src/**
+            import-currencies:
+              - yarn.lock
+              - .github/workflows/deploy.yml
+              - packages/import-currencies/package.json
+              - packages/import-currencies/.yarnrc-lambda.yml
+              - packages/import-currencies/src/**
             invoke-flag-removed:
               - yarn.lock
               - .github/workflows/deploy.yml
@@ -195,6 +201,23 @@ jobs:
         with:
           tag_name: '@chealt/image-text-interpreter@${{ steps.image-text-interpreter.outputs.version }}'
           release_name: Release @chealt/image-text-interpreter v${{ steps.image-text-interpreter.outputs.version }}
+          draft: false
+          prerelease: false
+      - name: import-currencies
+        id: import-currencies
+        if: steps.changed-files-yaml.outputs.import-currencies_any_changed == 'true'
+        run: |
+          yarn workspace @centralbeans/import-currencies build
+          version=$(yarn workspace @centralbeans/import-currencies deploy | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release import-currencies
+        if: steps.changed-files-yaml.outputs.import-currencies_any_changed == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: '@centralbeans/import-currencies@${{ steps.import-currencies.outputs.version }}'
+          release_name: Release @centralbeans/import-currencies v${{ steps.import-currencies.outputs.version }}
           draft: false
           prerelease: false
       - name: invoke-flag-removed

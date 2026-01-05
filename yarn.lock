@@ -1435,6 +1435,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@centralbeans/import-currencies@workspace:packages/import-currencies":
+  version: 0.0.0-use.local
+  resolution: "@centralbeans/import-currencies@workspace:packages/import-currencies"
+  dependencies:
+    "@aws-sdk/client-secrets-manager": "npm:^3.962.0"
+    "@libsql/client": "npm:^0.15.15"
+    "@sentry/aws-serverless": "npm:^10.32.1"
+  languageName: unknown
+  linkType: soft
+
 "@centralbeans/invoke-flag-removed@workspace:packages/invoke-flag-removed":
   version: 0.0.0-use.local
   resolution: "@centralbeans/invoke-flag-removed@workspace:packages/invoke-flag-removed"
