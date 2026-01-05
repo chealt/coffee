@@ -1438,6 +1438,7 @@ __metadata:
     "@libsql/client": "npm:^0.15.15"
     "@sentry/aws-serverless": "npm:^10.32.1"
     jsdom: "npm:27.3.0"
+    parse5: "npm:7.3.0"
     undici: "npm:^7.16.0"
   languageName: unknown
   linkType: soft
@@ -10320,7 +10321,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"parse5@npm:^7.0.0":
+"parse5@npm:7.3.0, parse5@npm:^7.0.0":
   version: 7.3.0
   resolution: "parse5@npm:7.3.0"
   dependencies:
