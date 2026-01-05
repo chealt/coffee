@@ -15,6 +15,7 @@ import { setCollections, setCollectionItem } from './server/you/collections.js';
 
 const locales = supportedLanguages.map(({ locale }) => locale);
 const defaultLocale = supportedLanguages.find(({ isDefault }) => isDefault).locale;
+const isDev = import.meta.env.MODE === 'development';
 
 const setGetSignedUrl = (context) => {
   context.locals.getSignedUrl = '/api/storage/get-signed-url.json';
@@ -251,6 +252,7 @@ const middleware = async (context, next) => {
   return next();
 };
 
+const devSentryMiddleware = (_, next) => next();
 const sentryMiddleware = defineMiddleware((context, next) =>
   wrapRequestHandler(
     {
@@ -274,4 +276,4 @@ const sentryMiddleware = defineMiddleware((context, next) =>
   )
 );
 
-export const onRequest = sequence(sentryMiddleware, middleware);
+export const onRequest = sequence(isDev ? devSentryMiddleware : sentryMiddleware, middleware);
