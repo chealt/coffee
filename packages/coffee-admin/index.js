@@ -1,15 +1,11 @@
 import { getSecret } from './src/AWS.js';
 import logger from './src/Sentry/logger.js';
-import flagRemoved from './src/coffees/flag-removed.js';
-import invokeFlagRemoved from './src/coffees/invoke-flag-removed.js';
 import recordRoasterWebshop from './src/coffees/record-roaster-webshop.js';
 import importCurrencies from './src/currencies/import.js';
 import sendNewCoffees from './src/notifications/send-new-coffees.js';
 import sendRegistrationCode from './src/users/send-registration-code.js';
 
 const supportedFunctions = {
-  coffeesFlagRemoved: 'coffees:flag-removed',
-  coffeesInvokeFlagRemoved: 'coffees:invoke-flag-removed',
   coffeesRecordRoasterWebshop: 'coffees:record-roaster-webshop',
   currenciesImport: 'currencies:import',
   notificationsSendNewCoffees: 'notifications:send-new-coffees',
@@ -65,18 +61,6 @@ export const handler = async (event) => {
       }
 
       await recordRoasterWebshop({ roasterId: event.roasterId });
-
-      break;
-    case supportedFunctions.coffeesInvokeFlagRemoved:
-      await invokeFlagRemoved();
-
-      break;
-    case supportedFunctions.coffeesFlagRemoved:
-      const {
-        details: { id, webshopItemLink, roasterId }
-      } = event;
-
-      await flagRemoved({ id, webshopItemLink, roasterId });
 
       break;
     default:

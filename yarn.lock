@@ -1459,9 +1459,7 @@ __metadata:
     "@playwright/test": "npm:^1.57.0"
     "@sentry/aws-serverless": "npm:^10.32.1"
     "@tursodatabase/api": "npm:^1.9.2"
-    jsdom: "npm:27.0.0"
     jsonwebtoken: "npm:^9.0.3"
-    undici: "npm:^7.16.0"
   languageName: unknown
   linkType: soft
 

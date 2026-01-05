@@ -23,8 +23,6 @@
     "@playwright/test": "^1.57.0",
     "@sentry/aws-serverless": "^10.32.1",
     "@tursodatabase/api": "^1.9.2",
-    "jsdom": "27.0.0",
-    "jsonwebtoken": "^9.0.3",
-    "undici": "^7.16.0"
+    "jsonwebtoken": "^9.0.3"
   }
 }
