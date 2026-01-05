@@ -2,7 +2,7 @@ import { invokeLambda } from './AWS.js';
 import logger from './Sentry/logger.js';
 import client from './Turso.js';
 
-const invokeFlagRemoved = async () => {
+export const handler = async () => {
   const results = await client.execute({
     sql: 'SELECT id, webshop_item_link, roaster_id FROM coffees WHERE NOT is_removed AND webshop_item_link IS NOT NULL'
   });
@@ -16,5 +16,3 @@ const invokeFlagRemoved = async () => {
     });
   }
 };
-
-export default invokeFlagRemoved;
