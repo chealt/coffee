@@ -61,7 +61,25 @@ const isOutOfStock = ({ html, roasterId, webshopItemLink }) => {
   return !someInStock;
 };
 
-const flagRemoved = async ({ id, webshopItemLink, roasterId }) => {
+export const handler = async ({ id, webshopItemLink, roasterId }) => {
+  if (!id) {
+    logger.error('No id provided');
+
+    throw new Error('No id provided');
+  }
+
+  if (!webshopItemLink) {
+    logger.error(`No webshop item link for coffee with id ${id}`);
+
+    throw new Error('No webshop item link provided');
+  }
+
+  if (!roasterId) {
+    logger.error(`No roaster id for coffee with id ${id}`);
+
+    throw new Error('No roaster id provided');
+  }
+
   logger.info(`Checking coffee: ${webshopItemLink}`);
 
   let response;
@@ -94,5 +112,3 @@ const flagRemoved = async ({ id, webshopItemLink, roasterId }) => {
     logger.info(`Coffee with id ${id} is flagged as removed.`);
   }
 };
-
-export default flagRemoved;

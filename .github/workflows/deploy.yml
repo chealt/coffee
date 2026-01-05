@@ -64,6 +64,12 @@ jobs:
               - packages/image-text-interpreter/package.json
               - packages/image-text-interpreter/.yarnrc-lambda.yml
               - packages/image-text-interpreter/src/**
+            invoke-flag-removed:
+              - yarn.lock
+              - .github/workflows/deploy.yml
+              - packages/invoke-flag-removed/package.json
+              - packages/invoke-flag-removed/.yarnrc-lambda.yml
+              - packages/invoke-flag-removed/src/**
             record-webshop-item:
               - yarn.lock
               - .github/workflows/deploy.yml
@@ -189,6 +195,23 @@ jobs:
         with:
           tag_name: '@chealt/image-text-interpreter@${{ steps.image-text-interpreter.outputs.version }}'
           release_name: Release @chealt/image-text-interpreter v${{ steps.image-text-interpreter.outputs.version }}
+          draft: false
+          prerelease: false
+      - name: invoke-flag-removed
+        id: invoke-flag-removed
+        if: steps.changed-files-yaml.outputs.invoke-flag-removed_any_changed == 'true'
+        run: |
+          yarn workspace @centralbeans/invoke-flag-removed build
+          version=$(yarn workspace @centralbeans/invoke-flag-removed deploy | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release invoke-flag-removed
+        if: steps.changed-files-yaml.outputs.invoke-flag-removed_any_changed == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: '@centralbeans/invoke-flag-removed@${{ steps.invoke-flag-removed.outputs.version }}'
+          release_name: Release @centralbeans/invoke-flag-removed v${{ steps.invoke-flag-removed.outputs.version }}
           draft: false
           prerelease: false
       - name: record-webshop-item
