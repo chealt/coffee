@@ -2,13 +2,13 @@ import { createClient } from '@libsql/client';
 
 import locales from './locales.json' with { type: 'json' };
 import content from './new-coffees-email-content.js';
+// eslint-disable-next-line import/no-unresolved
+import coffees from '../../../data/coffees.json' with { type: 'json' };
+// eslint-disable-next-line import/no-unresolved
+import newCoffeeIds from '../../../data/newCoffeeIds.json' with { type: 'json' };
 import { sendEmail } from '../../AWS.js';
 import logger from '../../Sentry/logger.js';
 import { client, platformClient } from '../../Turso.js';
-// eslint-disable-next-line import/no-unresolved
-import coffees from '../../data/coffees.json' with { type: 'json' };
-// eslint-disable-next-line import/no-unresolved
-import newCoffeeIds from '../../data/newCoffeeIds.json' with { type: 'json' };
 import { getContentHash } from '../../string.js';
 
 const notificationType = 'newCoffees';
