@@ -205,6 +205,7 @@ export default defineConfig([
       'packages/image-proxy/**/*.js',
       'packages/import-currencies/**/*.js',
       'packages/invoke-flag-removed/**/*.js',
+      'packages/notifications/**/*.js',
       'packages/ocr-worker/**/*.js',
       'packages/record-webshop-item/**/*.js',
       'packages/record-webshop-item-details/**/*.js',

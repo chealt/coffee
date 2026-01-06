@@ -76,6 +76,13 @@ jobs:
               - packages/invoke-flag-removed/package.json
               - packages/invoke-flag-removed/.yarnrc-lambda.yml
               - packages/invoke-flag-removed/src/**
+            notifications:
+              - yarn.lock
+              - .github/workflows/deploy.yml
+              - packages/coffee.chealt.com/data/**
+              - packages/notifications/package.json
+              - packages/notifications/.yarnrc-lambda.yml
+              - packages/notifications/src/**
             record-webshop-item:
               - yarn.lock
               - .github/workflows/deploy.yml
@@ -235,6 +242,23 @@ jobs:
         with:
           tag_name: '@centralbeans/invoke-flag-removed@${{ steps.invoke-flag-removed.outputs.version }}'
           release_name: Release @centralbeans/invoke-flag-removed v${{ steps.invoke-flag-removed.outputs.version }}
+          draft: false
+          prerelease: false
+      - name: notifications
+        id: notifications
+        if: steps.changed-files-yaml.outputs.notifications_any_changed == 'true'
+        run: |
+          yarn workspace @centralbeans/notifications build
+          version=$(yarn workspace @centralbeans/notifications deploy | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release notifications
+        if: steps.changed-files-yaml.outputs.notifications_any_changed == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: '@centralbeans/notifications@${{ steps.notifications.outputs.version }}'
+          release_name: Release @centralbeans/notifications v${{ steps.notifications.outputs.version }}
           draft: false
           prerelease: false
       - name: record-webshop-item

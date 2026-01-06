@@ -1,0 +1,16 @@
+{
+  "name": "@centralbeans/notifications",
+  "type": "module",
+  "scripts": {
+    "build": "cp .yarnrc-lambda.yml .yarnrc.yml && cp ../coffee.chealt.com/data/*.json data && yarn workspaces focus --production && zip -rq package.zip . -x .yarnrc.yml .yarnrc-lambda.yml && rm .yarnrc.yml && rm -rf data",
+    "deploy": "aws lambda update-function-code --function-name notifications --zip-file fileb://package.zip --publish"
+  },
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.962.0",
+    "@aws-sdk/client-sesv2": "^3.962.0",
+    "@centralbeans/email": "workspace:*",
+    "@libsql/client": "^0.15.15",
+    "@sentry/aws-serverless": "^10.32.1",
+    "@tursodatabase/api": "^1.9.2"
+  }
+}
