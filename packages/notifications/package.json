@@ -2,7 +2,7 @@
   "name": "@centralbeans/notifications",
   "type": "module",
   "scripts": {
-    "build": "cp .yarnrc-lambda.yml .yarnrc.yml && cp ../coffee.chealt.com/data/*.json data && yarn workspaces focus --production && zip -rq package.zip . -x .yarnrc.yml .yarnrc-lambda.yml && rm .yarnrc.yml && rm -rf data",
+    "build": "cp .yarnrc-lambda.yml .yarnrc.yml && mkdir -p data && cp ../coffee.chealt.com/data/*.json data && yarn workspaces focus --production && zip -rq package.zip . -x .yarnrc.yml .yarnrc-lambda.yml && rm .yarnrc.yml && rm -rf data",
     "deploy": "aws lambda update-function-code --function-name notifications --zip-file fileb://package.zip --publish"
   },
   "dependencies": {
