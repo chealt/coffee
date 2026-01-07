@@ -29,7 +29,7 @@ const main = async ({ locale }) => {
   });
 
   if (!users.length) {
-    logger.info('No new coffees to send.');
+    logger.info('All users have already been notified about the current new coffees.');
 
     return undefined;
   }
