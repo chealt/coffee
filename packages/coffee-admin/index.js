@@ -1,12 +1,10 @@
 import { getSecret } from './src/AWS.js';
 import logger from './src/Sentry/logger.js';
 import recordRoasterWebshop from './src/coffees/record-roaster-webshop.js';
-import sendNewCoffees from './src/notifications/send-new-coffees.js';
 import sendRegistrationCode from './src/users/send-registration-code.js';
 
 const supportedFunctions = {
   coffeesRecordRoasterWebshop: 'coffees:record-roaster-webshop',
-  notificationsSendNewCoffees: 'notifications:send-new-coffees',
   usersSendRegistrationCode: 'users:send-registration-code'
 };
 
@@ -40,10 +38,6 @@ export const handler = async (event) => {
       const email = event.email;
 
       await sendRegistrationCode({ username, email });
-
-      break;
-    case supportedFunctions.notificationsSendNewCoffees:
-      await sendNewCoffees();
 
       break;
     case supportedFunctions.coffeesRecordRoasterWebshop:
