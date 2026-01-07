@@ -73,7 +73,7 @@ const main = async ({ locale }) => {
 
     await sendEmail({
       to: email,
-      content: content({ newCoffees, locale, title: localeContent.newCoffeesEmailSubject }),
+      content: content({ newCoffees, locale, title: localeContent.newCoffeesEmailTitle }),
       subject: localeContent.newCoffeesEmailSubject
     });
   }
