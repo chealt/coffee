@@ -1,10 +1,12 @@
 import logger from './Sentry/logger.js';
 import sendNewCoffees from './coffees/new-coffees/index.js';
 
+const defaultLocale = 'en';
+
 export const handler = async ({ locale, notificationType }) => {
   switch (notificationType) {
     case 'newCoffeeNotification':
-      await sendNewCoffees({ locale });
+      await sendNewCoffees({ locale: locale || defaultLocale });
 
       break;
     default:
