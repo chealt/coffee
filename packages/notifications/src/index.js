@@ -3,10 +3,10 @@ import sendNewCoffees from './coffees/new-coffees/index.js';
 
 const defaultLocale = 'en';
 
-export const handler = async ({ locale, notificationType }) => {
+export const handler = async ({ locale = defaultLocale, notificationType }) => {
   switch (notificationType) {
     case 'newCoffeeNotification':
-      await sendNewCoffees({ locale: locale || defaultLocale });
+      await sendNewCoffees({ locale });
 
       break;
     default:
