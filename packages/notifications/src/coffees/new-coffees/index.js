@@ -62,13 +62,13 @@ const main = async ({ locale }) => {
 
     logger.info(`Preparing new coffee notification to ${username} with email ${email}`);
 
-    logger.info(`Saving notification to DB for user: ${username} with email: ${email}`);
+    logger.info(`Saving notification to DB for user ${username} with email ${email}`);
     await client.execute({
       sql: 'INSERT INTO notifications (username, email, type, data_hash) VALUES (:username, :email, :notificationType, :dataHash)',
       args: { username, email, notificationType, dataHash }
     });
 
-    logger.info(`Sending notification to user ${username} with email: ${email}`);
+    logger.info(`Sending notification to user ${username} with email ${email}`);
     const localeContent = locales[locale] || locales.en;
 
     await sendEmail({
