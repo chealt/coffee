@@ -32,10 +32,10 @@ const content = ({ newCoffees, locale, title }) => `
                 <tr>
                   <td align="center" style="padding-bottom: 10px;">
                     <h2 style="margin: 0; font-size: 20px;">${roasterName} - ${titleCase(originCountryName)}</h2>
-                    ${brewingMethod?.name && `<p style="margin: 5px 0; color: #666666;">${titleCase(brewingMethod.name)}</p>`}
-                    ${processingMethod?.name && `<p style="margin: 5px 0; color: #666666;">${titleCase(processingMethod.name)}</p>`}
-                    ${varieties?.length && `<p style="margin: 5px 0; color: #666666;">${varieties?.map(({ name }) => titleCase(name)).join(', ')}</p>`}
-                    ${tasteNotes?.length && `<p style="margin: 5px 0; color: #666666;">${tasteNotes?.map(({ name }) => titleCase(name)).join(', ')}</p>`}
+                    ${brewingMethod?.name ? `<p style="margin: 5px 0; color: #666666;">${titleCase(brewingMethod.name)}</p>` : ''}
+                    ${processingMethod?.name ? `<p style="margin: 5px 0; color: #666666;">${titleCase(processingMethod.name)}</p>` : ''}
+                    ${varieties?.length ? `<p style="margin: 5px 0; color: #666666;">${varieties?.map(({ name }) => titleCase(name)).join(', ')}</p>` : ''}
+                    ${tasteNotes?.length ? `<p style="margin: 5px 0; color: #666666;">${tasteNotes?.map(({ name }) => titleCase(name)).join(', ')}</p>` : ''}
                   </td>
                 </tr>
                 <tr>
