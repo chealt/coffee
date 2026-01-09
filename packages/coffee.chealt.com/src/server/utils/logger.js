@@ -1,4 +1,4 @@
-import { captureException } from '@sentry/cloudflare';
+import { captureException, captureMessage } from '@sentry/cloudflare';
 
 const logger = (() => {
   const debug = (message) => {
@@ -15,6 +15,8 @@ const logger = (() => {
 
   const warn = (message) => {
     console.warn(message);
+
+    captureMessage(message, 'warning');
   };
 
   const error = (_error) => {

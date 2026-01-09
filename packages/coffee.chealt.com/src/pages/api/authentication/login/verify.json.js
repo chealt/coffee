@@ -13,6 +13,7 @@ import {
   getPasskey,
   updatePasskeyCounter
 } from '../../../../server/database/user.js';
+import logger from '../../../../server/utils/logger.js';
 
 const POST = async ({ request }) => {
   const { username, ...body } = await request.json();
@@ -75,7 +76,7 @@ const POST = async ({ request }) => {
       ]
     });
   } catch (error) {
-    console.error(error); // eslint-disable-line no-console
+    logger.warn(error);
 
     return new Response(JSON.stringify({ error: error.message }), {
       status: 400,
