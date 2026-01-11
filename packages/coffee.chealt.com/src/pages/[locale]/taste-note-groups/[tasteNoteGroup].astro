@@ -1,10 +1,11 @@
 ---
 import TasteNoteGroup from '../../../components/taste-notes/taste-note-groups/taste-note-group.astro';
 import tasteNoteGroups from '../../../../data/tasteNoteGroups.json';
+import { decodeSafeURL } from '../../../utils/string.js';
 
 const { tasteNoteGroup } = Astro.params;
 
-const id = tasteNoteGroups.find(({ name }) => name === decodeURIComponent(tasteNoteGroup))?.taste_note_group_id;
+const id = tasteNoteGroups.find(({ name }) => name === decodeSafeURL(tasteNoteGroup))?.taste_note_group_id;
 
 Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---
