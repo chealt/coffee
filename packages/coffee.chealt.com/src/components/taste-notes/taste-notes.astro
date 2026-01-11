@@ -1,6 +1,7 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
 
+import { encodeSafeURL } from '../../utils/string.js';
 import { getTasteNoteGroupByNoteId } from './utils.js';
 
 import './taste-notes.css';
@@ -19,7 +20,7 @@ const tasteNotesWithGroup = tasteNotes.map((tasteNote) => ({
       <li class="chip" style={group?.color ? `background-color: ${group.color}` : 'border: 1px dashed'}>
         {(group && (
           <a
-            href={getRelativeLocaleUrl(Astro.currentLocale, `/taste-note-groups/${encodeURIComponent(group.name)}`)}
+            href={getRelativeLocaleUrl(Astro.currentLocale, `/taste-note-groups/${encodeSafeURL(group.name)}`)}
             style={`color: ${group.text_color}`}
           >
             {name}
