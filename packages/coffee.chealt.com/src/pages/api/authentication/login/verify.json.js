@@ -9,6 +9,7 @@ import {
 import { getSessionJWT } from '../../../../server/authentication/session.js';
 import {
   getUser,
+  getUserByUsernameOrEmail,
   getAuthenticationOptions,
   getPasskey,
   updatePasskeyCounter
@@ -25,9 +26,10 @@ const POST = async ({ request }) => {
     });
   }
 
-  const user = await getUser(username);
-  const currentOptions = await getAuthenticationOptions(username);
-  const passkey = await getPasskey({ user, credentialId: body.id });
+  const userDefault = await getUserByUsernameOrEmail(username);
+  const user = await getUser(userDefault.username);
+  const currentOptions = await getAuthenticationOptions(user.name);
+  const passkey = await getPasskey({ username: user.name, credentialId: body.id });
 
   try {
     const {
@@ -71,7 +73,7 @@ const POST = async ({ request }) => {
         ],
         [
           'Set-Cookie',
-          `${cookieNameUsername}=${username}; Path=/; HttpOnly; SameSite=Strict; Secure; Max-Age=${60 * 60 * 24 * 365}`
+          `${cookieNameUsername}=${user.name}; Path=/; HttpOnly; SameSite=Strict; Secure; Max-Age=${60 * 60 * 24 * 365}`
         ]
       ]
     });

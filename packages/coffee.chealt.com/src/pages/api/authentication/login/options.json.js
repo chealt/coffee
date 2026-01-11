@@ -1,16 +1,18 @@
 import { relyingPartyID } from '../../../../server/authentication/config.js';
-import { getAuthenticationOptions } from '../../../../server/database/user.js';
+import { getUserByUsernameOrEmail, getUser, getAuthenticationOptions } from '../../../../server/database/user.js';
 import { getAuthenticationOptions as getNewAuthenticationOptions } from '../../../../server/login.js';
 import logger from '../../../../server/utils/logger.js';
 
 const POST = async ({ request }) => {
   const { username } = await request.json();
+  const userDefault = await getUserByUsernameOrEmail(username);
+  const user = await getUser(userDefault.username);
 
   try {
-    let options = await getAuthenticationOptions(username);
+    let options = await getAuthenticationOptions(user.name);
 
     if (options.rpId !== relyingPartyID) {
-      options = await getNewAuthenticationOptions(username);
+      options = await getNewAuthenticationOptions(user.name);
     }
 
     return new Response(JSON.stringify({ options }), {

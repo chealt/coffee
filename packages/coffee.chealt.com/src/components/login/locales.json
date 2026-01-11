@@ -2,11 +2,11 @@
   "en": {
     "title": "Login",
     "login": "Login",
-    "username": "Username"
+    "usernameOrEmail": "Username or email"
   },
   "pl": {
     "title": "Logowanie",
     "login": "Zaloguj się",
-    "username": "Nazwa użytkownika"
+    "usernameOrEmail": "Nazwa użytkownika lub email"
   }
 }

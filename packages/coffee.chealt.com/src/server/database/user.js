@@ -4,7 +4,21 @@ import { getClient } from './client.js';
 const getUser = async (username) => {
   const client = getClient(username);
 
-  const { rows } = await client.execute({ sql: 'SELECT * FROM users WHERE name = (:name)', args: { name: username } });
+  const { rows } = await client.execute({
+    sql: 'SELECT * FROM users WHERE name = (:username)',
+    args: { username }
+  });
+
+  return rows[0];
+};
+
+const getUserByUsernameOrEmail = async (usernameOrEmail) => {
+  const client = getClient();
+
+  const { rows } = await client.execute({
+    sql: 'SELECT * FROM users WHERE username = (:usernameOrEmail) OR email = (:usernameOrEmail)',
+    args: { usernameOrEmail }
+  });
 
   return rows[0];
 };
@@ -81,8 +95,9 @@ const getAuthenticationOptions = async (username) => {
   return JSON.parse(rows[0].authentication_options);
 };
 
-const getPasskey = async ({ user, credentialId }) => {
-  const client = getClient(user.name);
+const getPasskey = async ({ username, credentialId }) => {
+  const client = getClient(username);
+  const user = await getUser(username);
 
   const { rows } = await client.execute({
     sql: 'SELECT * FROM passkeys WHERE user_id = (:id) AND credential_id = (:credential_id)',
@@ -103,6 +118,7 @@ const updatePasskeyCounter = async ({ username, credentialID, newCounter }) => {
 
 export {
   getUser,
+  getUserByUsernameOrEmail,
   getPasskeys,
   getRegistrationOptions,
   recordRegistrationOptions,
