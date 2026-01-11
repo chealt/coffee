@@ -1,5 +1,6 @@
 import { getSessionUser } from '../../../server/authentication/session.js';
 import { updateRanks } from '../../../server/database/collections.js';
+import logger from '../../../server/utils/logger.js';
 
 const POST = async (context) => {
   const loggedInUser = getSessionUser(context);
@@ -18,12 +19,12 @@ const POST = async (context) => {
 
         break;
       default:
-        console.error(`Unknown key: ${key}`); // eslint-disable-line no-console
+        logger.error(`Unknown key: ${key}`);
 
         return new Response(JSON.stringify({ error: 'Invalid command' }), { status: 400 });
     }
   } catch (error) {
-    console.error(error); // eslint-disable-line no-console
+    logger.error(error);
 
     return new Response(
       JSON.stringify({ success: false, error: `Could not save changes to ${key}. Please try again!` }),

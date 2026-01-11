@@ -1,6 +1,7 @@
 import { invoke } from '../../../../server/AWS/lambda.js';
 import { getSessionUser } from '../../../../server/authentication/session.js';
 import { getUser } from '../../../../server/database/user.js';
+import logger from '../../../../server/utils/logger.js';
 
 const POST = async (context) => {
   try {
@@ -9,8 +10,7 @@ const POST = async (context) => {
 
     await invoke({ name: 'coffeeAdmin', payload: { function: 'users:send-registration-code', username, email } });
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(error);
+    logger.error(error);
 
     return new Response(null, { status: 401 });
   }

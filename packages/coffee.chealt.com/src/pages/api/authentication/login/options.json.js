@@ -1,6 +1,7 @@
 import { relyingPartyID } from '../../../../server/authentication/config.js';
 import { getAuthenticationOptions } from '../../../../server/database/user.js';
 import { getAuthenticationOptions as getNewAuthenticationOptions } from '../../../../server/login.js';
+import logger from '../../../../server/utils/logger.js';
 
 const POST = async ({ request }) => {
   const { username } = await request.json();
@@ -17,7 +18,7 @@ const POST = async ({ request }) => {
       headers: { 'Content-Type': 'application/json' }
     });
   } catch (error) {
-    console.error(error); // eslint-disable-line no-console
+    logger.error(error);
 
     return new Response(JSON.stringify({ error: 'Cannot get authentication options. Please try again!' }));
   }

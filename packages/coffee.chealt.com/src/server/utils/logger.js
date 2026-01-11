@@ -7,10 +7,14 @@ const logger = (() => {
 
   const info = (message) => {
     console.info(message);
+
+    captureMessage(message, 'info');
   };
 
   const log = (message) => {
     console.log(message);
+
+    captureMessage(message, 'info');
   };
 
   const warn = (message) => {

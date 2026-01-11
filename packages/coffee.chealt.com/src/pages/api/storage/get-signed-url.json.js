@@ -1,5 +1,6 @@
 import { generateUploadUrl } from '../../../server/AWS/storage.js';
 import { getSessionUser } from '../../../server/authentication/session.js';
+import logger from '../../../server/utils/logger.js';
 
 const POST = async (context) => {
   // check if user is logged in
@@ -12,7 +13,7 @@ const POST = async (context) => {
 
     return new Response(JSON.stringify({ url }), { status: 200 });
   } catch (error) {
-    console.error(error); // eslint-disable-line no-console
+    logger.error(error);
 
     return new Response(JSON.stringify({ error: 'Failed to generate upload URL' }), {
       status: 500,

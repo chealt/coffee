@@ -1,4 +1,5 @@
 import { formDataToObject } from '../../utils/form.js';
+import logger from '../errors/utils.js';
 
 const storageKey = 'chealt-forms';
 const supportedStorageTypes = ['localStorage'];
@@ -150,23 +151,20 @@ const saveFormData =
         });
 
         if (!response.ok) {
-          // eslint-disable-next-line no-console
-          console.error(response);
+          logger.error(response);
         }
 
         const result = await response.json();
 
         if (result.error) {
-          // eslint-disable-next-line no-console
-          console.error(result.error);
+          logger.error(result.error);
         }
 
         if (result.redirectUrl) {
           window.location.assign(result.redirectUrl);
         }
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error(error);
+        logger.error(error);
       }
     }
   };
@@ -219,12 +217,20 @@ class ChealtForm extends HTMLElement {
 
     if (this.storage) {
       if (this.storage === 'api' && !this.saveEndpoint) {
+        logger.error(
+          `The API storage type needs to have a sve endpoint data attribute. Please add [data-save-endpoint] to the form.`
+        );
+
         throw new Error(
           `The API storage type needs to have a sve endpoint data attribute. Please add [data-save-endpoint] to the form.`
         );
       }
 
       if (!ChealtForm.isStorageTypeImplemented(this.storage)) {
+        logger.error(
+          `Storage type: ${this.storage} is not implemented, use one of the following: ${supportedStorageTypes.join(', ')}`
+        );
+
         throw new Error(
           `Storage type: ${this.storage} is not implemented, use one of the following: ${supportedStorageTypes.join(', ')}`
         );

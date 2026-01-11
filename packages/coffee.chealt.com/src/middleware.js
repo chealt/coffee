@@ -11,6 +11,7 @@ import { cookieNameLocale, cookieNameCurrency, defaultCurrency } from './server/
 import { getValue, insert } from './server/database/formData.js';
 import { getAuthenticationOptions } from './server/login.js';
 import { createRegistrationOptions } from './server/registration.js';
+import logger from './server/utils/logger.js';
 import { setCollections, setCollectionItem } from './server/you/collections.js';
 
 const locales = supportedLanguages.map(({ locale }) => locale);
@@ -51,7 +52,7 @@ const setCurrency = async (context) => {
 
     currencyDB = settings?.currency;
   } catch {
-    console.info('Not logged in, so could not read currency from DB.');
+    logger.info('Not logged in, so could not read currency from DB.');
   }
 
   const currency = currencyDB || cookieCurrency || defaultCurrency;
@@ -65,7 +66,7 @@ const setSettings = async (context) => {
 
     context.locals.settings = settings;
   } catch {
-    console.info('Not logged in, so could not read settings from DB.');
+    logger.info('Not logged in, so could not read settings from DB.');
   }
 };
 
@@ -151,7 +152,7 @@ const middleware = async (context, next) => {
 
     savedLocaleDB = settings?.language;
   } catch {
-    console.info('Not logged in, so could not read language from DB.');
+    logger.info('Not logged in, so could not read language from DB.');
   }
 
   const savedLocale = context.cookies.get(cookieNameLocale)?.value || savedLocaleDB;
@@ -174,7 +175,7 @@ const middleware = async (context, next) => {
     try {
       authenticate(context);
     } catch (error) {
-      console.error(error);
+      logger.error(error);
 
       return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
     }
@@ -206,7 +207,7 @@ const middleware = async (context, next) => {
         context.locals.feedback = feedback;
       }
     } catch (error) {
-      console.error(error);
+      logger.error(error);
 
       context.locals.shouldAuthenticate = true;
 
@@ -230,7 +231,7 @@ const middleware = async (context, next) => {
           return redirect('/registration/error?name=JsonWebTokenError');
         }
       } catch (error) {
-        console.error(error);
+        logger.error(error);
 
         return redirect(`/registration/error?name=${error.name}`);
       }
@@ -244,7 +245,7 @@ const middleware = async (context, next) => {
 
         context.locals.registrationOptions = JSON.stringify(registrationOptions);
       } catch (error) {
-        console.error(error);
+        logger.error(error);
       }
     }
   }

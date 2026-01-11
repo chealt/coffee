@@ -8,6 +8,7 @@ import {
 } from '../../../../server/authentication/config.js';
 import { getSessionJWT } from '../../../../server/authentication/session.js';
 import { getUser, getRegistrationOptions, storeRegistration } from '../../../../server/database/user.js';
+import logger from '../../../../server/utils/logger.js';
 
 const POST = async ({ request }) => {
   const { username, ...registration } = await request.json();
@@ -43,7 +44,7 @@ const POST = async ({ request }) => {
       ]
     });
   } catch (error) {
-    console.error(error); // eslint-disable-line no-console
+    logger.error(error);
 
     return new Response(JSON.stringify({ error: error.message }), {
       headers: {

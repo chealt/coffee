@@ -1,5 +1,7 @@
 import { startAuthentication } from '@simplewebauthn/browser';
 
+import logger from './errors/utils.js';
+
 class ChealtAuthLogin extends HTMLElement {
   connectedCallback() {
     this.form = this.querySelector('form');
@@ -47,7 +49,7 @@ class ChealtAuthLogin extends HTMLElement {
         window.location.href = this.redirectUrl;
       }
     } catch (error) {
-      console.error(error); // eslint-disable-line no-console
+      logger.error(error);
     }
 
     this.loginButton.disabled = false;

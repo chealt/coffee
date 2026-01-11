@@ -8,6 +8,7 @@ import {
   deleteCollectionItem,
   addItemToCollection
 } from '../../../server/database/collections.js';
+import logger from '../../../server/utils/logger.js';
 
 const POST = async (context) => {
   const loggedInUser = getSessionUser(context);
@@ -54,7 +55,7 @@ const POST = async (context) => {
         break;
     }
   } catch (error) {
-    console.error(error); // eslint-disable-line no-console
+    logger.error(error);
 
     return new Response(
       JSON.stringify({ success: false, error: `Could not save changes to ${key}. Please try again!` }),

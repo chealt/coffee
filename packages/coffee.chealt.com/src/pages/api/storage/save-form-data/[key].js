@@ -1,6 +1,7 @@
 import { getSessionUser } from '../../../../server/authentication/session.js';
 import { cookieNameCurrency, cookieNameLocale } from '../../../../server/config.js';
 import { insert } from '../../../../server/database/formData.js';
+import logger from '../../../../server/utils/logger.js';
 
 const POST = async (context) => {
   const loggedInUser = getSessionUser(context);
@@ -54,8 +55,7 @@ const POST = async (context) => {
 
     return new Response(JSON.stringify({ success: true, redirectUrl }), { status: 200, headers });
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(error);
+    logger.error(error);
 
     return new Response(JSON.stringify({ error: 'Failed to insert data' }));
   }

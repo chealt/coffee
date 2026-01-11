@@ -1,3 +1,5 @@
+import logger from './errors/utils.js';
+
 const defaults = {
   confirmDeleteMessage: 'Are you sure?'
 };
@@ -25,10 +27,14 @@ class ChealtData extends HTMLElement {
       const redirectUrl = deleteTrigger.dataset.redirectUrl;
 
       if (!elementToDelete) {
+        logger.error(`Cannot find element to delete with id: ${id}`);
+
         throw new Error(`Cannot find element to delete with id: ${id}`);
       }
 
       if (!type) {
+        logger.error('The element to be deleted must have a data-type attribute');
+
         throw new Error('The element to be deleted must have a data-type attribute');
       }
 
@@ -56,8 +62,7 @@ class ChealtData extends HTMLElement {
               window.location.assign(redirectUrl);
             }
           } catch (error) {
-            // eslint-disable-next-line no-console
-            console.error(error);
+            logger.error(error);
           }
         }
 

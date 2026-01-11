@@ -1,5 +1,6 @@
 import { getContentHash } from '../../utils/file.js';
 import { setItem } from '../../utils/storage.js';
+import logger from '../errors/utils.js';
 
 const addCollection = 'chealt-add-collection';
 const addImageToCollection = 'chealt-add-image-to-collection';
@@ -71,9 +72,9 @@ class CoffeeImageUpload extends HTMLElement {
         })
         .catch((error) => {
           if (error.name === 'AbortError') {
-            console.log('user abort'); // eslint-disable-line no-console
+            logger.info('user abort');
           } else {
-            console.error(error); // eslint-disable-line no-console
+            logger.error(error);
           }
         });
     });

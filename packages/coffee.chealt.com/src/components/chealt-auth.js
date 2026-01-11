@@ -1,5 +1,7 @@
 import { browserSupportsWebAuthn, startRegistration } from '@simplewebauthn/browser';
 
+import logger from './errors/utils.js';
+
 class ChealtAuth extends HTMLElement {
   connectedCallback() {
     this.checkSupport();
@@ -60,7 +62,7 @@ class ChealtAuth extends HTMLElement {
           this.registrationError.classList.remove('hidden');
         }
       } catch (error) {
-        console.error(error); // eslint-disable-line no-console
+        logger.error(error);
 
         if (error.code === 'ERROR_AUTHENTICATOR_PREVIOUSLY_REGISTERED') {
           this.registrationErrorAuthenticatorPreviouslyRegistered.classList.remove('hidden');
