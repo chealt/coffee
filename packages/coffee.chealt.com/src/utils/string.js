@@ -1,7 +1,9 @@
 const normalize = (string) => string.normalize('NFD').replace(/[\u0300-\u036f]/gu, '');
 const removeSpaces = (string) => string.replaceAll(' ', '');
-const encodeSafeURL = (string) => encodeURIComponent(string.replaceAll(' ', '-').replaceAll('&', '-and-'));
-const decodeSafeURL = (string) => decodeURIComponent(string.replaceAll('-and-', '&').replaceAll('-', ' '));
+const encodeSafeURL = (string) =>
+  encodeURIComponent(string.replaceAll(' ', '-').replaceAll('&', '-and-').replaceAll('/', '-or-'));
+const decodeSafeURL = (string) =>
+  decodeURIComponent(string.replaceAll('-and-', '&').replaceAll('-or-', '/').replaceAll('-', ' '));
 const friendlyIncludes = (haystack, needle) =>
   haystack.toLowerCase().includes(removeSpaces(normalize(needle.toLowerCase()))) ||
   haystack.toLowerCase().includes(normalize(needle.toLowerCase()));
