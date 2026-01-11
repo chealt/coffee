@@ -11,6 +11,7 @@ import Icon from '../../icon/icon.astro';
 import Common from '../../common/common.astro';
 import Coffees from '../../coffees/list.astro';
 import { convertToUSD, getDetails } from '../../coffees/utils.js';
+import { encodeSafeURL } from '../../../utils/string.js';
 
 import '../../stats/stats.css';
 import './taste-note-group.css';
@@ -49,7 +50,7 @@ const roastersWithCoffee = Array.from(new Set(allCoffees.map(({ roaster_id }) =>
       loggedInUser && (
         <Button
           class="ghost"
-          href={getRelativeLocaleUrl(Astro.currentLocale, `/taste-note-groups/${encodeURIComponent(name)}`)}
+          href={getRelativeLocaleUrl(Astro.currentLocale, `/taste-note-groups/${encodeSafeURL(name)}`)}
         >
           <Icon type="back" />
           <span class="visually-hidden">{t.back}</span>

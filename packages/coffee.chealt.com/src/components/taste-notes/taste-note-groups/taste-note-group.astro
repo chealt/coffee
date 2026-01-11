@@ -14,6 +14,7 @@ import Icon from '../../icon/icon.astro';
 import './taste-note-group.css';
 
 import allLocaleTranslations from '../../common/common.json';
+import { encodeSafeURL } from '../../../utils/string.js';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
@@ -43,7 +44,7 @@ const coffeesWithTasteNoteGroup = coffees
       loggedInUser && (
         <Button
           class="ghost"
-          href={getRelativeLocaleUrl(Astro.currentLocale, `/taste-note-groups/${encodeURIComponent(group.name)}/stats`)}
+          href={getRelativeLocaleUrl(Astro.currentLocale, `/taste-note-groups/${encodeSafeURL(group.name)}/stats`)}
         >
           <Icon type="chart" />
           <span class="visually-hidden">{t.chart}</span>
