@@ -1,0 +1,36 @@
+.roaster-container {
+  .links {
+    display: flex;
+    flex-direction: row;
+
+    > a.button {
+      flex-grow: 0;
+      width: auto;
+    }
+  }
+
+  .image.roaster {
+    padding: var(--gap);
+    background-color: var(--color-text);
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 300px;
+    overflow: hidden;
+    box-sizing: border-box;
+    max-width: var(--max-main-image-width);
+    margin: 0 auto;
+  }
+
+  .roaster.image.large {
+    height: 500px;
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--border-radius);
+  }
+}

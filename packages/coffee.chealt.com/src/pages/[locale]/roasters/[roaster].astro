@@ -1,13 +1,13 @@
 ---
-import Roaster from '../../../components/roasters/roaster.astro';
+import FilteredList from '../../../components/coffees/filtered-list.astro';
 import roasters from '../../../../data/roasters.json';
 import { decodeSafeURL } from '../../../utils/string';
 
 const { roaster } = Astro.params;
 
-const id = roasters.find(({ name }) => name === decodeSafeURL(roaster))?.id;
+const roasterId = roasters.find(({ name }) => name === decodeSafeURL(roaster))?.id;
 
 Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---
 
-<Roaster id={id} />
+<FilteredList roasterId={roasterId} />
