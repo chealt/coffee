@@ -112,16 +112,8 @@ const { currency } = Astro.locals;
           null
       }
       {(originRegion?.name && <span> - {originRegion.name}</span>) || null}
+      {(originFarm?.name && <span> - {originFarm.name}</span>) || null}
     </dd>
-    {
-      (originFarm?.name && (
-        <Fragment>
-          <dt>{t.originFarm}</dt>
-          <dd>{originFarm.name}</dd>
-        </Fragment>
-      )) ||
-        null
-    }
     {
       (brewingMethod?.name && (
         <Fragment>
@@ -193,14 +185,6 @@ const { currency } = Astro.locals;
         </Fragment>
       )) ||
         null
-    }
-    {
-      originFarm?.height && (
-        <Fragment>
-          <dt>{t.height}</dt>
-          <dd>{`${Intl.NumberFormat(Astro.currentLocale).format(originFarm.height)} m`}</dd>
-        </Fragment>
-      )
     }
     {
       (weight && price && (
