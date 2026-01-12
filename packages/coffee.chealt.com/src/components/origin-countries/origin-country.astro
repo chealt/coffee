@@ -14,6 +14,7 @@ import Common from '../common/common.astro';
 import Dialog from '../dialog/dialog.astro';
 import Icon from '../icon/icon.astro';
 import { capitalize, encodeSafeURL } from '../../utils/string.js';
+import { getSafeUrl } from '../utils/url.js';
 
 import allLocaleTranslationsCommon from '../common/common.json';
 import allLocaleTranslations from './locales.json';
@@ -63,7 +64,7 @@ if (!brewingMethod?.name && !country?.name) {
 } else if (brewingMethod?.name && country?.name) {
   statsLink = getRelativeLocaleUrl(
     Astro.currentLocale,
-    `/countries/${country.name}/origin-countries/${encodeSafeURL(name)}/brewing-methods/${brewingMethod.name}/stats`
+    `/countries/${encodeSafeURL(country.name)}/origin-countries/${encodeSafeURL(name)}/brewing-methods/${brewingMethod.name}/stats`
   );
 } else if (brewingMethod?.name) {
   statsLink = getRelativeLocaleUrl(
@@ -73,7 +74,7 @@ if (!brewingMethod?.name && !country?.name) {
 } else if (country?.name) {
   statsLink = getRelativeLocaleUrl(
     Astro.currentLocale,
-    `/countries/${country.name}/origin-countries/${encodeSafeURL(name)}/stats`
+    `/countries/${encodeSafeURL(country.name)}/origin-countries/${encodeSafeURL(name)}/stats`
   );
 }
 ---
@@ -93,7 +94,14 @@ if (!brewingMethod?.name && !country?.name) {
               )
               .map(({ origin_country_id, name }) => (
                 <li>
-                  <Button href={getRelativeLocaleUrl(Astro.currentLocale, `/origin-countries/${encodeSafeURL(name)}`)}>
+                  <Button
+                    href={getSafeUrl({
+                      locale: Astro.currentLocale,
+                      brewingMethod: brewingMethod?.name,
+                      country: country?.name,
+                      originCountry: name
+                    })}
+                  >
                     {name}
                   </Button>
                 </li>

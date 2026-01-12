@@ -9,9 +9,10 @@ import { convertToUSD } from '../coffees/utils.js';
 import Button from '../form/button/button.astro';
 import Coffees from '../coffees/list.astro';
 import Common from '../common/common.astro';
+import Dialog from '../dialog/dialog.astro';
 import Icon from '../icon/icon.astro';
 import Roasters from '../roasters/list.astro';
-import { capitalize } from '../../utils/string.js';
+import { capitalize, encodeSafeURL } from '../../utils/string.js';
 
 import allLocaleTranslations from './locales.json';
 import allLocaleTranslationsCommon from '../common/common.json';
@@ -46,10 +47,31 @@ const roastersInCountry = roastersWithCoffees.filter(({ country_id }) => country
 
 <Common title={`${t.title} ${capitalize(name)}`}>
   <h1 class="title">
-    <div>{name}</div>
+    <div>
+      <span data-dialog-id="countries">
+        {name}
+      </span>
+      <Dialog id="countries" class="drawer">
+        {
+          countries
+            .filter(({ language_code }) => language_code === Astro.currentLocale)
+            .map(({ name, country_id }) => (
+              <Button
+                href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${encodeSafeURL(name)}`)}
+                class={country_id === id ? 'primary' : ''}
+              >
+                {name}
+              </Button>
+            ))
+        }
+      </Dialog>
+    </div>
     {
       loggedInUser && (
-        <Button class="ghost small" href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${name}/stats`)}>
+        <Button
+          class="ghost small"
+          href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${encodeSafeURL(name)}/stats`)}
+        >
           <Icon type="chart" />
           <span class="visually-hidden">{tc.chart}</span>
         </Button>
@@ -80,15 +102,15 @@ const roastersInCountry = roastersWithCoffees.filter(({ country_id }) => country
         <h2>{tc.allCoffees}</h2>
         <Coffees coffees={coffees} />
       </section>
-    )) ||
-      null
+    )) || <section>{tc.noCoffees}</section>
   }
   {
-    roastersInCountry.length && (
+    (roastersInCountry.length && (
       <section>
         <h2>{tc.roasters}</h2>
         <Roasters roasters={roastersInCountry} />
       </section>
-    )
+    )) ||
+      null
   }
 </Common>

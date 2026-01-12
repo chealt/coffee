@@ -13,6 +13,7 @@ import Coffees from '../coffees/list.astro';
 import { convertToUSD, getDetails } from '../coffees/utils.js';
 import { titleCase } from '../../utils/string.js';
 import { getTasteNoteGroup, getTasteNoteGroupByNoteId } from '../taste-notes/utils.js';
+import { encodeSafeURL } from '../../utils/string.js';
 
 import '../stats/stats.css';
 
@@ -84,7 +85,10 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce(
     <div>{name}</div>
     {
       loggedInUser && (
-        <Button class="ghost small" href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${name}`)}>
+        <Button
+          class="ghost small"
+          href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${encodeSafeURL(name)}`)}
+        >
           <Icon type="back" />
           <span class="visually-hidden">{t.back}</span>
         </Button>

@@ -1,10 +1,11 @@
 ---
 import Stats from '../../../../components/countries/stats.astro';
 import countries from '../../../../../data/countries.json';
+import { decodeSafeURL } from '../../../../utils/string.js';
 
 const { country } = Astro.params;
 
-const id = countries.find(({ name }) => name === country)?.country_id;
+const id = countries.find(({ name }) => name === decodeSafeURL(country))?.country_id;
 
 Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---
