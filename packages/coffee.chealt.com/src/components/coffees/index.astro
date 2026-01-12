@@ -17,11 +17,11 @@ const { loggedInUser } = Astro.locals;
 ---
 
 <Common>
-  <h1>
+  <h1 class="title">
     <div>{t.coffees}</div>
     {
       loggedInUser && (
-        <Button class="ghost" href={getRelativeLocaleUrl(Astro.currentLocale, `/coffees/stats`)}>
+        <Button class="ghost small" href={getRelativeLocaleUrl(Astro.currentLocale, `/coffees/stats`)}>
           <Icon type="chart" />
           <span class="visually-hidden">{tc.chart}</span>
         </Button>

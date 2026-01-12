@@ -106,11 +106,11 @@ const maxTasteNoteGroupCount = tasteNoteGroupsByRoaster.reduce(
 ---
 
 <Common shouldAuthenticate={shouldAuthenticate}>
-  <h1>
+  <h1 class="title">
     <div>{t.allCoffees}</div>
     {
       loggedInUser && (
-        <Button class="ghost" href={getRelativeLocaleUrl(Astro.currentLocale, '/coffees')}>
+        <Button class="ghost small" href={getRelativeLocaleUrl(Astro.currentLocale, '/coffees')}>
           <Icon type="back" />
           <span class="visually-hidden">{t.back}</span>
         </Button>

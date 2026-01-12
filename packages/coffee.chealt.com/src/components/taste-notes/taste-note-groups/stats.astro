@@ -49,7 +49,7 @@ const roastersWithCoffee = Array.from(new Set(allCoffees.map(({ roaster_id }) =>
     {
       loggedInUser && (
         <Button
-          class="ghost"
+          class="ghost small"
           href={getRelativeLocaleUrl(Astro.currentLocale, `/taste-note-groups/${encodeSafeURL(name)}`)}
         >
           <Icon type="back" />

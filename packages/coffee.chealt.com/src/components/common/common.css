@@ -35,9 +35,9 @@
   --tile-height: 240px;
 
   --icon-size: 32px;
-  --icon-size--s: 24px;
+  --icon-size--s: 20px;
 
-  --card-height: 300px;
+  --card-height: 260px;
   --max-main-image-width: 600px;
 }
 
@@ -76,13 +76,21 @@ body {
 }
 
 main {
-  max-width: 1024px;
+  max-width: 2048px;
   margin: 0 auto;
   padding: 0;
 }
 
 h1 {
   font-size: 1.5rem;
+}
+
+h2 {
+  font-size: 1.2rem;
+}
+
+h3 {
+  font-size: 1rem;
 }
 
 h1,
@@ -111,10 +119,16 @@ h5 {
       width: auto;
     }
   }
+
+  &.title {
+    font-size: 1.2rem;
+    margin: 0;
+    padding: var(--gap--s) var(--gap);
+  }
 }
 
 section {
-  margin: var(--gap--l) 0;
+  margin: var(--gap) 0;
   padding: 0 var(--gap);
 
   h1,
@@ -147,11 +161,6 @@ dl {
   gap: var(--gap--s);
 }
 
-dt,
-dd {
-  font-size: 1.2rem;
-}
-
 dt {
   font-weight: bold;
 }
@@ -159,7 +168,6 @@ dt {
 dd {
   text-transform: capitalize;
   margin: 0;
-  margin-bottom: var(--gap);
 }
 
 a {
@@ -367,7 +375,7 @@ sup {
 
   svg {
     fill: var(--color-background);
-    height: 28px;
+    height: 18px;
   }
 
   &.bordered {

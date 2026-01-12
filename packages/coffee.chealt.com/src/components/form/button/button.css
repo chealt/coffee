@@ -80,6 +80,7 @@ a.column {
 button.ghost,
 a.ghost {
   &:not(:focus-visible) {
+    background-color: transparent;
     border-color: transparent;
   }
 }

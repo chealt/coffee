@@ -42,11 +42,14 @@ const cheapestCoffees = coffees
 ---
 
 <Common>
-  <h1>
+  <h1 class="title">
     <div>{name}</div>
     {
       loggedInUser && (
-        <Button class="ghost" href={getRelativeLocaleUrl(Astro.currentLocale, `/brewing-method-groups/${name}/stats`)}>
+        <Button
+          class="ghost small"
+          href={getRelativeLocaleUrl(Astro.currentLocale, `/brewing-method-groups/${name}/stats`)}
+        >
           <Icon type="chart" />
           <span class="visually-hidden">{t.chart}</span>
         </Button>

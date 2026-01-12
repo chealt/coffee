@@ -40,14 +40,14 @@ const cheapestCoffees = coffees
 ---
 
 <Common>
-  <h1>
+  <h1 class="title">
     <div>
       {name}
     </div>
     {
       loggedInUser && (
         <Button
-          class="ghost"
+          class="ghost small"
           href={getRelativeLocaleUrl(Astro.currentLocale, `/varieties/${encodeURIComponent(name.toLowerCase())}/stats`)}
         >
           <Icon type="chart" />

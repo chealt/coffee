@@ -80,11 +80,11 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce(
 ---
 
 <Common shouldAuthenticate={shouldAuthenticate}>
-  <h1>
+  <h1 class="title">
     <div>{name}</div>
     {
       loggedInUser && (
-        <Button class="ghost" href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${name}`)}>
+        <Button class="ghost small" href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${name}`)}>
           <Icon type="back" />
           <span class="visually-hidden">{t.back}</span>
         </Button>

@@ -117,11 +117,11 @@ if (!brewingMethod?.name && !country?.name) {
 ---
 
 <Common shouldAuthenticate={shouldAuthenticate}>
-  <h1>
+  <h1 class="title">
     <div>{name}</div>
     {
       loggedInUser && (
-        <Button class="ghost" href={backLink}>
+        <Button class="ghost small" href={backLink}>
           <Icon type="back" />
           <span class="visually-hidden">{t.back}</span>
         </Button>

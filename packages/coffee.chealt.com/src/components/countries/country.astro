@@ -45,11 +45,11 @@ const roastersInCountry = roastersWithCoffees.filter(({ country_id }) => country
 ---
 
 <Common title={`${t.title} ${capitalize(name)}`}>
-  <h1>
+  <h1 class="title">
     <div>{name}</div>
     {
       loggedInUser && (
-        <Button class="ghost" href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${name}/stats`)}>
+        <Button class="ghost small" href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${name}/stats`)}>
           <Icon type="chart" />
           <span class="visually-hidden">{tc.chart}</span>
         </Button>

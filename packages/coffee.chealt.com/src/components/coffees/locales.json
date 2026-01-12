@@ -1,6 +1,6 @@
 {
   "en": {
-    "brewingMethod": "Brewing method",
+    "brewingMethod": "Brewing",
     "coffees": "Coffees",
     "coffeeFrom": "coffee from",
     "decaf": "Decaf",
@@ -10,7 +10,7 @@
     "originRegion": "Region",
     "price": "Price",
     "pricePerGram": "/ g",
-    "processingMethod": "Processing method",
+    "processingMethod": "Processing",
     "roaster": "Roaster",
     "roastingDate": "Roasting date",
     "roastingLevel": "Roasting level",
@@ -20,7 +20,7 @@
     "weight": "Weight"
   },
   "pl": {
-    "brewingMethod": "Sposób zaparzania",
+    "brewingMethod": "Sposób",
     "coffees": "Kawy",
     "coffeeFrom": "Kawa z",
     "decaf": "Bezkofeinowy",

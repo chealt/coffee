@@ -75,11 +75,11 @@ if (!brewingMethod?.name && !country?.name) {
 ---
 
 <Common title={`${t.title} ${capitalize(name)}`}>
-  <h1>
+  <h1 class="title">
     <div>{name}</div>
     {
       loggedInUser && (
-        <Button class="ghost" href={statsLink}>
+        <Button class="ghost small" href={statsLink}>
           <Icon type="chart" />
           <span class="visually-hidden">{tc.chart}</span>
         </Button>
