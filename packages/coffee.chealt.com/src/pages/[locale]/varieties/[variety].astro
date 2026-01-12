@@ -1,13 +1,14 @@
 ---
 import varieties from '../../../../data/varieties.json';
 
-import Varieties from '../../../components/varieties/variety.astro';
+import FilteredList from '../../../components/coffees/filtered-list.astro';
+import { decodeSafeURL } from '../../../utils/string.js';
 
 const { variety } = Astro.params;
 
-const id = varieties.find(({ name }) => name.toLowerCase() === decodeURIComponent(variety))?.id;
+const varietyId = varieties.find(({ name }) => name.toLowerCase() === decodeSafeURL(variety))?.id;
 
 Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---
 
-<Varieties id={id} />
+<FilteredList varietyId={varietyId} />

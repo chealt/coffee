@@ -2,12 +2,14 @@
 import { getRelativeLocaleUrl } from 'astro:i18n';
 
 import allCoffees from '../../../data/coffees.json';
+import coffeeVarieties from '../../../data/coffeeVarieties.json';
 import countries from '../../../data/countries.json';
 import brewingMethods from '../../../data/brewingMethods.json';
 import brewingMethodGroups from '../../../data/brewingMethodGroups.json';
 import originCountries from '../../../data/originCountries.json';
 import processingMethods from '../../../data/processingMethods.json';
 import roasters from '../../../data/roasters.json';
+import varieties from '../../../data/varieties.json';
 
 import { convertToUSD } from './utils.js';
 import Button from '../form/button/button.astro';
@@ -27,7 +29,7 @@ const t = allLocaleTranslations[Astro.currentLocale];
 const tc = allLocaleTranslationsCommon[Astro.currentLocale];
 
 const { loggedInUser } = Astro.locals;
-const { brewingMethodId, brewingMethodGroupId, countryId, originCountryId, processingMethodId, roasterId } =
+const { brewingMethodId, brewingMethodGroupId, countryId, originCountryId, processingMethodId, roasterId, varietyId } =
   Astro.props;
 
 const brewingMethodGroup = brewingMethodGroupId && brewingMethodGroups.find(({ id }) => id === brewingMethodGroupId);
@@ -60,6 +62,7 @@ const processingMethod =
       processing_method_id === processingMethodId && language_code === Astro.currentLocale
   );
 const roaster = roasterId && roasters.find(({ id }) => id === roasterId);
+const variety = varietyId && varieties.find(({ id }) => id === varietyId);
 
 const coffees = allCoffees
   .filter(({ origin_country_id }) => (originCountryId ? origin_country_id === originCountryId : true))
@@ -71,7 +74,14 @@ const coffees = allCoffees
     brewingMethodGroupId ? brewingMethodIdsInGroup.includes(brewing_method_id) : true
   )
   .filter(({ processing_method_id }) => (processingMethodId ? processing_method_id === processingMethodId : true))
-  .filter(({ roaster_id }) => (roasterId ? roaster_id === roasterId : true));
+  .filter(({ roaster_id }) => (roasterId ? roaster_id === roasterId : true))
+  .filter(({ id: coffeeId }) =>
+    varietyId
+      ? coffeeVarieties
+          .filter(({ coffee_id }) => coffee_id === coffeeId)
+          .some(({ variety_id }) => variety_id === varietyId)
+      : true
+  );
 const priciestCoffees = coffees
   .sort(
     (a, b) =>
@@ -94,12 +104,13 @@ const statsLink = getSafeUrlWithStats({
   country: country?.name,
   originCountry: originCountry?.name,
   processingMethod: processingMethod?.name,
-  roaster: roaster?.name
+  roaster: roaster?.name,
+  variety: variety?.name
 });
 ---
 
 <Common
-  title={`${t.coffeeFrom} ${capitalize(brewingMethod?.name || brewingMethodGroup?.name || country?.name || originCountry?.name || processingMethod?.name || roaster?.name)}`}
+  title={`${t.coffeeFrom} ${capitalize(brewingMethod?.name || brewingMethodGroup?.name || country?.name || originCountry?.name || processingMethod?.name || roaster?.name || variety?.name)}`}
 >
   <h1 class="title">
     <div>
@@ -119,7 +130,8 @@ const statsLink = getSafeUrlWithStats({
                         country: country?.name,
                         originCountry: originCountry?.name,
                         processingMethod: processingMethod?.name,
-                        roaster: roaster?.name
+                        roaster: roaster?.name,
+                        variety: variety?.name
                       })}
                       class={brewingMethodGroupId === id ? 'primary' : ''}
                     >
@@ -150,7 +162,8 @@ const statsLink = getSafeUrlWithStats({
                           country: country?.name,
                           originCountry: originCountry?.name,
                           processingMethod: processingMethod?.name,
-                          roaster: roaster?.name
+                          roaster: roaster?.name,
+                          variety: variety?.name
                         })}
                         class={brewingMethodId === brewing_method_id ? 'primary' : ''}
                       >
@@ -179,7 +192,8 @@ const statsLink = getSafeUrlWithStats({
                       country: name,
                       originCountry: originCountry?.name,
                       processingMethod: processingMethod?.name,
-                      roaster: roaster?.name
+                      roaster: roaster?.name,
+                      variety: variety?.name
                     })}
                     class={country_id === countryId ? 'primary' : ''}
                   >
@@ -207,7 +221,8 @@ const statsLink = getSafeUrlWithStats({
                           country: country?.name,
                           originCountry: name,
                           processingMethod: processingMethod?.name,
-                          roaster: roaster?.name
+                          roaster: roaster?.name,
+                          variety: variety?.name
                         })}
                         class={originCountryId === origin_country_id ? 'primary' : ''}
                       >
@@ -237,7 +252,8 @@ const statsLink = getSafeUrlWithStats({
                           country: country?.name,
                           originCountry: originCountry?.name,
                           processingMethod: name,
-                          roaster: roaster?.name
+                          roaster: roaster?.name,
+                          variety: variety?.name
                         })}
                         class={processingMethodId === processing_method_id ? 'primary' : ''}
                       >
@@ -265,9 +281,39 @@ const statsLink = getSafeUrlWithStats({
                         country: country?.name,
                         originCountry: originCountry?.name,
                         processingMethod: processingMethod?.name,
-                        roaster: name
+                        roaster: name,
+                        variety: variety?.name
                       })}
                       class={id === roasterId ? 'primary' : ''}
+                    >
+                      {name}
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            </Dialog>
+          </Fragment>
+        )
+      }
+      {
+        varietyId && (
+          <Fragment>
+            <span data-dialog-id="varieties">{variety.name}</span>
+            <Dialog class="drawer" id="varieties">
+              <ul>
+                {varieties.map(({ id, name }) => (
+                  <li>
+                    <Button
+                      href={getSafeUrl({
+                        locale: Astro.currentLocale,
+                        brewingMethod: brewingMethod?.name,
+                        country: country?.name,
+                        originCountry: originCountry?.name,
+                        processingMethod: processingMethod?.name,
+                        roaster: roaster?.name,
+                        variety: name
+                      })}
+                      class={id === varietyId ? 'primary' : ''}
                     >
                       {name}
                     </Button>
