@@ -13,8 +13,6 @@ const logger = (() => {
 
   const log = (message) => {
     console.log(message);
-
-    captureMessage(message, 'info');
   };
 
   const warn = (message) => {
