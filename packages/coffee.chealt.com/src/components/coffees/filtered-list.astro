@@ -6,6 +6,7 @@ import countries from '../../../data/countries.json';
 import brewingMethods from '../../../data/brewingMethods.json';
 import brewingMethodGroups from '../../../data/brewingMethodGroups.json';
 import originCountries from '../../../data/originCountries.json';
+import processingMethods from '../../../data/processingMethods.json';
 import roasters from '../../../data/roasters.json';
 
 import { convertToUSD } from './utils.js';
@@ -24,7 +25,7 @@ const t = allLocaleTranslations[Astro.currentLocale];
 const tc = allLocaleTranslationsCommon[Astro.currentLocale];
 
 const { loggedInUser } = Astro.locals;
-const { brewingMethodId, brewingMethodGroupId, countryId, originCountryId } = Astro.props;
+const { brewingMethodId, brewingMethodGroupId, countryId, originCountryId, processingMethodId } = Astro.props;
 
 const brewingMethodGroup = brewingMethodGroupId && brewingMethodGroups.find(({ id }) => id === brewingMethodGroupId);
 const brewingMethodIdsInGroup =
@@ -49,6 +50,12 @@ const originCountry =
     ({ origin_country_id, language_code }) =>
       origin_country_id === originCountryId && language_code === Astro.currentLocale
   );
+const processingMethod =
+  processingMethodId &&
+  processingMethods.find(
+    ({ processing_method_id, language_code }) =>
+      processing_method_id === processingMethodId && language_code === Astro.currentLocale
+  );
 
 const coffees = allCoffees
   .filter(({ origin_country_id }) => (originCountryId ? origin_country_id === originCountryId : true))
@@ -58,7 +65,8 @@ const coffees = allCoffees
   .filter(({ brewing_method_id }) => (brewingMethodId ? brewing_method_id === brewingMethodId : true))
   .filter(({ brewing_method_id }) =>
     brewingMethodGroupId ? brewingMethodIdsInGroup.includes(brewing_method_id) : true
-  );
+  )
+  .filter(({ processing_method_id }) => (processingMethodId ? processing_method_id === processingMethodId : true));
 const priciestCoffees = coffees
   .sort(
     (a, b) =>
@@ -79,12 +87,13 @@ const statsLink = getSafeUrlWithStats({
   brewingMethod: brewingMethod?.name,
   brewingMethodGroup: brewingMethodGroup?.name,
   country: country?.name,
-  originCountry: originCountry?.name
+  originCountry: originCountry?.name,
+  processingMethod: processingMethod?.name
 });
 ---
 
 <Common
-  title={`${t.coffeeFrom} ${capitalize(brewingMethod?.name || brewingMethodGroup?.name || country?.name || originCountry?.name)}`}
+  title={`${t.coffeeFrom} ${capitalize(brewingMethod?.name || brewingMethodGroup?.name || country?.name || originCountry?.name || processingMethod?.name)}`}
 >
   <h1 class="title">
     <div>
@@ -102,7 +111,8 @@ const statsLink = getSafeUrlWithStats({
                         brewingMethod: brewingMethod?.name,
                         brewingMethodGroup: name,
                         country: country?.name,
-                        originCountry: originCountry?.name
+                        originCountry: originCountry?.name,
+                        processingMethod: processingMethod?.name
                       })}
                       class={brewingMethodGroupId === id ? 'primary' : ''}
                     >
@@ -131,7 +141,8 @@ const statsLink = getSafeUrlWithStats({
                           brewingMethod: name,
                           brewingMethodGroup: brewingMethodGroup?.name,
                           country: country?.name,
-                          originCountry: originCountry?.name
+                          originCountry: originCountry?.name,
+                          processingMethod: processingMethod?.name
                         })}
                         class={brewingMethodId === brewing_method_id ? 'primary' : ''}
                       >
@@ -158,7 +169,8 @@ const statsLink = getSafeUrlWithStats({
                       brewingMethod: brewingMethod?.name,
                       brewingMethodGroup: brewingMethodGroup?.name,
                       country: name,
-                      originCountry: originCountry?.name
+                      originCountry: originCountry?.name,
+                      processingMethod: processingMethod?.name
                     })}
                     class={country_id === countryId ? 'primary' : ''}
                   >
@@ -172,8 +184,8 @@ const statsLink = getSafeUrlWithStats({
       {
         originCountryId && (
           <Fragment>
-            <span data-dialog-id="origin-country">{originCountry.name}</span>
-            <Dialog class="drawer" id="origin-country">
+            <span data-dialog-id="origin-countries">{originCountry.name}</span>
+            <Dialog class="drawer" id="origin-countries">
               <ul>
                 {originCountries
                   .filter(({ language_code }) => language_code === Astro.currentLocale)
@@ -184,9 +196,39 @@ const statsLink = getSafeUrlWithStats({
                           locale: Astro.currentLocale,
                           brewingMethod: brewingMethod?.name,
                           country: country?.name,
-                          originCountry: name
+                          originCountry: name,
+                          processingMethod: processingMethod?.name
                         })}
                         class={originCountryId === origin_country_id ? 'primary' : ''}
+                      >
+                        {name}
+                      </Button>
+                    </li>
+                  ))}
+              </ul>
+            </Dialog>
+          </Fragment>
+        )
+      }
+      {
+        processingMethodId && (
+          <Fragment>
+            <span data-dialog-id="processing-methods">{processingMethod.name}</span>
+            <Dialog class="drawer" id="processing-methods">
+              <ul>
+                {processingMethods
+                  .filter(({ language_code }) => language_code === Astro.currentLocale)
+                  .map(({ processing_method_id, name }) => (
+                    <li>
+                      <Button
+                        href={getSafeUrl({
+                          locale: Astro.currentLocale,
+                          brewingMethod: brewingMethod?.name,
+                          country: country?.name,
+                          originCountry: originCountry?.name,
+                          processingMethod: name
+                        })}
+                        class={processingMethodId === processing_method_id ? 'primary' : ''}
                       >
                         {name}
                       </Button>

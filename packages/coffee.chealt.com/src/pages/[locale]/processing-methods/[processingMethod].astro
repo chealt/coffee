@@ -1,12 +1,12 @@
 ---
-import ProcessingMethods from '../../../components/processing-methods/processing-method.astro';
+import FilteredList from '../../../components/coffees/filtered-list.astro';
 import processingMethods from '../../../../data/processingMethods.json';
 
 const { processingMethod } = Astro.params;
 
-const id = processingMethods.find(({ name }) => name === processingMethod)?.processing_method_id;
+const processingMethodId = processingMethods.find(({ name }) => name === processingMethod)?.processing_method_id;
 
 Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---
 
-<ProcessingMethods id={id} />
+<FilteredList processingMethodId={processingMethodId} />
