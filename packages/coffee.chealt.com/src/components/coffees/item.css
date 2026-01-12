@@ -24,3 +24,8 @@
 .chip + span {
   margin-right: var(--gap--s);
 }
+
+dd:has(.chip + .chip) {
+  display: flex;
+  align-items: center;
+}

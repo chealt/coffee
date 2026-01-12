@@ -115,44 +115,46 @@ const { currency } = Astro.locals;
       {(originFarm?.name && <span> - {originFarm.name}</span>) || null}
     </dd>
     {
-      (brewingMethod?.name && (
+      ((brewingMethod?.name || processingMethod?.name) && (
         <Fragment>
-          <dt>{t.brewingMethod}</dt>
-          <dd class="brewing-method">
-            <a
-              href={getRelativeLocaleUrl(
-                Astro.currentLocale,
-                brewingMethod.group?.name
-                  ? `/brewing-method-groups/${brewingMethod.group.name}`
-                  : `/brewing-methods/${encodeURIComponent(brewingMethod.name)}`
-              )}
-              class="chip"
-            >
-              {(brewingMethodImages[`/public/icons/brewing-methods/${brewingMethod.name}.svg`] && (
-                <Fragment set:html={brewingMethodImages[`/public/icons/brewing-methods/${brewingMethod.name}.svg`]} />
+          <dt>
+            {t.brewingMethod} - {t.processingMethod}
+          </dt>
+          <dd>
+            <Fragment>
+              {(brewingMethod?.name && (
+                <a
+                  href={getRelativeLocaleUrl(
+                    Astro.currentLocale,
+                    brewingMethod.group?.name
+                      ? `/brewing-method-groups/${brewingMethod.group.name}`
+                      : `/brewing-methods/${encodeURIComponent(brewingMethod.name)}`
+                  )}
+                  class="chip"
+                >
+                  {(brewingMethodImages[`/public/icons/brewing-methods/${brewingMethod.name}.svg`] && (
+                    <Fragment
+                      set:html={brewingMethodImages[`/public/icons/brewing-methods/${brewingMethod.name}.svg`]}
+                    />
+                  )) ||
+                    null}
+                  {brewingMethod.name}
+                </a>
               )) ||
                 null}
-              {brewingMethod.name}
-            </a>
-          </dd>
-        </Fragment>
-      )) ||
-        null
-    }
-    {
-      (processingMethod?.name && (
-        <Fragment>
-          <dt>{t.processingMethod}</dt>
-          <dd>
-            <a
-              href={getRelativeLocaleUrl(
-                Astro.currentLocale,
-                `/processing-methods/${encodeURIComponent(processingMethod.name)}`
-              )}
-              class="chip"
-            >
-              {processingMethod.name}
-            </a>
+              {(processingMethod?.name && (
+                <a
+                  href={getRelativeLocaleUrl(
+                    Astro.currentLocale,
+                    `/processing-methods/${encodeURIComponent(processingMethod.name)}`
+                  )}
+                  class="chip"
+                >
+                  {processingMethod.name}
+                </a>
+              )) ||
+                null}
+            </Fragment>
           </dd>
         </Fragment>
       )) ||
