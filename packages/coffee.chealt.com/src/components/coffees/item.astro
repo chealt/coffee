@@ -118,7 +118,7 @@ const { currency } = Astro.locals;
       ((brewingMethod?.name || processingMethod?.name) && (
         <Fragment>
           <dt>
-            {t.brewingMethod} - {t.processingMethod}
+            {t.brewingMethod} {processingMethod?.name ? ` - ${t.processingMethod}` : ''}
           </dt>
           <dd>
             <Fragment>
