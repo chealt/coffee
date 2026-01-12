@@ -100,10 +100,7 @@ const { currency } = Astro.locals;
       {
         (originCountry?.name && (
           <a
-            href={getRelativeLocaleUrl(
-              Astro.currentLocale,
-              `/origin-countries/${encodeURIComponent(originCountry.name)}`
-            )}
+            href={getRelativeLocaleUrl(Astro.currentLocale, `/origin-countries/${encodeSafeURL(originCountry.name)}`)}
             class="chip bordered"
           >
             {originCountry.name}

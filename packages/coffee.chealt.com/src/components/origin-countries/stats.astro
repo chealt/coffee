@@ -14,7 +14,7 @@ import Common from '../common/common.astro';
 import Coffees from '../coffees/list.astro';
 import { convertToUSD, getDetails } from '../coffees/utils.js';
 import { getTasteNoteGroup, getTasteNoteGroupByNoteId } from '../taste-notes/utils.js';
-import { titleCase } from '../../utils/string.js';
+import { encodeSafeURL, titleCase } from '../../utils/string.js';
 
 import '../stats/stats.css';
 
@@ -25,7 +25,9 @@ const t = allLocaleTranslations[Astro.currentLocale];
 const { currency, loggedInUser, shouldAuthenticate } = Astro.locals;
 const { id, brewingMethodId, countryId } = Astro.props;
 
-const { name } = originCountries.find((originCountry) => originCountry.origin_country_id === id);
+const { name } = originCountries.find(
+  ({ origin_country_id, language_code }) => origin_country_id === id && language_code === Astro.currentLocale
+);
 const country =
   countryId &&
   countries.find(({ country_id, language_code }) => country_id === countryId && language_code === Astro.currentLocale);
@@ -100,19 +102,22 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce(
 
 let backLink;
 if (!brewingMethod?.name && !country?.name) {
-  backLink = getRelativeLocaleUrl(Astro.currentLocale, `/origin-countries/${name}`);
+  backLink = getRelativeLocaleUrl(Astro.currentLocale, `/origin-countries/${encodeSafeURL(name)}`);
 } else if (brewingMethod?.name && country?.name) {
   backLink = getRelativeLocaleUrl(
     Astro.currentLocale,
-    `/countries/${country.name}/origin-countries/${name}/brewing-methods/${brewingMethod.name}`
+    `/countries/${country.name}/origin-countries/${encodeSafeURL(name)}/brewing-methods/${brewingMethod.name}`
   );
 } else if (brewingMethod?.name) {
   backLink = getRelativeLocaleUrl(
     Astro.currentLocale,
-    `/origin-countries/${name}/brewing-methods/${brewingMethod.name}`
+    `/origin-countries/${encodeSafeURL(name)}/brewing-methods/${brewingMethod.name}`
   );
 } else if (country?.name) {
-  backLink = getRelativeLocaleUrl(Astro.currentLocale, `/countries/${country.name}/origin-countries/${name}`);
+  backLink = getRelativeLocaleUrl(
+    Astro.currentLocale,
+    `/countries/${country.name}/origin-countries/${encodeSafeURL(name)}`
+  );
 }
 ---
 
