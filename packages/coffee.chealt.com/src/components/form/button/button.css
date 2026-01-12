@@ -58,7 +58,8 @@ a.button:has(.icon):not(.column) {
   flex-direction: column;
 }
 
-button.primary {
+button.primary,
+a.button.primary {
   background-color: var(--color-primary);
   color: var(--color-text--primary);
   border-color: var(--color-primary);
