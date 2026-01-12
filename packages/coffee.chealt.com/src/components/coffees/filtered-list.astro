@@ -26,15 +26,6 @@ const tc = allLocaleTranslationsCommon[Astro.currentLocale];
 const { loggedInUser } = Astro.locals;
 const { brewingMethodId, brewingMethodGroupId, countryId, originCountryId } = Astro.props;
 
-const originCountry =
-  originCountryId &&
-  originCountries.find(
-    ({ origin_country_id, language_code }) =>
-      origin_country_id === originCountryId && language_code === Astro.currentLocale
-  );
-const country =
-  countryId &&
-  countries.find(({ country_id, language_code }) => country_id === countryId && language_code === Astro.currentLocale);
 const brewingMethodGroup = brewingMethodGroupId && brewingMethodGroups.find(({ id }) => id === brewingMethodGroupId);
 const brewingMethodIdsInGroup =
   brewingMethodGroupId &&
@@ -49,6 +40,16 @@ const brewingMethod =
     ({ brewing_method_id, language_code }) =>
       brewing_method_id === brewingMethodId && language_code === Astro.currentLocale
   );
+const country =
+  countryId &&
+  countries.find(({ country_id, language_code }) => country_id === countryId && language_code === Astro.currentLocale);
+const originCountry =
+  originCountryId &&
+  originCountries.find(
+    ({ origin_country_id, language_code }) =>
+      origin_country_id === originCountryId && language_code === Astro.currentLocale
+  );
+
 const coffees = allCoffees
   .filter(({ origin_country_id }) => (originCountryId ? origin_country_id === originCountryId : true))
   .filter(({ roaster_id: roasterId }) =>
@@ -83,7 +84,7 @@ const statsLink = getSafeUrlWithStats({
 ---
 
 <Common
-  title={`${t.title} ${capitalize(brewingMethod?.name || brewingMethodGroup?.name || country?.name || originCountry?.name)}`}
+  title={`${t.coffeeFrom} ${capitalize(brewingMethod?.name || brewingMethodGroup?.name || country?.name || originCountry?.name)}`}
 >
   <h1 class="title">
     <div>
@@ -144,6 +145,31 @@ const statsLink = getSafeUrlWithStats({
         )
       }
       {
+        countryId && (
+          <Fragment>
+            <span data-dialog-id="countries">{country.name}</span>
+            <Dialog id="countries" class="drawer">
+              {countries
+                .filter(({ language_code }) => language_code === Astro.currentLocale)
+                .map(({ name, country_id }) => (
+                  <Button
+                    href={getSafeUrl({
+                      locale: Astro.currentLocale,
+                      brewingMethod: brewingMethod?.name,
+                      brewingMethodGroup: brewingMethodGroup?.name,
+                      country: name,
+                      originCountry: originCountry?.name
+                    })}
+                    class={country_id === countryId ? 'primary' : ''}
+                  >
+                    {name}
+                  </Button>
+                ))}
+            </Dialog>
+          </Fragment>
+        )
+      }
+      {
         originCountryId && (
           <Fragment>
             <span data-dialog-id="origin-country">{originCountry.name}</span>
@@ -162,7 +188,7 @@ const statsLink = getSafeUrlWithStats({
                         })}
                         class={originCountryId === origin_country_id ? 'primary' : ''}
                       >
-                        {originCountry.name}
+                        {name}
                       </Button>
                     </li>
                   ))}

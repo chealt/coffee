@@ -1,5 +1,5 @@
 ---
-import OriginCountry from '../../../../../components/origin-countries/origin-country.astro';
+import FilteredList from '../../../../../components/coffees/filtered-list.astro';
 import countries from '../../../../../../data/countries.json';
 import originCountries from '../../../../../../data/originCountries.json';
 import { decodeSafeURL } from '../../../../../utils/string.js';
@@ -7,9 +7,11 @@ import { decodeSafeURL } from '../../../../../utils/string.js';
 const { country, originCountryName } = Astro.params;
 
 const countryId = countries.find(({ name }) => name === decodeSafeURL(country))?.country_id;
-const id = originCountries.find(({ name }) => name === decodeSafeURL(originCountryName))?.origin_country_id;
+const originCountryId = originCountries.find(
+  ({ name }) => name === decodeSafeURL(originCountryName)
+)?.origin_country_id;
 
 Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---
 
-<OriginCountry id={id} countryId={countryId} />
+<FilteredList originCountryId={originCountryId} countryId={countryId} />
