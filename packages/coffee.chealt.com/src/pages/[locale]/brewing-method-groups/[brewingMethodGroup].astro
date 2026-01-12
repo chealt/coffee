@@ -1,12 +1,13 @@
 ---
-import BrewingMethodGroup from '../../../components/brewing-method-groups/brewing-method-group.astro';
+import FilteredList from '../../../components/coffees/filtered-list.astro';
 import brewingMethodGroups from '../../../../data/brewingMethodGroups.json';
+import { decodeSafeURL } from '../../../utils/string.js';
 
 const { brewingMethodGroup } = Astro.params;
 
-const id = brewingMethodGroups.find(({ name }) => name === brewingMethodGroup)?.id;
+const id = brewingMethodGroups.find(({ name }) => name === decodeSafeURL(brewingMethodGroup))?.id;
 
 Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---
 
-<BrewingMethodGroup id={id} />
+<FilteredList brewingMethodGroupId={id} />

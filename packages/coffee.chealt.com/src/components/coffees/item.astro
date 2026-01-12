@@ -124,8 +124,8 @@ const { currency } = Astro.locals;
                   href={getRelativeLocaleUrl(
                     Astro.currentLocale,
                     brewingMethod.group?.name
-                      ? `/brewing-method-groups/${brewingMethod.group.name}`
-                      : `/brewing-methods/${encodeURIComponent(brewingMethod.name)}`
+                      ? `/brewing-method-groups/${encodeSafeURL(brewingMethod.group.name)}`
+                      : `/brewing-methods/${encodeSafeURL(brewingMethod.name)}`
                   )}
                   class="chip"
                 >
