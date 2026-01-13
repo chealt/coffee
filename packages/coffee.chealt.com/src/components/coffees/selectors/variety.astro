@@ -1,0 +1,37 @@
+---
+import varieties from '../../../../data/varieties.json';
+
+import Button from '../../form/button/button.astro';
+import Dialog from '../../dialog/dialog.astro';
+
+import { getSafeUrl } from '../../utils/url.js';
+
+const { brewingMethod, brewingMethodGroup, country, originCountry, processingMethod, roaster, variety, varietyId } =
+  Astro.props;
+---
+
+<span data-dialog-id="varieties">{variety.name}</span>
+<Dialog class="drawer" id="varieties">
+  <ul>
+    {
+      varieties.map(({ id, name }) => (
+        <li>
+          <Button
+            href={getSafeUrl({
+              locale: Astro.currentLocale,
+              brewingMethod: brewingMethod?.name,
+              country: country?.name,
+              originCountry: originCountry?.name,
+              processingMethod: processingMethod?.name,
+              roaster: roaster?.name,
+              variety: name
+            })}
+            class={id === varietyId ? 'primary' : ''}
+          >
+            {name}
+          </Button>
+        </li>
+      ))
+    }
+  </ul>
+</Dialog>

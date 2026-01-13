@@ -11,6 +11,13 @@ import processingMethods from '../../../data/processingMethods.json';
 import roasters from '../../../data/roasters.json';
 import varieties from '../../../data/varieties.json';
 
+import BrewingMethodGroupSelector from './selectors/brewing-method-group.astro';
+import BrewingMethodSelector from './selectors/brewing-method.astro';
+import CountrySelector from './selectors/country.astro';
+import OriginCountrySelector from './selectors/origin-country.astro';
+import ProcessingMethodSelector from './selectors/processing-method.astro';
+import RoasterSelector from './selectors/roaster.astro';
+import VarietySelector from './selectors/variety.astro';
 import { convertToUSD } from './utils.js';
 import Button from '../form/button/button.astro';
 import Coffees from './list.astro';
@@ -115,213 +122,101 @@ const statsLink = getSafeUrlWithStats({
   <h1 class="title">
     <div>
       {
-        brewingMethodGroupId && (
-          <Fragment>
-            <span data-dialog-id="brewing-method-group">{brewingMethodGroup.name}</span>
-            <Dialog class="drawer" id="brewing-method-group">
-              <ul>
-                {brewingMethodGroups.map(({ id, name }) => (
-                  <li>
-                    <Button
-                      href={getSafeUrl({
-                        locale: Astro.currentLocale,
-                        brewingMethod: brewingMethod?.name,
-                        brewingMethodGroup: name,
-                        country: country?.name,
-                        originCountry: originCountry?.name,
-                        processingMethod: processingMethod?.name,
-                        roaster: roaster?.name,
-                        variety: variety?.name
-                      })}
-                      class={brewingMethodGroupId === id ? 'primary' : ''}
-                    >
-                      {name}
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-            </Dialog>
-          </Fragment>
+        brewingMethodId && (
+          <BrewingMethodSelector
+            brewingMethod={brewingMethod}
+            brewingMethodId={brewingMethodId}
+            brewingMethodGroup={brewingMethodGroup}
+            country={country}
+            originCountry={originCountry}
+            processingMethod={processingMethod}
+            roaster={roaster}
+            variety={variety}
+          />
         )
       }
       {
-        brewingMethodId && (
-          <Fragment>
-            <span data-dialog-id="brewing-method">{brewingMethod.name}</span>
-            <Dialog class="drawer" id="brewing-method">
-              <ul>
-                {brewingMethods
-                  .filter(({ language_code }) => language_code === Astro.currentLocale)
-                  .map(({ brewing_method_id, name }) => (
-                    <li>
-                      <Button
-                        href={getSafeUrl({
-                          locale: Astro.currentLocale,
-                          brewingMethod: name,
-                          brewingMethodGroup: brewingMethodGroup?.name,
-                          country: country?.name,
-                          originCountry: originCountry?.name,
-                          processingMethod: processingMethod?.name,
-                          roaster: roaster?.name,
-                          variety: variety?.name
-                        })}
-                        class={brewingMethodId === brewing_method_id ? 'primary' : ''}
-                      >
-                        {name}
-                      </Button>
-                    </li>
-                  ))}
-              </ul>
-            </Dialog>
-          </Fragment>
+        brewingMethodGroupId && (
+          <BrewingMethodGroupSelector
+            brewingMethod={brewingMethod}
+            brewingMethodGroup={brewingMethodGroup}
+            brewingMethodGroupId={brewingMethodGroupId}
+            country={country}
+            originCountry={originCountry}
+            processingMethod={processingMethod}
+            roaster={roaster}
+            variety={variety}
+          />
         )
       }
       {
         countryId && (
-          <Fragment>
-            <span data-dialog-id="countries">{country.name}</span>
-            <Dialog id="countries" class="drawer">
-              {countries
-                .filter(({ language_code }) => language_code === Astro.currentLocale)
-                .map(({ name, country_id }) => (
-                  <Button
-                    href={getSafeUrl({
-                      locale: Astro.currentLocale,
-                      brewingMethod: brewingMethod?.name,
-                      brewingMethodGroup: brewingMethodGroup?.name,
-                      country: name,
-                      originCountry: originCountry?.name,
-                      processingMethod: processingMethod?.name,
-                      roaster: roaster?.name,
-                      variety: variety?.name
-                    })}
-                    class={country_id === countryId ? 'primary' : ''}
-                  >
-                    {name}
-                  </Button>
-                ))}
-            </Dialog>
-          </Fragment>
+          <CountrySelector
+            country={country}
+            countryId={countryId}
+            brewingMethod={brewingMethod}
+            brewingMethodGroup={brewingMethodGroup}
+            originCountry={originCountry}
+            processingMethod={processingMethod}
+            roaster={roaster}
+            variety={variety}
+          />
         )
       }
       {
         originCountryId && (
-          <Fragment>
-            <span data-dialog-id="origin-countries">{originCountry.name}</span>
-            <Dialog class="drawer" id="origin-countries">
-              <ul>
-                {originCountries
-                  .filter(({ language_code }) => language_code === Astro.currentLocale)
-                  .map(({ origin_country_id, name }) => (
-                    <li>
-                      <Button
-                        href={getSafeUrl({
-                          locale: Astro.currentLocale,
-                          brewingMethod: brewingMethod?.name,
-                          country: country?.name,
-                          originCountry: name,
-                          processingMethod: processingMethod?.name,
-                          roaster: roaster?.name,
-                          variety: variety?.name
-                        })}
-                        class={originCountryId === origin_country_id ? 'primary' : ''}
-                      >
-                        {name}
-                      </Button>
-                    </li>
-                  ))}
-              </ul>
-            </Dialog>
-          </Fragment>
+          <OriginCountrySelector
+            brewingMethod={brewingMethod}
+            brewingMethodGroup={brewingMethodGroup}
+            country={country}
+            originCountry={originCountry}
+            originCountryId={originCountryId}
+            processingMethod={processingMethod}
+            roaster={roaster}
+            variety={variety}
+          />
         )
       }
       {
         processingMethodId && (
-          <Fragment>
-            <span data-dialog-id="processing-methods">{processingMethod.name}</span>
-            <Dialog class="drawer" id="processing-methods">
-              <ul>
-                {processingMethods
-                  .filter(({ language_code }) => language_code === Astro.currentLocale)
-                  .map(({ processing_method_id, name }) => (
-                    <li>
-                      <Button
-                        href={getSafeUrl({
-                          locale: Astro.currentLocale,
-                          brewingMethod: brewingMethod?.name,
-                          country: country?.name,
-                          originCountry: originCountry?.name,
-                          processingMethod: name,
-                          roaster: roaster?.name,
-                          variety: variety?.name
-                        })}
-                        class={processingMethodId === processing_method_id ? 'primary' : ''}
-                      >
-                        {name}
-                      </Button>
-                    </li>
-                  ))}
-              </ul>
-            </Dialog>
-          </Fragment>
+          <ProcessingMethodSelector
+            brewingMethod={brewingMethod}
+            brewingMethodGroup={brewingMethodGroup}
+            country={country}
+            originCountry={originCountry}
+            processingMethod={processingMethod}
+            processingMethodId={processingMethodId}
+            roaster={roaster}
+            variety={variety}
+          />
         )
       }
       {
         roasterId && (
-          <Fragment>
-            <span data-dialog-id="roasters">{roaster.name}</span>
-            <Dialog class="drawer" id="roasters">
-              <ul>
-                {roasters.map(({ id, name }) => (
-                  <li>
-                    <Button
-                      href={getSafeUrl({
-                        locale: Astro.currentLocale,
-                        brewingMethod: brewingMethod?.name,
-                        country: country?.name,
-                        originCountry: originCountry?.name,
-                        processingMethod: processingMethod?.name,
-                        roaster: name,
-                        variety: variety?.name
-                      })}
-                      class={id === roasterId ? 'primary' : ''}
-                    >
-                      {name}
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-            </Dialog>
-          </Fragment>
+          <RoasterSelector
+            brewingMethod={brewingMethod}
+            brewingMethodGroup={brewingMethodGroup}
+            country={country}
+            originCountry={originCountry}
+            roaster={roaster}
+            roasterId={roasterId}
+            processingMethod={processingMethod}
+            variety={variety}
+          />
         )
       }
       {
         varietyId && (
-          <Fragment>
-            <span data-dialog-id="varieties">{variety.name}</span>
-            <Dialog class="drawer" id="varieties">
-              <ul>
-                {varieties.map(({ id, name }) => (
-                  <li>
-                    <Button
-                      href={getSafeUrl({
-                        locale: Astro.currentLocale,
-                        brewingMethod: brewingMethod?.name,
-                        country: country?.name,
-                        originCountry: originCountry?.name,
-                        processingMethod: processingMethod?.name,
-                        roaster: roaster?.name,
-                        variety: name
-                      })}
-                      class={id === varietyId ? 'primary' : ''}
-                    >
-                      {name}
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-            </Dialog>
-          </Fragment>
+          <VarietySelector
+            brewingMethod={brewingMethod}
+            brewingMethodGroup={brewingMethodGroup}
+            country={country}
+            originCountry={originCountry}
+            processingMethod={processingMethod}
+            roaster={roaster}
+            variety={variety}
+            varietyId={varietyId}
+          />
         )
       }
     </div>
@@ -382,7 +277,6 @@ const statsLink = getSafeUrlWithStats({
         <h2>{tc.allCoffees}</h2>
         <Coffees coffees={coffees} />
       </section>
-    )) ||
-      null
+    )) || <section>{tc.noCoffees}</section>
   }
 </Common>

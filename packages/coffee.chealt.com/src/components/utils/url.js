@@ -14,7 +14,7 @@ const getSafeUrl = ({
 }) =>
   getRelativeLocaleUrl(
     locale,
-    `${brewingMethod ? `/brewing-methods/${encodeSafeURL(brewingMethod)}` : ''}${brewingMethodGroup ? `/brewing-method-groups/${encodeSafeURL(brewingMethodGroup)}` : ''}${country ? `/countries/${encodeSafeURL(country)}` : ''}${originCountry ? `/origin-countries/${encodeSafeURL(originCountry)}` : ''}${processingMethod ? `/processing-methods/${processingMethod}` : ''}${roaster ? `/roasters/${encodeSafeURL(roaster)}` : ''}${variety ? `/varieties/${encodeSafeURL(variety.toLowerCase())}` : ''}`
+    `${brewingMethod ? `/brewing-methods/${encodeSafeURL(brewingMethod)}` : ''}${brewingMethodGroup ? `/brewing-method-groups/${encodeSafeURL(brewingMethodGroup)}` : ''}${country ? `/countries/${encodeSafeURL(country)}` : ''}${originCountry ? `/origin-countries/${encodeSafeURL(originCountry)}` : ''}${processingMethod ? `/processing-methods/${encodeSafeURL(processingMethod)}` : ''}${roaster ? `/roasters/${encodeSafeURL(roaster)}` : ''}${variety ? `/varieties/${encodeSafeURL(variety.toLowerCase())}` : ''}`
   );
 
 const getSafeUrlWithStats = ({

@@ -1,0 +1,47 @@
+---
+import processingMethods from '../../../../data/processingMethods.json';
+
+import Button from '../../form/button/button.astro';
+import Dialog from '../../dialog/dialog.astro';
+
+import { getSafeUrl } from '../../utils/url.js';
+
+const {
+  brewingMethod,
+  brewingMethodGroup,
+  country,
+  originCountry,
+  processingMethod,
+  processingMethodId,
+  roaster,
+  variety
+} = Astro.props;
+---
+
+<span data-dialog-id="processing-methods">{processingMethod.name}</span>
+<Dialog class="drawer" id="processing-methods">
+  <ul>
+    {
+      processingMethods
+        .filter(({ language_code }) => language_code === Astro.currentLocale)
+        .map(({ processing_method_id, name }) => (
+          <li>
+            <Button
+              href={getSafeUrl({
+                locale: Astro.currentLocale,
+                brewingMethod: brewingMethod?.name,
+                country: country?.name,
+                originCountry: originCountry?.name,
+                processingMethod: name,
+                roaster: roaster?.name,
+                variety: variety?.name
+              })}
+              class={processingMethodId === processing_method_id ? 'primary' : ''}
+            >
+              {name}
+            </Button>
+          </li>
+        ))
+    }
+  </ul>
+</Dialog>

@@ -89,7 +89,7 @@ const { currency } = Astro.locals;
       </a>
       <span>{' - '}</span>
       <a
-        href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${encodeURIComponent(roaster.country.name)}`)}
+        href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${encodeSafeURL(roaster.country.name)}`)}
         class="chip bordered"
       >
         {roaster.country.code.toUpperCase()}
@@ -143,7 +143,7 @@ const { currency } = Astro.locals;
                 <a
                   href={getRelativeLocaleUrl(
                     Astro.currentLocale,
-                    `/processing-methods/${encodeURIComponent(processingMethod.name)}`
+                    `/processing-methods/${encodeSafeURL(processingMethod.name)}`
                   )}
                   class="chip"
                 >
