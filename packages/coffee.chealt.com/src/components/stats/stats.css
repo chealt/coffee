@@ -3,6 +3,11 @@
   color: var(--color-background);
   padding-bottom: var(--gap);
 
+  section:has(&) {
+    max-width: 1024px;
+    margin-inline: auto;
+  }
+
   .chart-inner {
     position: relative;
     border-left: 2px solid var(--color-background);
