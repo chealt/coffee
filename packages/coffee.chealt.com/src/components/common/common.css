@@ -365,8 +365,6 @@ sup {
 
 .chip {
   display: inline-block;
-  align-items: center;
-  gap: var(--gap--s);
   padding: var(--gap--s);
   border-radius: var(--border-radius--s);
   margin-bottom: var(--gap--s);
@@ -382,6 +380,9 @@ sup {
   svg {
     fill: var(--color-background);
     height: 18px;
+    position: relative;
+    top: -2px;
+    vertical-align: middle;
   }
 
   &.bordered {
