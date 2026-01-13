@@ -1,8 +1,8 @@
 ---
-import FilteredList from '../../../../../components/coffees/filtered-list.astro';
-import brewingMethods from '../../../../../../data/brewingMethods.json';
-import countries from '../../../../../../data/countries.json';
-import { decodeSafeURL } from '../../../../../utils/string.js';
+import FilteredList from '@components/coffees/filtered-list.astro';
+import brewingMethods from '@data/brewingMethods.json';
+import countries from '@data/countries.json';
+import { decodeSafeURL } from '@utils/string.js';
 
 const { brewingMethod, country } = Astro.params;
 

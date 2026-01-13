@@ -1,11 +1,11 @@
 ---
-import processingMethods from '../../../../../../../../../../data/processingMethods.json';
-import brewingMethods from '../../../../../../../../../../data/brewingMethods.json';
-import countries from '../../../../../../../../../../data/countries.json';
-import originCountries from '../../../../../../../../../../data/originCountries.json';
+import brewingMethods from '@data/brewingMethods.json';
+import countries from '@data/countries.json';
+import originCountries from '@data/originCountries.json';
+import processingMethods from '@data/processingMethods.json';
 
-import FilteredList from '../../../../../../../../../components/coffees/filtered-list.astro';
-import { decodeSafeURL } from '../../../../../../../../../utils/string.js';
+import FilteredList from '@components/coffees/filtered-list.astro';
+import { decodeSafeURL } from '@utils/string.js';
 
 const { brewingMethod, country, originCountryName, processingMethod } = Astro.params;
 
