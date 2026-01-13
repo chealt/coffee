@@ -168,6 +168,8 @@ dt {
 dd {
   text-transform: capitalize;
   margin: 0;
+  display: flex;
+  align-items: center;
 }
 
 a {
@@ -264,7 +266,7 @@ sup {
   container-name: list;
   container-type: scroll-state;
 
-  &::after {
+  &:has(.item + .item)::after {
     opacity: 0;
     transform: translateX(100%);
     transition:
@@ -362,7 +364,7 @@ sup {
 }
 
 .chip {
-  display: inline-flex;
+  display: inline-block;
   align-items: center;
   gap: var(--gap--s);
   padding: var(--gap--s);
@@ -372,6 +374,10 @@ sup {
   background-color: var(--color-text);
   color: var(--color-background);
   border: 1px solid transparent;
+  max-width: 200px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 
   svg {
     fill: var(--color-background);
