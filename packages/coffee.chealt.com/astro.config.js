@@ -65,6 +65,7 @@ export default defineConfig({
         'node:tls',
         'node:util',
         'node:worker_threads',
+        'node:zlib',
         'path',
         'stream',
         'url',
@@ -83,7 +84,9 @@ export default defineConfig({
       autoInstrumentServer: false
     })
   ],
-  adapter: !isDev ? cloudflare({
-    imageService: 'passthrough'
-  }) : undefined
+  adapter: !isDev
+    ? cloudflare({
+        imageService: 'passthrough'
+      })
+    : undefined
 });
