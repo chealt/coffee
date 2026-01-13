@@ -1,4 +1,7 @@
 .roaster-container {
+  max-width: var(--max-main-image-width);
+  margin-inline: auto;
+
   .links {
     display: flex;
     flex-direction: row;
@@ -19,8 +22,6 @@
     height: 300px;
     overflow: hidden;
     box-sizing: border-box;
-    max-width: var(--max-main-image-width);
-    margin: 0 auto;
   }
 
   .roaster.image.large {
