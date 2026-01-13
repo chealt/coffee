@@ -40,6 +40,12 @@ a.button {
     margin: 0;
     border: 0;
     font-size: inherit;
+    font-weight: inherit;
+    text-transform: inherit;
+  }
+
+  &.block {
+    width: 100%;
   }
 }
 
