@@ -1,0 +1,40 @@
+---
+import Button from '../../form/button/button.astro';
+import Dialog from '../../dialog/dialog.astro';
+import { getSafeUrl } from '../../utils/url.js';
+
+import './new-selector.css';
+
+import allLocaleTranslations from '../locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+
+const types = [
+  'brewingMethod',
+  'brewingMethodGroup',
+  'country',
+  'originCountry',
+  'processingMethod',
+  'roaster',
+  'variety'
+];
+const { selected = {} } = Astro.props;
+const availableTypes = types.filter(
+  (type) => !selected[type] && !selected[type.replace('Group', '')] && !selected[`${type}Group`]
+);
+---
+
+<Button class="new-selector-button ghost inline" data-dialog-id="new-selector">& ...</Button>
+<Dialog class="drawer" id="new-selector">
+  <ul>
+    {
+      availableTypes.map((type) => (
+        <li>
+          <Button class="block" data-dialog-id={type}>
+            {t[type]}
+          </Button>
+        </li>
+      ))
+    }
+  </ul>
+</Dialog>

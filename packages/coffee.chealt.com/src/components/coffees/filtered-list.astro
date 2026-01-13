@@ -18,6 +18,7 @@ import OriginCountrySelector from './selectors/origin-country.astro';
 import ProcessingMethodSelector from './selectors/processing-method.astro';
 import RoasterSelector from './selectors/roaster.astro';
 import VarietySelector from './selectors/variety.astro';
+import NewSelector from './selectors/new-selector.astro';
 import { convertToUSD } from './utils.js';
 import Button from '../form/button/button.astro';
 import Coffees from './list.astro';
@@ -121,104 +122,86 @@ const statsLink = getSafeUrlWithStats({
 >
   <h1 class="title">
     <div>
-      {
-        brewingMethodId && (
-          <BrewingMethodSelector
-            brewingMethod={brewingMethod}
-            brewingMethodId={brewingMethodId}
-            brewingMethodGroup={brewingMethodGroup}
-            country={country}
-            originCountry={originCountry}
-            processingMethod={processingMethod}
-            roaster={roaster}
-            variety={variety}
-          />
-        )
-      }
-      {
-        brewingMethodGroupId && (
-          <BrewingMethodGroupSelector
-            brewingMethod={brewingMethod}
-            brewingMethodGroup={brewingMethodGroup}
-            brewingMethodGroupId={brewingMethodGroupId}
-            country={country}
-            originCountry={originCountry}
-            processingMethod={processingMethod}
-            roaster={roaster}
-            variety={variety}
-          />
-        )
-      }
-      {
-        countryId && (
-          <CountrySelector
-            country={country}
-            countryId={countryId}
-            brewingMethod={brewingMethod}
-            brewingMethodGroup={brewingMethodGroup}
-            originCountry={originCountry}
-            processingMethod={processingMethod}
-            roaster={roaster}
-            variety={variety}
-          />
-        )
-      }
-      {
-        originCountryId && (
-          <OriginCountrySelector
-            brewingMethod={brewingMethod}
-            brewingMethodGroup={brewingMethodGroup}
-            country={country}
-            originCountry={originCountry}
-            originCountryId={originCountryId}
-            processingMethod={processingMethod}
-            roaster={roaster}
-            variety={variety}
-          />
-        )
-      }
-      {
-        processingMethodId && (
-          <ProcessingMethodSelector
-            brewingMethod={brewingMethod}
-            brewingMethodGroup={brewingMethodGroup}
-            country={country}
-            originCountry={originCountry}
-            processingMethod={processingMethod}
-            processingMethodId={processingMethodId}
-            roaster={roaster}
-            variety={variety}
-          />
-        )
-      }
-      {
-        roasterId && (
-          <RoasterSelector
-            brewingMethod={brewingMethod}
-            brewingMethodGroup={brewingMethodGroup}
-            country={country}
-            originCountry={originCountry}
-            roaster={roaster}
-            roasterId={roasterId}
-            processingMethod={processingMethod}
-            variety={variety}
-          />
-        )
-      }
-      {
-        varietyId && (
-          <VarietySelector
-            brewingMethod={brewingMethod}
-            brewingMethodGroup={brewingMethodGroup}
-            country={country}
-            originCountry={originCountry}
-            processingMethod={processingMethod}
-            roaster={roaster}
-            variety={variety}
-            varietyId={varietyId}
-          />
-        )
-      }
+      <BrewingMethodSelector
+        brewingMethod={brewingMethod}
+        brewingMethodId={brewingMethodId}
+        brewingMethodGroup={brewingMethodGroup}
+        country={country}
+        originCountry={originCountry}
+        processingMethod={processingMethod}
+        roaster={roaster}
+        variety={variety}
+      />
+      <BrewingMethodGroupSelector
+        brewingMethod={brewingMethod}
+        brewingMethodGroup={brewingMethodGroup}
+        brewingMethodGroupId={brewingMethodGroupId}
+        country={country}
+        originCountry={originCountry}
+        processingMethod={processingMethod}
+        roaster={roaster}
+        variety={variety}
+      />
+      <CountrySelector
+        country={country}
+        countryId={countryId}
+        brewingMethod={brewingMethod}
+        brewingMethodGroup={brewingMethodGroup}
+        originCountry={originCountry}
+        processingMethod={processingMethod}
+        roaster={roaster}
+        variety={variety}
+      />
+      <OriginCountrySelector
+        brewingMethod={brewingMethod}
+        brewingMethodGroup={brewingMethodGroup}
+        country={country}
+        originCountry={originCountry}
+        originCountryId={originCountryId}
+        processingMethod={processingMethod}
+        roaster={roaster}
+        variety={variety}
+      />
+      <ProcessingMethodSelector
+        brewingMethod={brewingMethod}
+        brewingMethodGroup={brewingMethodGroup}
+        country={country}
+        originCountry={originCountry}
+        processingMethod={processingMethod}
+        processingMethodId={processingMethodId}
+        roaster={roaster}
+        variety={variety}
+      />
+      <RoasterSelector
+        brewingMethod={brewingMethod}
+        brewingMethodGroup={brewingMethodGroup}
+        country={country}
+        originCountry={originCountry}
+        roaster={roaster}
+        roasterId={roasterId}
+        processingMethod={processingMethod}
+        variety={variety}
+      />
+      <VarietySelector
+        brewingMethod={brewingMethod}
+        brewingMethodGroup={brewingMethodGroup}
+        country={country}
+        originCountry={originCountry}
+        processingMethod={processingMethod}
+        roaster={roaster}
+        variety={variety}
+        varietyId={varietyId}
+      />
+      <NewSelector
+        selected={{
+          brewingMethod: brewingMethod?.name,
+          brewingMethodGroup: brewingMethodGroup?.name,
+          country: country?.name,
+          originCountry: originCountry?.name,
+          processingMethod: processingMethod?.name,
+          variety: variety?.name
+        }}
+      />
     </div>
     {
       loggedInUser && (

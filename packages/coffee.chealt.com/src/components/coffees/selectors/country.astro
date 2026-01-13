@@ -10,8 +10,14 @@ const { brewingMethod, brewingMethodGroup, country, countryId, originCountry, pr
   Astro.props;
 ---
 
-<span data-dialog-id="countries">{country.name}</span>
-<Dialog id="countries" class="drawer">
+{
+  countryId && (
+    <Button class="filter-dialog-title ghost inline" data-dialog-id="country">
+      {country.name}
+    </Button>
+  )
+}
+<Dialog id="country" class="drawer">
   {
     countries
       .filter(({ language_code }) => language_code === Astro.currentLocale)
@@ -21,7 +27,7 @@ const { brewingMethod, brewingMethodGroup, country, countryId, originCountry, pr
             locale: Astro.currentLocale,
             brewingMethod: brewingMethod?.name,
             brewingMethodGroup: brewingMethodGroup?.name,
-            country: name,
+            country: countryId === country_id ? undefined : name,
             originCountry: originCountry?.name,
             processingMethod: processingMethod?.name,
             roaster: roaster?.name,

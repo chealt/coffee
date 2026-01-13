@@ -10,8 +10,14 @@ const { brewingMethod, brewingMethodGroup, country, originCountry, processingMet
   Astro.props;
 ---
 
-<span data-dialog-id="varieties">{variety.name}</span>
-<Dialog class="drawer" id="varieties">
+{
+  varietyId && (
+    <Button class="filter-dialog-title ghost inline" data-dialog-id="variety">
+      {variety.name}
+    </Button>
+  )
+}
+<Dialog class="drawer" id="variety">
   <ul>
     {
       varieties.map(({ id, name }) => (
@@ -24,7 +30,7 @@ const { brewingMethod, brewingMethodGroup, country, originCountry, processingMet
               originCountry: originCountry?.name,
               processingMethod: processingMethod?.name,
               roaster: roaster?.name,
-              variety: name
+              variety: varietyId === id ? undefined : name
             })}
             class={id === varietyId ? 'primary' : ''}
           >

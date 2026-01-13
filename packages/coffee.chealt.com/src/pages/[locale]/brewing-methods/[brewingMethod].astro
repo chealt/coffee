@@ -5,9 +5,9 @@ import { decodeSafeURL } from '../../../utils/string.js';
 
 const { brewingMethod } = Astro.params;
 
-const id = brewingMethods.find(({ name }) => name === decodeSafeURL(brewingMethod))?.brewing_method_id;
+const brewingMethodId = brewingMethods.find(({ name }) => name === decodeSafeURL(brewingMethod))?.brewing_method_id;
 
 Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---
 
-<FilteredList brewingMethodId={id} />
+<FilteredList brewingMethodId={brewingMethodId} />

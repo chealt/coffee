@@ -18,8 +18,14 @@ const {
 } = Astro.props;
 ---
 
-<span data-dialog-id="processing-methods">{processingMethod.name}</span>
-<Dialog class="drawer" id="processing-methods">
+{
+  processingMethodId && (
+    <Button class="filter-dialog-title ghost inline" data-dialog-id="processingMethod">
+      {processingMethod.name}
+    </Button>
+  )
+}
+<Dialog class="drawer" id="processingMethod">
   <ul>
     {
       processingMethods
@@ -32,7 +38,7 @@ const {
                 brewingMethod: brewingMethod?.name,
                 country: country?.name,
                 originCountry: originCountry?.name,
-                processingMethod: name,
+                processingMethod: processingMethodId === processing_method_id ? undefined : name,
                 roaster: roaster?.name,
                 variety: variety?.name
               })}

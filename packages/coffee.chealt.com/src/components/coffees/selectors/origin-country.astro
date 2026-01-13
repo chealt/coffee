@@ -18,8 +18,14 @@ const {
 } = Astro.props;
 ---
 
-<span data-dialog-id="origin-countries">{originCountry.name}</span>
-<Dialog class="drawer" id="origin-countries">
+{
+  originCountryId && (
+    <Button class="filter-dialog-title ghost inline" data-dialog-id="originCountry">
+      {originCountry.name}
+    </Button>
+  )
+}
+<Dialog class="drawer" id="originCountry">
   <ul>
     {
       originCountries
@@ -32,7 +38,7 @@ const {
                 brewingMethod: brewingMethod?.name,
                 brewingMethodGroup: brewingMethodGroup?.name,
                 country: country?.name,
-                originCountry: name,
+                originCountry: originCountryId === origin_country_id ? undefined : name,
                 processingMethod: processingMethod?.name,
                 roaster: roaster?.name,
                 variety: variety?.name

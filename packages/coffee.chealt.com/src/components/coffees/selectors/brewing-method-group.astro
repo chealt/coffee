@@ -18,8 +18,14 @@ const {
 } = Astro.props;
 ---
 
-<span data-dialog-id="brewing-method-group">{brewingMethodGroup.name}</span>
-<Dialog class="drawer" id="brewing-method-group">
+{
+  brewingMethodGroupId && (
+    <Button class="filter-dialog-title ghost inline" data-dialog-id="brewingMethodGroup">
+      {brewingMethodGroup.name}
+    </Button>
+  )
+}
+<Dialog class="drawer" id="brewingMethodGroup">
   <ul>
     {
       brewingMethodGroups.map(({ id, name }) => (
@@ -28,7 +34,7 @@ const {
             href={getSafeUrl({
               locale: Astro.currentLocale,
               brewingMethod: brewingMethod?.name,
-              brewingMethodGroup: name,
+              brewingMethodGroup: brewingMethodGroupId === id ? undefined : name,
               country: country?.name,
               originCountry: originCountry?.name,
               processingMethod: processingMethod?.name,
