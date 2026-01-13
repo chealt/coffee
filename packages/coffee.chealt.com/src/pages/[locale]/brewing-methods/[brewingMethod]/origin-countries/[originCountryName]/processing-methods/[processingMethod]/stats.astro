@@ -1,0 +1,16 @@
+---
+import Stats from '@components/processing-methods/stats.astro';
+import brewingMethods from '@data/brewingMethods.json';
+import originCountries from '@data/originCountries.json';
+import processingMethods from '@data/processingMethods.json';
+
+const { brewingMethod, originCountryName, processingMethod } = Astro.params;
+
+const brewingMethodId = brewingMethods.find(({ name }) => name === brewingMethod)?.brewing_method_id;
+const originCountryId = originCountries.find(({ name }) => name === originCountryName)?.origin_country_id;
+const processingMethodId = processingMethods.find(({ name }) => name === processingMethod)?.processing_method_id;
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
+---
+
+<Stats brewingMethodId={brewingMethodId} originCountryId={originCountryId} processingMethodId={processingMethodId} />

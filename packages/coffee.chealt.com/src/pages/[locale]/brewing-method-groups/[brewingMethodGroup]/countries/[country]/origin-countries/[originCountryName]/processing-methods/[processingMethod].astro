@@ -1,0 +1,29 @@
+---
+import brewingMethodGroups from '@data/brewingMethodGroups.json';
+import countries from '@data/countries.json';
+import originCountries from '@data/originCountries.json';
+import processingMethods from '@data/processingMethods.json';
+
+import FilteredList from '@components/coffees/filtered-list.astro';
+import { decodeSafeURL } from '@utils/string.js';
+
+const { brewingMethodGroup, country, originCountryName, processingMethod } = Astro.params;
+
+const brewingMethodGroupId = brewingMethodGroups.find(({ name }) => name === decodeSafeURL(brewingMethodGroup))?.id;
+const countryId = countries.find(({ name }) => name === decodeSafeURL(country))?.country_id;
+const originCountryId = originCountries.find(
+  ({ name }) => name === decodeSafeURL(originCountryName)
+)?.origin_country_id;
+const processingMethodId = processingMethods.find(
+  ({ name }) => name === decodeSafeURL(processingMethod)
+)?.processing_method_id;
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
+---
+
+<FilteredList
+  brewingMethodGroupId={brewingMethodGroupId}
+  countryId={countryId}
+  originCountryId={originCountryId}
+  processingMethodId={processingMethodId}
+/>

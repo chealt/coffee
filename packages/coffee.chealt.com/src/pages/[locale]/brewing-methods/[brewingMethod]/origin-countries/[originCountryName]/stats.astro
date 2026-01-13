@@ -1,0 +1,17 @@
+---
+import Stats from '@components/origin-countries/stats.astro';
+import brewingMethods from '@data/brewingMethods.json';
+import originCountries from '@data/originCountries.json';
+import { decodeSafeURL } from '@utils/string.js';
+
+const { brewingMethod, originCountryName } = Astro.params;
+
+const brewingMethodId = brewingMethods.find(({ name }) => name === decodeSafeURL(brewingMethod))?.brewing_method_id;
+const originCountryId = originCountries.find(
+  ({ name }) => name === decodeSafeURL(originCountryName)
+)?.origin_country_id;
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
+---
+
+<Stats brewingMethodId={brewingMethodId} originCountryId={originCountryId} />

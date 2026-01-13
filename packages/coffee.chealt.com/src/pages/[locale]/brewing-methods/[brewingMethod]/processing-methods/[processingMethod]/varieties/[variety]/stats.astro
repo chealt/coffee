@@ -1,0 +1,19 @@
+---
+import brewingMethods from '@data/brewingMethods.json';
+import processingMethods from '@data/processingMethods.json';
+import varieties from '@data/varieties.json';
+import Stats from '@components/varieties/stats.astro';
+import { decodeSafeURL } from '@utils/string.js';
+
+const { brewingMethod, processingMethod, variety } = Astro.params;
+
+const brewingMethodId = brewingMethods.find(({ name }) => name === decodeSafeURL(brewingMethod))?.brewing_method_id;
+const processingMethodId = processingMethods.find(
+  ({ name }) => name === decodeSafeURL(processingMethod)
+)?.processing_method_id;
+const varietyId = varieties.find(({ name }) => name.toLowerCase() === decodeSafeURL(variety))?.id;
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
+---
+
+<Stats brewingMethodId={brewingMethodId} processingMethodId={processingMethodId} varietyId={varietyId} />
