@@ -10,6 +10,6 @@
     "@libsql/client": "^0.15.15",
     "@sentry/aws-serverless": "^10.32.1",
     "jsdom": "27.0.0",
-    "undici": "^7.16.0"
+    "undici": "^7.18.2"
   }
 }
