@@ -14,6 +14,8 @@ const {
   processingMethod,
   processingMethodId,
   roaster,
+  tasteNote,
+  tasteNoteGroup,
   variety
 } = Astro.props;
 ---
@@ -40,6 +42,8 @@ const {
                 originCountry: originCountry?.name,
                 processingMethod: processingMethodId === processing_method_id ? undefined : name,
                 roaster: roaster?.name,
+                tasteNote: tasteNote?.name,
+                tasteNoteGroup: tasteNoteGroup?.name,
                 variety: variety?.name
               })}
               class={processingMethodId === processing_method_id ? 'primary' : ''}

@@ -6,8 +6,18 @@ import Dialog from '../../dialog/dialog.astro';
 
 import { getSafeUrl } from '../../utils/url.js';
 
-const { brewingMethod, brewingMethodGroup, country, originCountry, processingMethod, roaster, roasterId, variety } =
-  Astro.props;
+const {
+  brewingMethod,
+  brewingMethodGroup,
+  country,
+  originCountry,
+  processingMethod,
+  roaster,
+  roasterId,
+  tasteNote,
+  tasteNoteGroup,
+  variety
+} = Astro.props;
 ---
 
 {
@@ -30,6 +40,8 @@ const { brewingMethod, brewingMethodGroup, country, originCountry, processingMet
               originCountry: originCountry?.name,
               processingMethod: processingMethod?.name,
               roaster: roasterId === id ? undefined : name,
+              tasteNote: tasteNote?.name,
+              tasteNoteGroup: tasteNoteGroup?.name,
               variety: variety?.name
             })}
             class={id === roasterId ? 'primary' : ''}

@@ -1,15 +1,18 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
 
-import allCoffees from '../../../data/coffees.json';
-import coffeeVarieties from '../../../data/coffeeVarieties.json';
-import countries from '../../../data/countries.json';
-import brewingMethods from '../../../data/brewingMethods.json';
-import brewingMethodGroups from '../../../data/brewingMethodGroups.json';
-import originCountries from '../../../data/originCountries.json';
-import processingMethods from '../../../data/processingMethods.json';
-import roasters from '../../../data/roasters.json';
-import varieties from '../../../data/varieties.json';
+import allCoffees from '@data/coffees.json';
+import coffeeTasteNotes from '@data/coffeeTasteNotes.json';
+import coffeeVarieties from '@data/coffeeVarieties.json';
+import countries from '@data/countries.json';
+import brewingMethods from '@data/brewingMethods.json';
+import brewingMethodGroups from '@data/brewingMethodGroups.json';
+import originCountries from '@data/originCountries.json';
+import processingMethods from '@data/processingMethods.json';
+import roasters from '@data/roasters.json';
+import tasteNotes from '@data/tasteNotes.json';
+import tasteNoteGroups from '@data/tasteNoteGroups.json';
+import varieties from '@data/varieties.json';
 
 import BrewingMethodGroupSelector from './selectors/brewing-method-group.astro';
 import BrewingMethodSelector from './selectors/brewing-method.astro';
@@ -17,6 +20,8 @@ import CountrySelector from './selectors/country.astro';
 import OriginCountrySelector from './selectors/origin-country.astro';
 import ProcessingMethodSelector from './selectors/processing-method.astro';
 import RoasterSelector from './selectors/roaster.astro';
+import TasteNoteGroupSelector from './selectors/taste-note-group.astro';
+import TasteNoteSelector from './selectors/taste-note.astro';
 import VarietySelector from './selectors/variety.astro';
 import NewSelector from './selectors/new-selector.astro';
 import { convertToUSD } from './utils.js';
@@ -27,6 +32,7 @@ import Dialog from '../dialog/dialog.astro';
 import Icon from '../icon/icon.astro';
 import { capitalize, encodeSafeURL } from '../../utils/string.js';
 import { getSafeUrl, getSafeUrlWithStats } from '../utils/url.js';
+import { getTasteNoteGroupByNoteId } from '../taste-notes/utils.js';
 
 import './filtered-list.css';
 
@@ -37,8 +43,17 @@ const t = allLocaleTranslations[Astro.currentLocale];
 const tc = allLocaleTranslationsCommon[Astro.currentLocale];
 
 const { loggedInUser } = Astro.locals;
-const { brewingMethodId, brewingMethodGroupId, countryId, originCountryId, processingMethodId, roasterId, varietyId } =
-  Astro.props;
+const {
+  brewingMethodId,
+  brewingMethodGroupId,
+  countryId,
+  originCountryId,
+  processingMethodId,
+  roasterId,
+  tasteNoteGroupId,
+  tasteNoteId,
+  varietyId
+} = Astro.props;
 
 const brewingMethodGroup = brewingMethodGroupId && brewingMethodGroups.find(({ id }) => id === brewingMethodGroupId);
 const brewingMethodIdsInGroup =
@@ -70,16 +85,19 @@ const processingMethod =
       processing_method_id === processingMethodId && language_code === Astro.currentLocale
   );
 const roaster = roasterId && roasters.find(({ id }) => id === roasterId);
+const tasteNote = tasteNoteId && tasteNotes.find(({ taste_note_id }) => taste_note_id === tasteNoteId);
+const tasteNoteGroup =
+  tasteNoteGroupId && tasteNoteGroups.find(({ taste_note_group_id }) => taste_note_group_id === tasteNoteGroupId);
 const variety = varietyId && varieties.find(({ id }) => id === varietyId);
 
 const coffees = allCoffees
-  .filter(({ origin_country_id }) => (originCountryId ? origin_country_id === originCountryId : true))
-  .filter(({ roaster_id: roasterId }) =>
-    countryId ? roasters.find((roaster) => roaster.id === roasterId).country_id === countryId : true
-  )
   .filter(({ brewing_method_id }) => (brewingMethodId ? brewing_method_id === brewingMethodId : true))
   .filter(({ brewing_method_id }) =>
     brewingMethodGroupId ? brewingMethodIdsInGroup.includes(brewing_method_id) : true
+  )
+  .filter(({ origin_country_id }) => (originCountryId ? origin_country_id === originCountryId : true))
+  .filter(({ roaster_id: roasterId }) =>
+    countryId ? roasters.find((roaster) => roaster.id === roasterId).country_id === countryId : true
   )
   .filter(({ processing_method_id }) => (processingMethodId ? processing_method_id === processingMethodId : true))
   .filter(({ roaster_id }) => (roasterId ? roaster_id === roasterId : true))
@@ -88,6 +106,22 @@ const coffees = allCoffees
       ? coffeeVarieties
           .filter(({ coffee_id }) => coffee_id === coffeeId)
           .some(({ variety_id }) => variety_id === varietyId)
+      : true
+  )
+  .filter(({ id: coffeeId }) =>
+    tasteNoteId
+      ? coffeeTasteNotes
+          .filter(({ coffee_id }) => coffee_id === coffeeId)
+          .some(({ taste_note_id }) => taste_note_id === tasteNoteId)
+      : true
+  )
+  .filter(({ id: coffeeId }) =>
+    tasteNoteGroupId
+      ? coffeeTasteNotes
+          .filter(({ coffee_id }) => coffee_id === coffeeId)
+          .some(
+            ({ taste_note_id }) => getTasteNoteGroupByNoteId(taste_note_id).taste_note_group_id === tasteNoteGroupId
+          )
       : true
   );
 const priciestCoffees = coffees
@@ -113,12 +147,14 @@ const statsLink = getSafeUrlWithStats({
   originCountry: originCountry?.name,
   processingMethod: processingMethod?.name,
   roaster: roaster?.name,
+  tasteNote: tasteNote?.name,
+  tasteNoteGroup: tasteNoteGroup?.name,
   variety: variety?.name
 });
 ---
 
 <Common
-  title={`${t.coffeeFrom} ${capitalize(brewingMethod?.name || brewingMethodGroup?.name || country?.name || originCountry?.name || processingMethod?.name || roaster?.name || variety?.name)}`}
+  title={`${t.coffeeFrom} ${capitalize(brewingMethod?.name || brewingMethodGroup?.name || country?.name || originCountry?.name || processingMethod?.name || roaster?.name || tasteNote?.name || tasteNoteGroup?.name || variety?.name)}`}
 >
   <h1 class="title">
     <div>
@@ -130,6 +166,8 @@ const statsLink = getSafeUrlWithStats({
         originCountry={originCountry}
         processingMethod={processingMethod}
         roaster={roaster}
+        tasteNote={tasteNote}
+        tasteNoteGroup={tasteNoteGroup}
         variety={variety}
       />
       <BrewingMethodGroupSelector
@@ -140,6 +178,8 @@ const statsLink = getSafeUrlWithStats({
         originCountry={originCountry}
         processingMethod={processingMethod}
         roaster={roaster}
+        tasteNote={tasteNote}
+        tasteNoteGroup={tasteNoteGroup}
         variety={variety}
       />
       <CountrySelector
@@ -150,6 +190,8 @@ const statsLink = getSafeUrlWithStats({
         originCountry={originCountry}
         processingMethod={processingMethod}
         roaster={roaster}
+        tasteNote={tasteNote}
+        tasteNoteGroup={tasteNoteGroup}
         variety={variety}
       />
       <OriginCountrySelector
@@ -160,6 +202,8 @@ const statsLink = getSafeUrlWithStats({
         originCountryId={originCountryId}
         processingMethod={processingMethod}
         roaster={roaster}
+        tasteNote={tasteNote}
+        tasteNoteGroup={tasteNoteGroup}
         variety={variety}
       />
       <ProcessingMethodSelector
@@ -170,6 +214,8 @@ const statsLink = getSafeUrlWithStats({
         processingMethod={processingMethod}
         processingMethodId={processingMethodId}
         roaster={roaster}
+        tasteNote={tasteNote}
+        tasteNoteGroup={tasteNoteGroup}
         variety={variety}
       />
       <RoasterSelector
@@ -180,6 +226,32 @@ const statsLink = getSafeUrlWithStats({
         roaster={roaster}
         roasterId={roasterId}
         processingMethod={processingMethod}
+        tasteNote={tasteNote}
+        tasteNoteGroup={tasteNoteGroup}
+        variety={variety}
+      />
+      <TasteNoteSelector
+        brewingMethod={brewingMethod}
+        brewingMethodGroup={brewingMethodGroup}
+        country={country}
+        originCountry={originCountry}
+        processingMethod={processingMethod}
+        roaster={roaster}
+        tasteNote={tasteNote}
+        tasteNoteId={tasteNoteId}
+        tasteNoteGroup={tasteNoteGroup}
+        variety={variety}
+      />
+      <TasteNoteGroupSelector
+        brewingMethod={brewingMethod}
+        brewingMethodGroup={brewingMethodGroup}
+        country={country}
+        originCountry={originCountry}
+        processingMethod={processingMethod}
+        roaster={roaster}
+        tasteNote={tasteNote}
+        tasteNoteGroupId={tasteNoteGroupId}
+        tasteNoteGroup={tasteNoteGroup}
         variety={variety}
       />
       <VarietySelector
@@ -189,6 +261,8 @@ const statsLink = getSafeUrlWithStats({
         originCountry={originCountry}
         processingMethod={processingMethod}
         roaster={roaster}
+        tasteNote={tasteNote}
+        tasteNoteGroup={tasteNoteGroup}
         variety={variety}
         varietyId={varietyId}
       />
@@ -199,6 +273,8 @@ const statsLink = getSafeUrlWithStats({
           country: country?.name,
           originCountry: originCountry?.name,
           processingMethod: processingMethod?.name,
+          tasteNote: tasteNote?.name,
+          tasteNoteGroup: tasteNoteGroup?.name,
           variety: variety?.name
         }}
       />

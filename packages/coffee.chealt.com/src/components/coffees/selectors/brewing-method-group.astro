@@ -14,6 +14,8 @@ const {
   originCountry,
   processingMethod,
   roaster,
+  tasteNote,
+  tasteNoteGroup,
   variety
 } = Astro.props;
 ---
@@ -39,6 +41,8 @@ const {
               originCountry: originCountry?.name,
               processingMethod: processingMethod?.name,
               roaster: roaster?.name,
+              tasteNote: tasteNote?.name,
+              tasteNoteGroup: tasteNoteGroup?.name,
               variety: variety?.name
             })}
             class={brewingMethodGroupId === id ? 'primary' : ''}

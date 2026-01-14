@@ -1,5 +1,5 @@
 ---
-import originCountries from '../../../../data/originCountries.json';
+import tasteNoteGroups from '@data/tasteNoteGroups.json';
 
 import Button from '../../form/button/button.astro';
 import Dialog from '../../dialog/dialog.astro';
@@ -11,28 +11,28 @@ const {
   brewingMethodGroup,
   country,
   originCountry,
-  originCountryId,
   processingMethod,
   roaster,
   tasteNote,
   tasteNoteGroup,
+  tasteNoteGroupId,
   variety
 } = Astro.props;
 ---
 
 {
-  originCountryId && (
-    <Button class="filter-dialog-title ghost inline" data-dialog-id="originCountry">
-      {originCountry.name}
+  tasteNoteGroupId && (
+    <Button class="filter-dialog-title ghost inline" data-dialog-id="tasteNoteGroup">
+      {tasteNoteGroup.name}
     </Button>
   )
 }
-<Dialog class="drawer" id="originCountry">
+<Dialog class="drawer" id="tasteNoteGroup">
   <ul>
     {
-      originCountries
+      tasteNoteGroups
         .filter(({ language_code }) => language_code === Astro.currentLocale)
-        .map(({ origin_country_id, name }) => (
+        .map(({ taste_note_group_id, name }) => (
           <li>
             <Button
               href={getSafeUrl({
@@ -40,14 +40,14 @@ const {
                 brewingMethod: brewingMethod?.name,
                 brewingMethodGroup: brewingMethodGroup?.name,
                 country: country?.name,
-                originCountry: originCountryId === origin_country_id ? undefined : name,
+                originCountry: originCountry?.name,
                 processingMethod: processingMethod?.name,
                 roaster: roaster?.name,
                 tasteNote: tasteNote?.name,
-                tasteNoteGroup: tasteNoteGroup?.name,
+                tasteNoteGroup: taste_note_group_id === tasteNoteGroupId ? undefined : name,
                 variety: variety?.name
               })}
-              class={originCountryId === origin_country_id ? 'primary' : ''}
+              class={tasteNoteGroupId === taste_note_group_id ? 'primary' : ''}
             >
               {name}
             </Button>
