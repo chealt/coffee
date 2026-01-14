@@ -21,7 +21,7 @@
   text-transform: uppercase;
 }
 
-.chip + span {
+.chip ~ span {
   margin-bottom: var(--gap--s);
   margin-right: var(--gap--s);
 }
