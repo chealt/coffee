@@ -28,7 +28,7 @@ const {
   )
 }
 <Dialog class="drawer" id="originCountry">
-  <ul>
+  <ul class="selector-list">
     {
       originCountries
         .filter(({ language_code }) => language_code === Astro.currentLocale)

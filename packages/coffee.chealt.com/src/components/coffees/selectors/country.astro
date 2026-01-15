@@ -28,27 +28,31 @@ const {
   )
 }
 <Dialog id="country" class="drawer">
-  {
-    countries
-      .filter(({ language_code }) => language_code === Astro.currentLocale)
-      .map(({ name, country_id }) => (
-        <Button
-          href={getSafeUrl({
-            locale: Astro.currentLocale,
-            brewingMethod: brewingMethod?.name,
-            brewingMethodGroup: brewingMethodGroup?.name,
-            country: countryId === country_id ? undefined : name,
-            originCountry: originCountry?.name,
-            processingMethod: processingMethod?.name,
-            roaster: roaster?.name,
-            tasteNote: tasteNote?.name,
-            tasteNoteGroup: tasteNoteGroup?.name,
-            variety: variety?.name
-          })}
-          class={country_id === countryId ? 'primary' : ''}
-        >
-          {name}
-        </Button>
-      ))
-  }
+  <ul class="selector-list">
+    {
+      countries
+        .filter(({ language_code }) => language_code === Astro.currentLocale)
+        .map(({ name, country_id }) => (
+          <li>
+            <Button
+              href={getSafeUrl({
+                locale: Astro.currentLocale,
+                brewingMethod: brewingMethod?.name,
+                brewingMethodGroup: brewingMethodGroup?.name,
+                country: countryId === country_id ? undefined : name,
+                originCountry: originCountry?.name,
+                processingMethod: processingMethod?.name,
+                roaster: roaster?.name,
+                tasteNote: tasteNote?.name,
+                tasteNoteGroup: tasteNoteGroup?.name,
+                variety: variety?.name
+              })}
+              class={country_id === countryId ? 'primary' : ''}
+            >
+              {name}
+            </Button>
+          </li>
+        ))
+    }
+  </ul>
 </Dialog>

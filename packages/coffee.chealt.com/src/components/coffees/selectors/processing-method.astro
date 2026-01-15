@@ -28,7 +28,7 @@ const {
   )
 }
 <Dialog class="drawer" id="processingMethod">
-  <ul>
+  <ul class="selector-list">
     {
       processingMethods
         .filter(({ language_code }) => language_code === Astro.currentLocale)

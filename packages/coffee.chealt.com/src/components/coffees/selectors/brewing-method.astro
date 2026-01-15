@@ -28,7 +28,7 @@ const {
   )
 }
 <Dialog class="drawer" id="brewingMethod">
-  <ul>
+  <ul class="selector-list">
     {
       brewingMethods
         .filter(({ language_code }) => language_code === Astro.currentLocale)

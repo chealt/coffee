@@ -42,7 +42,11 @@ const {
 } = Astro.props;
 
 const brewingMethod =
-  brewingMethodId && brewingMethods.find(({ brewing_method_id }) => brewing_method_id === brewingMethodId);
+  brewingMethodId &&
+  brewingMethods.find(
+    ({ brewing_method_id, language_code }) =>
+      brewing_method_id === brewingMethodId && language_code === Astro.currentLocale
+  );
 const brewingMethodIdsInGroup =
   brewingMethodGroupId &&
   brewingMethods
@@ -51,16 +55,33 @@ const brewingMethodIdsInGroup =
     )
     .map(({ brewing_method_id }) => brewing_method_id);
 const brewingMethodGroup = brewingMethodGroupId && brewingMethodGroups.find(({ id }) => id === brewingMethodGroupId);
-const country = countryId && countries.find(({ country_id }) => country_id === countryId);
+const country =
+  countryId &&
+  countries.find(({ country_id, language_code }) => country_id === countryId && language_code === Astro.currentLocale);
 const originCountry =
-  originCountryId && originCountries.find(({ origin_country_id }) => origin_country_id === originCountryId);
+  originCountryId &&
+  originCountries.find(
+    ({ origin_country_id, language_code }) =>
+      origin_country_id === originCountryId && language_code === Astro.currentLocale
+  );
 const processingMethod =
   processingMethodId &&
-  processingMethods.find(({ processing_method_id }) => processing_method_id === processingMethodId);
+  processingMethods.find(
+    ({ processing_method_id, language_code }) =>
+      processing_method_id === processingMethodId && language_code === Astro.currentLocale
+  );
 const roaster = roasterId && roasters.find(({ id }) => id === roasterId);
-const tasteNote = tasteNoteId && tasteNotes.find(({ taste_note_id }) => taste_note_id === tasteNoteId);
+const tasteNote =
+  tasteNoteId &&
+  tasteNotes.find(
+    ({ taste_note_id, language_code }) => taste_note_id === tasteNoteId && language_code === Astro.currentLocale
+  );
 const tasteNoteGroup =
-  tasteNoteGroupId && tasteNoteGroups.find(({ taste_note_group_id }) => taste_note_group_id === tasteNoteGroupId);
+  tasteNoteGroupId &&
+  tasteNoteGroups.find(
+    ({ taste_note_group_id, language_code }) =>
+      taste_note_group_id === tasteNoteGroupId && language_code === Astro.currentLocale
+  );
 const variety = varietyId && varieties.find(({ id }) => id === varietyId);
 
 const coffees = allCoffees

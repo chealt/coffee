@@ -85,9 +85,17 @@ const processingMethod =
       processing_method_id === processingMethodId && language_code === Astro.currentLocale
   );
 const roaster = roasterId && roasters.find(({ id }) => id === roasterId);
-const tasteNote = tasteNoteId && tasteNotes.find(({ taste_note_id }) => taste_note_id === tasteNoteId);
+const tasteNote =
+  tasteNoteId &&
+  tasteNotes.find(
+    ({ taste_note_id, language_code }) => taste_note_id === tasteNoteId && language_code === Astro.currentLocale
+  );
 const tasteNoteGroup =
-  tasteNoteGroupId && tasteNoteGroups.find(({ taste_note_group_id }) => taste_note_group_id === tasteNoteGroupId);
+  tasteNoteGroupId &&
+  tasteNoteGroups.find(
+    ({ taste_note_group_id, language_code }) =>
+      taste_note_group_id === tasteNoteGroupId && language_code === Astro.currentLocale
+  );
 const variety = varietyId && varieties.find(({ id }) => id === varietyId);
 
 const coffees = allCoffees
