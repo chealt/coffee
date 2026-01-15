@@ -1,14 +1,5 @@
 ---
-import Stats from '@components/processing-methods/stats.astro';
-import brewingMethods from '@data/brewingMethods.json';
-import processingMethods from '@data/processingMethods.json';
-
-const { brewingMethod, processingMethod } = Astro.params;
-
-const brewingMethodId = brewingMethods.find(({ name }) => name === brewingMethod)?.brewing_method_id;
-const processingMethodId = processingMethods.find(({ name }) => name === processingMethod)?.processing_method_id;
-
-Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
+import FilteredListStats from '@pages/_filtered-list-stats.astro';
 ---
 
-<Stats brewingMethodId={brewingMethodId} processingMethodId={processingMethodId} />
+<FilteredListStats />

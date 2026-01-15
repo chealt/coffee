@@ -1,12 +1,5 @@
 ---
-import Stats from '@components/varieties/stats.astro';
-import varieties from '@data/varieties.json';
-
-const { variety } = Astro.params;
-
-const id = varieties.find(({ name }) => name.toLowerCase() === variety)?.id;
-
-Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
+import FilteredListStats from '@pages/_filtered-list-stats.astro';
 ---
 
-<Stats id={id} />
+<FilteredListStats />

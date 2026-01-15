@@ -94,3 +94,10 @@
     letter-spacing: 8px;
   }
 }
+
+.filter-title + .filter-title {
+  &::before {
+    content: '& ';
+    cursor: default;
+  }
+}

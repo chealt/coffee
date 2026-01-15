@@ -1,13 +1,5 @@
 ---
-import FilteredList from '@components/coffees/filtered-list.astro';
-import roasters from '@data/roasters.json';
-import { decodeSafeURL } from '@utils/string.js';
-
-const { roaster } = Astro.params;
-
-const roasterId = roasters.find(({ name }) => name === decodeSafeURL(roaster))?.id;
-
-Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
+import FilteredList from '@pages/_filtered-list.astro';
 ---
 
-<FilteredList roasterId={roasterId} />
+<FilteredList />

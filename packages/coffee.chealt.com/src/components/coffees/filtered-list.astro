@@ -230,7 +230,7 @@ const statsLink = getSafeUrlWithStats({
         tasteNoteGroup={tasteNoteGroup}
         variety={variety}
       />
-      <TasteNoteSelector
+      <!-- <TasteNoteSelector
         brewingMethod={brewingMethod}
         brewingMethodGroup={brewingMethodGroup}
         country={country}
@@ -241,7 +241,7 @@ const statsLink = getSafeUrlWithStats({
         tasteNoteId={tasteNoteId}
         tasteNoteGroup={tasteNoteGroup}
         variety={variety}
-      />
+      /> -->
       <TasteNoteGroupSelector
         brewingMethod={brewingMethod}
         brewingMethodGroup={brewingMethodGroup}
@@ -273,6 +273,7 @@ const statsLink = getSafeUrlWithStats({
           country: country?.name,
           originCountry: originCountry?.name,
           processingMethod: processingMethod?.name,
+          roaster: roaster?.name,
           tasteNote: tasteNote?.name,
           tasteNoteGroup: tasteNoteGroup?.name,
           variety: variety?.name

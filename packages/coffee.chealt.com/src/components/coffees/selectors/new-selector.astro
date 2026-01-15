@@ -16,7 +16,7 @@ const types = [
   'originCountry',
   'processingMethod',
   'roaster',
-  'tasteNote',
+  // 'tasteNote',
   'tasteNoteGroup',
   'variety'
 ];
@@ -26,17 +26,23 @@ const availableTypes = types.filter(
 );
 ---
 
-<Button class="new-selector-button ghost inline" data-dialog-id="new-selector">& ...</Button>
-<Dialog class="drawer" id="new-selector">
-  <ul>
-    {
-      availableTypes.map((type) => (
-        <li>
-          <Button class="block" data-dialog-id={type}>
-            {t[type]}
-          </Button>
-        </li>
-      ))
-    }
-  </ul>
-</Dialog>
+{
+  availableTypes.length > 0 ? (
+    <Fragment>
+      <Button class="new-selector-button ghost inline" data-dialog-id="new-selector">
+        & ...
+      </Button>
+      <Dialog class="drawer" id="new-selector">
+        <ul>
+          {availableTypes.map((type) => (
+            <li>
+              <Button class="block" data-dialog-id={type}>
+                {t[type]}
+              </Button>
+            </li>
+          ))}
+        </ul>
+      </Dialog>
+    </Fragment>
+  ) : null
+}

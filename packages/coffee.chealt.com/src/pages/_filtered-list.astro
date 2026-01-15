@@ -1,0 +1,55 @@
+---
+import FilteredList from '@components/coffees/filtered-list.astro';
+import brewingMethods from '@data/brewingMethods.json';
+import brewingMethodGroups from '@data/brewingMethodGroups.json';
+import countries from '@data/countries.json';
+import originCountries from '@data/originCountries.json';
+import processingMethods from '@data/processingMethods.json';
+import roasters from '@data/roasters.json';
+import tasteNotes from '@data/tasteNotes.json';
+import tasteNoteGroups from '@data/tasteNoteGroups.json';
+import varieties from '@data/varieties.json';
+import { decodeSafeURL } from '@utils/string.js';
+
+const {
+  brewingMethod,
+  brewingMethodGroup,
+  country,
+  originCountry,
+  processingMethod,
+  roaster,
+  tasteNote,
+  tasteNoteGroup,
+  variety
+} = Astro.params;
+
+const brewingMethodId =
+  brewingMethod && brewingMethods.find(({ name }) => name === decodeSafeURL(brewingMethod))?.brewing_method_id;
+const brewingMethodGroupId =
+  brewingMethodGroup && brewingMethodGroups.find(({ name }) => name === decodeSafeURL(brewingMethodGroup))?.id;
+const countryId = country && countries.find(({ name }) => name === decodeSafeURL(country))?.country_id;
+const originCountryId =
+  originCountry && originCountries.find(({ name }) => name === decodeSafeURL(originCountry))?.origin_country_id;
+const processingMethodId =
+  processingMethod &&
+  processingMethods.find(({ name }) => name === decodeSafeURL(processingMethod))?.processing_method_id;
+const roasterId = roaster && roasters.find(({ name }) => name === decodeSafeURL(roaster))?.id;
+const tasteNoteId = tasteNote && tasteNotes.find(({ name }) => name === decodeSafeURL(tasteNote))?.taste_note_id;
+const tasteNoteGroupId =
+  tasteNoteGroup && tasteNoteGroups.find(({ name }) => name === decodeSafeURL(tasteNoteGroup))?.taste_note_group_id;
+const varietyId = variety && varieties.find(({ name }) => name.toLowerCase() === decodeSafeURL(variety))?.id;
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
+---
+
+<FilteredList
+  brewingMethodId={brewingMethodId}
+  brewingMethodGroupId={brewingMethodGroupId}
+  countryId={countryId}
+  originCountryId={originCountryId}
+  processingMethodId={processingMethodId}
+  roasterId={roasterId}
+  tasteNoteGroupId={tasteNoteGroupId}
+  tasteNoteId={tasteNoteId}
+  varietyId={varietyId}
+/>

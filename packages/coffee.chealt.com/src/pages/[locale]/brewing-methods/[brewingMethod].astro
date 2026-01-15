@@ -1,13 +1,5 @@
 ---
-import FilteredList from '@components/coffees/filtered-list.astro';
-import brewingMethods from '@data/brewingMethods.json';
-import { decodeSafeURL } from '@utils/string.js';
-
-const { brewingMethod } = Astro.params;
-
-const brewingMethodId = brewingMethods.find(({ name }) => name === decodeSafeURL(brewingMethod))?.brewing_method_id;
-
-Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
+import FilteredList from '@pages/_filtered-list.astro';
 ---
 
-<FilteredList brewingMethodId={brewingMethodId} />
+<FilteredList />

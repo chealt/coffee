@@ -1,15 +1,5 @@
 ---
-import FilteredList from '@components/coffees/filtered-list.astro';
-import tasteNoteGroups from '@data/tasteNoteGroups.json';
-import { decodeSafeURL } from '@utils/string.js';
-
-const { tasteNoteGroup } = Astro.params;
-
-const tasteNoteGroupId = tasteNoteGroups.find(
-  ({ name }) => name === decodeSafeURL(tasteNoteGroup)
-)?.taste_note_group_id;
-
-Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
+import FilteredList from '@pages/_filtered-list.astro';
 ---
 
-<FilteredList tasteNoteGroupId={tasteNoteGroupId} />
+<FilteredList />
