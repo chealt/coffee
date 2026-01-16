@@ -8,7 +8,7 @@ const POST = async (context) => {
     const { username } = getSessionUser(context);
     const { email } = await getUser(username);
 
-    await invoke({ name: 'coffeeAdmin', payload: { function: 'users:send-registration-code', username, email } });
+    await invoke({ name: 'sendRegistrationCode', payload: { username, email } });
   } catch (error) {
     logger.error(error);
 
