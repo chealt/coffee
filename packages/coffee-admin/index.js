@@ -1,11 +1,9 @@
 import { getSecret } from './src/AWS.js';
 import logger from './src/Sentry/logger.js';
 import recordRoasterWebshop from './src/coffees/record-roaster-webshop.js';
-import sendRegistrationCode from './src/users/send-registration-code.js';
 
 const supportedFunctions = {
-  coffeesRecordRoasterWebshop: 'coffees:record-roaster-webshop',
-  usersSendRegistrationCode: 'users:send-registration-code'
+  coffeesRecordRoasterWebshop: 'coffees:record-roaster-webshop'
 };
 
 export const handler = async (event) => {
@@ -33,13 +31,6 @@ export const handler = async (event) => {
   process.env.SESSION_SECRET = secrets.SESSION_SECRET;
 
   switch (event.function) {
-    case supportedFunctions.usersSendRegistrationCode:
-      const username = event.username;
-      const email = event.email;
-
-      await sendRegistrationCode({ username, email });
-
-      break;
     case supportedFunctions.coffeesRecordRoasterWebshop:
       if (!event.roasterId) {
         logger.error('No roasterId specified');
