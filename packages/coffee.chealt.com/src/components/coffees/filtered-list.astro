@@ -322,7 +322,7 @@ const statsLink = getSafeUrlWithStats({
       null
   }
   {
-    (priciestCoffees.length && (
+    (priciestCoffees.length >= 10 && (
       <section>
         <h2>{tc.priciestCoffees}</h2>
         <Coffees coffees={priciestCoffees} />
@@ -331,7 +331,7 @@ const statsLink = getSafeUrlWithStats({
       null
   }
   {
-    (cheapestCoffees.length && (
+    (cheapestCoffees.length >= 10 && (
       <section>
         <h2>{tc.cheapestCoffees}</h2>
         <Coffees coffees={cheapestCoffees} />
