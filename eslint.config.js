@@ -209,6 +209,7 @@ export default defineConfig([
       'packages/ocr-worker/**/*.js',
       'packages/record-webshop-item/**/*.js',
       'packages/record-webshop-item-details/**/*.js',
+      'packages/send-registration-code/**/*.js',
       'packages/webshop-item-processor/**/*.js',
       'packages/webshop-processor/**/*.js'
     ],

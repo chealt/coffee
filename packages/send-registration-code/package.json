@@ -1,0 +1,17 @@
+{
+  "name": "@centralbeans/send-registration-code",
+  "type": "module",
+  "scripts": {
+    "build": "cp .yarnrc-lambda.yml .yarnrc.yml && yarn workspaces focus --production && zip -rq package.zip . -x .yarnrc.yml .yarnrc-lambda.yml && rm .yarnrc.yml",
+    "deploy": "aws lambda update-function-code --function-name sendRegistrationCode --zip-file fileb://package.zip --publish"
+  },
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.962.0",
+    "@aws-sdk/client-sesv2": "^3.962.0",
+    "@centralbeans/email": "workspace:*",
+    "@libsql/client": "^0.15.15",
+    "@sentry/aws-serverless": "^10.32.1",
+    "@tursodatabase/api": "^1.9.2",
+    "jsonwebtoken": "^9.0.3"
+  }
+}

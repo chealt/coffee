@@ -152,7 +152,7 @@ export const handler = async (event) => {
   const localeContent = locales[locale] || locales.en;
   await sendEmail({
     to: email,
-    content: content({ title: localeContent.registrationEmailSubject, username, registrationCode, locale }),
+    content: content({ title: localeContent.registrationEmailTitle, username, registrationCode, locale }),
     subject: localeContent.registrationEmailSubject
   });
 };

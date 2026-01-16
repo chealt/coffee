@@ -95,6 +95,12 @@ jobs:
               - packages/record-webshop-item-details/package.json
               - packages/record-webshop-item-details/.yarnrc-lambda.yml
               - packages/record-webshop-item-details/src/**
+            send-registration-code:
+              - yarn.lock
+              - .github/workflows/deploy.yml
+              - packages/send-registration-code/package.json
+              - packages/send-registration-code/.yarnrc-lambda.yml
+              - packages/send-registration-code/src/**
             webshop-item-processor:
               - yarn.lock
               - .github/workflows/deploy.yml
@@ -293,6 +299,23 @@ jobs:
         with:
           tag_name: '@chealt/record-webshop-item-details@${{ steps.record-webshop-item-details.outputs.version }}'
           release_name: Release @chealt/record-webshop-item-details v${{ steps.record-webshop-item-details.outputs.version }}
+          draft: false
+          prerelease: false
+      - name: send-registration-code
+        id: send-registration-code
+        if: steps.changed-files-yaml.outputs.send-registration-code_any_changed == 'true'
+        run: |
+          yarn workspace @centralbeans/send-registration-code build
+          version=$(yarn workspace @centralbeans/send-registration-code deploy | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release send-registration-code
+        if: steps.changed-files-yaml.outputs.send-registration-code_any_changed == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: '@centralbeans/send-registration-code@${{ steps.send-registration-code.outputs.version }}'
+          release_name: Release @centralbeans/send-registration-code v${{ steps.send-registration-code.outputs.version }}
           draft: false
           prerelease: false
       - name: webshop-item-processor
