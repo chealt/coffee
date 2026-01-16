@@ -1469,6 +1469,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@centralbeans/send-registration-code@workspace:packages/send-registration-code":
+  version: 0.0.0-use.local
+  resolution: "@centralbeans/send-registration-code@workspace:packages/send-registration-code"
+  dependencies:
+    "@aws-sdk/client-secrets-manager": "npm:^3.962.0"
+    "@aws-sdk/client-sesv2": "npm:^3.962.0"
+    "@centralbeans/email": "workspace:*"
+    "@libsql/client": "npm:^0.15.15"
+    "@sentry/aws-serverless": "npm:^10.32.1"
+    "@tursodatabase/api": "npm:^1.9.2"
+    jsonwebtoken: "npm:^9.0.3"
+  languageName: unknown
+  linkType: soft
+
 "@chealt/coffee-admin@workspace:packages/coffee-admin":
   version: 0.0.0-use.local
   resolution: "@chealt/coffee-admin@workspace:packages/coffee-admin"
