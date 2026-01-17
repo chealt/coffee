@@ -1,7 +1,7 @@
 import { invokeLambda } from './AWS.js';
 import logger from './Sentry/logger.js';
 // eslint-disable-next-line import/no-unresolved
-import roasters from '../../data/roasters.json' with { type: 'json' };
+import roasters from '../data/roasters.json' with { type: 'json' };
 import { deflateSync } from 'node:zlib';
 
 export const handler = async ({ roasterId }) => {
