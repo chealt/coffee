@@ -100,7 +100,9 @@ const variety = varietyId && varieties.find(({ id }) => id === varietyId);
 
 let coffees = [];
 
-for (const { id, brewing_method_id, origin_country_id, processing_method_id, roaster_id } of allCoffees) {
+for (const coffee of allCoffees) {
+  const { id, brewing_method_id, origin_country_id, processing_method_id, roaster_id } = coffee;
+
   if (brewingMethodId && brewing_method_id !== brewingMethodId) {
     continue;
   }
