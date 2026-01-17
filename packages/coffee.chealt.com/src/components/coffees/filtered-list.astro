@@ -98,40 +98,61 @@ const tasteNoteGroup =
   );
 const variety = varietyId && varieties.find(({ id }) => id === varietyId);
 
-const coffees = allCoffees
-  .filter(({ brewing_method_id }) => (brewingMethodId ? brewing_method_id === brewingMethodId : true))
-  .filter(({ brewing_method_id }) =>
-    brewingMethodGroupId ? brewingMethodIdsInGroup.includes(brewing_method_id) : true
-  )
-  .filter(({ origin_country_id }) => (originCountryId ? origin_country_id === originCountryId : true))
-  .filter(({ roaster_id: roasterId }) =>
-    countryId ? roasters.find((roaster) => roaster.id === roasterId).country_id === countryId : true
-  )
-  .filter(({ processing_method_id }) => (processingMethodId ? processing_method_id === processingMethodId : true))
-  .filter(({ roaster_id }) => (roasterId ? roaster_id === roasterId : true))
-  .filter(({ id: coffeeId }) =>
-    varietyId
-      ? coffeeVarieties
-          .filter(({ coffee_id }) => coffee_id === coffeeId)
-          .some(({ variety_id }) => variety_id === varietyId)
-      : true
-  )
-  .filter(({ id: coffeeId }) =>
-    tasteNoteId
-      ? coffeeTasteNotes
-          .filter(({ coffee_id }) => coffee_id === coffeeId)
-          .some(({ taste_note_id }) => taste_note_id === tasteNoteId)
-      : true
-  )
-  .filter(({ id: coffeeId }) =>
-    tasteNoteGroupId
-      ? coffeeTasteNotes
-          .filter(({ coffee_id }) => coffee_id === coffeeId)
-          .some(
-            ({ taste_note_id }) => getTasteNoteGroupByNoteId(taste_note_id).taste_note_group_id === tasteNoteGroupId
-          )
-      : true
-  );
+let coffees = [];
+
+for (const { id, brewing_method_id, origin_country_id, processing_method_id, roaster_id } of allCoffees) {
+  if (brewingMethodId && brewing_method_id !== brewingMethodId) {
+    continue;
+  }
+
+  if (brewingMethodGroupId && !brewingMethodIdsInGroup.includes(brewing_method_id)) {
+    continue;
+  }
+
+  if (originCountryId && origin_country_id !== originCountryId) {
+    continue;
+  }
+
+  if (countryId && roasters.find((roaster) => roaster.id === roaster_id).country_id !== countryId) {
+    continue;
+  }
+
+  if (processingMethodId && processing_method_id !== processingMethodId) {
+    continue;
+  }
+
+  if (roasterId && roaster_id !== roasterId) {
+    continue;
+  }
+
+  if (
+    varietyId &&
+    !coffeeVarieties.filter(({ coffee_id }) => coffee_id === id).some(({ variety_id }) => variety_id === varietyId)
+  ) {
+    continue;
+  }
+
+  if (
+    tasteNoteId &&
+    !coffeeTasteNotes
+      .filter(({ coffee_id }) => coffee_id === id)
+      .some(({ taste_note_id }) => taste_note_id === tasteNoteId)
+  ) {
+    continue;
+  }
+
+  if (
+    tasteNoteGroupId &&
+    !coffeeTasteNotes
+      .filter(({ coffee_id }) => coffee_id === id)
+      .some(({ taste_note_id }) => getTasteNoteGroupByNoteId(taste_note_id).taste_note_group_id === tasteNoteGroupId)
+  ) {
+    continue;
+  }
+
+  coffees.push(coffee);
+}
+
 const priciestCoffees = coffees
   .sort(
     (a, b) =>
