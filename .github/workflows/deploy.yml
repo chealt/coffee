@@ -83,6 +83,13 @@ jobs:
               - packages/notifications/package.json
               - packages/notifications/.yarnrc-lambda.yml
               - packages/notifications/src/**
+            record-roaster-webshop:
+              - yarn.lock
+              - .github/workflows/deploy.yml
+              - packages/coffee.chealt.com/data/roasters.json
+              - packages/record-roaster-webshop/package.json
+              - packages/record-roaster-webshop/.yarnrc-lambda.yml
+              - packages/record-roaster-webshop/src/**
             record-webshop-item:
               - yarn.lock
               - .github/workflows/deploy.yml
@@ -265,6 +272,23 @@ jobs:
         with:
           tag_name: '@centralbeans/notifications@${{ steps.notifications.outputs.version }}'
           release_name: Release @centralbeans/notifications v${{ steps.notifications.outputs.version }}
+          draft: false
+          prerelease: false
+      - name: record-roaster-webshop
+        id: record-roaster-webshop
+        if: steps.changed-files-yaml.outputs.record-roaster-webshop_any_changed == 'true'
+        run: |
+          yarn workspace @centralbeans/record-roaster-webshop build
+          version=$(yarn workspace @centralbeans/record-roaster-webshop deploy | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release record-roaster-webshop
+        if: steps.changed-files-yaml.outputs.record-roaster-webshop_any_changed == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: '@centralbeans/record-roaster-webshop@${{ steps.record-roaster-webshop.outputs.version }}'
+          release_name: Release @centralbeans/record-roaster-webshop v${{ steps.record-roaster-webshop.outputs.version }}
           draft: false
           prerelease: false
       - name: record-webshop-item
