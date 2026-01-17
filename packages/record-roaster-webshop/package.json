@@ -1,14 +1,12 @@
 {
-  "name": "@centralbeans/invoke-flag-removed",
+  "name": "@centralbeans/record-roaster-webshop",
   "type": "module",
   "scripts": {
     "build": "cp .yarnrc-lambda.yml .yarnrc.yml && yarn workspaces focus --production && zip -rq package.zip . -x .yarnrc.yml .yarnrc-lambda.yml && rm .yarnrc.yml",
-    "deploy": "aws lambda update-function-code --function-name invokeFlagRemoved --zip-file fileb://package.zip --publish"
+    "deploy": "aws lambda update-function-code --function-name recordRoasterWebshop --zip-file fileb://package.zip --publish"
   },
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.971.0",
-    "@aws-sdk/client-secrets-manager": "^3.971.0",
-    "@libsql/client": "^0.17.0",
     "@sentry/aws-serverless": "^10.34.0"
   }
 }

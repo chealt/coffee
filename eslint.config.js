@@ -207,6 +207,7 @@ export default defineConfig([
       'packages/invoke-flag-removed/**/*.js',
       'packages/notifications/**/*.js',
       'packages/ocr-worker/**/*.js',
+      'packages/record-roaster-webshop/**/*.js',
       'packages/record-webshop-item/**/*.js',
       'packages/record-webshop-item-details/**/*.js',
       'packages/send-registration-code/**/*.js',

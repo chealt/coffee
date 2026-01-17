@@ -6,11 +6,11 @@
     "deploy": "aws lambda update-function-code --function-name notifications --zip-file fileb://package.zip --publish"
   },
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.962.0",
-    "@aws-sdk/client-sesv2": "^3.962.0",
+    "@aws-sdk/client-secrets-manager": "^3.971.0",
+    "@aws-sdk/client-sesv2": "^3.971.0",
     "@centralbeans/email": "workspace:*",
-    "@libsql/client": "^0.15.15",
-    "@sentry/aws-serverless": "^10.32.1",
+    "@libsql/client": "^0.17.0",
+    "@sentry/aws-serverless": "^10.34.0",
     "@tursodatabase/api": "^1.9.2"
   }
 }

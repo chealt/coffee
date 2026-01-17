@@ -14,14 +14,14 @@
     "taste-notes:translate": "node --env-file=.env src/taste-notes/translate.js"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.962.0",
-    "@aws-sdk/client-s3": "^3.962.0",
-    "@aws-sdk/client-secrets-manager": "^3.962.0",
-    "@aws-sdk/client-sesv2": "^3.962.0",
-    "@aws-sdk/client-translate": "^3.962.0",
-    "@libsql/client": "^0.15.15",
+    "@aws-sdk/client-lambda": "^3.971.0",
+    "@aws-sdk/client-s3": "^3.971.0",
+    "@aws-sdk/client-secrets-manager": "^3.971.0",
+    "@aws-sdk/client-sesv2": "^3.971.0",
+    "@aws-sdk/client-translate": "^3.971.0",
+    "@libsql/client": "^0.17.0",
     "@playwright/test": "^1.57.0",
-    "@sentry/aws-serverless": "^10.32.1",
+    "@sentry/aws-serverless": "^10.34.0",
     "@tursodatabase/api": "^1.9.2",
     "jsonwebtoken": "^9.0.3"
   }
