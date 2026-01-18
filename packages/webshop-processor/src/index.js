@@ -1,4 +1,5 @@
 import { callRecordWebshopItem } from './AWS.js';
+import logger from './Sentry/logger.js';
 import parsers from './parsers.js';
 import { inflateSync } from 'node:zlib';
 
@@ -6,32 +7,40 @@ const handler = async (event) => {
   const { roasterId, url } = event;
   const html = inflateSync(Buffer.from(event.html, 'base64')).toString();
 
-  console.info(`Processing ${url}`);
+  logger.info(`Processing ${url}`);
 
   if (!url) {
+    logger.error('No url');
+
     throw new Error('No url');
   }
 
   if (!roasterId) {
+    logger.error('No roaster id');
+
     throw new Error('No roaster id');
   }
 
   if (!html) {
+    logger.error('No HTML');
+
     throw new Error('No HTML');
   }
 
   const parser = parsers[roasterId];
 
   if (!parser) {
+    logger.error(`No parser found for ${roasterId}`);
+
     throw new Error(`No parser found for ${roasterId}`);
   }
 
   const productLinks = await parser({ html, url });
-  console.info(`Found ${productLinks.length} products at ${url}`);
+  logger.info(`Found ${productLinks.length} products at ${url}`);
 
   // call lambda serially so we don't run into rate limits
   for (const productUrl of productLinks) {
-    console.info(`Invoking record lambda for ${productUrl}`);
+    logger.info(`Invoking record lambda for ${productUrl}`);
 
     await callRecordWebshopItem({ url: productUrl, roasterId });
   }

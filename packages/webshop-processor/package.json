@@ -1,13 +1,14 @@
 {
-  "name": "@chealt/webshop-processor",
+  "name": "@centralbeans/webshop-processor",
   "type": "module",
   "scripts": {
-    "build": "rm -rf dist && mkdir dist && cp -r package.json dist && cp ../../yarn.lock dist && cp .yarnrc-lambda.yml dist/.yarnrc.yml && cp -r src dist && cd dist && yarn workspaces focus && rm -rf .yarn && rm -rf yarn.lock && rm -rf .yarnrc.yml && zip -rq package.zip .",
-    "deploy": "aws lambda update-function-code --function-name webshopProcessor --zip-file fileb://dist/package.zip --publish",
+    "build": "cp .yarnrc-lambda.yml .yarnrc.yml && mkdir -p data && cp ../coffee.chealt.com/data/*.json data && yarn workspaces focus --production && zip -rq package.zip . -x .yarnrc.yml .yarnrc-lambda.yml && rm .yarnrc.yml && rm -rf data",
+    "deploy": "aws lambda update-function-code --function-name webshopProcessor --zip-file fileb://package.zip --publish",
     "test": "node --env-file=../coffee-admin/.env test.js"
   },
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.971.0",
+    "@sentry/aws-serverless": "^10.34.0",
     "jsdom": "27.0.0"
   }
 }

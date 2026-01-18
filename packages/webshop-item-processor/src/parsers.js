@@ -2,6 +2,7 @@
 import { JSDOM } from 'jsdom';
 
 import { translate } from './AWS.js';
+import logger from './Sentry/logger.js';
 import currencyCodes from './currencies.js';
 /* eslint-disable import/no-unresolved */
 import brewingMethods from '../data/brewingMethods.json' with { type: 'json' };
@@ -39,7 +40,7 @@ const cleanPrice = ({ priceElement, currencySymbol = '€' }) =>
 const parsers = {
   // Sheep & Raven
   6: ({ html, url, roasterId }) => {
-    console.info(`Parsing webshop item page ${url}`);
+    logger.info(`Parsing webshop item page ${url}`);
 
     const document = getDocument(html);
 
@@ -48,6 +49,8 @@ const parsers = {
     ).toFixed(2);
 
     if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
       throw new Error(errors.priceMissing);
     }
 
@@ -55,6 +58,8 @@ const parsers = {
     const currency = currencyCodes[currencySymbol];
 
     if (!currency) {
+      logger.error(`No currency found for ${url}`);
+
       throw new Error(errors.currencyMissing);
     }
 
@@ -62,6 +67,8 @@ const parsers = {
     const weight = Number(weightElement.dataset.value.replaceAll('g-en', ''));
 
     if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
       throw new Error(errors.weightMissing);
     }
 
@@ -74,6 +81,8 @@ const parsers = {
       null;
 
     if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
       throw new Error(errors.originCountryMissing);
     }
 
@@ -136,7 +145,7 @@ const parsers = {
       .map(({ id }) => id);
 
     if (!varietyIds.length) {
-      console.info(`Missing varieties: ${varietiesStrings}`);
+      logger.info(`Missing varieties: ${varietiesStrings}`);
     }
 
     const image = document.querySelector('.woocommerce-product-gallery__wrapper img').src;
@@ -160,7 +169,7 @@ const parsers = {
   },
   // El Cafetero
   7: ({ html, url, roasterId }) => {
-    console.info(`Parsing webshop item page: ${url}`);
+    logger.info(`Parsing webshop item page: ${url}`);
 
     const document = getDocument(html);
 
@@ -169,6 +178,8 @@ const parsers = {
     ).toFixed(2);
 
     if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
       throw new Error(errors.priceMissing);
     }
 
@@ -179,6 +190,8 @@ const parsers = {
     );
 
     if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
       throw new Error(errors.weightMissing);
     }
 
@@ -192,7 +205,7 @@ const parsers = {
     }, {});
 
     if (details['skład']?.includes('robusta')) {
-      console.info(`Skipping robusta: ${url}`);
+      logger.info(`Skipping robusta: ${url}`);
 
       return {};
     }
@@ -201,6 +214,8 @@ const parsers = {
     const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
 
     if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
       throw new Error(errors.originCountryMissing);
     }
 
@@ -208,14 +223,14 @@ const parsers = {
     const originRegionId = originRegions.find(({ name }) => name === originRegion)?.origin_region_id || null;
 
     if (!originRegionId) {
-      console.info(`Missing origin region: ${originCountry} - ${originRegion}`);
+      logger.info(`Missing origin region: ${originCountry} - ${originRegion}`);
     }
 
     const brewingMethod = details['profil palenia'];
     const brewingMethodId = brewingMethods.find(({ name }) => name === brewingMethod)?.brewing_method_id || null;
 
     if (!brewingMethodId) {
-      console.info(`Missing brewing method: ${brewingMethod}`);
+      logger.info(`Missing brewing method: ${brewingMethod}`);
     }
 
     const processingMethod = details['obróbka'];
@@ -225,7 +240,7 @@ const parsers = {
       )?.processing_method_id || null;
 
     if (!processingMethodId) {
-      console.info(`Missing processing method: ${processingMethod}`);
+      logger.info(`Missing processing method: ${processingMethod}`);
     }
 
     const tasteNotesStrings = details['profil smakowy']?.split('\n').map((name) => name.trim().toLowerCase()) || [];
@@ -235,7 +250,7 @@ const parsers = {
     const missingTasteNotes = tasteNotesStrings.filter((note) => !tasteNotes.some(({ name }) => name === note));
 
     if (missingTasteNotes.length) {
-      console.info(`Missing taste notes: ${missingTasteNotes}`);
+      logger.info(`Missing taste notes: ${missingTasteNotes}`);
     }
 
     const varietiesStrings =
@@ -254,7 +269,7 @@ const parsers = {
     );
 
     if (missingVarieties.length) {
-      console.info(`Missing varieties: ${missingVarieties}`);
+      logger.info(`Missing varieties: ${missingVarieties}`);
     }
 
     const image = document.querySelector('.zdjecie-okragle').src;
@@ -278,7 +293,7 @@ const parsers = {
   },
   // BeMyBean
   39: async ({ html, url, roasterId }) => {
-    console.info(`Parsing item page: ${url}`);
+    logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
 
@@ -287,6 +302,8 @@ const parsers = {
       .some(Boolean);
 
     if (!someInStock) {
+      logger.error(`All items at ${url} are out of stock`);
+
       throw new Error(`All items at ${url} are out of stock`);
     }
 
@@ -296,6 +313,8 @@ const parsers = {
     const price = Number(priceElement.textContent.replace(',', '.')).toFixed(2);
 
     if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
       throw new Error(errors.priceMissing);
     }
 
@@ -303,12 +322,16 @@ const parsers = {
     const currency = currencyCodes[currencySymbol];
 
     if (!currency) {
+      logger.error(`Unknown currency: ${currencySymbol}`);
+
       throw new Error(`Unknown currency: ${currencySymbol}`);
     }
 
     const weight = Number(document.querySelector('#masa-netto option:not([value=""])').value.replaceAll('g', ''));
 
     if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
       throw new Error(errors.weightMissing);
     }
 
@@ -329,6 +352,8 @@ const parsers = {
     const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
 
     if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
       throw new Error(errors.originCountryMissing);
     }
 
@@ -387,7 +412,7 @@ const parsers = {
     const missingTasteNotes = tasteNotesStrings.filter((note) => !tasteNotes.some(({ name }) => name === note));
 
     if (missingTasteNotes.length) {
-      console.info(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
+      logger.info(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
     }
 
     const varietiesString = details
@@ -406,7 +431,7 @@ const parsers = {
       .map(({ id }) => id);
 
     if (!varietyIds.length) {
-      console.info(`Missing varieties: ${varietiesStrings}`);
+      logger.info(`Missing varieties: ${varietiesStrings}`);
     }
 
     const isDecaf = processingMethod.includes('decaf');
@@ -433,7 +458,7 @@ const parsers = {
   },
   // Heresy
   65: async ({ html, url, roasterId }) => {
-    console.info(`Parsing item page: ${url}`);
+    logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
 
@@ -445,6 +470,8 @@ const parsers = {
     ).toFixed(2);
 
     if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
       throw new Error(errors.priceMissing);
     }
 
@@ -452,6 +479,8 @@ const parsers = {
     const currency = currencyCodes[currencySymbol];
 
     if (!currency) {
+      logger.error(`Unknown currency: ${currencySymbol}`);
+
       throw new Error(`Unknown currency: ${url}`);
     }
 
@@ -459,6 +488,8 @@ const parsers = {
     const weight = parseFloat(weightElementValue);
 
     if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
       throw new Error(errors.weightMissing);
     }
 
@@ -480,6 +511,8 @@ const parsers = {
     const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
 
     if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
       throw new Error(errors.originCountryMissing);
     }
 
@@ -490,21 +523,21 @@ const parsers = {
       null;
 
     if (!originRegionId) {
-      console.info(`Missing origin region: ${originRegion}`);
+      logger.info(`Missing origin region: ${originRegion}`);
     }
 
     const originFarm = details.farma;
     const originFarmId = originFarms.find(({ name }) => name === originFarm)?.id || null;
 
     if (originFarm && !originFarmId) {
-      console.info(`Missing origin farm: ${originFarm}`);
+      logger.info(`Missing origin farm: ${originFarm}`);
     }
 
     const processingMethod = details['obróbka'];
     const processingMethodId = processingMethods.find(({ name }) => name === processingMethod)?.processing_method_id;
 
     if (!processingMethodId) {
-      console.debug(`Missing processing method: ${processingMethod}`);
+      logger.debug(`Missing processing method: ${processingMethod}`);
     }
 
     const brewingMethod = document
@@ -528,7 +561,7 @@ const parsers = {
     const tasteNoteIds = distinctTasteNotes.map(({ taste_note_id: tasteNoteId }) => tasteNoteId);
 
     if (!tasteNoteIds.length) {
-      console.debug(`No taste notes: ${cleanTranslation}, at ${url}`);
+      logger.debug(`No taste notes: ${cleanTranslation}, at ${url}`);
     }
 
     const varietiesStrings = details.odmiana
@@ -549,7 +582,7 @@ const parsers = {
     );
 
     if (missingVarieties.length) {
-      console.debug(`Missing varieties: ${missingVarieties.join(', ')}`);
+      logger.debug(`Missing varieties: ${missingVarieties.join(', ')}`);
     }
 
     const image =
@@ -557,6 +590,8 @@ const parsers = {
       document.querySelectorAll('.ct-product-gallery-container figure img')[0]?.src;
 
     if (!image) {
+      logger.error(`No image found for ${url}`);
+
       throw new Error(`No image found: ${url}`);
     }
 
@@ -578,7 +613,7 @@ const parsers = {
   },
   // Klaro
   70: async ({ html, url, roasterId }) => {
-    console.info(`Parsing item page: ${url}`);
+    logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
 
@@ -590,6 +625,8 @@ const parsers = {
     ).toFixed(2);
 
     if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
       throw new Error(errors.priceMissing);
     }
 
@@ -597,6 +634,8 @@ const parsers = {
     const currency = currencyCodes[currencySymbol];
 
     if (!currency) {
+      logger.error(`Unknown currency: ${currencySymbol}`);
+
       throw new Error(`Unknown currency: ${url}`);
     }
 
@@ -608,6 +647,8 @@ const parsers = {
     const weight = url.includes('1-kg') ? 1000 : parseFloat(weightElementValue) * 1000;
 
     if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
       throw new Error(errors.weightMissing);
     }
 
@@ -617,6 +658,8 @@ const parsers = {
     const originCountryId = originCountry?.origin_country_id;
 
     if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
       throw new Error(errors.originCountryMissing);
     }
 
@@ -626,7 +669,7 @@ const parsers = {
     const originRegionId = originRegions.find(({ name }) => originRegion.includes(name))?.origin_region_id || null;
 
     if (!originRegionId) {
-      console.debug(`Missing origin region: ${originRegion.textContent}`);
+      logger.debug(`Missing origin region: ${originRegion.textContent}`);
     }
 
     const processingMethod = document
@@ -636,7 +679,7 @@ const parsers = {
     const processingMethodId = processingMethods.find(({ name }) => name === processingMethod)?.processing_method_id;
 
     if (!processingMethodId) {
-      console.debug(`Missing processing method: ${processingMethod}`);
+      logger.debug(`Missing processing method: ${processingMethod}`);
     }
 
     const brewingMethodId = brewingMethods.find(({ name }) => url.includes(name))?.brewing_method_id || null;
@@ -652,7 +695,7 @@ const parsers = {
     const missingTasteNotes = tasteNoteValues.filter((tasteNote) => !tasteNotes.some(({ name }) => name === tasteNote));
 
     if (missingTasteNotes.length) {
-      console.debug(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
+      logger.debug(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
     }
 
     const varietiesStrings = document
@@ -680,7 +723,7 @@ const parsers = {
     );
 
     if (missingVarieties.length) {
-      console.debug(`Missing varieties: ${missingVarieties.join(', ')}`);
+      logger.debug(`Missing varieties: ${missingVarieties.join(', ')}`);
     }
 
     const isDecaf = url.includes('decaf');
@@ -688,6 +731,8 @@ const parsers = {
     const image = document.querySelector('img.wp-post-image').src;
 
     if (!image) {
+      logger.error(`No image found for ${url}`);
+
       throw new Error(`No image found: ${url}`);
     }
 
@@ -710,7 +755,7 @@ const parsers = {
   },
   // Spojka
   82: async ({ html, url, roasterId }) => {
-    console.info(`Parsing item page: ${url}`);
+    logger.info(`Parsing item page: ${url}`);
     const document = getDocument(html);
 
     const price = Number(
@@ -718,6 +763,8 @@ const parsers = {
     ).toFixed(2);
 
     if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
       throw new Error(errors.priceMissing);
     }
 
@@ -725,6 +772,8 @@ const parsers = {
     const currency = currencyCodes[currencySymbol];
 
     if (!currency) {
+      logger.error(`Unknown currency: ${currencySymbol}`);
+
       throw new Error(`Unknown currency: ${url}`);
     }
 
@@ -735,6 +784,8 @@ const parsers = {
     const weight = parseFloat(weightElementValue);
 
     if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
       throw new Error(errors.weightMissing);
     }
 
@@ -760,6 +811,8 @@ const parsers = {
       null;
 
     if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
       throw new Error(errors.originCountryMissing);
     }
 
@@ -772,7 +825,7 @@ const parsers = {
       processingMethods.find(({ name }) => processingMethod.includes(name.toLowerCase()))?.processing_method_id;
 
     if (!processingMethodId) {
-      console.debug(`Missing processing method: ${processingMethod} for ${url}`);
+      logger.debug(`Missing processing method: ${processingMethod} for ${url}`);
     }
 
     const brewingMethodId = brewingMethods.find(({ name }) => name === 'omni')?.brewing_method_id || null;
@@ -789,7 +842,7 @@ const parsers = {
     const tasteNoteIds = distinctTasteNotes.map(({ taste_note_id: tasteNoteId }) => tasteNoteId);
 
     if (!tasteNoteIds.length) {
-      console.debug(`No taste notes: ${cleanTranslation}, at ${url}`);
+      logger.debug(`No taste notes: ${cleanTranslation}, at ${url}`);
     }
 
     const isDecaf = url.includes('decaf');
@@ -797,6 +850,8 @@ const parsers = {
     const imageSrc = document.querySelector('img.global-media-settings')?.src;
 
     if (!imageSrc) {
+      logger.error(`No image found for ${url}`);
+
       throw new Error(`No image found: ${url}`);
     }
 
@@ -819,7 +874,7 @@ const parsers = {
   },
   // Meron
   252: async ({ html, url, roasterId }) => {
-    console.info(`Parsing item page: ${url}`);
+    logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
 
@@ -831,6 +886,8 @@ const parsers = {
     ).toFixed(2);
 
     if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
       throw new Error(errors.priceMissing);
     }
 
@@ -838,6 +895,8 @@ const parsers = {
     const currency = currencyCodes[currencySymbol];
 
     if (!currency) {
+      logger.error(`No currency found for ${url}`);
+
       throw new Error(errors.currencyMissing);
     }
 
@@ -857,6 +916,8 @@ const parsers = {
     const weight = Number(details.volume.replace(' gr', ''));
 
     if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
       throw new Error(errors.weightMissing);
     }
 
@@ -868,6 +929,8 @@ const parsers = {
     const originCountryId = originCountry?.origin_country_id || null;
 
     if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
       throw new Error(errors.originCountryMissing);
     }
 
@@ -937,7 +1000,7 @@ const parsers = {
   },
   // Father's (Czech)
   277: async ({ html, url, roasterId }) => {
-    console.info(`Parsing item page: ${url}`);
+    logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
 
@@ -952,18 +1015,24 @@ const parsers = {
     const currency = currencyCodes[currencySymbol];
 
     if (!currency) {
+      logger.error(`No currency found for ${url}`);
+
       throw new Error(errors.currencyMissing);
     }
 
     const weightElement = document.querySelector('div[data-attribute_name="attribute_pa_vaha"] .nasa-attr-text');
 
     if (!weightElement) {
+      logger.error(`No weight found for ${url}`);
+
       throw new Error(errors.weightMissing);
     }
 
     const weight = Number(weightElement.textContent.replace('g', ''));
 
     if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
       throw new Error(errors.weightMissing);
     }
 
@@ -998,7 +1067,7 @@ const parsers = {
     const details = detailNames.reduce((_details, name, index) => ({ ..._details, [name]: detailValues[index] }), {});
 
     if (Object.keys(details).length === 0 || !details.country) {
-      console.error(`No details found at: ${url}`);
+      logger.error(`No details found at: ${url}`);
 
       return {};
     }
@@ -1040,7 +1109,7 @@ const parsers = {
         .filter(Boolean) || [];
 
     if (!tasteNotesString) {
-      console.debug(url, ': ', details);
+      logger.debug(url, ': ', details);
     }
 
     const missingTasteNotes = tasteNotesString
@@ -1048,7 +1117,7 @@ const parsers = {
       .filter((note) => !tasteNotes.some(({ name }) => name === note.trim().toLowerCase()));
 
     if (missingTasteNotes.length) {
-      console.info(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
+      logger.info(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
     }
 
     const varietiesString = details.variety || details.varietal;
@@ -1062,7 +1131,7 @@ const parsers = {
       .map(({ id }) => id);
 
     if (!varietyIds.length) {
-      console.info(`Missing varieties: ${varietiesStrings}`);
+      logger.info(`Missing varieties: ${varietiesStrings}`);
     }
 
     const image = document.querySelector('.nasa-item-main-image-wrap .wp-post-image').src;
@@ -1089,7 +1158,7 @@ const parsers = {
   },
   // PALE
   278: async ({ html, url, roasterId }) => {
-    console.info(`Parsing item page: ${url}`);
+    logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
 
@@ -1104,6 +1173,8 @@ const parsers = {
     const price = Number(priceAmount) + (optionsPrice ? Number(optionsPrice).toFixed(2) : 0).toFixed(2);
 
     if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
       throw new Error(errors.priceMissing);
     }
 
@@ -1111,6 +1182,8 @@ const parsers = {
     const currency = currencyCodes[currencySymbol];
 
     if (!currency) {
+      logger.error(`No currency found for ${url}`);
+
       throw new Error(errors.currencyMissing);
     }
 
@@ -1130,6 +1203,8 @@ const parsers = {
       null;
 
     if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
       throw new Error(errors.weightMissing);
     }
 
@@ -1144,6 +1219,8 @@ const parsers = {
     const originCountryId = originCountry?.origin_country_id || null;
 
     if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
       throw new Error(errors.originCountryMissing);
     }
 
@@ -1214,7 +1291,7 @@ const parsers = {
   },
   // Bani Beans
   285: async ({ html, url, roasterId }) => {
-    console.info(`Parsing item page: ${url}`);
+    logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
 
@@ -1228,6 +1305,8 @@ const parsers = {
     ).toFixed(2);
 
     if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
       throw new Error(errors.priceMissing);
     }
 
@@ -1237,6 +1316,8 @@ const parsers = {
     const weight = Number(weightElement?.value.replace('g', ''));
 
     if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
       throw new Error(errors.weightMissing);
     }
 
@@ -1265,6 +1346,8 @@ const parsers = {
     const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
 
     if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
       throw new Error(errors.originCountryMissing);
     }
 
@@ -1319,7 +1402,7 @@ const parsers = {
   },
   // Stow
   286: async ({ html, url, roasterId }) => {
-    console.info(`Parsing item page: ${url}`);
+    logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
 
@@ -1341,6 +1424,8 @@ const parsers = {
       ).toFixed(2);
 
     if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
       throw new Error(errors.priceMissing);
     }
 
@@ -1361,6 +1446,8 @@ const parsers = {
         );
 
     if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
       throw new Error(errors.weightMissing);
     }
 
@@ -1384,6 +1471,8 @@ const parsers = {
     const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
 
     if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
       throw new Error(errors.originCountryMissing);
     }
 
@@ -1392,7 +1481,7 @@ const parsers = {
     const originFarmId = foundOriginFarm?.id || null;
 
     if (originFarm && !originFarmId) {
-      console.info(`Missing origin farm: ${originFarm}`);
+      logger.info(`Missing origin farm: ${originFarm}`);
     }
 
     const originRegionId = foundOriginFarm ? foundOriginFarm.origin_region_id : null;
@@ -1405,7 +1494,7 @@ const parsers = {
     const missingTasteNotes = tasteNotesStrings.filter((note) => !tasteNotes.find(({ name }) => name === note));
 
     if (missingTasteNotes.length) {
-      console.info(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
+      logger.info(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
     }
 
     const subtitle = document.querySelector('h6').textContent.toLowerCase().trim();
@@ -1433,7 +1522,7 @@ const parsers = {
       )?.brewing_method_id || null;
 
     if (!brewingMethodId) {
-      console.info(`Missing brewing method`);
+      logger.info(`Missing brewing method`);
     }
 
     const isDecaf = url.includes('decaf') || subtitle.includes('decaf');
@@ -1460,13 +1549,15 @@ const parsers = {
   },
   // kava family
   287: async ({ html, url, roasterId }) => {
-    console.info(`Parsing item page: ${url}`);
+    logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
 
     const price = cleanPrice({ priceElement: document.querySelector('.product__price--original') });
 
     if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
       throw new Error(errors.priceMissing);
     }
 
@@ -1481,6 +1572,8 @@ const parsers = {
       ) || 250;
 
     if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
       throw new Error(errors.weightMissing);
     }
 
@@ -1490,6 +1583,8 @@ const parsers = {
     const originCountryId = originCountries.find(({ name }) => originCountry.includes(name))?.origin_country_id || null;
 
     if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
       throw new Error(errors.originCountryMissing);
     }
 
@@ -1516,13 +1611,13 @@ const parsers = {
       null;
 
     if (!processingMethodId) {
-      console.debug(errors.processingMethodMissing, ': ', details.process);
+      logger.debug(errors.processingMethodMissing, ': ', details.process);
     }
 
     const originRegionId = originRegions.find(({ name }) => name === details.region)?.origin_region_id || null;
 
     if (!originRegionId) {
-      console.debug(errors.originRegionMissing, ': ', details.region);
+      logger.debug(errors.originRegionMissing, ': ', details.region);
     }
 
     const originFarmId = originFarms.find(({ name }) => details.producer?.includes(name))?.id || null;
@@ -1542,7 +1637,7 @@ const parsers = {
       );
 
     if (missingVarieties.length) {
-      console.debug(`Missing varieties: ${missingVarieties}`);
+      logger.debug(`Missing varieties: ${missingVarieties}`);
     }
 
     const tasteNoteStrings = (details.notes || details['taste notes']).split(', ');
@@ -1552,7 +1647,7 @@ const parsers = {
     const missingTasteNotes = tasteNoteStrings.filter((note) => !tasteNotes.find(({ name }) => name === note));
 
     if (missingTasteNotes.length) {
-      console.debug(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
+      logger.debug(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
     }
 
     const variants = Array.from(document.querySelectorAll('#productSelect option')).map(({ textContent }) =>
@@ -1569,13 +1664,15 @@ const parsers = {
       )?.brewing_method_id || null;
 
     if (!brewingMethodId) {
-      console.debug(errors.brewingMethodMissing);
-      console.debug(variants);
+      logger.debug(errors.brewingMethodMissing);
+      logger.debug(variants);
     }
 
     const image = document.querySelector('.product__gallery img')?.src;
 
     if (!image) {
+      logger.error(`No image found for ${url}`);
+
       throw new Error(errors.imageMissing);
     }
 
@@ -1598,7 +1695,7 @@ const parsers = {
   },
   // nordbeans
   288: async ({ html, url, roasterId }) => {
-    console.info(`Parsing item page: ${url}`);
+    logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
 
@@ -1606,6 +1703,8 @@ const parsers = {
     const price = cleanPrice({ priceElement: document.querySelector('.product-price-block .price'), currencySymbol });
 
     if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
       throw new Error(errors.priceMissing);
     }
 
@@ -1614,6 +1713,8 @@ const parsers = {
     const weight = Number(document.querySelector('.product-variations option').textContent.trim().replace('g', ''));
 
     if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
       throw new Error(errors.weightMissing);
     }
 
@@ -1643,14 +1744,16 @@ const parsers = {
     const originCountryId = originCountries.find(({ name }) => originCountry.includes(name))?.origin_country_id || null;
 
     if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
       throw new Error(errors.originCountryMissing);
     }
 
     const originRegionId = originRegions.find(({ name }) => name === details.region)?.origin_region_id || null;
 
     if (!originRegionId) {
-      console.debug(errors.originRegionMissing);
-      console.debug(details.region);
+      logger.debug(errors.originRegionMissing);
+      logger.debug(details.region);
     }
 
     const originFarmId = originFarms.find(({ name }) => details.farm.includes(name))?.id || null;
@@ -1661,7 +1764,7 @@ const parsers = {
       null;
 
     if (!processingMethodId) {
-      console.debug(errors.processingMethodMissing, ': ', details.processing);
+      logger.debug(errors.processingMethodMissing, ': ', details.processing);
     }
 
     const varietyIds = varieties
@@ -1679,7 +1782,7 @@ const parsers = {
       );
 
     if (missingVarieties.length) {
-      console.debug(`Missing varieties: ${missingVarieties}`);
+      logger.debug(`Missing varieties: ${missingVarieties}`);
     }
 
     const tasteNoteStrings = details.taste.split(', ');
@@ -1689,7 +1792,7 @@ const parsers = {
     const missingTasteNotes = tasteNoteStrings.filter((note) => !tasteNotes.find(({ name }) => name === note));
 
     if (missingTasteNotes.length) {
-      console.debug(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
+      logger.debug(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
     }
 
     const isEspresso = details.preparation.includes('espresso');
@@ -1703,7 +1806,7 @@ const parsers = {
       )?.brewing_method_id || null;
 
     if (!brewingMethodId) {
-      console.debug(errors.brewingMethodMissing);
+      logger.debug(errors.brewingMethodMissing);
     }
 
     const roastingLevelId =
@@ -1713,6 +1816,8 @@ const parsers = {
     const image = document.querySelector('.gallery-item img')?.src;
 
     if (!image) {
+      logger.error(`No image found for ${url}`);
+
       throw new Error(errors.imageMissing);
     }
 

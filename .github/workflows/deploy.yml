@@ -321,8 +321,8 @@ jobs:
         id: webshop-item-processor
         if: steps.changed-files-yaml.outputs.webshop-item-processor_any_changed == 'true'
         run: |
-          yarn workspace @chealt/webshop-item-processor build
-          version=$(yarn workspace @chealt/webshop-item-processor deploy | jq -r '.Version')
+          yarn workspace @centralbeans/webshop-item-processor build
+          version=$(yarn workspace @centralbeans/webshop-item-processor deploy | jq -r '.Version')
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release webshop-item-processor
         if: steps.changed-files-yaml.outputs.webshop-item-processor_any_changed == 'true'
@@ -330,16 +330,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: '@chealt/webshop-item-processor@${{ steps.webshop-item-processor.outputs.version }}'
-          release_name: Release @chealt/webshop-item-processor v${{ steps.webshop-item-processor.outputs.version }}
+          tag_name: '@centralbeans/webshop-item-processor@${{ steps.webshop-item-processor.outputs.version }}'
+          release_name: Release @centralbeans/webshop-item-processor v${{ steps.webshop-item-processor.outputs.version }}
           draft: false
           prerelease: false
       - name: webshop-processor
         id: webshop-processor
         if: steps.changed-files-yaml.outputs.webshop-processor_any_changed == 'true'
         run: |
-          yarn workspace @chealt/webshop-processor build
-          version=$(yarn workspace @chealt/webshop-processor deploy | jq -r '.Version')
+          yarn workspace @centralbeans/webshop-processor build
+          version=$(yarn workspace @centralbeans/webshop-processor deploy | jq -r '.Version')
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release webshop-processor
         if: steps.changed-files-yaml.outputs.webshop-processor_any_changed == 'true'
@@ -347,7 +347,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: '@chealt/webshop-processor@${{ steps.webshop-processor.outputs.version }}'
-          release_name: Release @chealt/webshop-processor v${{ steps.webshop-processor.outputs.version }}
+          tag_name: '@centralbeans/webshop-processor@${{ steps.webshop-processor.outputs.version }}'
+          release_name: Release @centralbeans/webshop-processor v${{ steps.webshop-processor.outputs.version }}
           draft: false
           prerelease: false

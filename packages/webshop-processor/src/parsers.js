@@ -1,5 +1,7 @@
 import { JSDOM } from 'jsdom';
 
+import logger from './Sentry/logger.js';
+
 const getDocument = (html) => {
   const {
     window: { document }
@@ -175,16 +177,16 @@ const parsers = {
 
       const pageLink = `${url}/page/${i}/`;
 
-      console.info(`Fetching page ${pageLink}`);
+      logger.info(`Fetching page ${pageLink}`);
       const response = await fetch(pageLink);
 
-      console.info(`Getting text ${pageLink}`);
+      logger.info(`Getting text ${pageLink}`);
       const nextHTML = (await response.text()).match(/<body[^>]*>[\s\S]*<\/body>/giu)[0];
 
-      console.info(`Getting document ${pageLink}`);
+      logger.info(`Getting document ${pageLink}`);
       const nextDocument = getDocument(nextHTML);
 
-      console.info(`Parsing links for ${pageLink}`);
+      logger.info(`Parsing links for ${pageLink}`);
 
       productLinks.push(...getProductLinks(nextDocument));
     }
