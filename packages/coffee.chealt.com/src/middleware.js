@@ -132,7 +132,9 @@ const middleware = async (context, next) => {
     );
   }
 
-  let savedLocaleDB;
+  // set defaults
+  let savedLocaleDB = defaultLocale;
+  context.locals.currency = defaultCurrency;
 
   // only try to get the user settings if we have a session cookie
   if (context.cookies.get(cookieNameSession)?.value) {
