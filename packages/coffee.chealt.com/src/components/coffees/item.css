@@ -6,6 +6,7 @@
   .price-per-gram {
     font-size: 1rem;
     text-transform: none;
+    margin-inline-start: var(--gap--s);
   }
 }
 
