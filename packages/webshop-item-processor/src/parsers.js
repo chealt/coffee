@@ -68,7 +68,10 @@ const parsers = {
     const pricePerGram = Number((price / weight).toFixed(2));
 
     const originCountry = document.querySelector('[data-id="4cb216da"]').textContent.trim().toLowerCase();
-    const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
+    const originCountryId =
+      originCountries.find(({ name }) => name === originCountry)?.origin_country_id ||
+      originCountries.find(({ name }) => url.includes(name))?.origin_country_id ||
+      null;
 
     if (!originCountryId) {
       throw new Error(errors.originCountryMissing);
