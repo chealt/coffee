@@ -185,8 +185,8 @@ jobs:
         id: image-text-interpreter
         if: steps.changed-files-yaml.outputs.image-text-interpreter_any_changed == 'true'
         run: |
-          yarn workspace @chealt/image-text-interpreter build
-          version=$(yarn workspace @chealt/image-text-interpreter deploy | jq -r '.Version')
+          yarn workspace @centralbeans/image-text-interpreter build
+          version=$(yarn workspace @centralbeans/image-text-interpreter deploy | jq -r '.Version')
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release image-text-interpreter
         if: steps.changed-files-yaml.outputs.image-text-interpreter_any_changed == 'true'
@@ -194,8 +194,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: '@chealt/image-text-interpreter@${{ steps.image-text-interpreter.outputs.version }}'
-          release_name: Release @chealt/image-text-interpreter v${{ steps.image-text-interpreter.outputs.version }}
+          tag_name: '@centralbeans/image-text-interpreter@${{ steps.image-text-interpreter.outputs.version }}'
+          release_name: Release @centralbeans/image-text-interpreter v${{ steps.image-text-interpreter.outputs.version }}
           draft: false
           prerelease: false
       - name: import-currencies

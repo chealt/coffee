@@ -1,6 +1,7 @@
 import { createClient } from '@libsql/client';
 
 import { getSecret } from './AWS/secrets.js';
+import logger from './Sentry/logger.js';
 
 const secrets = await getSecret({ name: 'imageTextInterpreter' });
 
@@ -8,10 +9,14 @@ const authToken = secrets.TURSO_DEFAULT_TOKEN;
 const databaseUrl = secrets.TURSO_DATABASE_URL;
 
 if (!databaseUrl) {
+  logger.error('TURSO_DATABASE_URL is not set');
+
   throw new Error('TURSO_DATABASE_URL is not set');
 }
 
 if (!authToken) {
+  logger.error('TURSO_DEFAULT_TOKEN is not set');
+
   throw new Error('TURSO_DEFAULT_TOKEN is not set');
 }
 
@@ -21,7 +26,7 @@ const client = createClient({
 });
 
 const getBrewingMethod = async (texts) => {
-  console.info(`Reading brewing methods from DB`);
+  logger.info(`Reading brewing methods from DB`);
   const { rows: brewingMethods } = await client.execute({
     sql: 'SELECT * FROM brewing_methods_all'
   });
@@ -30,7 +35,7 @@ const getBrewingMethod = async (texts) => {
 };
 
 const getOriginCountry = async (texts) => {
-  console.info(`Reading origin countries from DB`);
+  logger.info(`Reading origin countries from DB`);
   const { rows: originCountries } = await client.execute({
     sql: 'SELECT * FROM origin_countries_all'
   });
@@ -39,7 +44,7 @@ const getOriginCountry = async (texts) => {
 };
 
 const getOriginRegion = async (texts) => {
-  console.info(`Reading origin regions from DB`);
+  logger.info(`Reading origin regions from DB`);
   const { rows: originRegions } = await client.execute({
     sql: 'SELECT * FROM origin_regions_all'
   });
@@ -48,7 +53,7 @@ const getOriginRegion = async (texts) => {
 };
 
 const getOriginFarm = async (texts) => {
-  console.info(`Reading origin farms from DB`);
+  logger.info(`Reading origin farms from DB`);
   const { rows: originFarms } = await client.execute({
     sql: 'SELECT * FROM origin_farms'
   });
@@ -57,7 +62,7 @@ const getOriginFarm = async (texts) => {
 };
 
 const getProcessingMethod = async (texts) => {
-  console.info(`Reading processing methods from DB`);
+  logger.info(`Reading processing methods from DB`);
   const { rows: processingMethods } = await client.execute({
     sql: 'SELECT * FROM processing_methods_all'
   });
@@ -66,7 +71,7 @@ const getProcessingMethod = async (texts) => {
 };
 
 const getRoaster = async (texts) => {
-  console.info(`Reading roasters from DB`);
+  logger.info(`Reading roasters from DB`);
   const { rows: roasters } = await client.execute({
     sql: 'SELECT * FROM roasters'
   });
@@ -75,7 +80,7 @@ const getRoaster = async (texts) => {
 };
 
 const getTasteNotes = async (texts) => {
-  console.info(`Reading taste notes from DB`);
+  logger.info(`Reading taste notes from DB`);
   const { rows: tasteNotes } = await client.execute({
     sql: 'SELECT * FROM taste_notes_all'
   });
@@ -84,7 +89,7 @@ const getTasteNotes = async (texts) => {
 };
 
 const getVarieties = async (texts) => {
-  console.info(`Reading varieties from DB`);
+  logger.info(`Reading varieties from DB`);
   const { rows: varieties } = await client.execute({
     sql: 'SELECT * FROM varieties'
   });
@@ -93,7 +98,7 @@ const getVarieties = async (texts) => {
 };
 
 const saveDetails = async ({ filename, details }) => {
-  console.info(`Saving item details for ${filename}`);
+  logger.info(`Saving item details for ${filename}`);
 
   return client.execute({
     sql: 'INSERT INTO collection_item_details (filename, details) VALUES (:filename, :details) ON CONFLICT (filename) DO UPDATE SET details = excluded.details',

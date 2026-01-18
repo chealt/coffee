@@ -1,3 +1,4 @@
+import logger from './Sentry/logger.js';
 import {
   getBrewingMethod,
   getOriginCountry,
@@ -15,7 +16,7 @@ const handler = async (event) => {
   const filename = event.filename;
   const texts = event.texts.map((text) => text.trim().toLowerCase());
 
-  console.info(`Processing updated or new item: ${filename}`);
+  logger.info(`Processing updated or new item: ${filename}`);
 
   const [brewingMethod, originCountry, originFarm, originRegion, processingMethod, roaster, tasteNotes, varieties] =
     await Promise.all([
@@ -31,7 +32,7 @@ const handler = async (event) => {
 
   const cleanVarieties = varieties.filter(({ name }) => name.toLowerCase() !== originCountry?.name.toLowerCase()); // filter Colombia from varieties
 
-  console.info(
+  logger.info(
     `Found details: ${JSON.stringify({ brewingMethod, originCountry, originFarm, originRegion, processingMethod, roaster, tasteNotes, varieties: cleanVarieties })}`
   );
 
