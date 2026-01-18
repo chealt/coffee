@@ -1457,6 +1457,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@centralbeans/image-text-interpreter@workspace:packages/image-text-interpreter":
+  version: 0.0.0-use.local
+  resolution: "@centralbeans/image-text-interpreter@workspace:packages/image-text-interpreter"
+  dependencies:
+    "@aws-sdk/client-secrets-manager": "npm:^3.971.0"
+    "@libsql/client": "npm:^0.17.0"
+    "@sentry/aws-serverless": "npm:^10.34.0"
+  languageName: unknown
+  linkType: soft
+
 "@centralbeans/import-currencies@workspace:packages/import-currencies":
   version: 0.0.0-use.local
   resolution: "@centralbeans/import-currencies@workspace:packages/import-currencies"
@@ -1547,15 +1557,6 @@ __metadata:
   resolution: "@chealt/image-proxy@workspace:packages/image-proxy"
   dependencies:
     wrangler: "npm:^4.59.2"
-  languageName: unknown
-  linkType: soft
-
-"@chealt/image-text-interpreter@workspace:packages/image-text-interpreter":
-  version: 0.0.0-use.local
-  resolution: "@chealt/image-text-interpreter@workspace:packages/image-text-interpreter"
-  dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.971.0"
-    "@libsql/client": "npm:^0.17.0"
   languageName: unknown
   linkType: soft
 
