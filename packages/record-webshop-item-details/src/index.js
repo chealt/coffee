@@ -1,4 +1,5 @@
 import { storeImage } from './AWS.js';
+import logger from './Sentry/logger.js';
 import { storeDetails } from './database.js';
 
 const responses = {
@@ -10,22 +11,22 @@ const responses = {
 const handler = async (event) => {
   const { url, details } = event;
 
-  console.info(`Recording webshop item ${url} with details ${JSON.stringify(details)}`);
+  logger.info(`Recording webshop item ${url} with details ${JSON.stringify(details)}`);
 
   if (!url) {
-    console.info(`Missing url in ${JSON.stringify(event)}`);
+    logger.info(`Missing url in ${JSON.stringify(event)}`);
 
     return responses.missingData;
   }
 
   if (!details) {
-    console.info(`Missing details in ${JSON.stringify(event)}`);
+    logger.info(`Missing details in ${JSON.stringify(event)}`);
 
     return responses.missingData;
   }
 
   if (!details.image) {
-    console.info(`Missing image in ${JSON.stringify(event)}`);
+    logger.info(`Missing image in ${JSON.stringify(event)}`);
 
     return responses.missingData;
   }
@@ -34,7 +35,7 @@ const handler = async (event) => {
   try {
     filename = await storeImage({ url: details.image });
   } catch (error) {
-    console.error(`Error storing image for ${url}: ${error}`);
+    logger.error(`Error storing image for ${url}: ${error}`);
 
     return responses.error;
   }
@@ -43,7 +44,7 @@ const handler = async (event) => {
     try {
       await storeDetails({ filename, details });
     } catch (error) {
-      console.error(`Error storing details for ${url}: ${error}`);
+      logger.error(`Error storing details for ${url}: ${error}`);
 
       return responses.error;
     }

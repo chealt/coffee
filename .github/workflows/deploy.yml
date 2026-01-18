@@ -287,8 +287,8 @@ jobs:
         id: record-webshop-item-details
         if: steps.changed-files-yaml.outputs.record-webshop-item-details_any_changed == 'true'
         run: |
-          yarn workspace @chealt/record-webshop-item-details build
-          version=$(yarn workspace @chealt/record-webshop-item-details deploy | jq -r '.Version')
+          yarn workspace @centralbeans/record-webshop-item-details build
+          version=$(yarn workspace @centralbeans/record-webshop-item-details deploy | jq -r '.Version')
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release record-webshop-item-details
         if: steps.changed-files-yaml.outputs.record-webshop-item-details_any_changed == 'true'
@@ -296,8 +296,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: '@chealt/record-webshop-item-details@${{ steps.record-webshop-item-details.outputs.version }}'
-          release_name: Release @chealt/record-webshop-item-details v${{ steps.record-webshop-item-details.outputs.version }}
+          tag_name: '@centralbeans/record-webshop-item-details@${{ steps.record-webshop-item-details.outputs.version }}'
+          release_name: Release @centralbeans/record-webshop-item-details v${{ steps.record-webshop-item-details.outputs.version }}
           draft: false
           prerelease: false
       - name: send-registration-code

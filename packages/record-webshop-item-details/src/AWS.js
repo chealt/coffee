@@ -2,6 +2,7 @@ import { GetObjectCommand, NoSuchKey, PutObjectCommand, S3Client } from '@aws-sd
 import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
 import sharp from 'sharp';
 
+import logger from './Sentry/logger.js';
 import { getContentHash } from './utils.js';
 
 const imageBucketName = 'centralbeans-images-public';
@@ -47,12 +48,14 @@ const getObject = async ({ bucketName, key }) =>
   );
 
 const storeImage = async ({ url }) => {
-  console.info(`Storing image ${url}`);
+  logger.info(`Storing image ${url}`);
 
-  console.info(`Fetching image ${url}`);
+  logger.info(`Fetching image ${url}`);
   const imageResponse = await fetch(url);
 
   if (!imageResponse.ok) {
+    logger.error(`Failed to fetch image ${url}`);
+
     throw new Error(`Failed to fetch image ${url}`);
   }
 
@@ -61,7 +64,7 @@ const storeImage = async ({ url }) => {
   const fileHash = await getContentHash({ arrayBuffer });
   const filename = `${fileHash}.${imageExtension}`;
 
-  console.info(`Checking if image ${fileHash} already exists`);
+  logger.info(`Checking if image ${fileHash} already exists`);
   let existingFileResponse;
 
   try {
@@ -71,39 +74,39 @@ const storeImage = async ({ url }) => {
     });
   } catch (error) {
     if (error instanceof NoSuchKey) {
-      console.info(`Image ${fileHash} does not exist, continuing`);
+      logger.info(`Image ${fileHash} does not exist, continuing`);
     } else {
       throw error;
     }
   }
 
   if (existingFileResponse?.Body) {
-    console.info(`Image ${fileHash} already exists, skipping conversion`);
+    logger.info(`Image ${fileHash} already exists, skipping conversion`);
 
     return filename;
   }
 
-  console.info(`Converting image ${url}`);
+  logger.info(`Converting image ${url}`);
   const convertedImage = await sharp(arrayBuffer).webp({
     lossless: false,
     quality: 85
   });
 
-  console.info(`Getting image buffer for ${url}`);
+  logger.info(`Getting image buffer for ${url}`);
   const data = await convertedImage.toBuffer();
 
-  console.info(`Saving image ${fileHash}`);
+  logger.info(`Saving image ${fileHash}`);
   await putObject({
     bucketName: imageBucketName,
     key: filename,
     data
   });
 
-  console.info(`Resizing image ${fileHash}`);
+  logger.info(`Resizing image ${fileHash}`);
   const smallImageData = await convertedImage.resize({ width: 600 }).toBuffer();
   const mediumImageData = await convertedImage.resize({ width: 1024 }).toBuffer();
 
-  console.info(`Saving resized images ${fileHash}`);
+  logger.info(`Saving resized images ${fileHash}`);
   await Promise.all([
     putObject({
       bucketName: imageBucketName,
