@@ -101,8 +101,8 @@ const saveDetails = async ({ filename, details }) => {
   logger.info(`Saving item details for ${filename}`);
 
   return client.execute({
-    sql: 'INSERT INTO collection_item_details (filename, details) VALUES (:filename, :details) ON CONFLICT (filename) DO UPDATE SET details = excluded.details',
-    args: { filename, details: JSON.stringify(details) }
+    sql: 'INSERT INTO collection_item_details (filename, details, status) VALUES (:filename, :details, :status) ON CONFLICT (filename) DO UPDATE SET details = excluded.details, status = excluded.status',
+    args: { filename, details: JSON.stringify(details), status: 'processed' }
   });
 };
 

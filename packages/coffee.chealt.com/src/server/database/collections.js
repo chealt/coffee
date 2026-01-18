@@ -27,7 +27,7 @@ const queryImageDetails = async (filename) => {
   const client = getClient();
 
   const results = await client.execute({
-    sql: 'SELECT details FROM collection_item_details WHERE filename = :filename',
+    sql: 'SELECT details, status FROM collection_item_details WHERE filename = :filename',
     args: { filename }
   });
 
@@ -165,7 +165,8 @@ const getCollectionItem = async (user, itemId) => {
       filename,
       src: getImageUrl({ filename }),
       srcSmall: getImageUrl({ filename, size: 'small' }),
-      srcMedium: getImageUrl({ filename, size: 'medium' })
+      srcMedium: getImageUrl({ filename, size: 'medium' }),
+      status: queryImageDetails(filename)?.status
     })),
     details,
     extractedDetails,

@@ -1,6 +1,8 @@
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import { TextractClient, DetectDocumentTextCommand } from '@aws-sdk/client-textract';
+import { createClient } from '@libsql/client';
 
+import { getSecret } from './secrets.js';
 import logger from '../Sentry/logger.js';
 
 const client = new TextractClient({});
@@ -17,7 +19,36 @@ const invokeLambda = ({ functionName: FunctionName, payload }) =>
     })
   );
 
+const secrets = await getSecret({ name: 'imageProcessor' });
+
+const url = secrets.TURSO_DATABASE_URL;
+const authToken = secrets.TURSO_DEFAULT_TOKEN;
+
+let tursoClient;
+
+try {
+  tursoClient = createClient({
+    url,
+    authToken
+  });
+} catch (error) {
+  logger.error(error);
+
+  throw error;
+}
+
 const extractText = async ({ filename }) => {
+  if (!tursoClient) {
+    logger.error('Turso client not initialized');
+
+    throw new Error('Turso client not initialized');
+  }
+
+  await tursoClient.execute({
+    sql: 'INSERT INTO collection_item_details (filename, details, status) VALUES (:filename, :details, :status)',
+    args: { filename, details: JSON.stringify({}), status: 'processing' }
+  });
+
   const input = {
     Document: {
       S3Object: {

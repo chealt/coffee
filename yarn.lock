@@ -1451,7 +1451,9 @@ __metadata:
   dependencies:
     "@aws-sdk/client-lambda": "npm:^3.971.0"
     "@aws-sdk/client-s3": "npm:^3.971.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.971.0"
     "@aws-sdk/client-textract": "npm:^3.971.0"
+    "@libsql/client": "npm:^0.17.0"
     "@sentry/aws-serverless": "npm:^10.34.0"
     sharp: "npm:^0.34.5"
   languageName: unknown
