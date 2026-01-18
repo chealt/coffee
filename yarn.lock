@@ -5,13 +5,6 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@acemir/cssom@npm:^0.9.28":
-  version: 0.9.31
-  resolution: "@acemir/cssom@npm:0.9.31"
-  checksum: 10c0/cbfff98812642104ec3b37de1ad3a53f216ddc437e7b9276a23f46f2453844ea3c3f46c200bc4656a2f747fb26567560b3cc5183d549d119a758926551b5f566
-  languageName: node
-  linkType: hard
-
 "@apm-js-collab/code-transformer@npm:^0.8.0":
   version: 0.8.2
   resolution: "@apm-js-collab/code-transformer@npm:0.8.2"
@@ -43,7 +36,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@asamuzakjp/dom-selector@npm:^6.7.6":
+"@asamuzakjp/dom-selector@npm:^6.5.4":
   version: 6.7.6
   resolution: "@asamuzakjp/dom-selector@npm:6.7.6"
   dependencies:
@@ -1437,7 +1430,7 @@ __metadata:
     "@aws-sdk/client-secrets-manager": "npm:^3.971.0"
     "@libsql/client": "npm:^0.17.0"
     "@sentry/aws-serverless": "npm:^10.34.0"
-    jsdom: "npm:27.4.0"
+    jsdom: "npm:27.0.0"
     undici: "npm:^7.18.2"
   languageName: unknown
   linkType: soft
@@ -1621,7 +1614,7 @@ __metadata:
   dependencies:
     "@aws-sdk/client-lambda": "npm:^3.971.0"
     "@aws-sdk/client-translate": "npm:^3.971.0"
-    jsdom: "npm:27.4.0"
+    jsdom: "npm:27.0.0"
   languageName: unknown
   linkType: soft
 
@@ -1630,7 +1623,7 @@ __metadata:
   resolution: "@chealt/webshop-processor@workspace:packages/webshop-processor"
   dependencies:
     "@aws-sdk/client-lambda": "npm:^3.971.0"
-    jsdom: "npm:27.4.0"
+    jsdom: "npm:27.0.0"
   languageName: unknown
   linkType: soft
 
@@ -2651,18 +2644,6 @@ __metadata:
     "@eslint/core": "npm:^0.17.0"
     levn: "npm:^0.4.1"
   checksum: 10c0/51600f78b798f172a9915dffb295e2ffb44840d583427bc732baf12ecb963eb841b253300e657da91d890f4b323d10a1bd12934bf293e3018d8bb66fdce5217b
-  languageName: node
-  linkType: hard
-
-"@exodus/bytes@npm:^1.6.0":
-  version: 1.8.0
-  resolution: "@exodus/bytes@npm:1.8.0"
-  peerDependencies:
-    "@exodus/crypto": ^1.0.0-rc.4
-  peerDependenciesMeta:
-    "@exodus/crypto":
-      optional: true
-  checksum: 10c0/1878868519230fa564b80d3d12fa7e2b559dfed143f4e48969eb5f98083caea431bbc70356d6b2f90ba80c8148295fe85af6a5ed8a746dd53baefe4f1ed086e8
   languageName: node
   linkType: hard
 
@@ -6455,7 +6436,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cssstyle@npm:^5.3.4":
+"cssstyle@npm:^5.3.0":
   version: 5.3.7
   resolution: "cssstyle@npm:5.3.7"
   dependencies:
@@ -6538,7 +6519,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"decimal.js@npm:^10.6.0":
+"decimal.js@npm:^10.5.0":
   version: 10.6.0
   resolution: "decimal.js@npm:10.6.0"
   checksum: 10c0/07d69fbcc54167a340d2d97de95f546f9ff1f69d2b45a02fd7a5292412df3cd9eb7e23065e532a318f5474a2e1bccf8392fdf0443ef467f97f3bf8cb0477e5aa
@@ -8248,12 +8229,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"html-encoding-sniffer@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "html-encoding-sniffer@npm:6.0.0"
+"html-encoding-sniffer@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "html-encoding-sniffer@npm:4.0.0"
   dependencies:
-    "@exodus/bytes": "npm:^1.6.0"
-  checksum: 10c0/66dc3f6f5539cc3beb814fcbfae7eacf4ec38cf824d6e1425b72039b51a40f4456bd8541ba66f4f4fe09cdf885ab5cd5bae6ec6339d6895a930b2fdb83c53025
+    whatwg-encoding: "npm:^3.1.1"
+  checksum: 10c0/523398055dc61ac9b34718a719cb4aa691e4166f29187e211e1607de63dc25ac7af52ca7c9aead0c4b3c0415ffecb17326396e1202e2e86ff4bca4c0ee4c6140
   languageName: node
   linkType: hard
 
@@ -8308,7 +8289,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"iconv-lite@npm:^0.6.2":
+"iconv-lite@npm:0.6.3, iconv-lite@npm:^0.6.2":
   version: 0.6.3
   resolution: "iconv-lite@npm:0.6.3"
   dependencies:
@@ -8789,36 +8770,36 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsdom@npm:27.4.0":
-  version: 27.4.0
-  resolution: "jsdom@npm:27.4.0"
+"jsdom@npm:27.0.0":
+  version: 27.0.0
+  resolution: "jsdom@npm:27.0.0"
   dependencies:
-    "@acemir/cssom": "npm:^0.9.28"
-    "@asamuzakjp/dom-selector": "npm:^6.7.6"
-    "@exodus/bytes": "npm:^1.6.0"
-    cssstyle: "npm:^5.3.4"
+    "@asamuzakjp/dom-selector": "npm:^6.5.4"
+    cssstyle: "npm:^5.3.0"
     data-urls: "npm:^6.0.0"
-    decimal.js: "npm:^10.6.0"
-    html-encoding-sniffer: "npm:^6.0.0"
+    decimal.js: "npm:^10.5.0"
+    html-encoding-sniffer: "npm:^4.0.0"
     http-proxy-agent: "npm:^7.0.2"
     https-proxy-agent: "npm:^7.0.6"
     is-potential-custom-element-name: "npm:^1.0.1"
-    parse5: "npm:^8.0.0"
+    parse5: "npm:^7.3.0"
+    rrweb-cssom: "npm:^0.8.0"
     saxes: "npm:^6.0.0"
     symbol-tree: "npm:^3.2.4"
     tough-cookie: "npm:^6.0.0"
     w3c-xmlserializer: "npm:^5.0.0"
     webidl-conversions: "npm:^8.0.0"
+    whatwg-encoding: "npm:^3.1.1"
     whatwg-mimetype: "npm:^4.0.0"
-    whatwg-url: "npm:^15.1.0"
-    ws: "npm:^8.18.3"
+    whatwg-url: "npm:^15.0.0"
+    ws: "npm:^8.18.2"
     xml-name-validator: "npm:^5.0.0"
   peerDependencies:
     canvas: ^3.0.0
   peerDependenciesMeta:
     canvas:
       optional: true
-  checksum: 10c0/291bb71a611dbaed81ce516587b71a5ffd9d43337d65bbd0731e7924cd7018f5871cf66614facadfd0dffec2b23a0fc57b2ee36b5a39e20f0f569e2949b3418c
+  checksum: 10c0/cc977bd0f48f92b275166b3e64622d83c2073dc309b790ed806246365985743295a7735bc8519a186ccffd42d1f2c16a0fa52a4ea79d2b329a948756db64ade1
   languageName: node
   linkType: hard
 
@@ -10324,21 +10305,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"parse5@npm:^7.0.0":
+"parse5@npm:^7.0.0, parse5@npm:^7.3.0":
   version: 7.3.0
   resolution: "parse5@npm:7.3.0"
   dependencies:
     entities: "npm:^6.0.0"
   checksum: 10c0/7fd2e4e247e85241d6f2a464d0085eed599a26d7b0a5233790c49f53473232eb85350e8133344d9b3fd58b89339e7ad7270fe1f89d28abe50674ec97b87f80b5
-  languageName: node
-  linkType: hard
-
-"parse5@npm:^8.0.0":
-  version: 8.0.0
-  resolution: "parse5@npm:8.0.0"
-  dependencies:
-    entities: "npm:^6.0.0"
-  checksum: 10c0/8279892dcd77b2f2229707f60eb039e303adf0288812b2a8fd5acf506a4d432da833c6c5d07a6554bef722c2367a81ef4a1f7e9336564379a7dba3e798bf16b3
   languageName: node
   linkType: hard
 
@@ -11154,6 +11126,13 @@ __metadata:
   bin:
     rollup: dist/bin/rollup
   checksum: 10c0/427216da71c1ce7fefb0bef75f94c301afd858ac27e35898e098c2da5977325fa54c2edda867caf9675c8abfa8d8d94efa99c482fa04f5cd91f3a740112d4f4f
+  languageName: node
+  linkType: hard
+
+"rrweb-cssom@npm:^0.8.0":
+  version: 0.8.0
+  resolution: "rrweb-cssom@npm:0.8.0"
+  checksum: 10c0/56f2bfd56733adb92c0b56e274c43f864b8dd48784d6fe946ef5ff8d438234015e59ad837fc2ad54714b6421384141c1add4eb569e72054e350d1f8a50b8ac7b
   languageName: node
   linkType: hard
 
@@ -12601,6 +12580,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"whatwg-encoding@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "whatwg-encoding@npm:3.1.1"
+  dependencies:
+    iconv-lite: "npm:0.6.3"
+  checksum: 10c0/273b5f441c2f7fda3368a496c3009edbaa5e43b71b09728f90425e7f487e5cef9eb2b846a31bd760dd8077739c26faf6b5ca43a5f24033172b003b72cf61a93e
+  languageName: node
+  linkType: hard
+
 "whatwg-fetch@npm:^3.6.19":
   version: 3.6.20
   resolution: "whatwg-fetch@npm:3.6.20"
@@ -12615,7 +12603,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"whatwg-url@npm:^15.0.0, whatwg-url@npm:^15.1.0":
+"whatwg-url@npm:^15.0.0":
   version: 15.1.0
   resolution: "whatwg-url@npm:15.1.0"
   dependencies:
@@ -12912,7 +12900,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.18.3":
+"ws@npm:^8.18.2":
   version: 8.19.0
   resolution: "ws@npm:8.19.0"
   peerDependencies:

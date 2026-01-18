@@ -9,7 +9,7 @@
     "@aws-sdk/client-secrets-manager": "^3.971.0",
     "@libsql/client": "^0.17.0",
     "@sentry/aws-serverless": "^10.34.0",
-    "jsdom": "27.4.0",
+    "jsdom": "27.0.0",
     "undici": "^7.18.2"
   }
 }
