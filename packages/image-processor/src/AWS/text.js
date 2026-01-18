@@ -1,6 +1,8 @@
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import { TextractClient, DetectDocumentTextCommand } from '@aws-sdk/client-textract';
 
+import logger from '../Sentry/logger.js';
+
 const client = new TextractClient({});
 const lambdaClient = new LambdaClient({
   region: 'eu-central-1'
@@ -26,16 +28,16 @@ const extractText = async ({ filename }) => {
   };
   const command = new DetectDocumentTextCommand(input);
 
-  console.info(`Extracting text from ${filename}`);
+  logger.info(`Extracting text from ${filename}`);
   const { Blocks } = await client.send(command);
   const texts = Blocks.filter(({ Confidence }) => Confidence > 90).map(({ Text: text }) => text);
 
   if (texts.length) {
-    console.info(`Extracted texts: ${texts.join(', ')} from ${filename}`);
+    logger.info(`Extracted texts: ${texts.join(', ')} from ${filename}`);
   }
 
   if (texts.length) {
-    console.info(`Calling text interpreter for ${filename}`);
+    logger.info(`Calling text interpreter for ${filename}`);
     await invokeLambda({
       functionName: 'imageTextInterpreter',
       payload: { filename, texts }

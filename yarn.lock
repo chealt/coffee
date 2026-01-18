@@ -1445,6 +1445,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@centralbeans/image-processor@workspace:packages/image-processor":
+  version: 0.0.0-use.local
+  resolution: "@centralbeans/image-processor@workspace:packages/image-processor"
+  dependencies:
+    "@aws-sdk/client-lambda": "npm:^3.971.0"
+    "@aws-sdk/client-s3": "npm:^3.971.0"
+    "@aws-sdk/client-textract": "npm:^3.971.0"
+    "@sentry/aws-serverless": "npm:^10.34.0"
+    sharp: "npm:^0.34.5"
+  languageName: unknown
+  linkType: soft
+
 "@centralbeans/import-currencies@workspace:packages/import-currencies":
   version: 0.0.0-use.local
   resolution: "@centralbeans/import-currencies@workspace:packages/import-currencies"
@@ -1527,17 +1539,6 @@ __metadata:
     vite: "npm:^7.3.1"
     vite-plugin-wasm: "npm:^3.5.0"
     wrangler: "npm:^4.59.2"
-  languageName: unknown
-  linkType: soft
-
-"@chealt/image-processor@workspace:packages/image-processor":
-  version: 0.0.0-use.local
-  resolution: "@chealt/image-processor@workspace:packages/image-processor"
-  dependencies:
-    "@aws-sdk/client-lambda": "npm:^3.971.0"
-    "@aws-sdk/client-s3": "npm:^3.971.0"
-    "@aws-sdk/client-textract": "npm:^3.971.0"
-    sharp: "npm:^0.34.5"
   languageName: unknown
   linkType: soft
 

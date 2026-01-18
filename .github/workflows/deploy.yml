@@ -168,8 +168,8 @@ jobs:
         id: image-processor
         if: steps.changed-files-yaml.outputs.image-processor_any_changed == 'true'
         run: |
-          yarn workspace @chealt/image-processor build
-          version=$(yarn workspace @chealt/image-processor deploy | jq -r '.Version')
+          yarn workspace @centralbeans/image-processor build
+          version=$(yarn workspace @centralbeans/image-processor deploy | jq -r '.Version')
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release image-processor
         if: steps.changed-files-yaml.outputs.image-processor_any_changed == 'true'
@@ -177,8 +177,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: '@chealt/image-processor@${{ steps.image-processor.outputs.version }}'
-          release_name: Release @chealt/image-processor v${{ steps.image-processor.outputs.version }}
+          tag_name: '@centralbeans/image-processor@${{ steps.image-processor.outputs.version }}'
+          release_name: Release @centralbeans/image-processor v${{ steps.image-processor.outputs.version }}
           draft: false
           prerelease: false
       - name: image-text-interpreter
