@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 
 import supportedLanguages from '../data/supportedLanguages.json';
 import { getImageUrl } from './server/AWS/storage.js';
-import { sessionSecret } from './server/authentication/config.js';
+import { cookieNameSession, sessionSecret } from './server/authentication/config.js';
 import { getUsername } from './server/authentication/cookies.js';
 import { getSessionUser } from './server/authentication/session.js';
 import { cookieNameLocale, cookieNameCurrency, defaultCurrency } from './server/config.js';
@@ -132,28 +132,32 @@ const middleware = async (context, next) => {
     );
   }
 
-  await Promise.all([setCurrency(context), setSettings(context)]);
+  let savedLocaleDB;
+
+  // only try to get the user settings if we have a session cookie
+  if (context.cookies.get(cookieNameSession)?.value) {
+    await Promise.all([setCurrency(context), setSettings(context)]);
+
+    try {
+      // set the user if we have it
+      authenticate(context);
+    } catch {
+      // DO NOTHING
+    }
+
+    try {
+      const settings = await getValue({ user: { name: getSessionUser(context)?.username }, key: 'settings' });
+
+      savedLocaleDB = settings?.language;
+    } catch {
+      logger.info('Not logged in, so could not read language from DB.');
+    }
+  }
+
   setGetSignedUrl(context);
   setImageUploadUrls(context);
 
-  try {
-    // set the user if we have it
-    authenticate(context);
-  } catch {
-    // DO NOTHING
-  }
-
   const { itemId, collectionId, locale } = context.params;
-
-  let savedLocaleDB;
-
-  try {
-    const settings = await getValue({ user: { name: getSessionUser(context)?.username }, key: 'settings' });
-
-    savedLocaleDB = settings?.language;
-  } catch {
-    logger.info('Not logged in, so could not read language from DB.');
-  }
 
   const savedLocale = context.cookies.get(cookieNameLocale)?.value || savedLocaleDB;
 
