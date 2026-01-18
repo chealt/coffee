@@ -115,7 +115,16 @@ const parsers = {
     );
 
     const varietiesString = document.querySelector('[data-id="512fea5c"]').textContent.trim().toLowerCase();
-    const varietiesStrings = varietiesString.includes(' / ') ? varietiesString.split(' / ') : [varietiesString];
+    let varietiesStrings;
+
+    if (varietiesString.includes('/')) {
+      varietiesStrings = varietiesString.split('/').map((s) => s.trim());
+    } else if (varietiesString.includes(',')) {
+      varietiesStrings = varietiesString.split(',').map((s) => s.trim());
+    } else {
+      varietiesStrings = [varietiesString];
+    }
+
     const varietyIds = varieties
       .filter(
         ({ name, alias }) =>
