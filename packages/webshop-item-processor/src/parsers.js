@@ -80,7 +80,9 @@ const parsers = {
     const brewingMethod = document.querySelector('[data-id="4af2f61c"]').textContent.trim().toLowerCase();
     const brewingMethodId =
       brewingMethods.find(
-        ({ name }) => name === brewingMethod || (brewingMethod === 'espresso / pour over' && name === 'omni')
+        ({ name }) =>
+          name === brewingMethod ||
+          ((brewingMethod === 'espresso / pour over' || brewingMethod === 'pour over/espresso') && name === 'omni')
       )?.brewing_method_id || null;
 
     const regionOrFarm = document.querySelector('[data-id="15362af"]').textContent.trim().toLowerCase();
