@@ -7,8 +7,6 @@ const logger = (() => {
 
   const info = (message) => {
     console.info(message);
-
-    captureMessage(message, 'info');
   };
 
   const log = (message) => {
