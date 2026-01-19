@@ -10,8 +10,6 @@ import allLocaleCommonTranslations from '../common/common.json';
 const t = allLocaleTranslations[Astro.currentLocale];
 const tc = allLocaleCommonTranslations[Astro.currentLocale];
 
-await import.meta.glob('/public/roasters/*.{jpeg,jpg,png,gif,svg,webp}', { eager: true });
-
 const { roasters } = Astro.props;
 const recommendationsData = import.meta.glob('../../../data/recommendations/*.json', { eager: true });
 const { loggedInUser } = Astro.locals;
