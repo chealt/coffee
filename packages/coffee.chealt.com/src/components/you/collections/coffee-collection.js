@@ -13,7 +13,7 @@ class CoffeeCollection extends HTMLElement {
     this.editCollectionsTrigger = this.querySelector('[data-dialog-id="edit-collections"]');
     this.collectionCheckboxes = this.editCollectionsDialog.querySelectorAll('[type="checkbox"]');
 
-    const links = this.querySelectorAll('.items-list a');
+    const links = this.querySelectorAll('.items-list a:not(.triggerButton)');
 
     links.forEach((element) => element.addEventListener('click', this.addInProgressClass.bind(this)));
     links.forEach((element) => element.addEventListener('mousedown', this.selectItemWhenHeld.bind(this)));
