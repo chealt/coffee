@@ -1,5 +1,6 @@
 import { createClient } from '@libsql/client';
 
+import { convertToUSD } from '../src/components/coffees/utils.js';
 import { readFile, writeFile } from 'node:fs/promises';
 
 const turso = createClient({
@@ -108,11 +109,30 @@ const saveNewCoffees = async (newCoffees) => {
 };
 
 const saveCoffees = async () => {
-  const results = await turso.execute('SELECT * FROM coffees_all WHERE NOT is_removed');
+  const { rows: allCoffees } = await turso.execute('SELECT * FROM coffees_all WHERE NOT is_removed');
 
-  await writeFile('./data/coffees.json', JSON.stringify(results.rows), { flag: 'w+' });
+  const priciestCoffees = allCoffees
+    .sort(
+      (a, b) =>
+        convertToUSD({ currency: b.currency, price: b.price_per_gram }) -
+        convertToUSD({ currency: a.currency, price: a.price_per_gram })
+    )
+    .slice(0, 10);
+  const cheapestCoffees = allCoffees
+    .sort(
+      (a, b) =>
+        convertToUSD({ currency: a.currency, price: a.price_per_gram }) -
+        convertToUSD({ currency: b.currency, price: b.price_per_gram })
+    )
+    .slice(0, 10);
 
-  return saveNewCoffees(results.rows);
+  await Promise.all([
+    writeFile('./data/coffees.json', JSON.stringify(allCoffees), { flag: 'w+' }),
+    writeFile('./data/priciestCoffees.json', JSON.stringify(priciestCoffees), { flag: 'w+' }),
+    writeFile('./data/cheapestCoffees.json', JSON.stringify(cheapestCoffees), { flag: 'w+' })
+  ]);
+
+  return saveNewCoffees(allCoffees);
 };
 
 const saveCoffeeImages = async () => {

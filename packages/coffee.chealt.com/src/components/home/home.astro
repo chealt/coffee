@@ -1,6 +1,7 @@
 ---
-import coffees from '../../../data/coffees.json';
-import tasteNoteGroups from '../../../data/tasteNoteGroups.json';
+import cheapestCoffees from '@data/cheapestCoffees.json';
+import priciestCoffees from '@data/priciestCoffees.json';
+import tasteNoteGroups from '@data/tasteNoteGroups.json';
 
 import { convertToUSD } from '../coffees/utils.js';
 import Coffees from '../coffees/list.astro';
@@ -17,23 +18,6 @@ import allLocaleCommonTranslations from '../common/common.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 const tc = allLocaleCommonTranslations[Astro.currentLocale];
-
-logger.info('Sorting coffees');
-const priciestCoffees = coffees
-  .sort(
-    (a, b) =>
-      convertToUSD({ currency: b.currency, price: b.price_per_gram }) -
-      convertToUSD({ currency: a.currency, price: a.price_per_gram })
-  )
-  .slice(0, 10);
-const cheapestCoffees = coffees
-  .sort(
-    (a, b) =>
-      convertToUSD({ currency: a.currency, price: a.price_per_gram }) -
-      convertToUSD({ currency: b.currency, price: b.price_per_gram })
-  )
-  .slice(0, 10);
-logger.info('Sorted coffees');
 
 logger.info('Filtering taste note groups');
 const groups = tasteNoteGroups.filter(({ language_code }) => language_code === Astro.currentLocale);
