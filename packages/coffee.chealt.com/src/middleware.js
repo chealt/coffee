@@ -119,12 +119,21 @@ const pages = [
  */
 // eslint-disable-next-line complexity
 const middleware = async (context, next) => {
+  logger.info('Starting middleware');
+
+  logger.info('Parsing path');
   const { page, params } = parsePath(context.url.pathname);
+  logger.info('Parsed path');
 
   if (page !== 'api' && !context.params.locale && (context.routePattern !== '/404' || pages.includes(page))) {
+    logger.info('Setting locale');
     const acceptLanguage = context.request.headers.get('accept-language')?.slice(0, 2) || defaultLocale;
-    const locale = locales.find((l) => l === acceptLanguage);
 
+    logger.info('Finding locale');
+    const locale = locales.find((l) => l === acceptLanguage);
+    logger.info('Found locale');
+
+    logger.info('Rewriting to include locale');
     return context.rewrite(
       new Request(`${context.url.origin}/${locale}${context.url.pathname}${context.url.search}`, {
         headers: context.request.headers
@@ -174,6 +183,7 @@ const middleware = async (context, next) => {
       url += `/${params.join('/')}`;
     }
 
+    logger.info('Redirecting to include locale');
     return redirect(url);
   }
 
@@ -256,6 +266,7 @@ const middleware = async (context, next) => {
     }
   }
 
+  logger.info('Calling next');
   return next();
 };
 
