@@ -321,7 +321,7 @@ const statsLink = getSafeUrlWithStats({
     }
   </h1>
   {
-    (roasterId && (
+    (roasterId && roaster?.logo && (
       <div class="roaster-container">
         <section>
           <div class="image roaster" style={`view-transition-name: roaster-${roaster.id}`}>
