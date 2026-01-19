@@ -1,5 +1,3 @@
-import { captureException, captureMessage } from '@sentry/cloudflare';
-
 const logger = (() => {
   const debug = (message) => {
     console.debug(message);
@@ -15,14 +13,10 @@ const logger = (() => {
 
   const warn = (message) => {
     console.warn(message);
-
-    captureMessage(message, 'warning');
   };
 
   const error = (_error) => {
     console.error(_error);
-
-    captureException(_error);
   };
 
   return {

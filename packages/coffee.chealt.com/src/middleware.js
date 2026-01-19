@@ -1,5 +1,3 @@
-import { wrapRequestHandler, captureException } from '@sentry/cloudflare';
-import { defineMiddleware, sequence } from 'astro:middleware';
 import jwt from 'jsonwebtoken';
 
 import supportedLanguages from '../data/supportedLanguages.json';
@@ -16,7 +14,6 @@ import { setCollections, setCollectionItem } from './server/you/collections.js';
 
 const locales = supportedLanguages.map(({ locale }) => locale);
 const defaultLocale = supportedLanguages.find(({ isDefault }) => isDefault).locale;
-const isDev = import.meta.env.MODE === 'development';
 
 const setGetSignedUrl = (context) => {
   context.locals.getSignedUrl = '/api/storage/get-signed-url.json';
@@ -118,7 +115,7 @@ const pages = [
  * @type {import("astro").MiddlewareHandler}
  */
 // eslint-disable-next-line complexity
-const middleware = async (context, next) => {
+export const onRequest = async (context, next) => {
   logger.info('Starting middleware');
 
   logger.info('Parsing path');
@@ -267,31 +264,6 @@ const middleware = async (context, next) => {
   }
 
   logger.info('Calling next');
+
   return next();
 };
-
-const devSentryMiddleware = (_, next) => next();
-const sentryMiddleware = defineMiddleware((context, next) =>
-  wrapRequestHandler(
-    {
-      options: {
-        dsn: context.locals.runtime.env.SENTRY_DSN,
-        environment: import.meta.env.MODE,
-        tracesSampleRate: 1.0
-      },
-      request: context.request,
-      context: context.locals.runtime.ctx
-    },
-    async () => {
-      try {
-        return await next();
-      } catch (err) {
-        captureException(err);
-
-        throw err;
-      }
-    }
-  )
-);
-
-export const onRequest = sequence(isDev ? devSentryMiddleware : sentryMiddleware, middleware);
