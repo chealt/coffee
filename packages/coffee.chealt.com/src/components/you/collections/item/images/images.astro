@@ -1,7 +1,13 @@
 ---
+import Button from '../../../../form/button/button.astro';
 import Dialog from '../../../../dialog/dialog.astro';
+import Icon from '../../../../icon/icon.astro';
 
 import './images.css';
+
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
 
 const { collectionItem } = Astro.locals;
 const { collectionId } = Astro.props;
@@ -12,11 +18,21 @@ const { collectionId } = Astro.props;
     {
       (collectionItem?.images.length && (
         <div class="carousel">
-          {collectionItem?.images.map(({ src, srcSmall, srcMedium, filename }, index) => (
+          {collectionItem?.images.map(({ src, srcSmall, srcMedium, filename, status }, index) => (
             <picture>
               <source srcset={srcSmall} media="(max-width: 599px)" />
               <source srcset={srcMedium} media="(max-width: 1023px)" />
               <img id={filename} data-dialog-id={`image-dialog-${index}`} src={src} />
+              {status === 'processing' && (
+                <Fragment>
+                  <Button class="small round status" popovertarget="status">
+                    <Icon type="info" />
+                  </Button>
+                  <span popover="hint" id="status" class="tooltip">
+                    {t.processing}
+                  </span>
+                </Fragment>
+              )}
             </picture>
           ))}
         </div>

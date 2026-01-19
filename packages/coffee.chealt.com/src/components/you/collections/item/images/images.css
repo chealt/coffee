@@ -10,6 +10,24 @@
   align-items: center;
   overflow-y: hidden;
   scrollbar-width: none;
+
+  picture {
+    position: relative;
+
+    .status {
+      position: absolute;
+      bottom: var(--gap);
+      right: var(--gap);
+      width: 32px;
+      height: 32px;
+      align-items: center;
+      justify-content: center;
+
+      .icon {
+        display: flex;
+      }
+    }
+  }
 }
 
 .carousel > * {
