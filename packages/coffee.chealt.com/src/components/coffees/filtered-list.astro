@@ -312,12 +312,13 @@ const statsLink = getSafeUrlWithStats({
       />
     </div>
     {
-      loggedInUser && (
-        <Button class="ghost small" href={statsLink}>
+      (loggedInUser && (
+        <Button class="ghost small" href={statsLink} disabled={!coffees.length}>
           <Icon type="chart" />
           <span class="visually-hidden">{tc.chart}</span>
         </Button>
-      )
+      )) ||
+        null
     }
   </h1>
   {
