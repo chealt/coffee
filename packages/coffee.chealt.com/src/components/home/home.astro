@@ -11,7 +11,6 @@ import OriginCountries from './origin-countries/origin-countries.astro';
 import Roasters from './roasters/roasters.astro';
 import TasteNoteGroups from './taste-note-groups/taste-note-groups.astro';
 import Wheel from '../taste-notes/taste-note-groups/wheel.astro';
-import logger from '../../server/utils/logger.js';
 
 import allLocaleTranslations from './locales.json';
 import allLocaleCommonTranslations from '../common/common.json';
@@ -19,18 +18,14 @@ import allLocaleCommonTranslations from '../common/common.json';
 const t = allLocaleTranslations[Astro.currentLocale];
 const tc = allLocaleCommonTranslations[Astro.currentLocale];
 
-logger.info('Filtering taste note groups');
 const groups = tasteNoteGroups.filter(({ language_code }) => language_code === Astro.currentLocale);
-logger.info('Filtered taste note groups');
 
-logger.info('Getting recommendations');
 const recommendationsData = import.meta.glob('../../../data/recommendations/*.json', { eager: true });
 const { loggedInUser } = Astro.locals;
 const recommendedKey = Object.keys(recommendationsData).find(
   (key) => key === `../../../data/recommendations/${loggedInUser ? loggedInUser.username : 'anonymous'}.json`
 );
 const recommended = recommendationsData[recommendedKey] || {};
-logger.info('Got recommendations');
 ---
 
 <Common>
