@@ -1,5 +1,7 @@
 ---
 import Home from '../../components/home/home.astro';
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---
 
 <Home />
