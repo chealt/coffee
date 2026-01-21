@@ -49,7 +49,7 @@ const setCurrency = async (context) => {
 
     currencyDB = settings?.currency;
   } catch {
-    logger.info('Not logged in, so could not read currency from DB.');
+    // DO NOTHING
   }
 
   const currency = currencyDB || cookieCurrency || defaultCurrency;
@@ -63,7 +63,7 @@ const setSettings = async (context) => {
 
     context.locals.settings = settings;
   } catch {
-    logger.info('Not logged in, so could not read settings from DB.');
+    // DO NOTHING
   }
 };
 
@@ -116,21 +116,13 @@ const pages = [
  */
 // eslint-disable-next-line complexity
 export const onRequest = async (context, next) => {
-  logger.info('Starting middleware');
-
-  logger.info('Parsing path');
   const { page, params } = parsePath(context.url.pathname);
-  logger.info('Parsed path');
 
   if (page !== 'api' && !context.params.locale && (context.routePattern !== '/404' || pages.includes(page))) {
-    logger.info('Setting locale');
     const acceptLanguage = context.request.headers.get('accept-language')?.slice(0, 2) || defaultLocale;
 
-    logger.info('Finding locale');
     const locale = locales.find((l) => l === acceptLanguage);
-    logger.info('Found locale');
 
-    logger.info('Rewriting to include locale');
     return context.rewrite(
       new Request(`${context.url.origin}/${locale}${context.url.pathname}${context.url.search}`, {
         headers: context.request.headers
@@ -158,7 +150,7 @@ export const onRequest = async (context, next) => {
 
       savedLocaleDB = settings?.language;
     } catch {
-      logger.info('Not logged in, so could not read language from DB.');
+      // DO NOTHING
     }
   }
 
@@ -180,7 +172,6 @@ export const onRequest = async (context, next) => {
       url += `/${params.join('/')}`;
     }
 
-    logger.info('Redirecting to include locale');
     return redirect(url);
   }
 
@@ -262,8 +253,6 @@ export const onRequest = async (context, next) => {
       }
     }
   }
-
-  logger.info('Calling next');
 
   return next();
 };
