@@ -61,6 +61,7 @@ const isOutOfStock = ({ html, roasterId, webshopItemLink }) => {
   return !someInStock;
 };
 
+// eslint-disable-next-line complexity
 export const handler = async ({ id, webshopItemLink, roasterId }) => {
   if (!id) {
     logger.error('No id provided');
@@ -99,7 +100,7 @@ export const handler = async ({ id, webshopItemLink, roasterId }) => {
   if (
     response.status === 404 ||
     response.status === 301 || // Sheep and Raven uses 301 for no longer available coffees
-    (roasterId === 82 && response.redirected) || // Spojka uses redirects for no longer available coffees
+    (roasterId === 82 && response.redirected && response.url === 'https://shop.spojkaroastery.com/') || // Spojka uses redirects for no longer available coffees
     isOutOfStock({ html: await response.text(), roasterId, webshopItemLink })
   ) {
     logger.info(`Flagging coffee with id ${id} as removed...`);
