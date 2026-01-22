@@ -37,7 +37,7 @@ const roasterId = roaster && roasters.find(({ name }) => name === decodeSafeURL(
 const tasteNoteId = tasteNote && tasteNotes.find(({ name }) => name === decodeSafeURL(tasteNote))?.taste_note_id;
 const tasteNoteGroupId =
   tasteNoteGroup && tasteNoteGroups.find(({ name }) => name === decodeSafeURL(tasteNoteGroup))?.taste_note_group_id;
-const varietyId = variety && varieties.find(({ name }) => name.toLowerCase() === decodeSafeURL(variety))?.id;
+const varietyId = variety && varieties.find(({ name }) => name.toLowerCase() === variety)?.id;
 
 Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
 ---
