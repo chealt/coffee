@@ -1,7 +1,5 @@
 import { JSDOM } from 'jsdom';
 
-import logger from './Sentry/logger.js';
-
 const getDocument = (html) => {
   const {
     window: { document }
@@ -155,43 +153,10 @@ const parsers = {
     return uniqueCoffeeElements.map(({ element }) => element.querySelector('a').href);
   },
   // PALE
-  278: async ({ html, url }) => {
+  278: async ({ html }) => {
     const document = getDocument(html);
 
-    const numberOfPages = Number(Array.from(document.querySelectorAll('.page-numbers')).pop().textContent);
-
-    if (isNaN(numberOfPages)) {
-      throw new Error('Number of pages is not a number');
-    }
-
-    const getProductLinks = (doc) =>
-      Array.from(doc.querySelectorAll('.wc-block-components-product-image a')).map((element) => element.href);
-
-    const productLinks = [];
-
-    for (let i = 1; i <= numberOfPages; i++) {
-      if (i === 1) {
-        productLinks.push(...getProductLinks(document));
-        continue;
-      }
-
-      const pageLink = `${url}/page/${i}/`;
-
-      logger.info(`Fetching page ${pageLink}`);
-      const response = await fetch(pageLink);
-
-      logger.info(`Getting text ${pageLink}`);
-      const nextHTML = (await response.text()).match(/<body[^>]*>[\s\S]*<\/body>/giu)[0];
-
-      logger.info(`Getting document ${pageLink}`);
-      const nextDocument = getDocument(nextHTML);
-
-      logger.info(`Parsing links for ${pageLink}`);
-
-      productLinks.push(...getProductLinks(nextDocument));
-    }
-
-    return productLinks;
+    return Array.from(document.querySelectorAll('.wc-block-components-product-image a')).map((element) => element.href);
   },
   // Bani Beans
   285: async ({ html, url }) => {
