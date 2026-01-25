@@ -40,25 +40,25 @@ const recommended = recommendationsData[recommendedKey];
                 <img src={`/roasters/${logo}`} alt={`${t.roasterLogo} ${name}`} loading="lazy" />
               </div>
               {isRecommended && <span class="tag primary left">{tc.recommended}</span>}
-              <div class="name">
-                {instagram && (
-                  <Button
-                    class="tight"
-                    href={`https://instagram.com/${instagram}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Icon class="icon-only" type="instagram" />
-                  </Button>
-                )}
-                {website && (
-                  <Button class="tight" href={website} target="_blank" rel="noopener noreferrer">
-                    <Icon class="icon-only" type="home" />
-                  </Button>
-                )}
-                <span class="text">{name}</span>
-              </div>
             </a>
+            <div class="name">
+              {instagram && (
+                <Button
+                  class="tight"
+                  href={`https://instagram.com/${instagram}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon class="icon-only" type="instagram" />
+                </Button>
+              )}
+              {website && (
+                <Button class="tight" href={website} target="_blank" rel="noopener noreferrer">
+                  <Icon class="icon-only" type="home" />
+                </Button>
+              )}
+              <span class="text">{name}</span>
+            </div>
           </li>
         ))
     }
