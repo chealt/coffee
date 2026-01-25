@@ -55,7 +55,7 @@
     --color-secondary: #4b4a41;
     --color-shadow: rgba(0, 0, 0, 0.5);
     --color-success: #00ff00;
-    --color-error: #b72b2b;
+    --color-error: #ec4040;
     --color-danger: #b72b2b;
     --color-danger--text: #dd6262;
   }
@@ -420,6 +420,10 @@ sup {
     left: -50%;
     right: auto;
   }
+}
+
+.error {
+  color: var(--color-error);
 }
 
 @view-transition {

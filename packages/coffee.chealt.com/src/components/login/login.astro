@@ -33,6 +33,10 @@ const { username, redirectUrl } = Astro.props;
             required
           />
         </Label>
+        <p data-error-code="USER_NOT_FOUND" class="error hidden">{t.userNotFound}</p>
+        <p data-error-code="CANNOT_GET_AUTHENTICATION_OPTIONS" class="error hidden">
+          {t.cannotGetAuthenticationOptions}
+        </p>
       </section>
       <section>
         <Button class="primary" type="submit">{t.login}</Button>

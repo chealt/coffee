@@ -25,6 +25,8 @@ class ChealtAuthLogin extends HTMLElement {
   async loginOnSubmit(event) {
     event.preventDefault();
 
+    this.hideErrors();
+
     let optionsJSON = this.authenticationOptions;
     const username = this.querySelector('input[name="username"]').value;
 
@@ -38,7 +40,16 @@ class ChealtAuthLogin extends HTMLElement {
 
     try {
       if (!optionsJSON) {
-        optionsJSON = await this.fetchAuthenticationOptions({ username });
+        const { options, errorCode } = await this.fetchAuthenticationOptions({ username });
+
+        if (!options && errorCode) {
+          this.querySelector(`[data-error-code="${errorCode}"]`).classList.remove('hidden');
+          this.loginButton.disabled = false;
+
+          return;
+        }
+
+        optionsJSON = options;
       }
 
       const response = await startAuthentication({ optionsJSON });
@@ -55,6 +66,12 @@ class ChealtAuthLogin extends HTMLElement {
     this.loginButton.disabled = false;
   }
 
+  hideErrors() {
+    this.querySelectorAll('[data-error-code]').forEach((error) => {
+      error.classList.add('hidden');
+    });
+  }
+
   async fetchAuthenticationOptions({ username }) {
     const authenticationOptions = await fetch(this.authenticationOptionsEndpoint, {
       method: 'POST',
@@ -65,9 +82,7 @@ class ChealtAuthLogin extends HTMLElement {
       body: JSON.stringify({ username })
     });
 
-    const { options } = await authenticationOptions.json();
-
-    return options;
+    return await authenticationOptions.json();
   }
 
   async verify({ username, response }) {

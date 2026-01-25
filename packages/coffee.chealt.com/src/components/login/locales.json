@@ -2,11 +2,15 @@
   "en": {
     "title": "Login",
     "login": "Login",
-    "usernameOrEmail": "Username or email"
+    "usernameOrEmail": "Username or email",
+    "userNotFound": "User not found",
+    "cannotGetAuthenticationOptions": "Cannot get authentication options"
   },
   "pl": {
     "title": "Logowanie",
     "login": "Zaloguj się",
-    "usernameOrEmail": "Nazwa użytkownika lub email"
+    "usernameOrEmail": "Nazwa użytkownika lub email",
+    "userNotFound": "Użytkownik nie został znaleziony",
+    "cannotGetAuthenticationOptions": "Nie można uzyskać opcji uwierzytelnienia"
   }
 }
