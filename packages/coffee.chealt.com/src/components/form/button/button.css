@@ -47,6 +47,10 @@ a.button {
   &.block {
     width: 100%;
   }
+
+  &.tight {
+    padding: var(--gap--s);
+  }
 }
 
 button[disabled],
