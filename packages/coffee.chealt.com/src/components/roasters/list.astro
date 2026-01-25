@@ -1,8 +1,12 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
 
-import countries from '../../../data/countries.json';
+import countries from '@data/countries.json';
 import { encodeSafeURL } from '../../utils/string.js';
+import Button from '../form/button/button.astro';
+import Icon from '../icon/icon.astro';
+
+import './list.css';
 
 import allLocaleTranslations from './locales.json';
 import allLocaleCommonTranslations from '../common/common.json';
@@ -30,13 +34,30 @@ const recommended = recommendationsData[recommendedKey];
           isRecommended: recommended?.roasters?.includes(id)
         }))
         .map(({ id, name, country_id, isRecommended, logo, website, instagram }, index) => (
-          <li data-country-id={country_id} class="item">
+          <li data-country-id={country_id} class="item roaster">
             <a href={getRelativeLocaleUrl(Astro.currentLocale, `/roasters/${encodeSafeURL(name)}`)}>
               <div class="image card" style={`view-transition-name: roaster-${id}`}>
                 <img src={`/roasters/${logo}`} alt={`${t.roasterLogo} ${name}`} loading="lazy" />
               </div>
               {isRecommended && <span class="tag primary left">{tc.recommended}</span>}
-              <div class="name">{name}</div>
+              <div class="name">
+                {instagram && (
+                  <Button
+                    class="tight"
+                    href={`https://instagram.com/${instagram}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon class="icon-only" type="instagram" />
+                  </Button>
+                )}
+                {website && (
+                  <Button class="tight" href={website} target="_blank" rel="noopener noreferrer">
+                    <Icon class="icon-only" type="home" />
+                  </Button>
+                )}
+                <span class="text">{name}</span>
+              </div>
             </a>
           </li>
         ))
