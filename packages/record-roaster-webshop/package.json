@@ -6,7 +6,7 @@
     "deploy": "aws lambda update-function-code --function-name recordRoasterWebshop --zip-file fileb://package.zip --publish"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.971.0",
-    "@sentry/aws-serverless": "^10.34.0"
+    "@aws-sdk/client-lambda": "^3.975.0",
+    "@sentry/aws-serverless": "^10.36.0"
   }
 }

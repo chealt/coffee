@@ -7,8 +7,8 @@
     "test": "node --env-file=../coffee-admin/.env test.js"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.971.0",
-    "@sentry/aws-serverless": "^10.34.0",
+    "@aws-sdk/client-lambda": "^3.975.0",
+    "@sentry/aws-serverless": "^10.36.0",
     "jsdom": "27.0.0"
   }
 }

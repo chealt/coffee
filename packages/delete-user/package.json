@@ -6,9 +6,9 @@
     "deploy": "aws lambda update-function-code --function-name deleteUser --zip-file fileb://dist/package.zip --publish"
   },
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.971.0",
+    "@aws-sdk/client-secrets-manager": "^3.975.0",
     "@libsql/client": "^0.17.0",
-    "@sentry/aws-serverless": "^10.34.0",
+    "@sentry/aws-serverless": "^10.36.0",
     "@tursodatabase/api": "^1.9.2"
   }
 }
