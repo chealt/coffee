@@ -208,6 +208,14 @@ const parsers = {
     }
 
     return productLinks;
+  },
+  // Teso
+  291: async ({ html }) => {
+    const document = getDocument(html);
+
+    return Array.from(document.querySelectorAll('.product-tile a'))
+      .filter(({ href }) => !href.includes('probki'))
+      .map(({ href }) => href);
   }
 };
 
