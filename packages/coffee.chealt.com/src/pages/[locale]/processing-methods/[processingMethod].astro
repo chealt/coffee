@@ -1,15 +1,5 @@
 ---
-import FilteredList from '@components/coffees/filtered-list.astro';
-import processingMethods from '@data/processingMethods.json';
-import { decodeSafeURL } from '@utils/string.js';
-
-const { processingMethod } = Astro.params;
-
-const processingMethodId = processingMethods.find(
-  ({ name }) => name === decodeSafeURL(processingMethod)
-)?.processing_method_id;
-
-Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
+import FilteredList from '@pages/_filtered-list.astro';
 ---
 
-<FilteredList processingMethodId={processingMethodId} />
+<FilteredList />
