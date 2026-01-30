@@ -6,11 +6,11 @@
     "deploy": "aws lambda update-function-code --function-name createUser --zip-file fileb://package.zip --publish"
   },
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.975.0",
-    "@aws-sdk/client-sesv2": "^3.971.0",
+    "@aws-sdk/client-secrets-manager": "^3.978.0",
+    "@aws-sdk/client-sesv2": "^3.978.0",
     "@centralbeans/email": "workspace:*",
     "@libsql/client": "^0.17.0",
-    "@sentry/aws-serverless": "^10.36.0",
+    "@sentry/aws-serverless": "^10.38.0",
     "@tursodatabase/api": "^1.9.2",
     "jsonwebtoken": "^9.0.3"
   }
