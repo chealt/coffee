@@ -103,7 +103,7 @@ const saveNewCoffees = async (newCoffees) => {
 
   return writeFile(
     './data/newCoffeeIds.json',
-    JSON.stringify(newCoffeeIds.filter((id) => coffees.find(({ id: coffeeId }) => coffeeId === id)?.is_removed)),
+    JSON.stringify(newCoffeeIds.filter((id) => !coffees.find(({ id: coffeeId }) => coffeeId === id)?.is_removed)),
     { flag: 'w+' }
   );
 };
