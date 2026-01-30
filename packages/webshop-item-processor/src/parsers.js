@@ -26,6 +26,7 @@ const getDocument = (html) => {
 const errors = {
   brewingMethodMissing: 'Missing brewing method',
   currencyMissing: 'Missing currency',
+  detailsMissing: 'Missing details',
   imageMissing: 'Missing image',
   originCountryMissing: 'Missing origin country',
   originRegionMissing: 'Missing origin region',
@@ -1833,6 +1834,131 @@ const parsers = {
       processingMethodId,
       roasterId,
       roastingLevelId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
+  },
+  // Teso
+  291: async ({ html, url, roasterId }) => {
+    logger.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const details = JSON.parse(document.querySelector('[data-product]').dataset.product);
+
+    if (!details) {
+      logger.error(`No details found for ${url}`);
+
+      throw new Error(errors.detailsMissing);
+    }
+
+    const price = details.price.raw;
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    const currency = currencyCodes['zł'];
+
+    const weight = 250;
+
+    if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
+      throw new Error(errors.weightMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const originCountry = details.fields.country.toLowerCase();
+    const originCountryId = originCountries.find(({ name }) => originCountry.includes(name))?.origin_country_id || null;
+
+    if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const originRegionId =
+      originRegions.find(({ name }) => name === details.fields.region.toLowerCase())?.origin_region_id || null;
+
+    if (!originRegionId) {
+      logger.debug(errors.originRegionMissing);
+      logger.debug(details.fields.region);
+    }
+
+    const processingMethodId =
+      processingMethods.find(({ name }) => name === details.fields.process.toLowerCase())?.processing_method_id ||
+      processingMethods.find(({ name }) => details.fields.process.toLowerCase().includes(name))?.processing_method_id ||
+      null;
+
+    if (!processingMethodId) {
+      logger.debug(errors.processingMethodMissing, ': ', details.fields.process);
+    }
+
+    const varietiesStrings = details.fields.varietal.toLowerCase().replace('741112', '74112').split(', '); // 741112 is a typo
+    const varietyIds = varieties
+      .filter(
+        ({ name, alias }) =>
+          varietiesStrings.includes(name.toLowerCase()) || (alias && varietiesStrings.includes(alias.toLowerCase()))
+      )
+      .map(({ id }) => id);
+    const missingVarieties = varietiesStrings.filter(
+      (name) =>
+        !varieties.map((variety) => variety.name.toLowerCase()).includes(name) &&
+        !varieties.map((variety) => variety.alias?.toLowerCase()).includes(name)
+    );
+
+    if (missingVarieties.length) {
+      logger.debug(`Missing varieties: ${missingVarieties}`);
+    }
+
+    const tasteNoteStrings = details.fields.tasting_notes.split(', ');
+    const tasteNoteIds = tasteNoteStrings
+      .filter((note) => tasteNotes.find(({ name }) => name === note))
+      .map((note) => tasteNotes.find(({ name }) => name === note).taste_note_id);
+    const missingTasteNotes = tasteNoteStrings.filter((note) => !tasteNotes.find(({ name }) => name === note));
+
+    if (missingTasteNotes.length) {
+      logger.debug(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
+    }
+
+    const isEspresso = details.category.slug.includes('espresso') || details.category.slug.includes('omniroast');
+    const isFilter = details.category.slug.includes('filtr') || details.category.slug.includes('omniroast');
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) =>
+          (isFilter && isEspresso && name === 'omni') ||
+          (isEspresso && !isFilter && name === 'espresso') ||
+          (!isEspresso && isFilter && name === 'filter')
+      )?.brewing_method_id || null;
+
+    if (!brewingMethodId) {
+      logger.debug(errors.brewingMethodMissing);
+    }
+
+    const image = details.image.full;
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      originCountryId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
       tasteNoteIds,
       varietyIds,
       webshopItemLink: url,
