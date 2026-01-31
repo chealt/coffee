@@ -45,7 +45,7 @@ const extractText = async ({ filename }) => {
   }
 
   await tursoClient.execute({
-    sql: 'INSERT INTO collection_item_details (filename, details, status) VALUES (:filename, :details, :status)',
+    sql: 'INSERT INTO collection_item_details (filename, details, status) VALUES (:filename, :details, :status) ON CONFLICT (filename) DO UPDATE SET details = :details, status = :status',
     args: { filename, details: JSON.stringify({}), status: 'processing' }
   });
 
