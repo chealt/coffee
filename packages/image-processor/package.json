@@ -6,7 +6,7 @@
     "upload": "aws s3 cp package.zip s3://centralbeans-artifacts/image-processor/",
     "update": "aws lambda update-function-code --function-name imageProcessor --s3-bucket centralbeans-artifacts --s3-key image-processor/package.zip --publish",
     "version": "aws lambda list-versions-by-function --function-name imageProcessor --no-paginate --query \"max_by(Versions, &to_number(to_number(Version) || '0'))\"",
-    "deploy": "yarn upload && yarn update && yarn version"
+    "deploy": "yarn upload > /dev/null && yarn update > /dev/null && yarn run version"
   },
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.978.0",
