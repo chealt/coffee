@@ -3,7 +3,9 @@
   "type": "module",
   "scripts": {
     "build": "cp .yarnrc-lambda.yml .yarnrc.yml && yarn workspaces focus --production && zip -rq package.zip . -x .yarnrc.yml .yarnrc-lambda.yml && rm .yarnrc.yml",
-    "deploy": "aws lambda update-function-code --function-name imageProcessor --zip-file fileb://package.zip --publish"
+    "upload": "aws s3 cp package.zip s3://centralbeans-artifacts/image-processor/",
+    "update": "aws lambda update-function-code --function-name imageProcessor --s3-bucket centralbeans-artifacts --s3-key image-processor/package.zip --publish",
+    "deploy": "yarn upload && yarn update"
   },
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.978.0",
