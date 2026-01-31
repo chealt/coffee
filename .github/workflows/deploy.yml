@@ -5,6 +5,8 @@ on:
       - main
 permissions:
   contents: write
+concurrency:
+  group: deploy
 jobs:
   deploy:
     runs-on: ubuntu-latest
