@@ -1777,7 +1777,7 @@ const parsers = {
       logger.debug(errors.processingMethodMissing, ': ', details.processing);
     }
 
-    const detailsVarieties = details.variety.replace('paraneima', 'parainema') || details.localities || ''; // typo
+    const detailsVarieties = details.variety?.replace('paraneima', 'parainema') || details.localities || ''; // typo
     const varietyIds = varieties
       .filter(
         ({ name, alias }) =>
