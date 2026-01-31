@@ -1913,7 +1913,7 @@ const parsers = {
       new Set(tasteNotes.filter(({ name }) => tasteNotesElement.includes(name)).map(({ taste_note_id: id }) => id))
     );
 
-    const image = document.querySelector('.product-media__image')?.src;
+    const image = `https:${document.querySelector('.product-media__image')?.src}`;
 
     if (!image) {
       logger.error(`No image found for ${url}`);
