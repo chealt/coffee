@@ -3,8 +3,8 @@ import { deflateSync } from 'node:zlib';
 
 const invokeLambda = async ({ payload }) => handler(payload);
 
-const url = 'https://teso.coffee/kawa/';
-const roasterId = 291;
+const url = 'https://rgbcoffee.pl/collections/all';
+const roasterId = 290;
 
 const response = await fetch(url);
 

@@ -211,6 +211,14 @@ const parsers = {
 
     return productLinks;
   },
+  // Roast Grind Brew
+  290: async ({ html, url }) => {
+    const document = getDocument(html);
+
+    const { origin } = new URL(url);
+
+    return Array.from(document.querySelectorAll('a.contents:has(img)')).map(({ href }) => `${origin}${href.trim()}`);
+  },
   // Teso
   291: async ({ html }) => {
     const document = getDocument(html);
