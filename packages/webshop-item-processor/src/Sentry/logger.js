@@ -2,13 +2,9 @@ import * as Sentry from '@sentry/aws-serverless';
 
 const logger = {
   info: (message) => {
-    Sentry.captureMessage(message, 'info');
-
     console.info(message);
   },
   debug: (message) => {
-    Sentry.captureMessage(message, 'debug');
-
     console.debug(message);
   },
   error: (message) => {
