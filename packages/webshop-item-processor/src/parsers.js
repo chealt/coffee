@@ -1701,7 +1701,7 @@ const parsers = {
     const document = getDocument(html);
 
     const currencySymbol = 'Kč';
-    const price = cleanPrice({ priceElement: document.querySelector('.product-price-block .price'), currencySymbol });
+    const price = cleanPrice({ priceElement: document.querySelector('.price'), currencySymbol });
 
     if (!price || isNaN(price)) {
       logger.error(`No price found for ${url}`);
@@ -1742,7 +1742,16 @@ const parsers = {
     }, {});
 
     const originCountry = details.origin;
-    const originCountryId = originCountries.find(({ name }) => originCountry.includes(name))?.origin_country_id || null;
+
+    if (originCountry?.includes('/')) {
+      logger.info(`Multiple origin countries, so we don't store it`);
+
+      return {};
+    }
+
+    const originCountryId =
+      originCountries.find(({ name }) => originCountry?.includes(name) || url.toLowerCase().includes(name))
+        ?.origin_country_id || null;
 
     if (!originCountryId) {
       logger.error(`No origin country found for ${url}`);
@@ -1757,7 +1766,7 @@ const parsers = {
       logger.debug(details.region);
     }
 
-    const originFarmId = originFarms.find(({ name }) => details.farm.includes(name))?.id || null;
+    const originFarmId = originFarms.find(({ name }) => details.farm?.includes(name))?.id || null;
 
     const processingMethodId =
       processingMethods.find(({ name }) => name === details.processing)?.processing_method_id ||
@@ -1768,18 +1777,19 @@ const parsers = {
       logger.debug(errors.processingMethodMissing, ': ', details.processing);
     }
 
+    const detailsVarieties = details.variety.replace('paraneima', 'parainema') || details.localities || ''; // typo
     const varietyIds = varieties
       .filter(
         ({ name, alias }) =>
-          details.variety.includes(name.toLowerCase()) || (alias && details.variety.includes(alias.toLowerCase()))
+          detailsVarieties.includes(name.toLowerCase()) || (alias && detailsVarieties.includes(alias.toLowerCase()))
       )
       .map(({ id }) => id);
-    const missingVarieties = details.variety
+    const missingVarieties = detailsVarieties
       .split(', ')
       .filter(
         (name) =>
           !varieties.map((variety) => variety.name.toLowerCase()).includes(name) &&
-          !varieties.map((variety) => variety.alias.toLowerCase()).includes(name)
+          !varieties.map((variety) => variety.alias?.toLowerCase()).includes(name)
       );
 
     if (missingVarieties.length) {
@@ -1796,8 +1806,9 @@ const parsers = {
       logger.debug(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
     }
 
-    const isEspresso = details.preparation.includes('espresso');
-    const isFilter = details.preparation.includes('filter');
+    const isEspresso =
+      details.preparation.includes('espresso') || details.preparation.includes('automatic coffee machine');
+    const isFilter = details.preparation.includes('filter') || details.preparation.includes('aeropress');
     const brewingMethodId =
       brewingMethods.find(
         ({ name }) =>
@@ -1811,7 +1822,7 @@ const parsers = {
     }
 
     const roastingLevelId =
-      roastingLevels.find(({ name }) => details['degree of roasting'].toLowerCase().includes(name))
+      roastingLevels.find(({ name }) => details['degree of roasting']?.toLowerCase().includes(name))
         ?.roasting_level_id || null;
 
     const image = document.querySelector('.gallery-item img')?.src;

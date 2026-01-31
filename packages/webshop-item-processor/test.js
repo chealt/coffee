@@ -1,18 +1,8 @@
 import { handler } from './src/index.js';
 import { deflateSync } from 'node:zlib';
 
-const urls = [
-  'https://teso.coffee/kawa/abdo-limu/',
-  'https://teso.coffee/kawa/banko-gotiti/',
-  'https://teso.coffee/kawa/el-libano/',
-  'https://teso.coffee/kawa/gaitania/',
-  'https://teso.coffee/kawa/konga/',
-  'https://teso.coffee/kawa/muranga/',
-  'https://teso.coffee/kawa/rungeto-kii/',
-  'https://teso.coffee/kawa/san-ignacio/',
-  'https://teso.coffee/kawa/sertao-2/'
-];
-const roasterId = 291;
+const urls = ['https://www.nordbeans.com/honduras_z3564/'];
+const roasterId = 288;
 
 for (const url of urls) {
   const response = await fetch(url);
@@ -25,5 +15,9 @@ for (const url of urls) {
 
   console.info(`Invoke webshop processor for ${roasterId} and url: ${url}`);
 
-  await handler({ url, roasterId, html: deflateSync(html).toString('base64') });
+  try {
+    await handler({ url, roasterId, html: deflateSync(html).toString('base64') });
+  } catch (error) {
+    console.error(`Failed to process ${url}`, error);
+  }
 }

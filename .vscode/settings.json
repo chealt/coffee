@@ -6,6 +6,7 @@
   "typescript.validate.enable": false,
   "editor.formatOnSave": true,
   "cSpell.words": [
+    "aeropress",
     "botaniczna",
     "Cafetero",
     "centralbeans",
@@ -22,6 +23,7 @@
     "odmiana",
     "onnx",
     "palenia",
+    "parainema",
     "pochodzenie",
     "ppocr",
     "preds",

@@ -203,7 +203,9 @@ const parsers = {
       const pageDocument = getDocument(pageHTML);
 
       productLinks.push(
-        ...Array.from(pageDocument.querySelectorAll('a.product-link')).map(({ href }) => `${origin}${href}`)
+        ...Array.from(pageDocument.querySelectorAll('a.product-link'))
+          .filter(({ href }) => !href.includes('blend') && !href.includes('pack'))
+          .map(({ href }) => `${origin}${href}`)
       );
     }
 
