@@ -42,6 +42,12 @@ const recommended = recommendationsData[recommendedKey];
               {isRecommended && <span class="tag primary left">{tc.recommended}</span>}
             </a>
             <div class="name">
+              {website && (
+                <Button class="tight" href={website} target="_blank" rel="noopener noreferrer">
+                  <Icon class="icon-only" type="home" />
+                </Button>
+              )}
+              <span class="text">{name}</span>
               {instagram && (
                 <Button
                   class="tight"
@@ -52,12 +58,6 @@ const recommended = recommendationsData[recommendedKey];
                   <Icon class="icon-only" type="instagram" />
                 </Button>
               )}
-              {website && (
-                <Button class="tight" href={website} target="_blank" rel="noopener noreferrer">
-                  <Icon class="icon-only" type="home" />
-                </Button>
-              )}
-              <span class="text">{name}</span>
             </div>
           </li>
         ))
