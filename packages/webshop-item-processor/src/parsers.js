@@ -1851,6 +1851,95 @@ const parsers = {
       weight
     };
   },
+  // roast grind brew
+  290: async ({ html, url, roasterId }) => {
+    logger.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const details = document.querySelector('h1').textContent.toLowerCase().trim();
+
+    if (!details) {
+      logger.error(`No details found for ${url}`);
+
+      throw new Error(errors.detailsMissing);
+    }
+
+    const currencySymbol = 'zł';
+    const price = cleanPrice({
+      priceElement: document.querySelector('product-price [ref="priceContainer"] .price'),
+      currencySymbol
+    });
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    const currency = currencyCodes[currencySymbol];
+
+    const weight = details.includes('250g') ? 250 : undefined;
+
+    if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
+      throw new Error(errors.weightMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const originCountryId = originCountries.find(({ name }) => details.includes(name))?.origin_country_id || null;
+
+    if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const brewingMethodId =
+      brewingMethods.find(({ name }) => details.includes(name))?.brewing_method_id ||
+      brewingMethods.find(({ name }) => name === 'filter')?.brewing_method_id ||
+      null;
+
+    const originRegionId = originRegions.find(({ name }) => details.includes(name))?.origin_region_id || null;
+    const originFarmId = originFarms.find(({ name }) => details.includes(name))?.id || null;
+
+    const processingMethodId =
+      processingMethods.find(({ name }) => details.includes(name))?.processing_method_id || null;
+
+    const tasteNotesElement = document.querySelector('rte-formatter.text-block').textContent.trim().toLowerCase();
+    const tasteNoteIds = Array.from(
+      new Set(tasteNotes.filter(({ name }) => tasteNotesElement.includes(name)).map(({ taste_note_id: id }) => id))
+    );
+
+    const image = document.querySelector('.product-media__image')?.src;
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    const isDecaf = url.includes('decaf');
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      webshopItemLink: url,
+      weight
+    };
+  },
   // Teso
   291: async ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
