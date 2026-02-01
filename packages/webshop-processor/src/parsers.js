@@ -37,6 +37,20 @@ const parsers = {
       )
     );
   },
+  // Typika
+  14: async ({ html, url }) => {
+    const document = getDocument(html);
+
+    const { origin } = new URL(url);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll(`.product-item__image-link`))
+          .filter(({ href }) => !href.includes('-set-'))
+          .map(({ href }) => `${origin}${href}`)
+      )
+    );
+  },
   // BeMyBean
   39: async ({ html }) => {
     const document = getDocument(html);
