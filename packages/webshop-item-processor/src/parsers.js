@@ -309,6 +309,7 @@ const parsers = {
     const price = cleanPrice({ priceElement, currencySymbol });
 
     if (!price || isNaN(price)) {
+      logger.debug(`Price element text: '${priceElement?.textContent}'`);
       logger.error(`No price found for ${url}`);
 
       throw new Error(errors.priceMissing);
