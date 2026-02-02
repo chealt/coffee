@@ -315,6 +315,8 @@ const parsers = {
       throw new Error(errors.currencyMissing);
     }
 
+    const currency = currencyCodes[currencySymbol];
+
     const price = cleanPrice({ priceElement, currencySymbol });
 
     if (!price || isNaN(price)) {
@@ -324,7 +326,20 @@ const parsers = {
       throw new Error(errors.priceMissing);
     }
 
-    const currency = currencyCodes[currencySymbol];
+    const weight = Number(
+      document.querySelector('.product__variants-wrapper [data-selected-value-for-option]').textContent.replace('g', '')
+    );
+
+    if (!weight || isNaN(weight)) {
+      logger.debug(
+        `Weight element text: '${document.querySelector('.product__variants-wrapper [data-selected-value-for-option]').textContent}'`
+      );
+      logger.error(`No weight found for ${url}`);
+
+      throw new Error(errors.weightMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
 
     const details = Array.from(document.querySelectorAll('.product-information__additional__line')).map((element) =>
       element.textContent.trim().toLowerCase()
@@ -391,11 +406,13 @@ const parsers = {
       originCountryId,
       originRegionId,
       price,
+      pricePerGram,
       processingMethodId,
       roasterId,
       tasteNoteIds,
       varietyIds,
-      webshopItemLink: url
+      webshopItemLink: url,
+      weight
     };
   },
   // BeMyBean
