@@ -1,23 +1,25 @@
-.roaster {
-  .image img {
-    height: 100%;
-    object-fit: contain;
-  }
-
-  .name {
-    display: flex;
-    align-items: center;
-    gap: var(--gap);
-
-    .button {
-      flex-grow: 0;
-      flex-shrink: 1;
-      width: auto;
+.list {
+  .roaster {
+    .image img {
+      height: 100%;
+      object-fit: contain;
     }
 
-    .text {
-      flex-grow: 1;
-      text-align: start;
+    .name {
+      display: flex;
+      align-items: center;
+      gap: var(--gap);
+
+      .button {
+        flex-grow: 0;
+        flex-shrink: 1;
+        width: auto;
+      }
+
+      .text {
+        flex-grow: 1;
+        text-align: start;
+      }
     }
   }
 }
