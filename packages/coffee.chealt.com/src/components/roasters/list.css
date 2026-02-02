@@ -1,4 +1,9 @@
 .roaster {
+  .image img {
+    height: 100%;
+    object-fit: contain;
+  }
+
   .name {
     display: flex;
     align-items: center;
