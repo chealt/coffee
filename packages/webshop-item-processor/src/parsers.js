@@ -36,7 +36,7 @@ const errors = {
 };
 
 const cleanPrice = ({ priceElement, currencySymbol = '€' }) =>
-  Number(priceElement.textContent.replaceAll(currencySymbol, '').replaceAll(',', '.').trim()).toFixed(2);
+  Number(priceElement.textContent.toLowerCase().replaceAll(currencySymbol, '').replaceAll(',', '.').trim()).toFixed(2);
 
 const parsers = {
   // Sheep & Raven
@@ -290,6 +290,96 @@ const parsers = {
       varietyIds,
       webshopItemLink: url,
       weight
+    };
+  },
+  // Typika
+  14: ({ html, url, roasterId }) => {
+    logger.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    if (document.querySelector('.product__title').textContent.toLowerCase().includes('blend')) {
+      logger.info(`Skipping blend: ${url}`);
+
+      return {};
+    }
+
+    const currencySymbol = 'zł';
+    const priceElement = document.querySelector('[data-price]');
+    const price = cleanPrice({ priceElement, currencySymbol });
+
+    const currency = currencyCodes[currencySymbol];
+
+    const details = Array.from(document.querySelectorAll('.product-information__additional__line')).map((element) =>
+      element.textContent.trim().toLowerCase()
+    );
+
+    const originCountry = originCountries.find(({ name }) =>
+      details.some((detail) => detail.includes(name) || url.includes(name))
+    );
+    const originCountryId = originCountry?.origin_country_id || null;
+
+    if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const originRegion = originRegions.find(({ name }) => details.some((detail) => detail.includes(name)));
+    const originRegionId = originRegion?.origin_region_id || null;
+
+    const processingMethodId =
+      processingMethods.find(({ name }) => details.some((detail) => detail.includes(name.toLowerCase())))
+        ?.processing_method_id || null;
+
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) => details.some((detail) => detail.includes(name.toLowerCase())) || url.includes(name.toLowerCase())
+      )?.brewing_method_id || null;
+
+    const tasteNotesString = Array.from(document.querySelectorAll('.product-information__additional__line strong'))
+      .map((element) => element.textContent.toLowerCase())
+      .join('')
+      .replace('additional information:', '');
+    const tasteNoteElement = tasteNotesString.includes('flavor profile:')
+      ? tasteNotesString.split('flavor profile:')[1]
+      : undefined;
+    const tasteNoteStrings = tasteNoteElement?.split(', ').map((note) => note.trim());
+    const tasteNoteIds = tasteNotes
+      .filter(({ name, alias }) => tasteNoteStrings.some((note) => name === note || alias === note))
+      .map(({ taste_note_id: id }) => id);
+
+    const varietyIds = details.reduce((newVarietyIds, detail) => {
+      varieties.forEach(({ id, name, alias }) => {
+        if (
+          !newVarietyIds.includes(id) &&
+          (detail.includes(name.toLowerCase()) || (alias && detail.includes(alias.toLowerCase()))) &&
+          name.toLowerCase() !== originCountry.name.toLowerCase() // Colombia is both origin country and variety
+        ) {
+          newVarietyIds.push(id);
+        }
+      });
+
+      return newVarietyIds;
+    }, []);
+
+    const isDecaf = url.includes('decaf');
+
+    const image = `https:${document.querySelector('.product__media img')?.src.replace(/&width=[0-9]+/gu, '')}`;
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originRegionId,
+      price,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url
     };
   },
   // BeMyBean
