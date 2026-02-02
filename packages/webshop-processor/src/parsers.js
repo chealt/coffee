@@ -164,7 +164,9 @@ const parsers = {
       []
     );
 
-    return uniqueCoffeeElements.map(({ element }) => element.querySelector('a').href);
+    return uniqueCoffeeElements
+      .map(({ element }) => element.querySelector('a').href)
+      .filter((href) => !href.includes('-set'));
   },
   // PALE
   278: async ({ html }) => {
