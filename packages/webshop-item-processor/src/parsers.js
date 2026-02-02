@@ -304,8 +304,17 @@ const parsers = {
       return {};
     }
 
-    const currencySymbol = 'zł';
     const priceElement = document.querySelector('[data-price]');
+    const currencySymbol =
+      priceElement && Object.keys(currencyCodes).find((key) => priceElement.textContent.toLowerCase().includes(key));
+
+    if (!currencySymbol) {
+      logger.debug(`Price element text: '${priceElement?.textContent}'`);
+      logger.error(`No currency found for ${url}`);
+
+      throw new Error(errors.currencyMissing);
+    }
+
     const price = cleanPrice({ priceElement, currencySymbol });
 
     if (!price || isNaN(price)) {
