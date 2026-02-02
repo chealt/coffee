@@ -308,6 +308,12 @@ const parsers = {
     const priceElement = document.querySelector('[data-price]');
     const price = cleanPrice({ priceElement, currencySymbol });
 
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
     const currency = currencyCodes[currencySymbol];
 
     const details = Array.from(document.querySelectorAll('.product-information__additional__line')).map((element) =>
