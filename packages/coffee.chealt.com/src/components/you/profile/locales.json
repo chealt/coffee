@@ -5,6 +5,7 @@
     "logout": "logout",
     "newCoffee": "new coffees",
     "notifications": "Notifications",
+    "rateLimitExceeded": "You tried to send a new registration code too many times. Please try again later.",
     "sendRegistrationCode": "Send new registration code",
     "title": "Profile"
   },
@@ -14,6 +15,7 @@
     "notifications": "Powiadomienia",
     "language": "Język",
     "logout": "wyloguj",
+    "rateLimitExceeded": "Zbyt wiele prób wysłania nowego kodu rejestracji. Proszę spróbować później.",
     "sendRegistrationCode": "Wyślij nowy kod rejestracji",
     "title": "Profil"
   }

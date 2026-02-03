@@ -32,6 +32,7 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
       data-save-on-input
       data-exclude-from-local-storage
     >
+      <p data-error-code="RATE_LIMIT_EXCEEDED" class="error hidden">{t.rateLimitExceeded}</p>
       <Label>
         <div class="name">{t.language}</div>
         <Select name="language">
