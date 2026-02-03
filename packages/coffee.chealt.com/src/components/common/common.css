@@ -39,6 +39,8 @@
 
   --card-height: 260px;
   --max-main-image-width: 600px;
+  --limited-width: 1024px;
+  --limited-width--s: 600px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -424,6 +426,11 @@ sup {
 
 .error {
   color: var(--color-error);
+}
+
+.limit-width {
+  max-width: var(--limited-width--s);
+  margin: 0 auto;
 }
 
 @view-transition {
