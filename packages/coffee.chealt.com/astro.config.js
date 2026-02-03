@@ -7,8 +7,6 @@ import supportedLanguages from './data/supportedLanguages.json';
 
 const locales = supportedLanguages.map(({ locale }) => locale);
 
-const isDev = process.env.NODE_ENV === 'development';
-
 export default defineConfig({
   output: 'server',
   i18n: {
