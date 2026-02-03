@@ -65,15 +65,13 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
           {t.newCoffee}
         </Checkbox>
       </fieldset>
+      <coffee-api-button data-api-endpoint="/api/authentication/registration/send-new-code.json?profile">
+        <Button class="bordered column">
+          <span>{t.sendRegistrationCode}</span>
+          <Icon type="email" />
+        </Button>
+      </coffee-api-button>
     </Form>
-  </section>
-  <section>
-    <coffee-api-button data-api-endpoint="/api/authentication/registration/send-new-code.json?profile">
-      <Button class="bordered column">
-        <span>{t.sendRegistrationCode}</span>
-        <Icon type="email" />
-      </Button>
-    </coffee-api-button>
   </section>
   <section>
     <Logout logoutUrl="/api/authentication/logout.json">

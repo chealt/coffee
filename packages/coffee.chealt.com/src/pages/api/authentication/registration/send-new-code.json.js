@@ -27,7 +27,7 @@ const POST = async (context) => {
       return new Response(JSON.stringify({ errorCode: 'USER_NOT_FOUND' }), { status: 401 });
     }
 
-    const { success } = await context.env.REGISTRATION_CODE_RATE_LIMITER.limit({
+    const { success } = await context.locals.runtime.env.REGISTRATION_CODE_RATE_LIMITER.limit({
       key: `send-new-registration-code-${email}`
     });
 

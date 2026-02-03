@@ -85,9 +85,7 @@ export default defineConfig({
       telemetry: false
     })
   ],
-  adapter: !isDev
-    ? cloudflare({
-        imageService: 'passthrough'
-      })
-    : undefined
+  adapter: cloudflare({
+    imageService: 'passthrough'
+  })
 });
