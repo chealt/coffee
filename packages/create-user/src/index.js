@@ -6,7 +6,7 @@ import { getSecret, sendEmail } from './AWS.js';
 import logger from './Sentry/logger.js';
 import { addSecret } from './cloudflare.js';
 import content from './email-content.js';
-import locales from './locales.json' with { type: 'json' };
+import locales from './locales.js';
 
 // eslint-disable-next-line complexity
 export const handler = async (event) => {
@@ -149,10 +149,10 @@ export const handler = async (event) => {
   });
 
   logger.info(`sending email with registration code for '${username}' to email: ${email}`);
-  const localeContent = locales[locale] || locales.en;
+  const t = locales({ locale });
   await sendEmail({
     to: email,
-    content: content({ title: localeContent.registrationEmailTitle, username, registrationCode, locale }),
-    subject: localeContent.registrationEmailSubject
+    content: content({ title: t('registrationEmailTitle'), username, registrationCode, locale }),
+    subject: t('registrationEmailSubject')
   });
 };
