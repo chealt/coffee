@@ -10,8 +10,8 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "yarn workspace @chealt/coffee build",
-    "dev": "yarn workspace @chealt/coffee dev",
+    "build": "yarn workspace @centralbeans/website build",
+    "dev": "yarn workspace @centralbeans/website dev",
     "lint": "eslint . --quiet",
     "format": "prettier --write ."
   },

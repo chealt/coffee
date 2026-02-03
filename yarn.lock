@@ -1569,9 +1569,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@chealt/coffee@workspace:packages/coffee.chealt.com":
+"@centralbeans/website@workspace:packages/coffee.chealt.com":
   version: 0.0.0-use.local
-  resolution: "@chealt/coffee@workspace:packages/coffee.chealt.com"
+  resolution: "@centralbeans/website@workspace:packages/coffee.chealt.com"
   dependencies:
     "@astrojs/cloudflare": "npm:^12.6.12"
     "@aws-sdk/client-lambda": "npm:^3.980.0"
