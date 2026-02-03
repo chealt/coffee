@@ -56,13 +56,18 @@ class CoffeeCollectionHeader extends HTMLElement {
   }
 
   async moveCollection(direction) {
-    this.moveUpTrigger.disabled = true;
-    this.moveDownTrigger.disabled = true;
+    if (this.moveDownTrigger) {
+      this.moveUpTrigger.disabled = true;
+    }
+
+    if (this.moveUpTrigger) {
+      this.moveDownTrigger.disabled = true;
+    }
 
     if (direction === 'up') {
-      this.moveUpTrigger.classList.add('in-progress');
+      this.moveUpTrigger?.classList.add('in-progress');
     } else {
-      this.moveDownTrigger.classList.add('in-progress');
+      this.moveDownTrigger?.classList.add('in-progress');
     }
 
     const id = this.closest('[data-collection-id]').dataset.collectionId;
