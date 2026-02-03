@@ -24,7 +24,15 @@ const POST = async (context) => {
     }
 
     if (!username || !email) {
-      throw new Error('User not found');
+      return new Response(JSON.stringify({ errorCode: 'USER_NOT_FOUND' }), { status: 401 });
+    }
+
+    const { success } = await context.env.REGISTRATION_CODE_RATE_LIMITER.limit({
+      key: `send-new-registration-code-${email}`
+    });
+
+    if (!success) {
+      return new Response(JSON.stringify({ errorCode: 'RATE_LIMIT_EXCEEDED' }), { status: 429 });
     }
 
     await invoke({ name: 'sendRegistrationCode', payload: { username, email } });

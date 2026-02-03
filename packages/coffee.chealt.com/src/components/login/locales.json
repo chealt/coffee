@@ -6,6 +6,7 @@
     "apiCallFailed": "Please try again later",
     "userNotFound": "User not found",
     "cannotGetAuthenticationOptions": "Cannot get authentication options",
+    "rateLimitExceeded": "You tried to send a new registration code too many times. Please try again later.",
     "sendRegistrationCode": "Send new registration code"
   },
   "pl": {
@@ -15,6 +16,7 @@
     "apiCallFailed": "Proszę spróbować później",
     "userNotFound": "Użytkownik nie został znaleziony",
     "cannotGetAuthenticationOptions": "Nie można uzyskać opcji uwierzytelnienia",
+    "rateLimitExceeded": "Zbyt wiele prób wysłania nowego kodu rejestracji. Proszę spróbować później.",
     "sendRegistrationCode": "Wyślij nowy kod rejestracji"
   }
 }

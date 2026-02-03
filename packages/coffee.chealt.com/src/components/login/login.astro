@@ -41,6 +41,7 @@ const { username, redirectUrl } = Astro.props;
         <p data-error-code="CANNOT_GET_AUTHENTICATION_OPTIONS" class="error hidden">
           {t.cannotGetAuthenticationOptions}
         </p>
+        <p data-error-code="RATE_LIMIT_EXCEEDED" class="error hidden">{t.rateLimitExceeded}</p>
       </section>
       <section>
         <coffee-api-button data-api-endpoint="/api/authentication/registration/send-new-code.json">

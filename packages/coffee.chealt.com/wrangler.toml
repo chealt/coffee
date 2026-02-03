@@ -17,3 +17,11 @@ enabled = true
 AWS_REGION = "eu-central-1"
 ORIGIN = "https://centralbeans.com"
 RELYING_PARTY_ID = "centralbeans.com"
+
+[[ratelimits]]
+name = "REGISTRATION_CODE_RATE_LIMITER"
+namespace_id = "1001"
+
+  [ratelimits.simple]
+    limit = 1
+    period = 60
