@@ -1,13 +1,5 @@
 ---
-import Stats from '@components/origin-countries/stats.astro';
-import originCountries from '@data/originCountries.json';
-import { decodeSafeURL } from '@utils/string.js';
-
-const { originCountry } = Astro.params;
-
-const id = originCountries.find(({ name }) => name === decodeSafeURL(originCountry))?.origin_country_id;
-
-Astro.response.headers.set('Cache-Control', 'public, max-age=86400');
+import FilteredListStats from '@pages/_filtered-list-stats.astro';
 ---
 
-<Stats id={id} />
+<FilteredListStats />
