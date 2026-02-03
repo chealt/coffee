@@ -174,9 +174,7 @@ const parsers = {
 
     const document = getDocument(html);
 
-    const price = Number(
-      document.querySelector('.current-price-value').textContent.trim().replaceAll(' PLN', '').replace(',', '.')
-    ).toFixed(2);
+    const price = cleanPrice({ priceElement: document.querySelector('.current-price-value'), currencySymbol: 'zł' });
 
     if (!price || isNaN(price)) {
       logger.error(`No price found for ${url}`);
@@ -198,7 +196,13 @@ const parsers = {
 
     const pricePerGram = Number((price / weight).toFixed(2));
 
-    const details = Array.from(document.querySelectorAll('.data-sheet dt')).reduce((newDetails, nameElement) => {
+    let detailsElements = document.querySelectorAll('.data-sheet dt');
+
+    if (!detailsElements.length) {
+      detailsElements = document.querySelectorAll('.product-description td:has(strong)');
+    }
+
+    const details = Array.from(detailsElements).reduce((newDetails, nameElement) => {
       const name = nameElement.textContent.toLowerCase();
       const value = nameElement.nextElementSibling.textContent.toLowerCase();
 
@@ -212,7 +216,11 @@ const parsers = {
     }
 
     const originCountry = details.pochodzenie;
-    const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
+    const originCountryId =
+      originCountries.find(({ name }) => name === originCountry)?.origin_country_id ||
+      originCountries.find(({ name }) => document.querySelector('h1').textContent.toLowerCase().includes(name))
+        ?.origin_country_id ||
+      null;
 
     if (!originCountryId) {
       logger.error(`No origin country found for ${url}`);
@@ -224,7 +232,9 @@ const parsers = {
     const originRegionId = originRegions.find(({ name }) => name === originRegion)?.origin_region_id || null;
 
     if (!originRegionId) {
-      logger.info(`Missing origin region: ${originCountry} - ${originRegion}`);
+      logger.info(
+        `Missing origin region: ${originCountry || originCountries.find(({ origin_country_id: id }) => id === originCountryId)?.name} - ${originRegion}`
+      );
     }
 
     const brewingMethod = details['profil palenia'];
@@ -244,7 +254,13 @@ const parsers = {
       logger.info(`Missing processing method: ${processingMethod}`);
     }
 
-    const tasteNotesStrings = details['profil smakowy']?.split('\n').map((name) => name.trim().toLowerCase()) || [];
+    const tasteNotesStrings = details['profil smakowy']
+      ? details['profil smakowy'].split('\n').map((name) => name.trim().toLowerCase())
+      : document
+          .querySelector('.product-description b, .product-description strong')
+          ?.textContent.toLowerCase()
+          .split(', ');
+
     const tasteNoteIds = Array.from(
       new Set(tasteNotes.filter(({ name }) => tasteNotesStrings.includes(name)).map(({ taste_note_id: id }) => id))
     );
@@ -259,14 +275,20 @@ const parsers = {
     const varietyIds = varieties
       .filter(
         ({ name, alias }) =>
-          varietiesStrings.includes(name.toLowerCase()) || (alias && varietiesStrings.includes(alias.toLowerCase()))
+          varietiesStrings.includes(name.toLowerCase()) ||
+          (name.toLowerCase() === 'heirloom' && varietiesStrings.includes('heriloom')) || // typo
+          (alias && varietiesStrings.includes(alias.toLowerCase()))
       )
       .filter(({ name }) => name.toLowerCase() !== originCountry)
       .map(({ id }) => id);
     const missingVarieties = varietiesStrings.filter(
       (variety) =>
-        !varieties.some(({ name }) => name.toLowerCase() === variety) &&
-        !varieties.some(({ alias }) => alias?.toLowerCase() === variety)
+        !varieties.some(
+          ({ name, alias }) =>
+            name.toLowerCase() === variety ||
+            (name.toLowerCase() === 'heirloom' && variety === 'heriloom') || // typo
+            (alias && alias.toLowerCase() === variety)
+        )
     );
 
     if (missingVarieties.length) {
