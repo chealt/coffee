@@ -3,14 +3,18 @@
     "title": "Login",
     "login": "Login",
     "usernameOrEmail": "Username or email",
+    "apiCallFailed": "Please try again later",
     "userNotFound": "User not found",
-    "cannotGetAuthenticationOptions": "Cannot get authentication options"
+    "cannotGetAuthenticationOptions": "Cannot get authentication options",
+    "sendRegistrationCode": "Send new registration code"
   },
   "pl": {
     "title": "Logowanie",
     "login": "Zaloguj się",
     "usernameOrEmail": "Nazwa użytkownika lub email",
+    "apiCallFailed": "Proszę spróbować później",
     "userNotFound": "Użytkownik nie został znaleziony",
-    "cannotGetAuthenticationOptions": "Nie można uzyskać opcji uwierzytelnienia"
+    "cannotGetAuthenticationOptions": "Nie można uzyskać opcji uwierzytelnienia",
+    "sendRegistrationCode": "Wyślij nowy kod rejestracji"
   }
 }

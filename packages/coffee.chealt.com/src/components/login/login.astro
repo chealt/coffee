@@ -1,8 +1,11 @@
 ---
 import Button from '../form/button/button.astro';
 import Form from '../form/form.astro';
+import Icon from '../icon/icon.astro';
 import Input from '../form/input/input.astro';
 import Label from '../form/label/label.astro';
+
+import './login.css';
 
 import allLocaleTranslations from './locales.json';
 
@@ -33,10 +36,19 @@ const { username, redirectUrl } = Astro.props;
             required
           />
         </Label>
+        <p data-error-code="API_CALL_FAILED" class="error hidden">{t.apiCallFailed}</p>
         <p data-error-code="USER_NOT_FOUND" class="error hidden">{t.userNotFound}</p>
         <p data-error-code="CANNOT_GET_AUTHENTICATION_OPTIONS" class="error hidden">
           {t.cannotGetAuthenticationOptions}
         </p>
+      </section>
+      <section>
+        <coffee-api-button data-api-endpoint="/api/authentication/registration/send-new-code.json">
+          <Button class="bordered column">
+            <span>{t.sendRegistrationCode}</span>
+            <Icon type="email" />
+          </Button>
+        </coffee-api-button>
       </section>
       <section>
         <Button class="primary" type="submit">{t.login}</Button>
@@ -46,3 +58,4 @@ const { username, redirectUrl } = Astro.props;
 </div>
 
 <script src="../chealt-auth-login.js"></script>
+<script src="../common/api-button.js"></script>

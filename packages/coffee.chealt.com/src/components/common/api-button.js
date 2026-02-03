@@ -1,5 +1,8 @@
+import logger from '../errors/utils.js';
+
 class APIButton extends HTMLElement {
   connectedCallback() {
+    this.usernameField = this.closest('form')?.querySelector('input[name="username"]');
     this.trigger = this.querySelector('button');
     this.apiEndpoint = this.dataset.apiEndpoint;
 
@@ -14,11 +17,30 @@ class APIButton extends HTMLElement {
     this.trigger.addEventListener('click', this.callEndpoint.bind(this));
   }
 
-  async callEndpoint() {
+  async callEndpoint(event) {
+    event.preventDefault();
+
+    const form = this.closest('form');
+
+    form?.querySelectorAll('[data-error-code]').forEach((element) => element.classList.add('hidden'));
     this.trigger.disabled = true;
     this.trigger.classList.add('in-progress');
 
-    await fetch(this.apiEndpoint, { method: 'POST' });
+    try {
+      const response = await fetch(this.apiEndpoint, {
+        method: 'POST',
+        body: this.usernameField ? JSON.stringify({ username: this.usernameField.value }) : undefined
+      });
+      const responseJSON = await response.json();
+
+      if (responseJSON.errorCode) {
+        form.querySelector(`[data-error-code="${responseJSON.errorCode}"]`)?.classList.remove('hidden');
+      }
+    } catch (error) {
+      logger.error(error);
+
+      form.querySelector('[data-error-code="API_CALL_FAILED"]')?.classList.remove('hidden');
+    }
 
     this.trigger.classList.remove('in-progress');
     this.trigger.disabled = false;

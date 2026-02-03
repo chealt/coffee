@@ -5,7 +5,7 @@ import logger from './errors/utils.js';
 class ChealtAuthLogin extends HTMLElement {
   connectedCallback() {
     this.form = this.querySelector('form');
-    this.loginButton = this.querySelector('button');
+    this.loginButton = this.querySelector('button[type="submit"]');
     this.verifyEndpoint = this.dataset.verifyEndpoint;
     this.authenticationOptionsEndpoint = this.dataset.authenticationOptionsEndpoint;
     this.authenticationOptions = this.dataset.authenticationOptions
