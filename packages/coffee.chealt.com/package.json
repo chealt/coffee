@@ -31,12 +31,12 @@
     "rollup-plugin-visualizer": "^6.0.5",
     "vite": "^7.3.1",
     "vite-plugin-wasm": "^3.5.0",
-    "wrangler": "^4.61.1"
+    "wrangler": "^4.62.0"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.980.0",
-    "@aws-sdk/client-s3": "^3.980.0",
-    "@aws-sdk/s3-request-presigner": "^3.980.0",
+    "@aws-sdk/client-lambda": "^3.981.0",
+    "@aws-sdk/client-s3": "^3.981.0",
+    "@aws-sdk/s3-request-presigner": "^3.981.0",
     "@playwright-testing-library/test": "^4.5.0",
     "@playwright/test": "^1.58.1",
     "@sentry/astro": "^10.38.0",

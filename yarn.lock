@@ -228,9 +228,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-dynamodb@npm:^3.980.0":
-  version: 3.980.0
-  resolution: "@aws-sdk/client-dynamodb@npm:3.980.0"
+"@aws-sdk/client-dynamodb@npm:^3.981.0":
+  version: 3.981.0
+  resolution: "@aws-sdk/client-dynamodb@npm:3.981.0"
   dependencies:
     "@aws-crypto/sha256-browser": "npm:5.2.0"
     "@aws-crypto/sha256-js": "npm:5.2.0"
@@ -244,7 +244,7 @@ __metadata:
     "@aws-sdk/middleware-user-agent": "npm:^3.972.5"
     "@aws-sdk/region-config-resolver": "npm:^3.972.3"
     "@aws-sdk/types": "npm:^3.973.1"
-    "@aws-sdk/util-endpoints": "npm:3.980.0"
+    "@aws-sdk/util-endpoints": "npm:3.981.0"
     "@aws-sdk/util-user-agent-browser": "npm:^3.972.3"
     "@aws-sdk/util-user-agent-node": "npm:^3.972.3"
     "@smithy/config-resolver": "npm:^4.4.6"
@@ -274,13 +274,13 @@ __metadata:
     "@smithy/util-utf8": "npm:^4.2.0"
     "@smithy/util-waiter": "npm:^4.2.8"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/07ee61f890e5157be2f66a4e6d4c8274171c7c826c5906a3a1e938ea0b177f23772253a7569abdb131091feb5e61da3c66e3bd8e2f3883444ac28164e31e0546
+  checksum: 10c0/22f072715abf49179d1f2aff544077c209712ca6f73a12f4e9e983d55a85b5cb32f77778b38f16cc96e616b30177c95dee00ff91f080a117c157c14c59ec1541
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-lambda@npm:^3.980.0":
-  version: 3.980.0
-  resolution: "@aws-sdk/client-lambda@npm:3.980.0"
+"@aws-sdk/client-lambda@npm:^3.981.0":
+  version: 3.981.0
+  resolution: "@aws-sdk/client-lambda@npm:3.981.0"
   dependencies:
     "@aws-crypto/sha256-browser": "npm:5.2.0"
     "@aws-crypto/sha256-js": "npm:5.2.0"
@@ -292,7 +292,7 @@ __metadata:
     "@aws-sdk/middleware-user-agent": "npm:^3.972.5"
     "@aws-sdk/region-config-resolver": "npm:^3.972.3"
     "@aws-sdk/types": "npm:^3.973.1"
-    "@aws-sdk/util-endpoints": "npm:3.980.0"
+    "@aws-sdk/util-endpoints": "npm:3.981.0"
     "@aws-sdk/util-user-agent-browser": "npm:^3.972.3"
     "@aws-sdk/util-user-agent-node": "npm:^3.972.3"
     "@smithy/config-resolver": "npm:^4.4.6"
@@ -326,13 +326,13 @@ __metadata:
     "@smithy/util-utf8": "npm:^4.2.0"
     "@smithy/util-waiter": "npm:^4.2.8"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/1aee115aab64e913d07c2d5622f6b525f857c8154f09073e086315f4943bc88b81fb0d47b1a14007ac564681bdda7da688da1ffc4e8a607c9da9cbe6f4c40e3b
+  checksum: 10c0/d3ce4637f2664d5da26580d59d38176d067d38e541b6050825dd3e463b5ea63660afe36a8c66282734554933b117e000c29c549a5a3a066c3e761d2dbbac46dd
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-s3@npm:^3.980.0":
-  version: 3.980.0
-  resolution: "@aws-sdk/client-s3@npm:3.980.0"
+"@aws-sdk/client-s3@npm:^3.981.0":
+  version: 3.981.0
+  resolution: "@aws-sdk/client-s3@npm:3.981.0"
   dependencies:
     "@aws-crypto/sha1-browser": "npm:5.2.0"
     "@aws-crypto/sha256-browser": "npm:5.2.0"
@@ -350,9 +350,9 @@ __metadata:
     "@aws-sdk/middleware-ssec": "npm:^3.972.3"
     "@aws-sdk/middleware-user-agent": "npm:^3.972.5"
     "@aws-sdk/region-config-resolver": "npm:^3.972.3"
-    "@aws-sdk/signature-v4-multi-region": "npm:3.980.0"
+    "@aws-sdk/signature-v4-multi-region": "npm:3.981.0"
     "@aws-sdk/types": "npm:^3.973.1"
-    "@aws-sdk/util-endpoints": "npm:3.980.0"
+    "@aws-sdk/util-endpoints": "npm:3.981.0"
     "@aws-sdk/util-user-agent-browser": "npm:^3.972.3"
     "@aws-sdk/util-user-agent-node": "npm:^3.972.3"
     "@smithy/config-resolver": "npm:^4.4.6"
@@ -389,13 +389,13 @@ __metadata:
     "@smithy/util-utf8": "npm:^4.2.0"
     "@smithy/util-waiter": "npm:^4.2.8"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/00a32c3cddb8828c3670c4657fb95a080a91f74ea8cb606b2cdcd0fcf77d57b4394bc4e843e0000ff3000e8b92e523c27cca1bf0dfab9f5ab45bf6f12cc4722c
+  checksum: 10c0/1f3f9b650b2b70ceafe0ec2b3aaf2df8e721639bcf25b7f6f549166027dd69176dd6548ee66b393d46725f7a1de0a735a31c2674d4f9239f20854661e7998c2f
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-secrets-manager@npm:^3.980.0":
-  version: 3.980.0
-  resolution: "@aws-sdk/client-secrets-manager@npm:3.980.0"
+"@aws-sdk/client-secrets-manager@npm:^3.981.0":
+  version: 3.981.0
+  resolution: "@aws-sdk/client-secrets-manager@npm:3.981.0"
   dependencies:
     "@aws-crypto/sha256-browser": "npm:5.2.0"
     "@aws-crypto/sha256-js": "npm:5.2.0"
@@ -407,7 +407,7 @@ __metadata:
     "@aws-sdk/middleware-user-agent": "npm:^3.972.5"
     "@aws-sdk/region-config-resolver": "npm:^3.972.3"
     "@aws-sdk/types": "npm:^3.973.1"
-    "@aws-sdk/util-endpoints": "npm:3.980.0"
+    "@aws-sdk/util-endpoints": "npm:3.981.0"
     "@aws-sdk/util-user-agent-browser": "npm:^3.972.3"
     "@aws-sdk/util-user-agent-node": "npm:^3.972.3"
     "@smithy/config-resolver": "npm:^4.4.6"
@@ -436,13 +436,13 @@ __metadata:
     "@smithy/util-retry": "npm:^4.2.8"
     "@smithy/util-utf8": "npm:^4.2.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/2a915d465d2f1e8ed5c4ada74b08822e0ad22ca528790d73be0cb9b366cef1a088394b8f66ae5dac4a133a51e0b74e3f2689332c720b5f26f47e6b72b5a5d451
+  checksum: 10c0/f67b18fc465e97dd60113f2a594c0da44fcfe27929486fe0cd80c03b3c45633e54c42860113de9d62ddcf620314886f22e2bec37f9b91ba952a0f792dacba5bc
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-sesv2@npm:^3.980.0":
-  version: 3.980.0
-  resolution: "@aws-sdk/client-sesv2@npm:3.980.0"
+"@aws-sdk/client-sesv2@npm:^3.981.0":
+  version: 3.981.0
+  resolution: "@aws-sdk/client-sesv2@npm:3.981.0"
   dependencies:
     "@aws-crypto/sha256-browser": "npm:5.2.0"
     "@aws-crypto/sha256-js": "npm:5.2.0"
@@ -453,9 +453,9 @@ __metadata:
     "@aws-sdk/middleware-recursion-detection": "npm:^3.972.3"
     "@aws-sdk/middleware-user-agent": "npm:^3.972.5"
     "@aws-sdk/region-config-resolver": "npm:^3.972.3"
-    "@aws-sdk/signature-v4-multi-region": "npm:3.980.0"
+    "@aws-sdk/signature-v4-multi-region": "npm:3.981.0"
     "@aws-sdk/types": "npm:^3.973.1"
-    "@aws-sdk/util-endpoints": "npm:3.980.0"
+    "@aws-sdk/util-endpoints": "npm:3.981.0"
     "@aws-sdk/util-user-agent-browser": "npm:^3.972.3"
     "@aws-sdk/util-user-agent-node": "npm:^3.972.3"
     "@smithy/config-resolver": "npm:^4.4.6"
@@ -484,7 +484,7 @@ __metadata:
     "@smithy/util-retry": "npm:^4.2.8"
     "@smithy/util-utf8": "npm:^4.2.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/531572bc89cd8f6b20799e68bf8def77676994888b2950a6927135d5d7c0a845d91290047e13fa796114e3cb736162f4f720a0f4b8cdfcdd465aa9ff79cb26d2
+  checksum: 10c0/94cf03268069e5eaa3a92c04c24baedacbd364439b6cd4b82ab8bad5f2aea3e39598d41114582c6014a71f59d3936b89b61d7d50162d2e02a282b46e055e9777
   languageName: node
   linkType: hard
 
@@ -534,9 +534,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-textract@npm:^3.980.0":
-  version: 3.980.0
-  resolution: "@aws-sdk/client-textract@npm:3.980.0"
+"@aws-sdk/client-textract@npm:^3.981.0":
+  version: 3.981.0
+  resolution: "@aws-sdk/client-textract@npm:3.981.0"
   dependencies:
     "@aws-crypto/sha256-browser": "npm:5.2.0"
     "@aws-crypto/sha256-js": "npm:5.2.0"
@@ -548,7 +548,7 @@ __metadata:
     "@aws-sdk/middleware-user-agent": "npm:^3.972.5"
     "@aws-sdk/region-config-resolver": "npm:^3.972.3"
     "@aws-sdk/types": "npm:^3.973.1"
-    "@aws-sdk/util-endpoints": "npm:3.980.0"
+    "@aws-sdk/util-endpoints": "npm:3.981.0"
     "@aws-sdk/util-user-agent-browser": "npm:^3.972.3"
     "@aws-sdk/util-user-agent-node": "npm:^3.972.3"
     "@smithy/config-resolver": "npm:^4.4.6"
@@ -577,13 +577,13 @@ __metadata:
     "@smithy/util-retry": "npm:^4.2.8"
     "@smithy/util-utf8": "npm:^4.2.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/2936ae8185e8fb344093391552a66335fc302ecbe0f89b520df92b6f2d1e8eb1677683dfa902dd1e92e77afa26cf386c8e569dc01edc8a6eab9d392ab2af0dee
+  checksum: 10c0/c7f165cae8b8d84f805d39b2ce5a06685bbb96db5959425083c6b8b21d702f3e23fb16a575e91144de36aefcd9182fad7edb197c494096c6a56aeef8da865d36
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-translate@npm:^3.980.0":
-  version: 3.980.0
-  resolution: "@aws-sdk/client-translate@npm:3.980.0"
+"@aws-sdk/client-translate@npm:^3.981.0":
+  version: 3.981.0
+  resolution: "@aws-sdk/client-translate@npm:3.981.0"
   dependencies:
     "@aws-crypto/sha256-browser": "npm:5.2.0"
     "@aws-crypto/sha256-js": "npm:5.2.0"
@@ -595,7 +595,7 @@ __metadata:
     "@aws-sdk/middleware-user-agent": "npm:^3.972.5"
     "@aws-sdk/region-config-resolver": "npm:^3.972.3"
     "@aws-sdk/types": "npm:^3.973.1"
-    "@aws-sdk/util-endpoints": "npm:3.980.0"
+    "@aws-sdk/util-endpoints": "npm:3.981.0"
     "@aws-sdk/util-user-agent-browser": "npm:^3.972.3"
     "@aws-sdk/util-user-agent-node": "npm:^3.972.3"
     "@smithy/config-resolver": "npm:^4.4.6"
@@ -624,7 +624,7 @@ __metadata:
     "@smithy/util-retry": "npm:^4.2.8"
     "@smithy/util-utf8": "npm:^4.2.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/8ce41e3d4ac95ef21feb193cfc9d7f37ce676048b86569c12508251537f7260641e8d5eaa8a01ccea93270d53c1e1b2dcf57bcc2cb68e9f5e69f26349a52f6c8
+  checksum: 10c0/5785c0e8bd0384de851437a3f92226cc4889806bf9edb51ec8306c32fb29e406840ff0fcc292080215e17663a1f1361e536f66d0ebf1d03e398ebf778b9a7a94
   languageName: node
   linkType: hard
 
@@ -1036,11 +1036,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/s3-request-presigner@npm:^3.980.0":
-  version: 3.980.0
-  resolution: "@aws-sdk/s3-request-presigner@npm:3.980.0"
+"@aws-sdk/s3-request-presigner@npm:^3.981.0":
+  version: 3.981.0
+  resolution: "@aws-sdk/s3-request-presigner@npm:3.981.0"
   dependencies:
-    "@aws-sdk/signature-v4-multi-region": "npm:3.980.0"
+    "@aws-sdk/signature-v4-multi-region": "npm:3.981.0"
     "@aws-sdk/types": "npm:^3.973.1"
     "@aws-sdk/util-format-url": "npm:^3.972.3"
     "@smithy/middleware-endpoint": "npm:^4.4.12"
@@ -1048,13 +1048,13 @@ __metadata:
     "@smithy/smithy-client": "npm:^4.11.1"
     "@smithy/types": "npm:^4.12.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/eaca31913b2753422d8bcf2f46cd272da84209e941dfe1ef3e75da190abeb08da9f7d8e496222e30fce456fd0c5a2eaf02e35cc8a2167140bd97f57d66cf5329
+  checksum: 10c0/74f5a099793fff7c53509daecd965c542c946d943ff909939e16d210b8f16eb6305141b93fe6e7282573d663ad0835ed025280ace4e0c7822221345213fdab0f
   languageName: node
   linkType: hard
 
-"@aws-sdk/signature-v4-multi-region@npm:3.980.0":
-  version: 3.980.0
-  resolution: "@aws-sdk/signature-v4-multi-region@npm:3.980.0"
+"@aws-sdk/signature-v4-multi-region@npm:3.981.0":
+  version: 3.981.0
+  resolution: "@aws-sdk/signature-v4-multi-region@npm:3.981.0"
   dependencies:
     "@aws-sdk/middleware-sdk-s3": "npm:^3.972.5"
     "@aws-sdk/types": "npm:^3.973.1"
@@ -1062,7 +1062,7 @@ __metadata:
     "@smithy/signature-v4": "npm:^5.3.8"
     "@smithy/types": "npm:^4.12.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/6dedf84fc255b0a772787ae45212a43e8cb43544b7a4815096ee87cb590dd6197b6012bb5fb1a8e46a68a32ebd52ec52e94f727031e241e12116701b82da9277
+  checksum: 10c0/23a098f78ac58c1bc4ebeca2fae6a2667a468d8e22fe022a606ddd1c63a1a998d0b0737789f0aad3dd3c6a1329b4c1bf8d36c45959a1bbf8a95ba2c260fac3fe
   languageName: node
   linkType: hard
 
@@ -1120,6 +1120,19 @@ __metadata:
     "@smithy/util-endpoints": "npm:^3.2.8"
     tslib: "npm:^2.6.2"
   checksum: 10c0/0de91a4d1e2382f45fbfcbd4e1424d2088fd58479483235b5dec23875a10fe11502a2482295ef14763793eeb607c4a0c1f75d2fc4101868e33f0837deab9a6ba
+  languageName: node
+  linkType: hard
+
+"@aws-sdk/util-endpoints@npm:3.981.0":
+  version: 3.981.0
+  resolution: "@aws-sdk/util-endpoints@npm:3.981.0"
+  dependencies:
+    "@aws-sdk/types": "npm:^3.973.1"
+    "@smithy/types": "npm:^4.12.0"
+    "@smithy/url-parser": "npm:^4.2.8"
+    "@smithy/util-endpoints": "npm:^3.2.8"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/d5256572280189e00ea7257f952a1c3fcc23e2245d65abda80c6734fe8dc7874658d74a09bf3284c5119a7fc5dfa5b2c4d711c5a812fdf0519ae0fa9997b5f68
   languageName: node
   linkType: hard
 
@@ -1396,7 +1409,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/coffee-admin@workspace:packages/coffee-admin"
   dependencies:
-    "@aws-sdk/client-translate": "npm:^3.980.0"
+    "@aws-sdk/client-translate": "npm:^3.981.0"
     "@libsql/client": "npm:^0.17.0"
     "@playwright/test": "npm:^1.58.1"
   languageName: unknown
@@ -1406,8 +1419,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/create-user@workspace:packages/create-user"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.980.0"
-    "@aws-sdk/client-sesv2": "npm:^3.980.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.981.0"
+    "@aws-sdk/client-sesv2": "npm:^3.981.0"
     "@centralbeans/email": "workspace:*"
     "@libsql/client": "npm:^0.17.0"
     "@sentry/aws-serverless": "npm:^10.38.0"
@@ -1420,7 +1433,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/delete-user@workspace:packages/delete-user"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.980.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.981.0"
     "@libsql/client": "npm:^0.17.0"
     "@sentry/aws-serverless": "npm:^10.38.0"
     "@tursodatabase/api": "npm:^1.9.2"
@@ -1437,11 +1450,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/flag-removed@workspace:packages/flag-removed"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.980.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.981.0"
     "@libsql/client": "npm:^0.17.0"
     "@sentry/aws-serverless": "npm:^10.38.0"
     jsdom: "npm:27.0.0"
-    undici: "npm:^7.19.2"
+    undici: "npm:^7.20.0"
   languageName: unknown
   linkType: soft
 
@@ -1449,10 +1462,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/image-processor@workspace:packages/image-processor"
   dependencies:
-    "@aws-sdk/client-lambda": "npm:^3.980.0"
-    "@aws-sdk/client-s3": "npm:^3.980.0"
-    "@aws-sdk/client-secrets-manager": "npm:^3.980.0"
-    "@aws-sdk/client-textract": "npm:^3.980.0"
+    "@aws-sdk/client-lambda": "npm:^3.981.0"
+    "@aws-sdk/client-s3": "npm:^3.981.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.981.0"
+    "@aws-sdk/client-textract": "npm:^3.981.0"
     "@libsql/client": "npm:^0.17.0"
     "@sentry/aws-serverless": "npm:^10.38.0"
     sharp: "npm:^0.34.5"
@@ -1463,7 +1476,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/image-text-interpreter@workspace:packages/image-text-interpreter"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.980.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.981.0"
     "@libsql/client": "npm:^0.17.0"
     "@sentry/aws-serverless": "npm:^10.38.0"
   languageName: unknown
@@ -1473,7 +1486,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/import-currencies@workspace:packages/import-currencies"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.980.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.981.0"
     "@libsql/client": "npm:^0.17.0"
     "@sentry/aws-serverless": "npm:^10.38.0"
   languageName: unknown
@@ -1483,8 +1496,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/invoke-flag-removed@workspace:packages/invoke-flag-removed"
   dependencies:
-    "@aws-sdk/client-lambda": "npm:^3.980.0"
-    "@aws-sdk/client-secrets-manager": "npm:^3.980.0"
+    "@aws-sdk/client-lambda": "npm:^3.981.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.981.0"
     "@libsql/client": "npm:^0.17.0"
     "@sentry/aws-serverless": "npm:^10.38.0"
   languageName: unknown
@@ -1494,8 +1507,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/notifications@workspace:packages/notifications"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.980.0"
-    "@aws-sdk/client-sesv2": "npm:^3.980.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.981.0"
+    "@aws-sdk/client-sesv2": "npm:^3.981.0"
     "@centralbeans/email": "workspace:*"
     "@libsql/client": "npm:^0.17.0"
     "@sentry/aws-serverless": "npm:^10.38.0"
@@ -1507,7 +1520,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/record-roaster-webshop@workspace:packages/record-roaster-webshop"
   dependencies:
-    "@aws-sdk/client-lambda": "npm:^3.980.0"
+    "@aws-sdk/client-lambda": "npm:^3.981.0"
     "@sentry/aws-serverless": "npm:^10.38.0"
   languageName: unknown
   linkType: soft
@@ -1516,9 +1529,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/record-webshop-item-details@workspace:packages/record-webshop-item-details"
   dependencies:
-    "@aws-sdk/client-dynamodb": "npm:^3.980.0"
-    "@aws-sdk/client-s3": "npm:^3.980.0"
-    "@aws-sdk/client-secrets-manager": "npm:^3.980.0"
+    "@aws-sdk/client-dynamodb": "npm:^3.981.0"
+    "@aws-sdk/client-s3": "npm:^3.981.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.981.0"
     "@libsql/client": "npm:^0.17.0"
     "@sentry/aws-serverless": "npm:^10.38.0"
     sharp: "npm:^0.34.5"
@@ -1529,7 +1542,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/record-webshop-item@workspace:packages/record-webshop-item"
   dependencies:
-    "@aws-sdk/client-lambda": "npm:^3.980.0"
+    "@aws-sdk/client-lambda": "npm:^3.981.0"
     "@sentry/aws-serverless": "npm:^10.38.0"
   languageName: unknown
   linkType: soft
@@ -1538,8 +1551,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/send-registration-code@workspace:packages/send-registration-code"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.980.0"
-    "@aws-sdk/client-sesv2": "npm:^3.980.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.981.0"
+    "@aws-sdk/client-sesv2": "npm:^3.981.0"
     "@centralbeans/email": "workspace:*"
     "@libsql/client": "npm:^0.17.0"
     "@sentry/aws-serverless": "npm:^10.38.0"
@@ -1552,8 +1565,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/webshop-item-processor@workspace:packages/webshop-item-processor"
   dependencies:
-    "@aws-sdk/client-lambda": "npm:^3.980.0"
-    "@aws-sdk/client-translate": "npm:^3.980.0"
+    "@aws-sdk/client-lambda": "npm:^3.981.0"
+    "@aws-sdk/client-translate": "npm:^3.981.0"
     "@sentry/aws-serverless": "npm:^10.38.0"
     jsdom: "npm:27.0.0"
   languageName: unknown
@@ -1563,7 +1576,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/webshop-processor@workspace:packages/webshop-processor"
   dependencies:
-    "@aws-sdk/client-lambda": "npm:^3.980.0"
+    "@aws-sdk/client-lambda": "npm:^3.981.0"
     "@sentry/aws-serverless": "npm:^10.38.0"
     jsdom: "npm:27.0.0"
   languageName: unknown
@@ -1574,9 +1587,9 @@ __metadata:
   resolution: "@centralbeans/website@workspace:packages/coffee.chealt.com"
   dependencies:
     "@astrojs/cloudflare": "npm:^12.6.12"
-    "@aws-sdk/client-lambda": "npm:^3.980.0"
-    "@aws-sdk/client-s3": "npm:^3.980.0"
-    "@aws-sdk/s3-request-presigner": "npm:^3.980.0"
+    "@aws-sdk/client-lambda": "npm:^3.981.0"
+    "@aws-sdk/client-s3": "npm:^3.981.0"
+    "@aws-sdk/s3-request-presigner": "npm:^3.981.0"
     "@libsql/client": "npm:^0.17.0"
     "@playwright-testing-library/test": "npm:^4.5.0"
     "@playwright/test": "npm:^1.58.1"
@@ -1592,7 +1605,7 @@ __metadata:
     rollup-plugin-visualizer: "npm:^6.0.5"
     vite: "npm:^7.3.1"
     vite-plugin-wasm: "npm:^3.5.0"
-    wrangler: "npm:^4.61.1"
+    wrangler: "npm:^4.62.0"
   languageName: unknown
   linkType: soft
 
@@ -1600,7 +1613,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@chealt/image-proxy@workspace:packages/image-proxy"
   dependencies:
-    wrangler: "npm:^4.61.1"
+    wrangler: "npm:^4.62.0"
   languageName: unknown
   linkType: soft
 
@@ -1676,9 +1689,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cloudflare/workerd-darwin-64@npm:1.20260128.0":
-  version: 1.20260128.0
-  resolution: "@cloudflare/workerd-darwin-64@npm:1.20260128.0"
+"@cloudflare/workerd-darwin-64@npm:1.20260131.0":
+  version: 1.20260131.0
+  resolution: "@cloudflare/workerd-darwin-64@npm:1.20260131.0"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
@@ -1690,9 +1703,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cloudflare/workerd-darwin-arm64@npm:1.20260128.0":
-  version: 1.20260128.0
-  resolution: "@cloudflare/workerd-darwin-arm64@npm:1.20260128.0"
+"@cloudflare/workerd-darwin-arm64@npm:1.20260131.0":
+  version: 1.20260131.0
+  resolution: "@cloudflare/workerd-darwin-arm64@npm:1.20260131.0"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
@@ -1704,9 +1717,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cloudflare/workerd-linux-64@npm:1.20260128.0":
-  version: 1.20260128.0
-  resolution: "@cloudflare/workerd-linux-64@npm:1.20260128.0"
+"@cloudflare/workerd-linux-64@npm:1.20260131.0":
+  version: 1.20260131.0
+  resolution: "@cloudflare/workerd-linux-64@npm:1.20260131.0"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
@@ -1718,9 +1731,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cloudflare/workerd-linux-arm64@npm:1.20260128.0":
-  version: 1.20260128.0
-  resolution: "@cloudflare/workerd-linux-arm64@npm:1.20260128.0"
+"@cloudflare/workerd-linux-arm64@npm:1.20260131.0":
+  version: 1.20260131.0
+  resolution: "@cloudflare/workerd-linux-arm64@npm:1.20260131.0"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
@@ -1732,9 +1745,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cloudflare/workerd-windows-64@npm:1.20260128.0":
-  version: 1.20260128.0
-  resolution: "@cloudflare/workerd-windows-64@npm:1.20260128.0"
+"@cloudflare/workerd-windows-64@npm:1.20260131.0":
+  version: 1.20260131.0
+  resolution: "@cloudflare/workerd-windows-64@npm:1.20260131.0"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -6266,7 +6279,7 @@ __metadata:
     eslint-import-resolver-node: "npm:^0.3.9"
     eslint-plugin-astro: "npm:^1.5.0"
     eslint-plugin-import: "npm:^2.32.0"
-    globals: "npm:^17.2.0"
+    globals: "npm:^17.3.0"
     prettier: "npm:^3.8.1"
     prettier-plugin-astro: "npm:^0.14.1"
     prettier-plugin-sql: "npm:^0.19.2"
@@ -8011,10 +8024,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globals@npm:^17.2.0":
-  version: 17.2.0
-  resolution: "globals@npm:17.2.0"
-  checksum: 10c0/fd25a98b08c1d31082337cbbb5ff1b90b9980e1db69a8621fb942bdb2cdca8aa54d61466742e8bf4910578ea5fa903b8bf83bffd1b2d45551cc614830dba910b
+"globals@npm:^17.3.0":
+  version: 17.3.0
+  resolution: "globals@npm:17.3.0"
+  checksum: 10c0/7f21443ecaa60c6e9ff56d9fb6f10a9b5f9514e7f22e5392f715472bb220ce31c865ebf414a32695150e733fb3e1013e6322dbce70fddd1e066f372b8d55a4b8
   languageName: node
   linkType: hard
 
@@ -9755,19 +9768,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"miniflare@npm:4.20260128.0":
-  version: 4.20260128.0
-  resolution: "miniflare@npm:4.20260128.0"
+"miniflare@npm:4.20260131.0":
+  version: 4.20260131.0
+  resolution: "miniflare@npm:4.20260131.0"
   dependencies:
     "@cspotcode/source-map-support": "npm:0.8.1"
     sharp: "npm:^0.34.5"
     undici: "npm:7.18.2"
-    workerd: "npm:1.20260128.0"
+    workerd: "npm:1.20260131.0"
     ws: "npm:8.18.0"
     youch: "npm:4.1.0-beta.10"
   bin:
     miniflare: bootstrap.js
-  checksum: 10c0/7eeb59a7b09b8d62ec331a08109cffac3227493b740cecec3b3b556e8f93985307ab8488bb561bd9088c560f44ef8ccbff5cd23a424f8267c3d7b25e0d85c4bc
+  checksum: 10c0/31b1d8e8cf6bce58996b9ba5366c5bb2d6d78e06bf084a4e29ca4003cbdd6ccf30e633a16702e0ffc0fd2832087bc6099109078118c42b7a73eab882eeb1ab66
   languageName: node
   linkType: hard
 
@@ -12141,10 +12154,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:^7.19.2":
-  version: 7.19.2
-  resolution: "undici@npm:7.19.2"
-  checksum: 10c0/2fdd9a2f6f2cf4c333531c631844350a6b1dbbd4b91022a2a7c293db5aea470ce293ea888987912f1cb2e896a99a4fae5dca9987ea71661cdcf7555f57ed2975
+"undici@npm:^7.20.0":
+  version: 7.20.0
+  resolution: "undici@npm:7.20.0"
+  checksum: 10c0/99054958a07b4105e1461bf5f38550746a15e01d6807e7a2b0849f18e1bc3f481c1ad080ea87b255a39264cec5d80ebf2b3bc82c3e732d81e6a0cc3c920c05c6
   languageName: node
   linkType: hard
 
@@ -12799,15 +12812,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"workerd@npm:1.20260128.0":
-  version: 1.20260128.0
-  resolution: "workerd@npm:1.20260128.0"
+"workerd@npm:1.20260131.0":
+  version: 1.20260131.0
+  resolution: "workerd@npm:1.20260131.0"
   dependencies:
-    "@cloudflare/workerd-darwin-64": "npm:1.20260128.0"
-    "@cloudflare/workerd-darwin-arm64": "npm:1.20260128.0"
-    "@cloudflare/workerd-linux-64": "npm:1.20260128.0"
-    "@cloudflare/workerd-linux-arm64": "npm:1.20260128.0"
-    "@cloudflare/workerd-windows-64": "npm:1.20260128.0"
+    "@cloudflare/workerd-darwin-64": "npm:1.20260131.0"
+    "@cloudflare/workerd-darwin-arm64": "npm:1.20260131.0"
+    "@cloudflare/workerd-linux-64": "npm:1.20260131.0"
+    "@cloudflare/workerd-linux-arm64": "npm:1.20260131.0"
+    "@cloudflare/workerd-windows-64": "npm:1.20260131.0"
   dependenciesMeta:
     "@cloudflare/workerd-darwin-64":
       optional: true
@@ -12821,7 +12834,7 @@ __metadata:
       optional: true
   bin:
     workerd: bin/workerd
-  checksum: 10c0/4a567c6f612de66349e497c43a2b250067accb1ef6556d9c727279e88fa768c711521b4313278ec8727018090f978bbe19b3caedddab0e5fb17c2ad7bdc064d3
+  checksum: 10c0/b6915b4df88563bac6ed3cd857229b92647ca5c5948fab1e14e8e602d173c6a165edf1bb0d1fda1695f1caf45d8b3d6bd9b78b91a2aa39701e68fc32285ddcdb
   languageName: node
   linkType: hard
 
@@ -12853,21 +12866,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wrangler@npm:^4.61.1":
-  version: 4.61.1
-  resolution: "wrangler@npm:4.61.1"
+"wrangler@npm:^4.62.0":
+  version: 4.62.0
+  resolution: "wrangler@npm:4.62.0"
   dependencies:
     "@cloudflare/kv-asset-handler": "npm:0.4.2"
     "@cloudflare/unenv-preset": "npm:2.12.0"
     blake3-wasm: "npm:2.1.5"
     esbuild: "npm:0.27.0"
     fsevents: "npm:~2.3.2"
-    miniflare: "npm:4.20260128.0"
+    miniflare: "npm:4.20260131.0"
     path-to-regexp: "npm:6.3.0"
     unenv: "npm:2.0.0-rc.24"
-    workerd: "npm:1.20260128.0"
+    workerd: "npm:1.20260131.0"
   peerDependencies:
-    "@cloudflare/workers-types": ^4.20260128.0
+    "@cloudflare/workers-types": ^4.20260131.0
   dependenciesMeta:
     fsevents:
       optional: true
@@ -12877,7 +12890,7 @@ __metadata:
   bin:
     wrangler: bin/wrangler.js
     wrangler2: bin/wrangler.js
-  checksum: 10c0/8dec836428ed06bf4f317884fc1688dade4c4f58a75db4308e0cb8b418b634dad63f838ece477adb35527e70d5bfb054b4cda183ab04f1b3c84fe671ce70d745
+  checksum: 10c0/4b14c2f4e01841df6e3a02556fbba0fc2fe839daa5de795d535fe6df77c8f6b180d2f8fb64fffd7555383d021cc22bfc37bd96564426832ed7eb3c69fcc777bd
   languageName: node
   linkType: hard
 
