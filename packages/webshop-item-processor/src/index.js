@@ -8,6 +8,7 @@ const responses = {
   missingDetails: { success: true, missingDetails: true }
 };
 
+// eslint-disable-next-line complexity
 const handler = async (event) => {
   const { url, roasterId } = event;
   const html = inflateSync(Buffer.from(event.html, 'base64')).toString();
