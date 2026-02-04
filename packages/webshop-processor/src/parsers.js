@@ -78,8 +78,8 @@ const parsers = {
 
     const productLinks = [...espressoLinks, ...alternativeLinks];
 
-    return Array.from(new Set(Array.from(productLinks).map((productLink) => productLink.href))).filter((href) =>
-      href.includes(origin)
+    return Array.from(new Set(Array.from(productLinks).map((productLink) => productLink.href))).filter(
+      (href) => href.includes(origin) && !href.includes('blend') && !href.includes('zestaw-prezentowy') // remove blends and gift sets
     );
   },
   // Heresy
