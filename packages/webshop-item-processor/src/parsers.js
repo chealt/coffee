@@ -323,7 +323,7 @@ const parsers = {
     if (document.querySelector('.product__title').textContent.toLowerCase().includes('blend')) {
       logger.info(`Skipping blend: ${url}`);
 
-      return {};
+      return { isBlend: true };
     }
 
     const priceElement = document.querySelector('[data-price]');
@@ -443,6 +443,10 @@ const parsers = {
 
     const document = getDocument(html);
 
+    if (document.querySelector('h1').textContent.toLowerCase().includes('zestaw prezentowy')) {
+      return { isGiftSet: true };
+    }
+
     const someInStock = JSON.parse(document.querySelector('.variations_form').dataset.product_variations)
       .map((product) => product.is_in_stock)
       .some(Boolean);
@@ -453,10 +457,12 @@ const parsers = {
       throw new Error(`All items at ${url} are out of stock`);
     }
 
+    const currencySymbol = document.querySelector('.woocommerce-Price-currencySymbol').textContent.toLowerCase();
+
     const priceElement =
       document.querySelector('.price > *:not(del) .woocommerce-Price-amount') ||
       document.querySelector('.price .woocommerce-Price-amount');
-    const price = Number(priceElement.textContent.replace(',', '.')).toFixed(2);
+    const price = cleanPrice({ priceElement, currencySymbol });
 
     if (!price || isNaN(price)) {
       logger.error(`No price found for ${url}`);
@@ -464,7 +470,6 @@ const parsers = {
       throw new Error(errors.priceMissing);
     }
 
-    const currencySymbol = document.querySelector('.woocommerce-Price-currencySymbol').textContent;
     const currency = currencyCodes[currencySymbol];
 
     if (!currency) {
@@ -495,7 +500,15 @@ const parsers = {
       .replace('kraj ', '')
       .replace(' region', '')
       .trim();
-    const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
+
+    if (originCountry.includes(' / ')) {
+      return { isBlend: true };
+    }
+
+    const originCountryId =
+      originCountries.find(({ name }) => name === originCountry)?.origin_country_id ||
+      originCountries.find(({ name }) => originCountry.includes(name))?.origin_country_id ||
+      null;
 
     if (!originCountryId) {
       logger.error(`No origin country found for ${url}`);
@@ -561,12 +574,15 @@ const parsers = {
       logger.info(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
     }
 
-    const varietiesString = details
-      .match(/odmiana (.*) wysokość/gu)
-      .join()
-      .replace('odmiana ', '')
-      .replace(' wysokość', '')
-      .trim();
+    const varietiesString =
+      processingMethod === 'cautai, typica, bourbon, castillo' // bug in the website
+        ? processingMethod
+        : details
+            .match(/odmiana (.*) wysokość/gu)
+            .join()
+            .replace('odmiana ', '')
+            .replace(' wysokość', '')
+            .trim();
     const varietiesStrings = varietiesString.includes(', ') ? varietiesString.split(', ') : [varietiesString];
     const varietyIds = varieties
       .filter(

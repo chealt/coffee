@@ -36,6 +36,18 @@ const handler = async (event) => {
 
   const details = await parser({ html, url, roasterId });
 
+  if (details.isBlend) {
+    logger.info(`Skipping blend ${url}`);
+
+    return responses.success;
+  }
+
+  if (details.isGiftSet) {
+    logger.info(`Skipping gift set ${url}`);
+
+    return responses.success;
+  }
+
   if (!details.originCountryId) {
     logger.info(`No origin country found for ${url}, got details: ${JSON.stringify(details)}`);
 
