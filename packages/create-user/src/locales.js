@@ -28,29 +28,27 @@ const data = {
           </td>
         </tr>
       </table>
+
       <table class="content-item" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-bottom: 1px solid #eeeeee; margin-bottom: 20px;">
         <tr>
-          <td align="center" style="padding-bottom: 15px;">
-            <img src="https://centralbeans.com/screenshots/features/profile-page.png" alt="Profile page" width="300" style="display: block; max-width: 100%; height: auto; border: 0; border-radius: 8px;" />
-          </td>
-        </tr>
-        <tr>
-          <td align="center" style="padding-bottom: 10px;">
+          <td width="50%" align="left" valign="middle" style="padding-bottom: 20px; padding-right: 15px;">
             <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">Profile Page</h2>
             <p style="margin: 5px 0; color: #666666;">
               Update your settings on the <a href="https://centralbeans.com/you/profile" style="color: #f8b64d; text-decoration: none;">Profile page</a> like currency or language. You can access it by navigation to the <a href="https://centralbeans.com/you/collections" style="color: #f8b64d; text-decoration: none;">You page</a>, and clicking on the Icon in the top right corner.
             </p>
           </td>
-        </tr>
-      </table>
-      <table class="content-item" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-bottom: 1px solid #eeeeee; margin-bottom: 20px;">
-        <tr>
-          <td align="center" style="padding-bottom: 15px;">
-            <img src="https://centralbeans.com/screenshots/features/lists.png" alt="Collections page" width="300" style="display: block; max-width: 100%; height: auto; border: 0; border-radius: 8px;" />
+          <td width="50%" align="center" valign="middle" style="padding-bottom: 20px;">
+            <img src="https://centralbeans.com/screenshots/features/profile-page.png" alt="Profile page" width="280" style="display: block; max-width: 100%; height: auto; border: 0; border-radius: 8px;" />
           </td>
         </tr>
+      </table>
+
+      <table class="content-item" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-bottom: 1px solid #eeeeee; margin-bottom: 20px;">
         <tr>
-          <td align="center" style="padding-bottom: 10px;">
+          <td width="50%" align="center" valign="middle" style="padding-bottom: 20px; padding-right: 15px;">
+            <img src="https://centralbeans.com/screenshots/features/lists.png" alt="Collections page" width="280" style="display: block; max-width: 100%; height: auto; border: 0; border-radius: 8px;" />
+          </td>
+          <td width="50%" align="left" valign="middle" style="padding-bottom: 20px;">
             <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">Collections</h2>
             <p style="margin: 5px 0; color: #666666;">
               Start collecting your coffees by adding them to your <a href="https://centralbeans.com/you/collections" style="color: #f8b64d; text-decoration: none;">collections</a>. We created a few collections for you to get started. Feel free to add your own.
@@ -58,29 +56,27 @@ const data = {
           </td>
         </tr>
       </table>
+
       <table class="content-item" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-bottom: 1px solid #eeeeee; margin-bottom: 20px;">
         <tr>
-          <td align="center" style="padding-bottom: 15px;">
-            <img src="https://centralbeans.com/screenshots/features/details.png" alt="Coffee details page" width="300" style="display: block; max-width: 100%; height: auto; border: 0; border-radius: 8px;" />
-          </td>
-        </tr>
-        <tr>
-          <td align="center" style="padding-bottom: 10px;">
+          <td width="50%" align="left" valign="middle" style="padding-bottom: 20px; padding-right: 15px;">
             <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">Coffee Details</h2>
             <p style="margin: 5px 0; color: #666666;">
               Update the details of your coffees on their details page. You can add more pictures for the same coffee, and add details like origin, roast level, etc.
             </p>
           </td>
-        </tr>
-      </table>
-      <table class="content-item" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-bottom: 1px solid #eeeeee; margin-bottom: 20px;">
-        <tr>
-          <td align="center" style="padding-bottom: 15px;">
-            <img src="https://centralbeans.com/screenshots/features/review.png" alt="Coffee review page" width="300" style="display: block; max-width: 100%; height: auto; border: 0; border-radius: 8px;" />
+          <td width="50%" align="center" valign="middle" style="padding-bottom: 20px;">
+            <img src="https://centralbeans.com/screenshots/features/details.png" alt="Coffee details page" width="280" style="display: block; max-width: 100%; height: auto; border: 0; border-radius: 8px;" />
           </td>
         </tr>
+      </table>
+
+      <table class="content-item" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-bottom: 1px solid #eeeeee; margin-bottom: 20px;">
         <tr>
-          <td align="center" style="padding-bottom: 10px;">
+          <td width="50%" align="center" valign="middle" style="padding-bottom: 20px; padding-right: 15px;">
+            <img src="https://centralbeans.com/screenshots/features/review.png" alt="Coffee review page" width="280" style="display: block; max-width: 100%; height: auto; border: 0; border-radius: 8px;" />
+          </td>
+          <td width="50%" align="left" valign="middle" style="padding-bottom: 20px;">
             <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">Personalized Recommendations</h2>
             <p style="margin: 5px 0; color: #666666;">
               Review your coffees on the details page to get personalized recommendations when browsing the shop.
@@ -119,29 +115,27 @@ const data = {
           </td>
         </tr>
       </table>
+
       <table class="content-item" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-bottom: 1px solid #eeeeee; margin-bottom: 20px;">
         <tr>
-          <td align="center" style="padding-bottom: 15px;">
-            <img src="https://centralbeans.com/screenshots/features/profile-page.png" alt="Strona profilu" width="300" style="display: block; max-width: 100%; height: auto; border: 0; border-radius: 8px;" />
-          </td>
-        </tr>
-        <tr>
-          <td align="center" style="padding-bottom: 10px;">
+          <td width="50%" align="left" valign="middle" style="padding-bottom: 20px; padding-right: 15px;">
             <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">Strona Profilu</h2>
             <p style="margin: 5px 0; color: #666666;">
               Zaktualizuj swoje ustawienia, takie jak waluta czy język, na <a href="https://centralbeans.com/you/profile" style="color: #f8b64d; text-decoration: none;">stronie Profilu</a>. Możesz do niej przejść ze <a href="https://centralbeans.com/you/collections" style="color: #f8b64d; text-decoration: none;">strony Ty</a>, klikając ikonę w prawym górnym rogu.
             </p>
           </td>
-        </tr>
-      </table>
-      <table class="content-item" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-bottom: 1px solid #eeeeee; margin-bottom: 20px;">
-        <tr>
-          <td align="center" style="padding-bottom: 15px;">
-            <img src="https://centralbeans.com/screenshots/features/lists.png" alt="Strona kolekcji" width="300" style="display: block; max-width: 100%; height: auto; border: 0; border-radius: 8px;" />
+          <td width="50%" align="center" valign="middle" style="padding-bottom: 20px;">
+            <img src="https://centralbeans.com/screenshots/features/profile-page.png" alt="Strona profilu" width="280" style="display: block; max-width: 100%; height: auto; border: 0; border-radius: 8px;" />
           </td>
         </tr>
+      </table>
+
+      <table class="content-item" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-bottom: 1px solid #eeeeee; margin-bottom: 20px;">
         <tr>
-          <td align="center" style="padding-bottom: 10px;">
+          <td width="50%" align="center" valign="middle" style="padding-bottom: 20px; padding-right: 15px;">
+            <img src="https://centralbeans.com/screenshots/features/lists.png" alt="Strona kolekcji" width="280" style="display: block; max-width: 100%; height: auto; border: 0; border-radius: 8px;" />
+          </td>
+          <td width="50%" align="left" valign="middle" style="padding-bottom: 20px;">
             <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">Kolekcje</h2>
             <p style="margin: 5px 0; color: #666666;">
               Zacznij kolekcjonować kawy, dodając je do swoich <a href="https://centralbeans.com/you/collections" style="color: #f8b64d; text-decoration: none;">kolekcji</a>. Na start przygotowaliśmy dla Ciebie kilka z nich. Śmiało twórz też własne.
@@ -149,29 +143,27 @@ const data = {
           </td>
         </tr>
       </table>
+
       <table class="content-item" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-bottom: 1px solid #eeeeee; margin-bottom: 20px;">
         <tr>
-          <td align="center" style="padding-bottom: 15px;">
-            <img src="https://centralbeans.com/screenshots/features/details.png" alt="Strona szczegółów kawy" width="300" style="display: block; max-width: 100%; height: auto; border: 0; border-radius: 8px;" />
-          </td>
-        </tr>
-        <tr>
-          <td align="center" style="padding-bottom: 10px;">
+          <td width="50%" align="left" valign="middle" style="padding-bottom: 20px; padding-right: 15px;">
             <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">Szczegóły Kawy</h2>
             <p style="margin: 5px 0; color: #666666;">
               Uzupełniaj informacje o swoich kawach na ich stronach szczegółów. Możesz dodawać więcej zdjęć tej samej kawy oraz szczegóły takie jak pochodzenie, stopień wypalenia itp.
             </p>
           </td>
-        </tr>
-      </table>
-      <table class="content-item" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-bottom: 1px solid #eeeeee; margin-bottom: 20px;">
-        <tr>
-          <td align="center" style="padding-bottom: 15px;">
-            <img src="https://centralbeans.com/screenshots/features/review.png" alt="Strona oceniania kawy" width="300" style="display: block; max-width: 100%; height: auto; border: 0; border-radius: 8px;" />
+          <td width="50%" align="center" valign="middle" style="padding-bottom: 20px;">
+            <img src="https://centralbeans.com/screenshots/features/details.png" alt="Strona szczegółów kawy" width="280" style="display: block; max-width: 100%; height: auto; border: 0; border-radius: 8px;" />
           </td>
         </tr>
+      </table>
+
+      <table class="content-item" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-bottom: 1px solid #eeeeee; margin-bottom: 20px;">
         <tr>
-          <td align="center" style="padding-bottom: 10px;">
+          <td width="50%" align="center" valign="middle" style="padding-bottom: 20px; padding-right: 15px;">
+            <img src="https://centralbeans.com/screenshots/features/review.png" alt="Strona oceniania kawy" width="280" style="display: block; max-width: 100%; height: auto; border: 0; border-radius: 8px;" />
+          </td>
+          <td width="50%" align="left" valign="middle" style="padding-bottom: 20px;">
             <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">Spersonalizowane Rekomendacje</h2>
             <p style="margin: 5px 0; color: #666666;">
               Oceniaj swoje kawy na stronie szczegółów, aby otrzymywać spersonalizowane rekomendacje podczas przeglądania sklepu.
