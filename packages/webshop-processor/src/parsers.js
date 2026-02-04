@@ -52,8 +52,9 @@ const parsers = {
     );
   },
   // BeMyBean
-  39: async ({ html }) => {
+  39: async ({ html, url }) => {
     const document = getDocument(html);
+    const { origin } = new URL(url);
 
     // espresso links
     const espressoLink = document.querySelector('[data-id="5e99470"] a');
@@ -77,7 +78,9 @@ const parsers = {
 
     const productLinks = [...espressoLinks, ...alternativeLinks];
 
-    return Array.from(new Set(Array.from(productLinks).map((productLink) => productLink.href)));
+    return Array.from(new Set(Array.from(productLinks).map((productLink) => productLink.href))).filter((href) =>
+      href.includes(origin)
+    );
   },
   // Heresy
   65: async ({ html }) => {
