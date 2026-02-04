@@ -7,7 +7,7 @@ const data = {
         <tr>
           <td align="center" style="padding-bottom: 15px;">
             <p style="margin: 5px 0; color: #666666;">
-              Register on Central Beans by following the link below.
+              Register on Central Beans by tapping the button below.
             </p>
           </td>
         </tr>
@@ -84,6 +84,20 @@ const data = {
           </td>
         </tr>
       </table>
+
+      <table class="content-item" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-bottom: 1px solid #eeeeee; margin-bottom: 20px;">
+        <tr>
+          <td width="60%" align="left" valign="middle" style="padding-bottom: 20px;">
+            <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">New Coffees</h2>
+            <p style="margin: 5px 0; color: #666666;">
+              If you want to get notified about new coffees, you can subscribe to the New Coffees notification on the <a href="https://centralbeans.com/you/profile" style="color: #f8b64d; text-decoration: none;">Profile page</a>.
+            </p>
+          </td>
+          <td width="40%" align="center" valign="middle" style="padding-bottom: 20px; padding-right: 15px;">
+            <img src="https://centralbeans.com/screenshots/features/new-coffees.png" alt="New Coffees" width="220" style="display: block; max-width: 100%; height: auto; border: 4px solid #272727; border-radius: 8px;" />
+          </td>
+        </tr>
+      </table>
     `
   },
   pl: {
@@ -94,7 +108,7 @@ const data = {
         <tr>
           <td align="center" style="padding-bottom: 15px;">
             <p style="margin: 5px 0; color: #666666;">
-              Zarejestruj się w Central Beans, klikając w link poniżej.
+              Zarejestruj się w Central Beans, klikając w przycisk poniżej.
             </p>
           </td>
         </tr>
@@ -168,6 +182,20 @@ const data = {
             <p style="margin: 5px 0; color: #666666;">
               Oceniaj swoje kawy na stronie szczegółów, aby otrzymywać spersonalizowane rekomendacje podczas przeglądania sklepu.
             </p>
+          </td>
+        </tr>
+      </table>
+
+      <table class="content-item" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-bottom: 1px solid #eeeeee; margin-bottom: 20px;">
+        <tr>
+          <td width="60%" align="left" valign="middle" style="padding-bottom: 20px;">
+            <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">Nowe Kawy</h2>
+            <p style="margin: 5px 0; color: #666666;">
+              Jeśli chcesz otrzymywać powiadomienia o nowych kawach, możesz zasubskrybować powiadomienie o Nowych Kawach na <a href="https://centralbeans.com/you/profile" style="color: #f8b64d; text-decoration: none;">stronie profilu</a>.
+            </p>
+          </td>
+          <td width="40%" align="center" valign="middle" style="padding-bottom: 20px; padding-right: 15px;">
+            <img src="https://centralbeans.com/screenshots/features/new-coffees.png" alt="Nowe Kawy" width="220" style="display: block; max-width: 100%; height: auto; border: 4px solid #272727; border-radius: 8px;" />
           </td>
         </tr>
       </table>
