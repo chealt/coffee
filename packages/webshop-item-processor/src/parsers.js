@@ -1593,14 +1593,14 @@ const parsers = {
 
     const currency = 'EUR';
 
-    const weight = productDetails
+    let weight = productDetails
       ? Number(productDetails.weight || productDetails.attributes?.attribute_pa_teza?.replace('-grams', ''))
       : Number(
           Array.from(document.querySelector('section .block').querySelectorAll('p'))
             .filter(
               ({ textContent }) => textContent.includes('Teža') || textContent.toLowerCase().includes('weight')
             )[0]
-            .textContent.toLowerCase()
+            ?.textContent.toLowerCase()
             .match(/(weight|teža): \d*g/giu)[0]
             .replace('weight: ', '')
             .replace('teža: ', '')
@@ -1608,9 +1608,7 @@ const parsers = {
         );
 
     if (!weight || isNaN(weight)) {
-      logger.error(`No weight found for ${url}`);
-
-      throw new Error(errors.weightMissing);
+      weight = 250; // we assume 250g
     }
 
     const pricePerGram = Number((price / weight).toFixed(2));
