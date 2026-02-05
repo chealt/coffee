@@ -1628,6 +1628,11 @@ const parsers = {
     );
 
     const originCountry = originDetails.country;
+
+    if (originCountry.includes(' / ')) {
+      return { isBlend: true };
+    }
+
     const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
 
     if (!originCountryId) {
