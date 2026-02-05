@@ -30,7 +30,7 @@
     "clean-cup": "Clean Cup",
     "sweetness": "Sweetness",
     "overall": "Overall",
-    "number-of-cups": "Number of Cups",
+    "number-of-cups": "#Cups",
     "defects": "Defects"
   },
   "pl": {
@@ -63,7 +63,7 @@
     "clean-cup": "Czysta kopcica",
     "sweetness": "Słodkość",
     "overall": "Ogólny",
-    "number-of-cups": "Liczba filiżanek",
+    "number-of-cups": "#Filiżanek",
     "defects": "Defekty"
   }
 }

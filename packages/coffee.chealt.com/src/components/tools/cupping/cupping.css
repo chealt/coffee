@@ -1,11 +1,15 @@
 .cupping-container {
+  padding: var(--gap) var(--gap) 24px var(--gap);
+
   .final-score-container {
     position: fixed;
     right: 0;
-    top: 0;
-    padding: var(--gap--s) var(--gap);
+    left: 0;
+    bottom: 73px; /* height of the bottom navigation */
+    padding: var(--gap);
     font-size: 1.2rem;
     font-weight: bold;
+    text-align: center;
   }
 }
 

@@ -19,7 +19,7 @@ const t = allLocaleTranslations[locale];
 ---
 
 <Common title={t.title}>
-  <h1>{t.title}</h1>
+  <h1 class="hidden">{t.title}</h1>
   <section class="cupping-container">
     <Form
       class="review-form"
@@ -28,10 +28,6 @@ const t = allLocaleTranslations[locale];
       data-save-on-input
       data-sum-group-name="cupping"
     >
-      <div class="final-score-container primary">
-        <span>{t['final-score']}</span>
-        <span class="final-score" data-sum="cupping"></span>
-      </div>
       <div class="range-group">
         <Range name="roast-level" min="1" max="5" excludeFromSum>
           <span slot="title">{t['roast-level']}</span>
@@ -147,6 +143,10 @@ const t = allLocaleTranslations[locale];
         <span>{t.notes}</span>
         <Textarea name="notes" />
       </Label>
+      <div class="final-score-container primary">
+        <span>{t['final-score']}</span>
+        <span class="final-score" data-sum="cupping"></span>
+      </div>
     </Form>
   </section>
 </Common>
