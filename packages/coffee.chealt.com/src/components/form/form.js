@@ -217,6 +217,36 @@ const removeDeletedFormData = (storage) => (mutationsList) => {
 
 let isNodeDeletionObserved = false;
 
+const attachShareHandler = ({ form, storage }) => {
+  const shareButton = document.querySelector(`[data-share="${form.name}"]`);
+
+  if (!shareButton) {
+    logger.error(`Share button not found for form: ${form.name}`);
+
+    return;
+  }
+
+  shareButton.addEventListener('click', async () => {
+    const data = getFormData({ form, storage });
+
+    if (data) {
+      const url = `${window.location.origin}${window.location.pathname}?data=${btoa(JSON.stringify(data))}`;
+
+      try {
+        await navigator.share({
+          title: form.name,
+          text: form.dataset.shareText,
+          url
+        });
+
+        logger.info('Form shared successfully');
+      } catch (err) {
+        logger.error(err);
+      }
+    }
+  });
+};
+
 class ChealtForm extends HTMLElement {
   connectedCallback() {
     this.form = this.querySelector('form');
@@ -226,6 +256,7 @@ class ChealtForm extends HTMLElement {
     this.sumGroupName = this.form.dataset.sumGroupName;
     this.saveEndpoint = this.form.dataset.saveEndpoint;
     this.sumGroups = this.form.querySelectorAll('[data-sum-group-name]');
+    this.canShare = this.form.dataset.canShare;
 
     if (this.storage) {
       if (this.storage === 'api' && !this.saveEndpoint) {
@@ -290,6 +321,10 @@ class ChealtForm extends HTMLElement {
 
     if (this.sumGroupName) {
       calculateSumOnInput(this.form);
+    }
+
+    if (this.canShare) {
+      attachShareHandler({ form: this.form, storage: this.storage });
     }
   }
 
