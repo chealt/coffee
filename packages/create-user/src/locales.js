@@ -34,7 +34,7 @@ const data = {
           <td width="60%" align="left" valign="middle" style="padding-bottom: 20px; padding-right: 15px;">
             <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">Profile Page</h2>
             <p style="margin: 5px 0; color: #666666;">
-              Update your settings on the <a href="https://centralbeans.com/you/profile" style="color: #f8b64d; text-decoration: none;">Profile page</a> like currency or language. You can access it by navigation to the <a href="https://centralbeans.com/you/collections" style="color: #f8b64d; text-decoration: none;">You page</a>, and clicking on the Icon in the top right corner.
+              Update your settings like currency or language on the <a href="https://centralbeans.com/you/profile" style="color: #f8b64d; text-decoration: none;">Profile page</a>. You can access it by navigation to the <a href="https://centralbeans.com/you/collections" style="color: #f8b64d; text-decoration: none;">You page</a>, and clicking on the Icon in the top right corner.
             </p>
           </td>
           <td width="40%" align="center" valign="middle" style="padding-bottom: 20px;">
