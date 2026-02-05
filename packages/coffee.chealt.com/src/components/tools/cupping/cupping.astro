@@ -22,9 +22,9 @@ const t = allLocaleTranslations[locale];
 <Common title={t.title} hideNav>
   <h1 class="hidden">{t.title}</h1>
   <div class="controls">
-    <Button class="primary small" data-share="cupping" data-share-text={t.share}>
+    <Button class="bordered column small" data-share="cupping" data-share-text={t.share}>
       <Icon type="share" />
-      <span class="visually-hidden">{t.share}</span>
+      {t.share}
     </Button>
   </div>
   <section class="cupping-container">

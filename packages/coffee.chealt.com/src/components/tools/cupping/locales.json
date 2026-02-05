@@ -1,6 +1,7 @@
 {
   "en": {
     "title": "Cupping",
+    "share": "Share",
     "bitter": "bitter",
     "acidic": "acidic",
     "sour": "sour",
@@ -35,6 +36,7 @@
   },
   "pl": {
     "title": "Cupping",
+    "share": "Udostępnij",
     "bitter": "gorzki",
     "acidic": "kwasowy",
     "sour": "kwašny",
