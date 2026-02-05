@@ -1,4 +1,6 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
 import Button from '../form/button/button.astro';
 import Form from '../form/form.astro';
 import Icon from '../icon/icon.astro';
@@ -56,6 +58,11 @@ const { username, redirectUrl } = Astro.props;
       </section>
     </Form>
   </chealt-auth-login>
+  <section>
+    <Button class="bordered" href={getRelativeLocaleUrl(Astro.currentLocale, `/registration/new-user`)}>
+      {t.register}
+    </Button>
+  </section>
 </div>
 
 <script src="../chealt-auth-login.js"></script>

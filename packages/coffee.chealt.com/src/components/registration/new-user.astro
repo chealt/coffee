@@ -1,0 +1,37 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+import Button from '../form/button/button.astro';
+import Common from '../common/common.astro';
+import Features from '../features/features.astro';
+import Form from '../form/form.astro';
+import Input from '../form/input/input.astro';
+import Label from '../form/label/label.astro';
+
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+---
+
+<Common title={t.title}>
+  <h1>{t.title}</h1>
+  <section>
+    <Form name="new-user.json" data-storage="api" data-save-endpoint="/api/authentication/registration">
+      <Label>
+        {t.email}
+        <Input name="email" type="email" required />
+      </Label>
+      <Button class="primary" type="submit">{t.register}</Button>
+      <p data-error-code="EMAIL_ALREADY_EXISTS" class="error hidden">{t.emailAlreadyExists}</p>
+      <p data-error-code="RATE_LIMIT_EXCEEDED" class="error hidden">{t.rateLimitExceeded}</p>
+      <p data-error-code="FAILED_TO_REGISTER" class="error hidden">{t.failedToRegister}</p>
+      <p data-success class="success hidden">{t.success}</p>
+    </Form>
+  </section>
+  <section>
+    <Button class="bordered" href={getRelativeLocaleUrl(Astro.currentLocale, `/you/collections`)}>{t.login}</Button>
+  </section>
+  <section>
+    <Features />
+  </section>
+</Common>

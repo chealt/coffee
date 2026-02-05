@@ -223,7 +223,7 @@ export const onRequest = async (context, next) => {
     }
   }
 
-  if (page === 'registration' && params[0] !== 'error') {
+  if (page === 'registration' && params[0] !== 'error' && params[0] !== 'new-user') {
     const registrationCode = context.url.searchParams.get('code');
     const username = params[0];
 

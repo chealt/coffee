@@ -116,6 +116,7 @@ const removeFormData = ({ storage, formName }) => {
 
 const saveFormData =
   ({ storage, saveEndpoint }) =>
+  // eslint-disable-next-line complexity
   async (form) => {
     if (!form.name) {
       throw new Error('The form must have a name to save its data.');
@@ -141,6 +142,9 @@ const saveFormData =
 
     if (storage === 'api') {
       try {
+        form.querySelectorAll(`[data-error-code]`)?.forEach((element) => element.classList.add('hidden'));
+        form.querySelectorAll(`[data-success]`)?.forEach((element) => element.classList.add('hidden'));
+
         const response = await fetch(`${saveEndpoint}/${form.name}`, {
           method: 'POST',
           headers: {
@@ -158,6 +162,14 @@ const saveFormData =
 
         if (result.error) {
           logger.error(result.error);
+        }
+
+        if (result.errorCode) {
+          form.querySelector(`[data-error-code="${result.errorCode}"]`)?.classList.remove('hidden');
+        }
+
+        if (result.success) {
+          form.querySelector(`[data-success]`)?.classList.remove('hidden');
         }
 
         if (result.redirectUrl) {

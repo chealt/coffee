@@ -1,0 +1,72 @@
+---
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+---
+
+<h2>{t.title}</h2>
+<section class="card">
+  <div class="columns">
+    <div class="sixty">
+      <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">{t.settingsTitle}</h2>
+      <p>
+        <Fragment set:html={t.settingsDescription} />
+      </p>
+    </div>
+    <div class="forty">
+      <img src="/screenshots/features/profile-page.png" alt="Profile page" />
+    </div>
+  </div>
+</section>
+<section class="card">
+  <div class="columns">
+    <div class="forty">
+      <img src="/screenshots/features/lists.png" alt="Collections page" />
+    </div>
+    <div class="sixty">
+      <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">{t.collectionsTitle}</h2>
+      <p>
+        <Fragment set:html={t.collectionsDescription} />
+      </p>
+    </div>
+  </div>
+</section>
+<section class="card">
+  <div class="columns">
+    <div class="sixty">
+      <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">{t.detailsTitle}</h2>
+      <p>
+        <Fragment set:html={t.detailsDescription} />
+      </p>
+    </div>
+    <div class="forty">
+      <img src="/screenshots/features/details.png" alt="Coffee details page" />
+    </div>
+  </div>
+</section>
+<section class="card">
+  <div class="columns">
+    <div class="forty">
+      <img src="/screenshots/features/review.png" alt="Coffee review page" />
+    </div>
+    <div class="sixty">
+      <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">{t.recommendationsTitle}</h2>
+      <p>
+        <Fragment set:html={t.recommendationsDescription} />
+      </p>
+    </div>
+  </div>
+</section>
+<section class="card">
+  <div class="columns">
+    <div class="sixty">
+      <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">{t.newCoffeesTitle}</h2>
+      <p>
+        <Fragment set:html={t.newCoffeesDescription} />
+      </p>
+    </div>
+    <div class="forty">
+      <img src="/screenshots/features/new-coffees.png" alt="New Coffees" />
+    </div>
+  </div>
+</section>

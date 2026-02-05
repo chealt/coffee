@@ -1,0 +1,28 @@
+{
+  "en": {
+    "title": "Register to get access to the following features",
+    "settingsTitle": "Profile Page",
+    "settingsDescription": "Update your settings like currency or language on the <a href=\"https://centralbeans.com/you/profile\">Profile page</a>. You can access it by navigation to the <a href=\"https://centralbeans.com/you/collections\">You page</a>, and clicking on the Icon in the top right corner.",
+    "collectionsTitle": "Collections",
+    "collectionsDescription": "Start collecting your coffees by adding them to your <a href=\"https://centralbeans.com/you/collections\">collections</a>. We created a few collections for you to get started. Feel free to add your own.",
+    "detailsTitle": "Coffee Details",
+    "detailsDescription": "Update the details of your coffees on their details page. You can add more pictures for the same coffee, and add details like origin, roast level, etc.",
+    "recommendationsTitle": "Personalized Recommendations",
+    "recommendationsDescription": "Review your coffees on the details page to get personalized recommendations when browsing the shop.",
+    "newCoffeesTitle": "New Coffees",
+    "newCoffeesDescription": "If you want to get notified about new coffees, you can subscribe to the New Coffees notification on the <a href=\"https://centralbeans.com/you/profile\">Profile page</a>."
+  },
+  "pl": {
+    "title": "Zarejestruj się, aby uzyskać dostęp do następujących funkcji",
+    "settingsTitle": "Strona profilu",
+    "settingsDescription": "Zaktualizuj swoje ustawienia, takie jak waluta lub język, na <a href=\"https://centralbeans.com/you/profile\">stronie profilu</a>. Możesz uzyskać do niej dostęp, przechodząc do <a href=\"https://centralbeans.com/you/collections\">strony Ty</a> i klikając ikonę w prawym górnym rogu.",
+    "collectionsTitle": "Kolekcje",
+    "collectionsDescription": "Zacznij kolekcjonować swoje kawy, dodając je do swoich <a href=\"https://centralbeans.com/you/collections\">kolekcji</a>. Stworzyliśmy kilka kolekcji, aby ułatwić Ci rozpoczęcie. Nie krępuj się dodawać własnych.",
+    "detailsTitle": "Szczegóły kawy",
+    "detailsDescription": "Zaktualizuj szczegóły swoich kaw na ich stronie szczegółów. Możesz dodać więcej zdjęć tej samej kawy i dodać szczegóły, takie jak pochodzenie, poziom palenia itp.",
+    "recommendationsTitle": "Spersonalizowane rekomendacje",
+    "recommendationsDescription": "Przejrzyj swoje kawy na stronie szczegółów, aby uzyskać spersonalizowane rekomendacje podczas przeglądania sklepu.",
+    "newCoffeesTitle": "Nowe kawy",
+    "newCoffeesDescription": "Jeśli chcesz otrzymywać powiadomienia o nowych kawach, możesz zasubskrybować powiadomienie o nowych kawach na <a href=\"https://centralbeans.com/you/profile\">stronie profilu</a>."
+  }
+}

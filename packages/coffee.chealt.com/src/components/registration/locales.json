@@ -1,6 +1,7 @@
 {
   "en": {
     "title": "Registration",
+    "email": "Email",
     "username": "Username",
     "register": "Register",
     "registrationSuccess": "Registration successful",
@@ -16,10 +17,15 @@
         "default": "Registration failed"
       }
     },
-    "notSupportedBrowser": "Your browser is not supported, if you opened this page from your email client, please open it from your default browser."
+    "notSupportedBrowser": "Your browser is not supported, if you opened this page from your email client, please open it from your default browser.",
+    "emailAlreadyExists": "Email already exists",
+    "rateLimitExceeded": "You tried to send a new registration code too many times. Please try again later.",
+    "failedToRegister": "Registration failed",
+    "success": "Registration request has been sent"
   },
   "pl": {
     "title": "Rejestracja",
+    "email": "Email",
     "username": "Nazwa użytkownika",
     "register": "Zarejestruj",
     "registrationSuccess": "Rejestracja zakończona pomyślnie",
@@ -35,6 +41,10 @@
         "default": "Rejestracja nie powiodła się"
       }
     },
-    "notSupportedBrowser": "Twoja przeglądarka nie jest obsługiwana. Jeżeli otworzyłeś tę stronę za pomocą swojego klienta poczty e-mail, otwórz ją w domyślnej przeglądarce."
+    "notSupportedBrowser": "Twoja przeglądarka nie jest obsługiwana. Jeżeli otworzyłeś tę stronę za pomocą swojego klienta poczty e-mail, otwórz ją w domyślnej przeglądarce.",
+    "emailAlreadyExists": "Adres email już istnieje",
+    "rateLimitExceeded": "Zbyt wiele prób wysłania nowego kodu rejestracji. Proszę spróbować później.",
+    "failedToRegister": "Rejestracja nie powiodła się",
+    "success": "Zgłoszenie rejestracyjne zostało wysłane"
   }
 }
