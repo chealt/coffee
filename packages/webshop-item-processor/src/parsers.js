@@ -662,7 +662,7 @@ const parsers = {
         document.querySelectorAll('#tab-additional_information .woocommerce-product-attributes-item__label')
     ).reduce((previousValue, currentValue) => {
       const key = currentValue.textContent.replace(':', '').trim().toLowerCase();
-      const value = currentValue.nextSibling.textContent.trim().toLowerCase();
+      const value = currentValue.nextElementSibling.textContent.trim().toLowerCase();
 
       previousValue[key] = value;
 
