@@ -259,7 +259,23 @@ class ChealtForm extends HTMLElement {
         this.form.addEventListener('submit', async (event) => {
           event.preventDefault();
 
-          await saveFormData({ storage: this.storage, saveEndpoint: this.saveEndpoint })(this.form);
+          const submitButton = this.form.querySelector('[type="submit"]');
+
+          if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.classList.add('in-progress');
+          }
+
+          try {
+            await saveFormData({ storage: this.storage, saveEndpoint: this.saveEndpoint })(this.form);
+          } catch (error) {
+            logger.error(error);
+          }
+
+          if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.classList.remove('in-progress');
+          }
         });
       }
 
