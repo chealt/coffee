@@ -1547,6 +1547,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@centralbeans/register-new-user@workspace:packages/register-new-user":
+  version: 0.0.0-use.local
+  resolution: "@centralbeans/register-new-user@workspace:packages/register-new-user"
+  dependencies:
+    "@aws-sdk/client-sesv2": "npm:^3.981.0"
+    "@centralbeans/email": "workspace:*"
+    "@sentry/aws-serverless": "npm:^10.38.0"
+  languageName: unknown
+  linkType: soft
+
 "@centralbeans/send-registration-code@workspace:packages/send-registration-code":
   version: 0.0.0-use.local
   resolution: "@centralbeans/send-registration-code@workspace:packages/send-registration-code"

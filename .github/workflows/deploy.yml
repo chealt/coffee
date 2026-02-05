@@ -96,6 +96,12 @@ jobs:
               - packages/record-webshop-item-details/package.json
               - packages/record-webshop-item-details/.yarnrc-lambda.yml
               - packages/record-webshop-item-details/src/**
+            register-new-user:
+              - yarn.lock
+              - .github/workflows/deploy.yml
+              - packages/register-new-user/package.json
+              - packages/register-new-user/.yarnrc-lambda.yml
+              - packages/register-new-user/src/**
             send-registration-code:
               - yarn.lock
               - .github/workflows/deploy.yml
@@ -300,6 +306,23 @@ jobs:
         with:
           tag_name: '@centralbeans/record-webshop-item-details@${{ steps.record-webshop-item-details.outputs.version }}'
           release_name: Release @centralbeans/record-webshop-item-details v${{ steps.record-webshop-item-details.outputs.version }}
+          draft: false
+          prerelease: false
+      - name: register-new-user
+        id: register-new-user
+        if: steps.changed-files-yaml.outputs.register-new-user_any_changed == 'true'
+        run: |
+          yarn workspace @centralbeans/register-new-user build
+          version=$(yarn workspace @centralbeans/register-new-user deploy | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release register-new-user
+        if: steps.changed-files-yaml.outputs.register-new-user_any_changed == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: '@centralbeans/register-new-user@${{ steps.register-new-user.outputs.version }}'
+          release_name: Release @centralbeans/register-new-user v${{ steps.register-new-user.outputs.version }}
           draft: false
           prerelease: false
       - name: send-registration-code

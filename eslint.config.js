@@ -210,6 +210,7 @@ export default defineConfig([
       'packages/record-roaster-webshop/**/*.js',
       'packages/record-webshop-item/**/*.js',
       'packages/record-webshop-item-details/**/*.js',
+      'packages/register-new-user/**/*.js',
       'packages/send-registration-code/**/*.js',
       'packages/webshop-item-processor/**/*.js',
       'packages/webshop-processor/**/*.js'
