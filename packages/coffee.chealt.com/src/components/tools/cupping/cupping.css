@@ -1,11 +1,9 @@
 .cupping-container {
-  padding: var(--gap) var(--gap) 24px var(--gap);
-
   .final-score-container {
     position: fixed;
     right: 0;
     left: 0;
-    bottom: 73px; /* height of the bottom navigation */
+    bottom: 0;
     padding: var(--gap);
     font-size: 1.2rem;
     font-weight: bold;

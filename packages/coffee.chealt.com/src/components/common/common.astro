@@ -11,7 +11,7 @@ import allLocaleTranslations from './common.json';
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
-const { shouldAuthenticate, redirectUrl, title } = Astro.props;
+const { shouldAuthenticate, redirectUrl, title, hideNav = false } = Astro.props;
 const isProd = import.meta.env.PROD;
 ---
 
@@ -33,7 +33,7 @@ const isProd = import.meta.env.PROD;
       <main class={Astro.props.class}>
         {shouldAuthenticate ? <Login redirectUrl={redirectUrl} /> : <slot />}
       </main>
-      <Nav />
+      {!hideNav && <Nav />}
     </chealt-data>
     <img src={loaderImage.src} class="visually-hidden" aria-hidden="true" />
     {isProd && <Analytics />}

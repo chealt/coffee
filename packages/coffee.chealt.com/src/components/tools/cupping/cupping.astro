@@ -18,7 +18,7 @@ const { locale } = Astro.params;
 const t = allLocaleTranslations[locale];
 ---
 
-<Common title={t.title}>
+<Common title={t.title} hideNav>
   <h1 class="hidden">{t.title}</h1>
   <section class="cupping-container">
     <Form
