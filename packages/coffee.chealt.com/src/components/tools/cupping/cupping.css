@@ -1,0 +1,14 @@
+.cupping-container {
+  .final-score-container {
+    position: fixed;
+    right: 0;
+    top: 0;
+    padding: var(--gap--s) var(--gap);
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+}
+
+.times-sign {
+  font-size: 2rem;
+}

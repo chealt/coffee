@@ -116,6 +116,13 @@ const pages = [
  */
 // eslint-disable-next-line complexity
 export const onRequest = async (context, next) => {
+  setGetSignedUrl(context);
+  setImageUploadUrls(context);
+
+  if (context.isPrerendered) {
+    return next();
+  }
+
   const { page, params } = parsePath(context.url.pathname);
 
   if (page !== 'api' && !context.params.locale && (context.routePattern !== '/404' || pages.includes(page))) {
@@ -153,9 +160,6 @@ export const onRequest = async (context, next) => {
       // DO NOTHING
     }
   }
-
-  setGetSignedUrl(context);
-  setImageUploadUrls(context);
 
   const { itemId, collectionId, locale } = context.params;
 

@@ -63,6 +63,11 @@
   }
 }
 
+.primary {
+  background-color: var(--color-primary);
+  color: var(--color-text--primary);
+}
+
 html,
 body {
   background-color: var(--color-background);
