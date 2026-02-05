@@ -657,17 +657,17 @@ const parsers = {
 
     const pricePerGram = Number((price / weight).toFixed(2));
 
-    const details = Array.from(document.querySelector('#tab-description p').querySelectorAll('strong')).reduce(
-      (previousValue, currentValue) => {
-        const key = currentValue.textContent.replace(':', '').trim().toLowerCase();
-        const value = currentValue.nextSibling.textContent.trim().toLowerCase();
+    const details = Array.from(
+      document.querySelector('#tab-description p')?.querySelectorAll('strong') ||
+        document.querySelectorAll('#tab-additional_information .woocommerce-product-attributes-item__label')
+    ).reduce((previousValue, currentValue) => {
+      const key = currentValue.textContent.replace(':', '').trim().toLowerCase();
+      const value = currentValue.nextSibling.textContent.trim().toLowerCase();
 
-        previousValue[key] = value;
+      previousValue[key] = value;
 
-        return previousValue;
-      },
-      {}
-    );
+      return previousValue;
+    }, {});
 
     const originCountry = details['kraj pochodzenia ziarna'];
     const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
