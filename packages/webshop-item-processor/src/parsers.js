@@ -1798,7 +1798,7 @@ const parsers = {
       .filter(
         (name) =>
           !varieties.map((variety) => variety.name.toLowerCase()).includes(name) &&
-          !varieties.map((variety) => variety.alias.toLowerCase()).includes(name)
+          !varieties.map((variety) => variety.alias?.toLowerCase()).includes(name)
       );
 
     if (missingVarieties.length) {
