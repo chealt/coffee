@@ -942,7 +942,8 @@ const parsers = {
     const weightElementValue =
       document.querySelector('.metafield-number_integer')?.textContent ||
       document.querySelector('[name=Packaging]:checked')?.value.replace('g', '') ||
-      document.querySelector('[name=balenie]:checked')?.value.replace('g', '');
+      document.querySelector('[name=balenie]:checked')?.value.replace('g', '') ||
+      document.querySelector('#template--24932172071240__main-1-0')?.value.replace('g', '');
     const weight = parseFloat(weightElementValue);
 
     if (!weight || isNaN(weight)) {
@@ -966,6 +967,13 @@ const parsers = {
       details.lokalita === 'cherry likér, jablko, hrozno, čierna ríbezľa, jahoda' // bad data
         ? 'indonesia'
         : details.lokalita;
+
+    if (!originCountry) {
+      logger.error(`No origin country found for ${url}`);
+
+      throw new Error(errors.originCountryMissing);
+    }
+
     const originCountryTranslated = await translate({ text: originCountry, from: 'cs', to: 'en' });
     const originCountryId =
       originCountries.find(({ name }) => name === originCountry)?.origin_country_id ||
