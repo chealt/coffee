@@ -129,7 +129,9 @@ const parsers = {
           .filter(({ textContent, href }) => !textContent.toLowerCase().includes('test') && !href.includes('kapsule'))
           .map(({ href }) => `${host}${href}`);
       })
-    ).then((links) => links.flat());
+    )
+      .then((links) => links.flat())
+      .then((links) => Array.from(new Set(links)));
   },
   // Meron
   252: async ({ html }) => {
