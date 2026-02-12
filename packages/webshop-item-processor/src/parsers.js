@@ -754,9 +754,7 @@ const parsers = {
       logger.debug(`Missing varieties: ${missingVarieties.join(', ')}`);
     }
 
-    const image =
-      document.querySelectorAll('.ct-product-gallery-container figure img')[1]?.src ||
-      document.querySelectorAll('.ct-product-gallery-container figure img')[0]?.src;
+    const image = document.querySelectorAll('.ct-product-gallery-container figure img')[0]?.src;
 
     if (!image) {
       logger.error(`No image found for ${url}`);
