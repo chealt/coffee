@@ -5,7 +5,8 @@ import { inflateSync } from 'node:zlib';
 
 const responses = {
   success: { success: true },
-  missingDetails: { success: true, missingDetails: true }
+  missingDetails: { success: true, missingDetails: true },
+  outOfStock: { success: true, outOfStock: true }
 };
 
 // eslint-disable-next-line complexity
@@ -67,6 +68,12 @@ const handler = async (event) => {
     );
 
     return responses.missingDetails;
+  }
+
+  if (details.isOutOfStock) {
+    logger.info(`Skipping out of stock item ${url}`);
+
+    return responses.outOfStock;
   }
 
   logger.info(`Calling record webshop item details for ${url}`);

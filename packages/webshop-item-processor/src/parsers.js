@@ -452,9 +452,7 @@ const parsers = {
       .some(Boolean);
 
     if (!someInStock) {
-      logger.error(`All items at ${url} are out of stock`);
-
-      throw new Error(`All items at ${url} are out of stock`);
+      return { isOutOfStock: true };
     }
 
     const currencySymbol = document.querySelector('.woocommerce-Price-currencySymbol').textContent.toLowerCase();
