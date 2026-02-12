@@ -622,6 +622,12 @@ const parsers = {
 
     const document = getDocument(html);
 
+    const title = document.querySelector('.product_title').textContent.trim().toLowerCase();
+
+    if (title.includes(' + ')) {
+      return { isBlend: true };
+    }
+
     const price = Number(
       document
         .querySelector('.price .woocommerce-Price-amount.amount')
@@ -660,7 +666,7 @@ const parsers = {
         document.querySelectorAll('#tab-additional_information .woocommerce-product-attributes-item__label')
     ).reduce((previousValue, currentValue) => {
       const key = currentValue.textContent.replace(':', '').trim().toLowerCase();
-      const value = currentValue.nextElementSibling.textContent.trim().toLowerCase();
+      const value = currentValue.nextSibling.textContent.trim().toLowerCase();
 
       previousValue[key] = value;
 
@@ -694,7 +700,9 @@ const parsers = {
     }
 
     const processingMethod = details['obróbka'];
-    const processingMethodId = processingMethods.find(({ name }) => name === processingMethod)?.processing_method_id;
+    const processingMethodId =
+      processingMethods.find(({ name }) => name === processingMethod)?.processing_method_id ||
+      processingMethods.find(({ name }) => processingMethod.includes(name))?.processing_method_id;
 
     if (!processingMethodId) {
       logger.debug(`Missing processing method: ${processingMethod}`);
@@ -737,8 +745,9 @@ const parsers = {
       .map(({ id }) => id);
     const missingVarieties = varietiesStrings.filter(
       (variety) =>
-        !varieties.some(({ name }) => name.toLowerCase() === variety) &&
-        !varieties.some(({ alias }) => alias?.toLowerCase() === variety)
+        !varieties.some(
+          ({ name }) => name.toLowerCase() === variety || (name.toLowerCase() === '74158' && variety === 'wolega') // typo
+        ) && !varieties.some(({ alias }) => alias?.toLowerCase() === variety)
     );
 
     if (missingVarieties.length) {
