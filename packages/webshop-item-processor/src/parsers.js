@@ -1877,6 +1877,12 @@ const parsers = {
 
     const document = getDocument(html);
 
+    const title = document.querySelector('h1').textContent.toLowerCase().trim();
+
+    if (title.includes('capsules')) {
+      return { isCapsule: true };
+    }
+
     const currencySymbol = 'Kč';
     const price = cleanPrice({ priceElement: document.querySelector('.price'), currencySymbol });
 
