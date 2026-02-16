@@ -64,8 +64,21 @@ const parsers = {
       throw new Error(errors.currencyMissing);
     }
 
-    const weightElement = document.querySelector('.swatch_label');
-    const weight = Number(weightElement.dataset.value.replaceAll('g-en', ''));
+    const weightElement =
+      document.querySelector('.swatch_label') ||
+      document.querySelector(
+        '.woocommerce-product-attributes-item--weight .woocommerce-product-attributes-item__value'
+      );
+
+    if (!weightElement) {
+      logger.error(`No weight found for ${url}`);
+
+      throw new Error(errors.weightMissing);
+    }
+
+    const weight = Number(
+      weightElement.dataset?.value?.replaceAll('g-en', '') || weightElement.textContent.replace(' g', '').trim()
+    );
 
     if (!weight || isNaN(weight)) {
       logger.error(`No weight found for ${url}`);
@@ -76,6 +89,11 @@ const parsers = {
     const pricePerGram = Number((price / weight).toFixed(2));
 
     const originCountry = document.querySelector('[data-id="4cb216da"]').textContent.trim().toLowerCase();
+
+    if (originCountry === 'blend') {
+      return { isBlend: true };
+    }
+
     const originCountryId =
       originCountries.find(({ name }) => name === originCountry)?.origin_country_id ||
       originCountries.find(({ name }) => url.includes(name))?.origin_country_id ||
