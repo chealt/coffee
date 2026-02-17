@@ -73,9 +73,17 @@ const addChangeEvent = ({ form, callback }) => {
 };
 
 const getFormData = ({ form, storage }) => {
+  const urlData = new URLSearchParams(window.location.search);
+  const dataFromUrl = urlData.get('data');
+  const parsedUrlData = dataFromUrl ? JSON.parse(atob(dataFromUrl)) : undefined;
+
   switch (storage) {
     case 'localStorage':
     case 'api':
+      if (parsedUrlData) {
+        return parsedUrlData;
+      }
+
       const dataInStorage = localStorage.getItem(storageKey);
       const data = dataInStorage ? JSON.parse(dataInStorage) : {};
 
