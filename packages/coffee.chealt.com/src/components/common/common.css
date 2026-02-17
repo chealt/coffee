@@ -23,6 +23,8 @@
   --color-origin-country: var(--color-background);
   --color-origin-country--stroke: var(--color-background);
 
+  --shadow: 0 -6px 12px var(--color-text);
+
   --border-radius: 16px;
   --border-radius--s: 8px;
 
