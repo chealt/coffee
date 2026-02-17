@@ -38,27 +38,27 @@ const t = allLocaleTranslations[locale];
     >
       <div class="range-group">
         <Range name="roast-level" min="1" max="5" excludeFromSum>
-          <span slot="title">{t['roast-level']}</span>
-          <span slot="min">{t['light']}</span>
-          <span slot="max">{t['dark']}</span>
+          <span slot="title">{t.roastLevel}</span>
+          <span slot="min">{t.light}</span>
+          <span slot="max">{t.dark}</span>
         </Range>
       </div>
       <div class="range-group">
         <div class="range-group-item">
           <Range name="aroma" min="6" max="10">
-            <span slot="title">{t['fragrance-aroma']}</span>
+            <span slot="title">{t.fragranceAroma}</span>
             <span slot="min">{6}</span>
             <span slot="max">{10}</span>
           </Range>
         </div>
         <div class="range-group-item">
           <Range name="dry" min="1" max="5" excludeFromSum>
-            <span slot="title">{t['dry']}</span>
+            <span slot="title">{t.dry}</span>
             <span slot="min">{1}</span>
             <span slot="max">{5}</span>
           </Range>
           <Range name="break" min="1" max="5" excludeFromSum>
-            <span slot="title">{t['break']}</span>
+            <span slot="title">{t.break}</span>
             <span slot="min">{1}</span>
             <span slot="max">{5}</span>
           </Range>
@@ -66,12 +66,12 @@ const t = allLocaleTranslations[locale];
       </div>
       <div class="range-group">
         <Range name="flavour" min="6" max="10">
-          <span slot="title">{t['flavour']}</span>
+          <span slot="title">{t.flavour}</span>
           <span slot="min">{6}</span>
           <span slot="max">{10}</span>
         </Range>
         <Range name="aftertaste" min="6" max="10">
-          <span slot="title">{t['aftertaste']}</span>
+          <span slot="title">{t.aftertaste}</span>
           <span slot="min">{6}</span>
           <span slot="max">{10}</span>
         </Range>
@@ -83,38 +83,38 @@ const t = allLocaleTranslations[locale];
           <span slot="max">{t.acidic}</span>
         </Range>
         <Range name="intensity" min="1" max="5" excludeFromSum>
-          <span slot="title">{t['intensity']}</span>
-          <span slot="min">{t['low']}</span>
-          <span slot="max">{t['high']}</span>
+          <span slot="title">{t.intensity}</span>
+          <span slot="min">{t.low}</span>
+          <span slot="max">{t.high}</span>
         </Range>
       </div>
       <div class="range-group">
         <Range name="body" min="6" max="10">
-          <span slot="title">{t['body']}</span>
+          <span slot="title">{t.body}</span>
           <span slot="min">{6}</span>
           <span slot="max">{10}</span>
         </Range>
         <Range name="level" min="1" max="5" excludeFromSum>
-          <span slot="title">{t['level']}</span>
-          <span slot="min">{t['thin']}</span>
-          <span slot="max">{t['heavy']}</span>
+          <span slot="title">{t.level}</span>
+          <span slot="min">{t.thin}</span>
+          <span slot="max">{t.heavy}</span>
         </Range>
       </div>
       <div class="range-group">
         <Range name="uniformity" min="6" max="10">
-          <span slot="title">{t['uniformity']}</span>
+          <span slot="title">{t.uniformity}</span>
           <span slot="min">{6}</span>
           <span slot="max">{10}</span>
         </Range>
         <Range name="balance" min="6" max="10">
-          <span slot="title">{t['balance']}</span>
+          <span slot="title">{t.balance}</span>
           <span slot="min">{6}</span>
           <span slot="max">{10}</span>
         </Range>
       </div>
       <div class="range-group">
         <Range name="clean-cup" min="6" max="10">
-          <span slot="title">{t['clean-cup']}</span>
+          <span slot="title">{t.cleanCup}</span>
           <span slot="min">{6}</span>
           <span slot="max">{10}</span>
         </Range>
@@ -135,7 +135,7 @@ const t = allLocaleTranslations[locale];
             <legend>{t.defects}</legend>
             <div class="range-group-item-container">
               <Label>
-                <span>{t['number-of-cups']}</span>
+                <span>{t.numberOfCups}</span>
                 <Input name="number-of-cups" data-negative type="number" />
               </Label>
               <span class="times-sign">x</span>
@@ -152,7 +152,7 @@ const t = allLocaleTranslations[locale];
         <Textarea name="notes" />
       </Label>
       <div class="final-score-container primary">
-        <span>{t['final-score']}</span>
+        <span>{t.finalScore}</span>
         <span class="final-score" data-sum="cupping"></span>
       </div>
     </Form>
