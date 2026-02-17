@@ -5,6 +5,7 @@ const storageKey = 'chealt-forms';
 const supportedStorageTypes = ['localStorage'];
 const sumInputSelector =
   'input:not([data-exclude-from-sum])[type="number"],input:not([data-exclude-from-sum])[type="range"]';
+const includedInputsSelector = 'input:not([data-exclude]),select:not([data-exclude]),textarea:not([data-exclude])';
 
 const calculateSum = (sumGroup) => {
   const multiplierInputNames = Array.from(sumGroup.querySelectorAll('[data-multiplier]')).map(
@@ -48,28 +49,26 @@ const calculateSumOnInput = (sumGroup) => {
 };
 
 const addChangeEvent = ({ form, callback }) => {
-  form
-    .querySelectorAll('input:not([data-exclude]),select:not([data-exclude]),textarea:not([data-exclude])')
-    .forEach((element) => {
-      element.addEventListener('input', (event) => {
-        if (event.isTrusted || element.getAttribute('type') === 'hidden') {
-          callback(form); // eslint-disable-line callback-return
+  form.querySelectorAll(includedInputsSelector).forEach((element) => {
+    element.addEventListener('input', (event) => {
+      if (event.isTrusted || event.detail?.triggerSave || element.getAttribute('type') === 'hidden') {
+        callback(form); // eslint-disable-line callback-return
 
-          form.dispatchEvent(
-            new CustomEvent('chealt-form:change', {
-              bubbles: true,
-              detail: {
-                formName: form.name
-              }
-            })
-          );
+        form.dispatchEvent(
+          new CustomEvent('chealt-form:change', {
+            bubbles: true,
+            detail: {
+              formName: form.name
+            }
+          })
+        );
 
-          return true;
-        }
+        return true;
+      }
 
-        return undefined;
-      });
+      return undefined;
     });
+  });
 };
 
 const getFormData = ({ form, storage }) => {
@@ -255,7 +254,27 @@ const attachShareHandler = ({ form, storage }) => {
   });
 };
 
+const attachResetHandlers = ({ form, resetButtons }) => {
+  resetButtons.forEach((resetButton) => {
+    resetButton.addEventListener('click', () => {
+      form.reset();
+
+      form.querySelectorAll(includedInputsSelector).forEach((element) => {
+        element.dispatchEvent(
+          new CustomEvent('input', {
+            bubbles: true,
+            detail: {
+              triggerSave: true
+            }
+          })
+        );
+      });
+    });
+  });
+};
+
 class ChealtForm extends HTMLElement {
+  // eslint-disable-next-line complexity
   connectedCallback() {
     this.form = this.querySelector('form');
     this.name = this.form.getAttribute('name');
@@ -265,6 +284,7 @@ class ChealtForm extends HTMLElement {
     this.saveEndpoint = this.form.dataset.saveEndpoint;
     this.sumGroups = this.form.querySelectorAll('[data-sum-group-name]');
     this.canShare = this.form.dataset.canShare;
+    this.resetButtons = document.querySelectorAll(`[data-reset="${this.name}"]`) || [];
 
     if (this.storage) {
       if (this.storage === 'api' && !this.saveEndpoint) {
@@ -334,6 +354,8 @@ class ChealtForm extends HTMLElement {
     if (this.canShare) {
       attachShareHandler({ form: this.form, storage: this.storage });
     }
+
+    attachResetHandlers({ form: this.form, resetButtons: this.resetButtons });
   }
 
   changeFormDataOnNameChange() {
