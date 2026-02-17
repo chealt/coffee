@@ -5,7 +5,7 @@ on:
       - main
   # Trigger when the cron workflow completes
   workflow_run:
-    workflows: ['deploy']
+    workflows: ['release']
     types:
       - completed
 permissions:
