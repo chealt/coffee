@@ -269,6 +269,10 @@ const attachResetHandlers = ({ form, resetButtons }) => {
           })
         );
       });
+
+      if (window.location.search.includes('?data=')) {
+        window.location.replace(`${window.location.origin}${window.location.pathname}`);
+      }
     });
   });
 };
