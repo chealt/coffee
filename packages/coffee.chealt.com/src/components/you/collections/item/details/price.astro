@@ -1,0 +1,34 @@
+---
+import exchangeRates from '@data/exchangeRates.json';
+
+import Input from '../../../../form/input/input.astro';
+import Label from '../../../../form/label/label.astro';
+import Select from '../../../../form/select/select.astro';
+
+import allLocaleTranslations from './locales.json';
+
+const t = allLocaleTranslations[Astro.currentLocale];
+
+const { price, selectedCurrency } = Astro.props;
+const { currency: profileCurrency } = Astro.locals;
+
+const currencies = exchangeRates.map(({ currency_code }) => currency_code);
+---
+
+<Label>
+  <div class="name">
+    {t.price}
+  </div>
+  <div class="inputs">
+    <Input name="price" type="number" value={price} />
+    <Select name="currency">
+      {
+        currencies.map((currency) => (
+          <option value={currency} selected={currency === (selectedCurrency || profileCurrency)}>
+            {currency}
+          </option>
+        ))
+      }
+    </Select>
+  </div>
+</Label>

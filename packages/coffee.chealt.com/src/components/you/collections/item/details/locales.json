@@ -16,6 +16,7 @@
     "favorites": "Favorites",
     "favorite": "favorite",
     "unnamed": "Untitled Collection",
+    "price": "Price",
     "review": "Review",
     "deleteCollection": {
       "buttonLabel": "Delete collection",
@@ -43,6 +44,7 @@
     "favorites": "Ulubione",
     "favorite": "ulubiony",
     "unnamed": "Niezidentyfikowana kolekcja",
+    "price": "Cena",
     "review": "Opinia",
     "deleteCollection": {
       "buttonLabel": "Usuń kolekcję",

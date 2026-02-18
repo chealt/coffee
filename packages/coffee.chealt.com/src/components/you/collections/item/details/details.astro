@@ -6,6 +6,7 @@ import BrewingMethods from './brewing-methods.astro';
 import Decaf from './decaf.astro';
 import OriginCountries from './origin-countries.astro';
 import OriginRegions from './origin-regions.astro';
+import Price from './price.astro';
 import ProcessingMethods from './processing-methods.astro';
 import Roasters from './roasters.astro';
 import RoastingDate from './roasting-date.astro';
@@ -34,6 +35,7 @@ const {
     <ProcessingMethods selected={details?.processingMethod || extractedDetails?.processingMethod} />
     <BrewingMethods selected={details?.brewingMethod || extractedDetails?.brewingMethod} />
     <TasteNotes selected={details?.['tasteNoteIds[]'] || extractedDetails?.['tasteNoteIds[]']} />
+    <Price price={details?.price} selectedCurrency={details?.currency} />
     <Decaf checked={details?.isDecaf} />
   </Form>
 </section>
