@@ -65,7 +65,6 @@ button.combobox {
   /* end of iOS hack */
 }
 
-input[readonly],
 input[disabled] {
   opacity: 0.5;
 }

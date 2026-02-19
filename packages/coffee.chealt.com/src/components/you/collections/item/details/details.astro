@@ -7,6 +7,7 @@ import Decaf from './decaf.astro';
 import OriginCountries from './origin-countries.astro';
 import OriginRegions from './origin-regions.astro';
 import Price from './price.astro';
+import PricePerGram from './price-per-gram.astro';
 import ProcessingMethods from './processing-methods.astro';
 import Roasters from './roasters.astro';
 import RoastingDate from './roasting-date.astro';
@@ -38,6 +39,7 @@ const {
     <TasteNotes selected={details?.['tasteNoteIds[]'] || extractedDetails?.['tasteNoteIds[]']} />
     <Price price={details?.price} selectedCurrency={details?.currency} />
     <Weight value={details?.weight} />
+    <PricePerGram price={details?.price} currency={details?.currency} weight={details?.weight} />
     <Decaf checked={details?.isDecaf} />
   </Form>
 </section>

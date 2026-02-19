@@ -17,6 +17,7 @@
     "favorite": "favorite",
     "unnamed": "Untitled Collection",
     "price": "Price",
+    "pricePerGram": "Price per gram",
     "review": "Review",
     "deleteCollection": {
       "buttonLabel": "Delete collection",
@@ -46,6 +47,7 @@
     "favorite": "ulubiony",
     "unnamed": "Niezidentyfikowana kolekcja",
     "price": "Cena",
+    "pricePerGram": "Cena za gram",
     "review": "Opinia",
     "deleteCollection": {
       "buttonLabel": "Usuń kolekcję",

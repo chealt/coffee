@@ -1,0 +1,30 @@
+---
+import { convertToUSD, getConvertedPrice } from '../../../../coffees/utils.js';
+import Input from '../../../../form/input/input.astro';
+import Label from '../../../../form/label/label.astro';
+
+import allLocaleTranslations from './locales.json';
+
+const { currency, price, weight } = Astro.props;
+
+const { currency: profileCurrency } = Astro.locals;
+
+const pricePerGramInUSD = convertToUSD({ currency, price: price / weight });
+
+const t = allLocaleTranslations[Astro.currentLocale];
+---
+
+<Label>
+  <div class="name">
+    {t.pricePerGram}
+  </div>
+  <Input
+    name="pricePerGram"
+    readonly
+    value={Intl.NumberFormat(Astro.currentLocale, {
+      style: 'decimal',
+      currency,
+      maximumFractionDigits: 2
+    }).format(getConvertedPrice({ price: pricePerGramInUSD, currency: profileCurrency }))}
+  />
+</Label>
