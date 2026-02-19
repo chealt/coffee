@@ -9,7 +9,15 @@ const { currency, price, weight } = Astro.props;
 
 const { currency: profileCurrency } = Astro.locals;
 
-const pricePerGramInUSD = convertToUSD({ currency, price: price / weight });
+let parsedPrice = Number(price);
+
+if (isNaN(parsedPrice)) {
+  logger.error(`Invalid price: ${price}`);
+
+  parsedPrice = 0;
+}
+
+const pricePerGramInUSD = convertToUSD({ currency, price: parsedPrice / weight });
 
 const t = allLocaleTranslations[Astro.currentLocale];
 ---
@@ -19,6 +27,7 @@ const t = allLocaleTranslations[Astro.currentLocale];
     {t.pricePerGram}
   </div>
   <Input
+    data-exclude-from-storage
     name="pricePerGram"
     readonly
     value={Intl.NumberFormat(Astro.currentLocale, {
