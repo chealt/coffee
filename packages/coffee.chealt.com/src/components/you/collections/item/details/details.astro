@@ -39,7 +39,11 @@ const {
     <TasteNotes selected={details?.['tasteNoteIds[]'] || extractedDetails?.['tasteNoteIds[]']} />
     <Price price={details?.price} selectedCurrency={details?.currency} />
     <Weight value={details?.weight} />
-    <PricePerGram price={details?.price} currency={details?.currency} weight={details?.weight} />
+    {
+      details?.price && details?.weight && details?.currency && (
+        <PricePerGram price={details?.price} currency={details?.currency} weight={details?.weight} />
+      )
+    }
     <Decaf checked={details?.isDecaf} />
   </Form>
 </section>

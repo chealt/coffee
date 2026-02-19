@@ -16,8 +16,7 @@ if (isNaN(parsedPrice)) {
 
   parsedPrice = 0;
 }
-
-const pricePerGramInUSD = convertToUSD({ currency, price: parsedPrice / weight });
+const pricePerGramInUSD = parsedPrice ? convertToUSD({ currency, price: parsedPrice / weight }) : undefined;
 
 const t = allLocaleTranslations[Astro.currentLocale];
 ---
@@ -30,10 +29,12 @@ const t = allLocaleTranslations[Astro.currentLocale];
     data-exclude-from-storage
     name="pricePerGram"
     readonly
-    value={Intl.NumberFormat(Astro.currentLocale, {
-      style: 'decimal',
-      currency,
-      maximumFractionDigits: 2
-    }).format(getConvertedPrice({ price: pricePerGramInUSD, currency: profileCurrency }))}
+    value={pricePerGramInUSD
+      ? Intl.NumberFormat(Astro.currentLocale, {
+          style: 'decimal',
+          currency,
+          maximumFractionDigits: 2
+        }).format(getConvertedPrice({ price: pricePerGramInUSD, currency: profileCurrency }))
+      : ''}
   />
 </Label>
