@@ -1,6 +1,8 @@
 /* eslint-disable camelcase */
 import { getClient } from './client.js';
 import { getValue } from './formData.js';
+import { convertToUSD } from '../../components/coffees/utils.js';
+import logger from '../../components/errors/utils.js';
 import { getImageUrl } from '../AWS/storage.js';
 
 const queryCollections = async (user) => {
@@ -149,6 +151,22 @@ const getExtractedDetails = async (collectionItemImages) =>
       )
   );
 
+const calculatePricePerGram = ({ price, weight, currency }) => {
+  if (!price || !weight || !currency) {
+    return undefined;
+  }
+
+  let parsedPrice = Number(price);
+
+  if (isNaN(parsedPrice)) {
+    logger.error(`Invalid price: ${price}`);
+
+    parsedPrice = 0;
+  }
+
+  return parsedPrice ? convertToUSD({ currency, price: parsedPrice / weight }) : undefined;
+};
+
 const getCollectionItem = async (user, itemId) => {
   const collectionItem = await queryCollectionItem(user, itemId);
   const collectionItemImages = await queryCollectionItemImages(user, itemId);
@@ -168,7 +186,10 @@ const getCollectionItem = async (user, itemId) => {
       srcMedium: getImageUrl({ filename, size: 'medium' }),
       status: queryImageDetails(filename)?.status
     })),
-    details,
+    details: {
+      ...details,
+      pricePerGram: calculatePricePerGram(details)
+    },
     extractedDetails,
     review,
     inCollections: collectionItemLinks.map((link) => link.collection_id)

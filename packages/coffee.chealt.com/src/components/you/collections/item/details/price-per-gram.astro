@@ -5,18 +5,9 @@ import Label from '../../../../form/label/label.astro';
 
 import allLocaleTranslations from './locales.json';
 
-const { currency, price, weight } = Astro.props;
+const { pricePerGram } = Astro.props;
 
-const { currency: profileCurrency } = Astro.locals;
-
-let parsedPrice = Number(price);
-
-if (isNaN(parsedPrice)) {
-  logger.error(`Invalid price: ${price}`);
-
-  parsedPrice = 0;
-}
-const pricePerGramInUSD = parsedPrice ? convertToUSD({ currency, price: parsedPrice / weight }) : undefined;
+const { currency } = Astro.locals;
 
 const t = allLocaleTranslations[Astro.currentLocale];
 ---
@@ -29,12 +20,10 @@ const t = allLocaleTranslations[Astro.currentLocale];
     data-exclude-from-storage
     name="pricePerGram"
     readonly
-    value={pricePerGramInUSD
-      ? Intl.NumberFormat(Astro.currentLocale, {
-          style: 'decimal',
-          currency,
-          maximumFractionDigits: 2
-        }).format(getConvertedPrice({ price: pricePerGramInUSD, currency: profileCurrency }))
-      : ''}
+    value={Intl.NumberFormat(Astro.currentLocale, {
+      style: 'decimal',
+      currency,
+      maximumFractionDigits: 2
+    }).format(getConvertedPrice({ price: pricePerGram, currency }))}
   />
 </Label>
