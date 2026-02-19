@@ -1673,7 +1673,8 @@ const parsers = {
     }
 
     const originFarm = originDetails.estate;
-    const foundOriginFarm = originFarms.find(({ name }) => name === originFarm);
+    const title = document.querySelector('h4.title')?.textContent.trim().toLowerCase();
+    const foundOriginFarm = originFarms.find(({ name }) => name === originFarm || name === title);
     const originFarmId = foundOriginFarm?.id || null;
 
     if (originFarm && !originFarmId) {
