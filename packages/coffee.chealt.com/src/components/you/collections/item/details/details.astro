@@ -13,6 +13,7 @@ import RoastingDate from './roasting-date.astro';
 import RoastingLevels from './roasting-levels.astro';
 import TasteNotes from './taste-notes.astro';
 import Varieties from './varieties.astro';
+import Weight from './weight.astro';
 
 import allLocaleTranslations from './locales.json';
 
@@ -36,6 +37,7 @@ const {
     <BrewingMethods selected={details?.brewingMethod || extractedDetails?.brewingMethod} />
     <TasteNotes selected={details?.['tasteNoteIds[]'] || extractedDetails?.['tasteNoteIds[]']} />
     <Price price={details?.price} selectedCurrency={details?.currency} />
+    <Weight value={details?.weight} />
     <Decaf checked={details?.isDecaf} />
   </Form>
 </section>

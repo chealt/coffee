@@ -25,7 +25,8 @@
     "tasteNotes": "Taste notes",
     "select": "Select",
     "search": "search",
-    "varieties": "Varieties"
+    "varieties": "Varieties",
+    "weight": "Weight (grams)"
   },
   "pl": {
     "title": "Kolekcje",
@@ -53,6 +54,7 @@
     "tasteNotes": "Smaki",
     "select": "Wybierz",
     "search": "szukaj",
-    "varieties": "Odmiany"
+    "varieties": "Odmiany",
+    "weight": "Waga (gramy)"
   }
 }
