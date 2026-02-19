@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import { getClient } from './client.js';
 import { getValue } from './formData.js';
+import coffees from '../../../data/coffees.json';
 import { convertToUSD } from '../../components/coffees/utils.js';
 import logger from '../../components/errors/utils.js';
 import { getImageUrl } from '../AWS/storage.js';
@@ -96,6 +97,42 @@ const queryCollectionItemLinks = async (user, itemId) => {
   return results.rows;
 };
 
+const getSimilarCoffeePrices = ({ originCountry, originRegion, originFarm, processingMethod, varieties }) =>
+  coffees
+    .filter(
+      (
+        {
+          currency,
+          price_per_gram: pricePerGram,
+          origin_country_id: originCountryId,
+          origin_region_id: originRegionId,
+          origin_farm_id: originFarmId,
+          processing_method_id: processingMethodId,
+          varieties: coffeeVarieties
+        } // eslint-disable-next-line complexity
+      ) =>
+        currency &&
+        pricePerGram &&
+        (originCountry ? Number(originCountry) === originCountryId : true) &&
+        (originRegion ? Number(originRegion) === originRegionId : true) &&
+        (originFarm ? Number(originFarm) === originFarmId : true) &&
+        (processingMethod ? Number(processingMethod) === processingMethodId : true) &&
+        (varieties ? varieties.some((variety) => coffeeVarieties.includes(variety)) : true)
+    )
+    .map(({ currency, price_per_gram: pricePerGram }) => convertToUSD({ price: pricePerGram, currency }));
+
+const getPriceIndex = ({ details, pricePerGram }) => {
+  const similarCoffeePrices = getSimilarCoffeePrices(details);
+
+  if (similarCoffeePrices.length < 3) {
+    return undefined;
+  }
+
+  const cheaperCount = similarCoffeePrices.filter((price) => price < pricePerGram).length;
+
+  return cheaperCount / similarCoffeePrices.length;
+};
+
 const getCollections = async (user) => {
   const collections = await queryCollections(user);
   const collectionItems = await queryCollectionItems(user);
@@ -175,6 +212,7 @@ const getCollectionItem = async (user, itemId) => {
   const details = await getValue({ user, key: `${itemId}.details` });
   const review = await getValue({ user, key: `${itemId}.review` });
   const collectionItemLinks = await queryCollectionItemLinks(user, itemId);
+  const pricePerGram = calculatePricePerGram(details);
 
   return {
     id: collectionItem.id,
@@ -188,7 +226,8 @@ const getCollectionItem = async (user, itemId) => {
     })),
     details: {
       ...details,
-      pricePerGram: calculatePricePerGram(details)
+      pricePerGram,
+      priceIndex: pricePerGram ? getPriceIndex({ details, pricePerGram }) : undefined
     },
     extractedDetails,
     review,

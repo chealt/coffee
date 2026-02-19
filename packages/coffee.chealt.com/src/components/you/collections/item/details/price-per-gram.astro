@@ -3,20 +3,32 @@ import { convertToUSD, getConvertedPrice } from '../../../../coffees/utils.js';
 import Input from '../../../../form/input/input.astro';
 import Label from '../../../../form/label/label.astro';
 
+import './price-per-gram.css';
+
 import allLocaleTranslations from './locales.json';
 
-const { pricePerGram } = Astro.props;
+const { pricePerGram, priceIndex } = Astro.props;
 
 const { currency } = Astro.locals;
 
 const t = allLocaleTranslations[Astro.currentLocale];
+
+const priceIndexPercentage = priceIndex && Math.round(priceIndex * 100);
 ---
 
 <Label>
   <div class="name">
     {t.pricePerGram}
+    {priceIndexPercentage && <span class="price-index-percentage">({priceIndexPercentage}%)</span>}
   </div>
   <Input
+    style={`background-size: 100% 6px; background-repeat: no-repeat; background-position: bottom; background-image: linear-gradient(
+      to right,
+      var(--color-primary) 0%,
+      var(--color-primary) ${priceIndexPercentage}%,
+      var(--color-background--alternative) ${priceIndexPercentage}%,
+      var(--color-background--alternative) 100%
+    ); border-color: var(--color-background)`}
     data-exclude-from-storage
     name="pricePerGram"
     readonly
