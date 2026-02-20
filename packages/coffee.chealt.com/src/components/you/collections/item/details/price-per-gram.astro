@@ -1,4 +1,5 @@
 ---
+import logger from '../../../../errors/utils.js';
 import { convertToUSD, getConvertedPrice } from '../../../../coffees/utils.js';
 import Input from '../../../../form/input/input.astro';
 import Label from '../../../../form/label/label.astro';
@@ -12,6 +13,7 @@ const { currency } = Astro.locals;
 const t = allLocaleTranslations[Astro.currentLocale];
 
 const priceIndexPercentage = priceIndex && Math.round(priceIndex * 100);
+logger.info({ pricePerGram });
 ---
 
 <Label>
