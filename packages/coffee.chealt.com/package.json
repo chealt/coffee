@@ -25,25 +25,25 @@
   "devDependencies": {
     "@astrojs/cloudflare": "^12.6.12",
     "@libsql/client": "^0.17.0",
-    "eslint": "^9.39.2",
-    "eslint-plugin-astro": "^1.5.0",
+    "eslint": "^9.39.3",
+    "eslint-plugin-astro": "^1.6.0",
     "prettier": "^3.8.1",
     "rollup-plugin-visualizer": "^6.0.5",
     "vite": "^7.3.1",
     "vite-plugin-wasm": "^3.5.0",
-    "wrangler": "^4.62.0"
+    "wrangler": "^4.67.0"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.981.0",
-    "@aws-sdk/client-s3": "^3.981.0",
-    "@aws-sdk/s3-request-presigner": "^3.981.0",
+    "@aws-sdk/client-lambda": "^3.994.0",
+    "@aws-sdk/client-s3": "^3.994.0",
+    "@aws-sdk/s3-request-presigner": "^3.994.0",
     "@playwright-testing-library/test": "^4.5.0",
-    "@playwright/test": "^1.58.1",
-    "@sentry/astro": "^10.38.0",
+    "@playwright/test": "^1.58.2",
+    "@sentry/astro": "^10.39.0",
     "@simplewebauthn/browser": "13.1.2",
     "@simplewebauthn/server": "13.1.2",
     "@tursodatabase/api": "^1.9.2",
-    "astro": "^5.17.1",
+    "astro": "^5.17.3",
     "jsonwebtoken": "^9.0.3"
   }
 }
