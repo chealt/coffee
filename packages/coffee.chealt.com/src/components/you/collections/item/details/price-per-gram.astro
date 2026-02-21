@@ -21,13 +21,15 @@ const priceIndexPercentage = priceIndex && Math.round(priceIndex * 100);
     {priceIndexPercentage && <span class="price-index-percentage">({priceIndexPercentage}%)</span>}
   </div>
   <Input
-    style={`background-size: 100% 6px; background-repeat: no-repeat; background-position: bottom; background-image: linear-gradient(
+    style={priceIndexPercentage
+      ? `background-size: 100% 6px; background-repeat: no-repeat; background-position: bottom; background-image: linear-gradient(
       to right,
       var(--color-primary) 0%,
       var(--color-primary) ${priceIndexPercentage}%,
       var(--color-background--alternative) ${priceIndexPercentage}%,
       var(--color-background--alternative) 100%
-    ); border-color: var(--color-background)`}
+    ); border-color: var(--color-background)`
+      : undefined}
     data-exclude
     name="pricePerGram"
     readonly
