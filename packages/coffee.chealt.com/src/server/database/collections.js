@@ -113,11 +113,11 @@ const getSimilarCoffeePrices = ({ originCountry, originRegion, originFarm, proce
       ) =>
         currency &&
         pricePerGram &&
-        (originCountry ? Number(originCountry) === originCountryId : true) &&
-        (originRegion ? Number(originRegion) === originRegionId : true) &&
-        (originFarm ? Number(originFarm) === originFarmId : true) &&
-        (processingMethod ? Number(processingMethod) === processingMethodId : true) &&
-        (varieties ? varieties.some((variety) => coffeeVarieties.includes(variety)) : true)
+        (originCountry && originCountryId ? Number(originCountry) === originCountryId : true) &&
+        (originRegion && originRegionId ? Number(originRegion) === originRegionId : true) &&
+        (originFarm && originFarmId ? Number(originFarm) === originFarmId : true) &&
+        (processingMethod && processingMethodId ? Number(processingMethod) === processingMethodId : true) &&
+        (varieties && varieties.length ? varieties.some((variety) => coffeeVarieties.includes(variety)) : true)
     )
     .map(({ currency, price_per_gram: pricePerGram }) => convertToUSD({ price: pricePerGram, currency }));
 
