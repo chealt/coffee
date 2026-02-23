@@ -118,7 +118,10 @@ const parsers = {
     const regionOrFarm = document.querySelector('[data-id="15362af"]').textContent.trim().toLowerCase();
 
     const originRegionId = originRegions.find(({ name }) => regionOrFarm.includes(name))?.origin_region_id || null;
-    const originFarmId = originFarms.find(({ name }) => regionOrFarm.includes(name))?.id || null;
+    const originFarmId =
+      originFarms.find(({ name }) => regionOrFarm.includes(name))?.id ||
+      originFarms.find(({ name }) => title.includes(name))?.id ||
+      null;
 
     const processingMethod = document.querySelector('[data-id="16e90837"]').textContent.trim().toLowerCase();
     const processingMethodId =
