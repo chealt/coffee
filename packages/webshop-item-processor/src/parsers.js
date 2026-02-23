@@ -45,6 +45,8 @@ const parsers = {
 
     const document = getDocument(html);
 
+    const title = document.querySelector('h1.product-title').textContent.toLowerCase().trim();
+
     const price = Number(
       document.querySelector('.price .woocommerce-Price-amount').textContent.replaceAll(' zł', '').replaceAll(',', '.')
     ).toFixed(2);
@@ -167,12 +169,15 @@ const parsers = {
       logger.info(`Missing varieties: ${varietiesStrings}`);
     }
 
+    const isDecaf = url.includes('decaf') || title.includes('decaf');
+
     const image = document.querySelector('.woocommerce-product-gallery__wrapper img').src;
 
     return {
       brewingMethodId,
       currency,
       image,
+      isDecaf,
       originCountryId,
       originFarmId,
       originRegionId,
