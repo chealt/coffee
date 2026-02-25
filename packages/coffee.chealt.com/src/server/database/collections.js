@@ -212,7 +212,7 @@ const getCollectionItem = async (user, itemId) => {
   const details = await getValue({ user, key: `${itemId}.details` });
   const review = await getValue({ user, key: `${itemId}.review` });
   const collectionItemLinks = await queryCollectionItemLinks(user, itemId);
-  const pricePerGram = calculatePricePerGram(details);
+  const pricePerGram = details ? calculatePricePerGram(details) : undefined;
 
   return {
     id: collectionItem.id,
