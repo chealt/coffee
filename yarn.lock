@@ -1525,6 +1525,7 @@ __metadata:
     "@playwright-testing-library/test": "npm:^4.5.0"
     "@playwright/test": "npm:^1.58.2"
     "@sentry/astro": "npm:^10.40.0"
+    "@sentry/cloudflare": "npm:^10.40.0"
     "@simplewebauthn/browser": "npm:13.1.2"
     "@simplewebauthn/server": "npm:13.1.2"
     "@tursodatabase/api": "npm:^1.9.2"
@@ -4377,6 +4378,21 @@ __metadata:
   bin:
     sentry-cli: bin/sentry-cli
   checksum: 10c0/569a3750f6a21e235f8dd3506e38cec7282e82f1e313fc677eb62f2ab3a6f44bdad4e43cc8b73200ca24ea94946811cbd54c0f6adbc4b6ed86b15707bd13941e
+  languageName: node
+  linkType: hard
+
+"@sentry/cloudflare@npm:^10.40.0":
+  version: 10.40.0
+  resolution: "@sentry/cloudflare@npm:10.40.0"
+  dependencies:
+    "@opentelemetry/api": "npm:^1.9.0"
+    "@sentry/core": "npm:10.40.0"
+  peerDependencies:
+    "@cloudflare/workers-types": ^4.x
+  peerDependenciesMeta:
+    "@cloudflare/workers-types":
+      optional: true
+  checksum: 10c0/c55c731abc63ca5ab714ba775d2dca27bc1d4daad1bbd6621db183c8aeddd3a2147fd5dd972af0db9c0c17da6f5c87e517a5807e8eb1868fa8ab61fca21793c2
   languageName: node
   linkType: hard
 
