@@ -1803,7 +1803,7 @@ const parsers = {
       }
 
       const valueElement = row.nextSibling.tagName === 'B' ? row.nextSibling.nextSibling : row.nextSibling;
-      const value = valueElement.textContent.toLowerCase().trim();
+      const value = valueElement.textContent.toLowerCase().replace(':', '').trim();
 
       _details[key] = value;
 
@@ -1827,13 +1827,14 @@ const parsers = {
 
     const originFarmId = originFarms.find(({ name }) => details.producer?.includes(name))?.id || null;
 
+    const varietiesStrings = details.variety || details.varieties;
     const varietyIds = varieties
       .filter(
         ({ name, alias }) =>
-          details.variety.includes(name.toLowerCase()) || (alias && details.variety.includes(alias.toLowerCase()))
+          varietiesStrings.includes(name.toLowerCase()) || (alias && varietiesStrings.includes(alias.toLowerCase()))
       )
       .map(({ id }) => id);
-    const missingVarieties = details.variety
+    const missingVarieties = varietiesStrings
       .split(', ')
       .filter(
         (name) =>
