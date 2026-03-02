@@ -1239,29 +1239,21 @@ const parsers = {
 
     const pricePerGram = Number((price / weight).toFixed(2));
 
-    let detailNames = Array.from(document.querySelectorAll('.woocommerce-product-details__short-description b')).map(
-      (element) => element.textContent.trim().toLowerCase().replace(':', '')
-    );
+    const detailNames = Array.from(
+      document.querySelectorAll(
+        '.woocommerce-product-details__short-description b, .woocommerce-product-details__short-description strong'
+      )
+    ).map((element) => element.textContent.replace(':', '').trim().toLowerCase());
 
-    if (detailNames.length === 0) {
-      detailNames = Array.from(document.querySelectorAll('.woocommerce-product-details__short-description strong')).map(
-        (element) => element.textContent.trim().toLowerCase().replace(':', '')
-      );
-    }
-
-    let detailValues = Array.from(document.querySelectorAll('.woocommerce-product-details__short-description b')).map(
-      (element) => element.nextSibling?.textContent.trim().toLowerCase()
-    );
-
-    if (detailValues.length === 0) {
-      detailValues = Array.from(
-        document.querySelectorAll('.woocommerce-product-details__short-description strong')
-      ).map((element) => element.nextSibling?.textContent.trim().toLowerCase());
-    }
+    let detailValues = Array.from(
+      document.querySelectorAll(
+        '.woocommerce-product-details__short-description b, .woocommerce-product-details__short-description strong'
+      )
+    ).map((element) => element.nextSibling?.textContent.replace(':', '').trim().toLowerCase());
 
     if (detailValues.length === 0) {
       detailValues = Array.from(document.querySelectorAll('.woocommerce-product-details__short-description i')).map(
-        (element) => element.textContent.trim().toLowerCase()
+        (element) => element.textContent.replace(':', '').trim().toLowerCase()
       );
     }
 
@@ -1317,7 +1309,7 @@ const parsers = {
       ?.split(', ')
       .filter((note) => !tasteNotes.some(({ name }) => name === note.trim().toLowerCase()));
 
-    if (missingTasteNotes.length) {
+    if (missingTasteNotes?.length) {
       logger.info(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
     }
 
