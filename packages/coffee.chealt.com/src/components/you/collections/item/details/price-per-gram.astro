@@ -6,7 +6,7 @@ import Label from '../../../../form/label/label.astro';
 
 import allLocaleTranslations from './locales.json';
 
-const { pricePerGram, priceIndex } = Astro.props;
+const { chartData, pricePerGram, priceIndex } = Astro.props;
 
 const { currency } = Astro.locals;
 
@@ -16,27 +16,19 @@ const priceIndexPercentage = priceIndex && Math.round(priceIndex * 100);
 ---
 
 <Label>
-  <div class="name">
-    {t.pricePerGram}
-    {priceIndexPercentage && <span class="price-index-percentage">({priceIndexPercentage}%)</span>}
-  </div>
-  <Input
-    style={priceIndexPercentage
-      ? `background-size: 100% 6px; background-repeat: no-repeat; background-position: bottom; background-image: linear-gradient(
-      to right,
-      var(--color-primary) 0%,
-      var(--color-primary) ${priceIndexPercentage}%,
-      var(--color-background--alternative) ${priceIndexPercentage}%,
-      var(--color-background--alternative) 100%
-    ); border-color: var(--color-background)`
-      : undefined}
-    data-exclude
-    name="pricePerGram"
-    readonly
-    value={Intl.NumberFormat(Astro.currentLocale, {
-      style: 'decimal',
-      currency,
-      maximumFractionDigits: 2
-    }).format(getConvertedPrice({ price: pricePerGram, currency }))}
-  />
+  <coffee-price-per-gram data-percentage={priceIndexPercentage} data-chart-data={chartData}>
+    <div class="name">
+      {
+        `${t.pricePerGram}: ${Intl.NumberFormat(Astro.currentLocale, {
+          style: 'currency',
+          currency,
+          currencyDisplay: 'narrowSymbol',
+          maximumFractionDigits: 2
+        }).format(getConvertedPrice({ price: pricePerGram, currency }))}`
+      }
+    </div>
+    <div data-chart></div>
+  </coffee-price-per-gram>
 </Label>
+
+<script src="./price-per-gram.js"></script>
