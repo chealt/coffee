@@ -6,6 +6,10 @@ Parameters:
     Type: String
     Default: 'arn:aws:lambda:eu-central-1:781346609033:function:recordRoasterWebshop'
     Description: ARN of the Lambda function to trigger
+  FlexibilityWindow:
+    Type: String
+    Default: '5'
+    Description: Flexibility window in minutes
 
 Resources:
   SchedulerExecutionRole:
@@ -33,6 +37,9 @@ Resources:
     Type: AWS::Scheduler::Schedule
     Properties:
       Name: SheepAndRavenSchedule
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
       ScheduleExpression: 'cron(0 0 ? * MON *)'
       Target:
         Arn: !Ref RecordLambdaArn
@@ -43,6 +50,9 @@ Resources:
     Type: AWS::Scheduler::Schedule
     Properties:
       Name: ElCafeteroSchedule
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
       ScheduleExpression: 'cron(10 0 ? * MON *)'
       Target:
         Arn: !Ref RecordLambdaArn
@@ -53,6 +63,9 @@ Resources:
     Type: AWS::Scheduler::Schedule
     Properties:
       Name: TypikaSchedule
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
       ScheduleExpression: 'cron(20 0 ? * MON *)'
       Target:
         Arn: !Ref RecordLambdaArn
@@ -63,6 +76,9 @@ Resources:
     Type: AWS::Scheduler::Schedule
     Properties:
       Name: BeMyBeanSchedule
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
       ScheduleExpression: 'cron(30 0 ? * MON *)'
       Target:
         Arn: !Ref RecordLambdaArn
@@ -73,6 +89,9 @@ Resources:
     Type: AWS::Scheduler::Schedule
     Properties:
       Name: HeresySchedule
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
       ScheduleExpression: 'cron(40 0 ? * MON *)'
       Target:
         Arn: !Ref RecordLambdaArn
@@ -83,6 +102,9 @@ Resources:
     Type: AWS::Scheduler::Schedule
     Properties:
       Name: KlaroSchedule
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
       ScheduleExpression: 'cron(50 0 ? * MON *)'
       Target:
         Arn: !Ref RecordLambdaArn
@@ -93,6 +115,9 @@ Resources:
     Type: AWS::Scheduler::Schedule
     Properties:
       Name: SpojkaSchedule
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
       ScheduleExpression: 'cron(0 1 ? * MON *)'
       Target:
         Arn: !Ref RecordLambdaArn
@@ -103,6 +128,9 @@ Resources:
     Type: AWS::Scheduler::Schedule
     Properties:
       Name: MeronSchedule
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
       ScheduleExpression: 'cron(10 1 ? * MON *)'
       Target:
         Arn: !Ref RecordLambdaArn
@@ -113,6 +141,9 @@ Resources:
     Type: AWS::Scheduler::Schedule
     Properties:
       Name: FathersSchedule
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
       ScheduleExpression: 'cron(20 1 ? * MON *)'
       Target:
         Arn: !Ref RecordLambdaArn
@@ -133,6 +164,9 @@ Resources:
     Type: AWS::Scheduler::Schedule
     Properties:
       Name: BaniBeansSchedule
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
       ScheduleExpression: 'cron(30 1 ? * MON *)'
       Target:
         Arn: !Ref RecordLambdaArn
@@ -143,6 +177,9 @@ Resources:
     Type: AWS::Scheduler::Schedule
     Properties:
       Name: StowSchedule
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
       ScheduleExpression: 'cron(40 1 ? * MON *)'
       Target:
         Arn: !Ref RecordLambdaArn
@@ -153,6 +190,9 @@ Resources:
     Type: AWS::Scheduler::Schedule
     Properties:
       Name: KavaFamilySchedule
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
       ScheduleExpression: 'cron(50 1 ? * MON *)'
       Target:
         Arn: !Ref RecordLambdaArn
@@ -163,6 +203,9 @@ Resources:
     Type: AWS::Scheduler::Schedule
     Properties:
       Name: NordbeansSchedule
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
       ScheduleExpression: 'cron(0 2 ? * MON *)'
       Target:
         Arn: !Ref RecordLambdaArn
@@ -173,6 +216,9 @@ Resources:
     Type: AWS::Scheduler::Schedule
     Properties:
       Name: RoastGrindBrewSchedule
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
       ScheduleExpression: 'cron(10 2 ? * MON *)'
       Target:
         Arn: !Ref RecordLambdaArn
@@ -183,6 +229,9 @@ Resources:
     Type: AWS::Scheduler::Schedule
     Properties:
       Name: TesoSchedule
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
       ScheduleExpression: 'cron(20 2 ? * MON *)'
       Target:
         Arn: !Ref RecordLambdaArn
