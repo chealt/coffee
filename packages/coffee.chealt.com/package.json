@@ -23,28 +23,28 @@
     "preview": "astro build && astro preview"
   },
   "devDependencies": {
-    "@astrojs/cloudflare": "^12.6.12",
+    "@astrojs/cloudflare": "^12.6.13",
     "@libsql/client": "^0.17.0",
-    "eslint": "^9.39.3",
+    "eslint": "^9.39.4",
     "eslint-plugin-astro": "^1.6.0",
     "prettier": "^3.8.1",
-    "rollup-plugin-visualizer": "^7.0.0",
+    "rollup-plugin-visualizer": "^7.0.1",
     "vite": "^7.3.1",
     "vite-plugin-wasm": "^3.5.0",
-    "wrangler": "^4.69.0"
+    "wrangler": "^4.71.0"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.999.0",
-    "@aws-sdk/client-s3": "^3.999.0",
-    "@aws-sdk/s3-request-presigner": "^3.999.0",
+    "@aws-sdk/client-lambda": "^3.1005.0",
+    "@aws-sdk/client-s3": "^3.1005.0",
+    "@aws-sdk/s3-request-presigner": "^3.1005.0",
     "@playwright-testing-library/test": "^4.5.0",
     "@playwright/test": "^1.58.2",
-    "@sentry/astro": "^10.40.0",
-    "@sentry/cloudflare": "^10.40.0",
+    "@sentry/astro": "^10.43.0",
+    "@sentry/cloudflare": "^10.43.0",
     "@simplewebauthn/browser": "13.1.2",
     "@simplewebauthn/server": "13.1.2",
     "@tursodatabase/api": "^1.9.2",
-    "astro": "^5.18.0",
+    "astro": "^6.0.1",
     "jsonwebtoken": "^9.0.3"
   }
 }
