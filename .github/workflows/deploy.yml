@@ -89,6 +89,9 @@ jobs:
               - packages/record-roaster-webshop/package.json
               - packages/record-roaster-webshop/.yarnrc-lambda.yml
               - packages/record-roaster-webshop/src/**
+            record-roaster-webshop-infra:
+              - .github/workflows/deploy.yml
+              - packages/record-roaster-webshop/infra/**
             record-webshop-item:
               - yarn.lock
               - .github/workflows/deploy.yml
@@ -269,6 +272,15 @@ jobs:
           yarn workspace @centralbeans/record-roaster-webshop build
           version=$(yarn workspace @centralbeans/record-roaster-webshop deploy | jq -r '.Version')
           echo "version=$version" >> $GITHUB_OUTPUT
+      - name: record-roaster-webshop-infra
+        id: record-roaster-webshop-infra
+        if: steps.changed-files-yaml.outputs.record-roaster-webshop-infra_any_changed == 'true'
+        uses: aws-actions/aws-cloudformation-github-deploy@v2
+        with:
+          name: record-roaster-webshop-schedules
+          template: packages/record-roaster-webshop/infra/schedules.yml
+          capabilities: CAPABILITY_IAM
+          fail-on-empty-changeset: false
       - name: Release record-roaster-webshop
         if: steps.changed-files-yaml.outputs.record-roaster-webshop_any_changed == 'true'
         uses: actions/create-release@v1

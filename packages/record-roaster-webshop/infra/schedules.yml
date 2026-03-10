@@ -1,0 +1,190 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Schedules for crawling roaster webshops
+
+Parameters:
+  RecordLambdaArn:
+    Type: String
+    Default: 'arn:aws:lambda:eu-central-1:781346609033:function:recordRoasterWebshop'
+    Description: ARN of the Lambda function to trigger
+
+Resources:
+  SchedulerExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: scheduler.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: InvokeLambdaPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: lambda:InvokeFunction
+                Resource:
+                  - !Ref RecordLambdaArn
+                  - !Sub '${RecordLambdaArn}:*'
+
+  SheepAndRavenSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: SheepAndRavenSchedule
+      ScheduleExpression: 'cron(0 0 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 6}'
+
+  ElCafeteroSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: ElCafeteroSchedule
+      ScheduleExpression: 'cron(10 0 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 7}'
+
+  TypikaSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: TypikaSchedule
+      ScheduleExpression: 'cron(20 0 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 14}'
+
+  BeMyBeanSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: BeMyBeanSchedule
+      ScheduleExpression: 'cron(30 0 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 39}'
+
+  HeresySchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: HeresySchedule
+      ScheduleExpression: 'cron(40 0 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 65}'
+
+  KlaroSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: KlaroSchedule
+      ScheduleExpression: 'cron(50 0 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 70}'
+
+  SpojkaSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: SpojkaSchedule
+      ScheduleExpression: 'cron(0 1 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 82}'
+
+  MeronSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: MeronSchedule
+      ScheduleExpression: 'cron(10 1 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 252}'
+
+  FathersSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: FathersSchedule
+      ScheduleExpression: 'cron(20 1 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 277}'
+
+  # PaleSchedule:
+  #   Type: AWS::Scheduler::Schedule
+  #   Properties:
+  #     Name: PaleSchedule
+  #     ScheduleExpression: "cron(90 0 ? * MON *)"
+  #     Target:
+  #       Arn: !Ref RecordLambdaArn
+  #       RoleArn: !GetAtt SchedulerExecutionRole.Arn
+  #       Input: '{"roasterId": 278}'
+
+  BaniBeansSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: BaniBeansSchedule
+      ScheduleExpression: 'cron(30 1 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 285}'
+
+  StowSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: StowSchedule
+      ScheduleExpression: 'cron(40 1 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 286}'
+
+  KavaFamilySchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: KavaFamilySchedule
+      ScheduleExpression: 'cron(50 1 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 287}'
+
+  NordbeansSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: NordbeansSchedule
+      ScheduleExpression: 'cron(0 2 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 288}'
+
+  RoastGrindBrewSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: RoastGrindBrewSchedule
+      ScheduleExpression: 'cron(10 2 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 290}'
+
+  TesoSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: TesoSchedule
+      ScheduleExpression: 'cron(20 2 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 291}'
