@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@astrojs/cloudflare": "^12.6.13",
+    "@axe-core/playwright": "^4.11.1",
     "@libsql/client": "^0.17.0",
     "eslint": "^9.39.4",
     "eslint-plugin-astro": "^1.6.0",
