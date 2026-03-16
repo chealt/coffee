@@ -21,8 +21,8 @@ jobs:
           TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
           TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
         run: |
-          yarn workspace @centralbeans/website build:scan:ci
-          yarn workspace @centralbeans/website recommendations:ci
+          yarn export:data:ci
+          yarn recommendations:ci
       - name: Commit changes
         continue-on-error: true
         run: |

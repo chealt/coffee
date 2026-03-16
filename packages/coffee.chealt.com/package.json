@@ -7,20 +7,20 @@
   },
   "homepage": "https://github.com/chealt/coffee",
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "license": "MIT",
   "scripts": {
-    "dev": "AWS_PROFILE=centralbeans.com astro dev",
+    "add:logos": "node --env-file=.env data/addLogos.js",
     "build": "astro build",
-    "build:scan": "node --env-file=.env data/build.js",
-    "build:scan:ci": "node data/build.js",
-    "recommendations": "node --env-file=.env data/recommendations/generate.js",
-    "recommendations:ci": "node data/recommendations/generate.js",
+    "dev": "AWS_PROFILE=centralbeans.com astro dev",
+    "export:data": "node --env-file=.env data/export.js",
+    "export:data:ci": "node data/export.js",
     "import": "node --env-file=.env data/importData.js",
     "import:logos": "node data/importLogos.js",
-    "add:logos": "node --env-file=.env data/addLogos.js",
-    "preview": "astro build && astro preview"
+    "preview": "astro build && astro preview",
+    "recommendations": "node --env-file=.env data/recommendations/generate.js",
+    "recommendations:ci": "node data/recommendations/generate.js"
   },
   "devDependencies": {
     "@astrojs/cloudflare": "^12.6.13",

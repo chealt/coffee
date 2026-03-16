@@ -12,8 +12,11 @@
   "scripts": {
     "build": "yarn workspace @centralbeans/website build",
     "dev": "yarn workspace @centralbeans/website dev",
+    "export:data": "yarn workspace @centralbeans/website export:data",
+    "export:data:ci": "yarn workspace @centralbeans/website export:data:ci",
+    "format": "prettier --write .",
     "lint": "eslint . --quiet",
-    "format": "prettier --write ."
+    "recommendations:ci": "yarn workspace @centralbeans/website recommendations:ci"
   },
   "devDependencies": {
     "@eslint/css": "^0.14.1",
