@@ -1,14 +1,3 @@
 nodeLinker: node-modules
-supportedArchitectures: {
-  os: [
-    "linux"
-  ],
-  cpu: [
-    "x64"
-  ],
-  libc: [
-    "glibc",
-    "musl"
-  ]
-}
+supportedArchitectures: { os: ['linux'], cpu: ['x64'], libc: ['glibc', 'musl'] }
 nmHoistingLimits: workspaces
