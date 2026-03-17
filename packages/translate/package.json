@@ -1,0 +1,12 @@
+{
+  "name": "@centralbeans/translate",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "origin-countries": "node --env-file=.env src/origin-countries.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-translate": "^3.1005.0",
+    "@libsql/client": "^0.17.0"
+  }
+}

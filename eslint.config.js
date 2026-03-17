@@ -212,6 +212,7 @@ export default defineConfig([
       'packages/record-webshop-item-details/**/*.js',
       'packages/register-new-user/**/*.js',
       'packages/send-registration-code/**/*.js',
+      'packages/translate/**/*.js',
       'packages/webshop-item-processor/**/*.js',
       'packages/webshop-processor/**/*.js'
     ],

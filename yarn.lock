@@ -1540,6 +1540,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@centralbeans/translate@workspace:packages/translate":
+  version: 0.0.0-use.local
+  resolution: "@centralbeans/translate@workspace:packages/translate"
+  dependencies:
+    "@aws-sdk/client-translate": "npm:^3.1005.0"
+    "@libsql/client": "npm:^0.17.0"
+  languageName: unknown
+  linkType: soft
+
 "@centralbeans/webshop-item-processor@workspace:packages/webshop-item-processor":
   version: 0.0.0-use.local
   resolution: "@centralbeans/webshop-item-processor@workspace:packages/webshop-item-processor"
