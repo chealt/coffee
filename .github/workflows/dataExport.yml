@@ -1,11 +1,11 @@
-name: Release
+name: DataExport
 on:
   schedule:
     - cron: '0 0 * * *'
 permissions:
   contents: write
 jobs:
-  release:
+  export:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
       - uses: actions/checkout@v3
