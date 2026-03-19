@@ -28,5 +28,5 @@ jobs:
         run: |
           git config --global user.name 'Chealt GitHub automation'
           git config --global user.email 'info@centralbeans.com'
-          git commit -am "Automated build"
+          git commit -am "Automated data export"
           git push
