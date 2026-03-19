@@ -207,36 +207,26 @@ const saveVarieties = async () => {
   return writeFile('./data/varieties.json', JSON.stringify(results.rows), { flag: 'w+' });
 };
 
-await Promise.all([
-  saveBrewingMethods(),
-  saveBrewingMethodGroups(),
-  saveCoffees(),
-  saveCoffeeImages(),
-  saveCoffeeTasteNotes()
-]);
-
-await Promise.all([
-  saveCoffeeVarieties(),
-  saveCountries(),
-  saveCountriesWithCoffees(),
-  saveExchangeRates(),
-  saveFarms()
-]);
-
-await Promise.all([
-  saveMiscellaneousCoffeeProperties(),
-  saveOriginCountries(),
-  saveOriginCountriesWithCoffees(),
-  saveOriginRegions(),
-  saveProcessingMethods()
-]);
-
-await Promise.all([
-  saveRoasters(),
-  saveRoastersBest(),
-  saveRoastersWithCoffees(),
-  saveRoastingLevels(),
-  saveTasteNotes()
-]);
-
-await Promise.all([saveTasteNoteGroups(), saveTasteNoteSubGroups(), saveVarieties()]);
+await saveBrewingMethods();
+await saveBrewingMethodGroups();
+await saveCoffees();
+await saveCoffeeImages();
+await saveCoffeeTasteNotes();
+await saveCoffeeVarieties();
+await saveCountries();
+await saveCountriesWithCoffees();
+await saveExchangeRates();
+await saveFarms();
+await saveMiscellaneousCoffeeProperties();
+await saveOriginCountries();
+await saveOriginCountriesWithCoffees();
+await saveOriginRegions();
+await saveProcessingMethods();
+await saveRoasters();
+await saveRoastersBest();
+await saveRoastersWithCoffees();
+await saveRoastingLevels();
+await saveTasteNotes();
+await saveTasteNoteGroups();
+await saveTasteNoteSubGroups();
+await saveVarieties();
