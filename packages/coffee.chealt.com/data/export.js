@@ -212,23 +212,31 @@ await Promise.all([
   saveBrewingMethodGroups(),
   saveCoffees(),
   saveCoffeeImages(),
-  saveCoffeeTasteNotes(),
+  saveCoffeeTasteNotes()
+]);
+
+await Promise.all([
   saveCoffeeVarieties(),
   saveCountries(),
   saveCountriesWithCoffees(),
   saveExchangeRates(),
-  saveFarms(),
+  saveFarms()
+]);
+
+await Promise.all([
   saveMiscellaneousCoffeeProperties(),
   saveOriginCountries(),
   saveOriginCountriesWithCoffees(),
   saveOriginRegions(),
-  saveProcessingMethods(),
+  saveProcessingMethods()
+]);
+
+await Promise.all([
   saveRoasters(),
   saveRoastersBest(),
   saveRoastersWithCoffees(),
   saveRoastingLevels(),
-  saveTasteNotes(),
-  saveTasteNoteGroups(),
-  saveTasteNoteSubGroups(),
-  saveVarieties()
+  saveTasteNotes()
 ]);
+
+await Promise.all([saveTasteNoteGroups(), saveTasteNoteSubGroups(), saveVarieties()]);
