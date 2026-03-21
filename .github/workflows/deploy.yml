@@ -26,8 +26,6 @@ jobs:
         with:
           node-version-file: 'package.json'
           cache: 'yarn'
-      - name: Install dependencies
-        run: yarn install --immutable
       - name: Check changed files
         id: changed-files-yaml
         uses: tj-actions/changed-files@v47
@@ -405,10 +403,11 @@ jobs:
         id: website
         if: steps.changed-files-yaml.outputs.website_any_changed == 'true'
         env:
-          NODE_ENV: production
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        working-directory: packages/coffee.chealt.com
         run: |
-          yarn workspace @centralbeans/website build
+          yarn workspaces focus
+          NODE_ENV=production yarn build
           version=$(git rev-parse --short HEAD)
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Deploy website
