@@ -1,4 +1,4 @@
-import { createClient } from '@libsql/client/node';
+import { createClient } from '@libsql/client';
 
 const clients = {};
 
