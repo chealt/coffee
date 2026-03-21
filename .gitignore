@@ -29,6 +29,7 @@ dev-dist
 .env
 
 # Playwright
+a11y-report/
 test-results/
 playwright-report/
 blob-report/

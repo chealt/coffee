@@ -1,3 +1,4 @@
+import { scanPage } from '../../test-utils/a11y.js';
 import { config, test, expect } from '../../utils/playwright.js';
 
 test('should render the home page with the correct headings', async ({ page }) => {
@@ -13,4 +14,6 @@ test('should render the home page with the correct headings', async ({ page }) =
   await expect(page.getByRole('heading', { name: /^countries/iu, level: 2 })).toBeVisible();
   await expect(page.getByRole('heading', { name: /your taste/iu, level: 2 })).toBeVisible();
   await expect(page.getByRole('heading', { name: /i feel lucky/iu, level: 2 })).toBeVisible();
+
+  await scanPage({ page });
 });
