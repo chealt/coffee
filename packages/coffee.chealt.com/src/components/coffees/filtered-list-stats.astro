@@ -90,9 +90,7 @@ const coffees = allCoffees
     brewingMethodGroupId ? brewingMethodIdsInGroup.includes(brewing_method_id) : true
   )
   .filter(({ origin_country_id }) => (originCountryId ? origin_country_id === originCountryId : true))
-  .filter(({ roaster_id: roasterId }) =>
-    countryId ? roasters.find((roaster) => roaster.id === roasterId).country_id === countryId : true
-  )
+  .filter(({ roaster_id }) => (countryId ? roasters.find((r) => r.id === roaster_id).country_id === countryId : true))
   .filter(({ processing_method_id }) => (processingMethodId ? processing_method_id === processingMethodId : true))
   .filter(({ roaster_id }) => (roasterId ? roaster_id === roasterId : true))
   .filter(({ id: coffeeId }) =>
@@ -126,22 +124,22 @@ const coffees = allCoffees
   .sort((a, b) => a.pricePerGram - b.pricePerGram);
 const maxPricePerGram = coffees[coffees.length - 1].pricePerGram;
 const roastersWithCoffee = Array.from(new Set(allCoffees.map(({ roaster_id }) => roaster_id)))
-  .map((roasterId) => roasters.find(({ id }) => id === roasterId))
-  .map((roaster) => ({
-    ...roaster,
-    coffees: coffees.filter(({ roaster: { id: roasterId } }) => roasterId === roaster.id)
+  .map((roasterWithCoffeeId) => roasters.find(({ id }) => id === roasterWithCoffeeId))
+  .map((roasterDetails) => ({
+    ...roasterDetails,
+    coffees: coffees.filter((c) => c.roaster.id === roasterDetails.id)
   }))
-  .filter(({ coffees }) => coffees.length)
-  .map((roaster) => ({
-    ...roaster,
-    tasteNoteGroups: roaster.coffees.reduce((stats, { tasteNotes }) => {
-      tasteNotes.forEach(({ taste_note_id: tasteNoteId }) => {
-        const { taste_note_group_id: tasteNoteGroupId } = getTasteNoteGroupByNoteId(tasteNoteId);
+  .filter(({ coffees: roasterCoffees }) => roasterCoffees.length)
+  .map((roasterDetails) => ({
+    ...roasterDetails,
+    tasteNoteGroups: roasterDetails.coffees.reduce((stats, currentValue) => {
+      currentValue.tasteNotes.forEach(({ taste_note_id }) => {
+        const { taste_note_group_id } = getTasteNoteGroupByNoteId(taste_note_id);
 
-        if (!stats[tasteNoteGroupId]) {
-          stats[tasteNoteGroupId] = 1;
+        if (!stats[taste_note_group_id]) {
+          stats[taste_note_group_id] = 1;
         } else {
-          stats[tasteNoteGroupId]++;
+          stats[taste_note_group_id]++;
         }
       });
 
@@ -150,23 +148,28 @@ const roastersWithCoffee = Array.from(new Set(allCoffees.map(({ roaster_id }) =>
   }));
 const tasteNoteGroupsLocale = tasteNoteGroups
   .filter(({ name, language_code: languageCode }) => languageCode === Astro.currentLocale && name !== 'other')
-  .map(({ name, taste_note_group_id: tasteNoteGroupId, ...rest }) =>
-    name.includes('/') ? { tasteNoteGroupId, name: name.split(' / ')[0], ...rest } : { tasteNoteGroupId, name, ...rest }
+  .map(({ name, taste_note_group_id, ...rest }) =>
+    name.includes('/')
+      ? { tasteNoteGroupId: taste_note_group_id, name: name.split(' / ')[0], ...rest }
+      : { tasteNoteGroupId: taste_note_group_id, name, ...rest }
   )
-  .map(({ tasteNoteGroupId, ...rest }) => ({
+  .map(({ tasteNoteGroupId: taste_note_group_id, ...rest }) => ({
     ...rest,
-    tasteNoteGroupId,
+    tasteNoteGroupId: taste_note_group_id,
     roasters: roastersWithCoffee
-      .filter(({ tasteNoteGroups }) => tasteNoteGroups[tasteNoteGroupId])
-      .map(({ id, name, tasteNoteGroups }) => ({
+      .filter((r) => r.tasteNoteGroups[taste_note_group_id])
+      .map(({ id, name, tasteNoteGroups: roasterTasteNoteGroups }) => ({
         id,
         name,
-        count: tasteNoteGroups[tasteNoteGroupId]
+        count: roasterTasteNoteGroups[taste_note_group_id]
       }))
       .sort((a, b) => b.count - a.count)
   }))
-  .filter(({ roasters }) => roasters.length);
-const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce((max, { roasters }) => Math.max(max, roasters[0].count), 0);
+  .filter((group) => group.roasters.length);
+const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce(
+  (max, currentValue) => Math.max(max, currentValue.roasters[0].count),
+  0
+);
 ---
 
 <Common shouldAuthenticate={shouldAuthenticate}>

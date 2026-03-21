@@ -22,14 +22,14 @@ RELYING_PARTY_ID = "centralbeans.com"
 name = "REGISTRATION_CODE_RATE_LIMITER"
 namespace_id = "1001"
 
-  [ratelimits.simple]
-    limit = 1
-    period = 60
+[ratelimits.simple]
+limit = 1
+period = 60
 
 [[ratelimits]]
 name = "NEW_USER_RATE_LIMITER"
 namespace_id = "1002"
 
-  [ratelimits.simple]
-    limit = 1
-    period = 60
+[ratelimits.simple]
+limit = 1
+period = 60

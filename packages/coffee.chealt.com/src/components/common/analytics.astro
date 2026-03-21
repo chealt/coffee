@@ -1,14 +1,14 @@
 <script async src="https://plausible.io/js/pa-yjWaVYcTpmTUrEWnvWipH.js"></script>
 <script>
-  ((window.plausible =
+  window.plausible =
     window.plausible ||
-    function () {
-      (plausible.q = plausible.q || []).push(arguments);
-    }),
-    (plausible.init =
-      plausible.init ||
-      function (i) {
-        plausible.o = i || {};
-      }));
-  plausible.init();
+    function (...args) {
+      (window.plausible.q = window.plausible.q || []).push(args);
+    };
+  window.plausible.init =
+    window.plausible.init ||
+    function (i) {
+      window.plausible.o = i || {};
+    };
+  window.plausible.init();
 </script>

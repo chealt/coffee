@@ -1,3 +1,4 @@
+/* oxlint-disable no-console */
 import { createClient } from '@libsql/client';
 
 const databaseUrl = process.env.TURSO_DATABASE_URL;

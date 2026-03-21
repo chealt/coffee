@@ -52,7 +52,7 @@ class CoffeeCollection extends HTMLElement {
       }
     }
 
-    if (!Boolean(this.querySelectorAll('.selected').length)) {
+    if (!this.querySelectorAll('.selected').length) {
       this.batchUpdatePopover.hidePopover();
     }
   }

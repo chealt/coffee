@@ -1,20 +1,20 @@
 {
   "name": "@chealt/ocr",
-  "type": "module",
+  "homepage": "https://github.com/chealt/coffee",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chealt/coffee.git"
   },
-  "homepage": "https://github.com/chealt/coffee",
-  "engines": {
-    "node": ">=22"
-  },
-  "license": "MIT",
+  "type": "module",
+  "main": "src/index.js",
   "dependencies": {
     "@techstark/opencv-js": "^4.12.0-release.1",
     "js-clipper": "^1.0.1",
     "onnxruntime-web": "^1.24.3",
     "tiny-invariant": "^1.3.3"
   },
-  "main": "src/index.js"
+  "engines": {
+    "node": ">=22"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@centralbeans/email",
+  "version": "0.0.0",
   "type": "module",
-  "main": "src/index.js",
-  "version": "0.0.0"
+  "main": "src/index.js"
 }

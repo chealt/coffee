@@ -1,0 +1,159 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [],
+  "rules": {
+    "arrow-body-style": "error",
+    "eqeqeq": "error",
+    "array-callback-return": "error",
+    "arrow-spacing": "error",
+    "block-spacing": "error",
+    "camelcase": "error",
+    "class-methods-use-this": "error",
+    "consistent-return": "error",
+    "default-case": "error",
+    "dot-notation": [
+      "error",
+      {
+        "allowKeywords": true
+      }
+    ],
+    "guard-for-in": "error",
+    "new-cap": "error",
+    "no-alert": "error",
+    "no-array-constructor": "error",
+    "no-buffer-constructor": "error",
+    "no-caller": "error",
+    "no-console": "error",
+    "no-delete-var": "error",
+    "no-else-return": [
+      "error",
+      {
+        "allowElseIf": false
+      }
+    ],
+    "no-eval": "error",
+    "no-extend-native": "error",
+    "no-extra-bind": "error",
+    "no-fallthrough": "error",
+    "no-floating-decimal": "error",
+    "no-global-assign": "error",
+    "no-implied-eval": "error",
+    "no-invalid-this": "error",
+    "no-iterator": "error",
+    "no-label-var": "error",
+    "no-labels": "error",
+    "no-lone-blocks": "error",
+    "no-loop-func": "error",
+    "no-mixed-requires": "error",
+    "no-multi-str": "error",
+    "no-nested-ternary": "error",
+    "no-new": "error",
+    "no-new-func": "error",
+    "no-new-object": "error",
+    "no-new-require": "error",
+    "no-new-wrappers": "error",
+    "no-octal": "error",
+    "no-octal-escape": "error",
+    "no-param-reassign": "error",
+    "no-path-concat": "error",
+    "no-process-exit": "error",
+    "no-proto": "error",
+    "no-redeclare": "error",
+    "no-return-assign": "error",
+    "no-script-url": "error",
+    "no-self-assign": "error",
+    "no-self-compare": "error",
+    "no-sequences": "error",
+    "no-shadow": "error",
+    "func-style": "error",
+    "no-unused-vars": "error",
+    "complexity": "error",
+    "no-throw-literal": "error",
+    "no-undef": [
+      "error",
+      {
+        "typeof": true
+      }
+    ],
+    "no-undef-init": "error",
+    "no-underscore-dangle": "error",
+    "no-unmodified-loop-condition": "error",
+    "no-unused-expressions": "error",
+    "no-use-before-define": "error",
+    "no-useless-call": "error",
+    "no-useless-computed-key": "error",
+    "no-useless-concat": "error",
+    "no-useless-constructor": "error",
+    "no-useless-escape": "error",
+    "no-useless-rename": "error",
+    "no-useless-return": "error",
+    "no-var": "error",
+    "object-shorthand": "error",
+    "one-var-declaration-per-line": "error",
+    "operator-assignment": "error",
+    "prefer-arrow-callback": "error",
+    "prefer-const": "error",
+    "prefer-numeric-literals": "error",
+    "prefer-promise-reject-errors": "error",
+    "prefer-rest-params": "error",
+    "prefer-spread": "error",
+    "prefer-template": "error",
+    "radix": "error",
+    "require-unicode-regexp": "error",
+    "strict": ["error", "global"],
+    "symbol-description": "error",
+    "unicode-bom": "error",
+    "wrap-iife": "error",
+    "import/default": "error",
+    "yoda": ["error", "never"]
+  },
+  "overrides": [
+    {
+      "files": [
+        "packages/coffee.chealt.com/data/**/*.js",
+        "packages/coffee.chealt.com/astro.config.js",
+        "packages/coffee.chealt.com/playwright.config.js",
+        "packages/coffee.chealt.com/src/server/**/*.js",
+        "packages/coffee.chealt.com/src/middleware.js",
+        "packages/coffee-admin/**/*.js",
+        "packages/create-user/**/*.js",
+        "packages/delete-user/**/*.js",
+        "packages/flag-removed/**/*.js",
+        "packages/image-text-interpreter/**/*.js",
+        "packages/image-processor/**/*.js",
+        "packages/image-proxy/**/*.js",
+        "packages/import-currencies/**/*.js",
+        "packages/invoke-flag-removed/**/*.js",
+        "packages/notifications/**/*.js",
+        "packages/ocr-worker/**/*.js",
+        "packages/record-roaster-webshop/**/*.js",
+        "packages/record-webshop-item/**/*.js",
+        "packages/record-webshop-item-details/**/*.js",
+        "packages/register-new-user/**/*.js",
+        "packages/send-registration-code/**/*.js",
+        "packages/translate/**/*.js",
+        "packages/webshop-item-processor/**/*.js",
+        "packages/webshop-processor/**/*.js"
+      ],
+      "rules": {
+        "no-console": "error"
+      }
+    },
+    {
+      "files": ["**/coffee-admin/**/*.js", "**/Sentry/logger.js", "**/test.js"],
+      "rules": {
+        "no-console": "off"
+      }
+    }
+  ],
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2024": true,
+    "builtin": true
+  },
+  "globals": {
+    "Astro": "readonly"
+  },
+  "ignorePatterns": ["node_modules", ".yarn", ".*", "**/dist", "**/dev-dist", "**/.astro"]
+}

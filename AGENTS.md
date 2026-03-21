@@ -12,7 +12,6 @@ yarn install          # Install all dependencies
 yarn build            # Build the website
 yarn dev              # Start dev server at localhost:4321
 yarn lint             # Run ESLint on all files
-yarn format           # Format all files with Prettier
 ```
 
 ### Running Tests
@@ -78,11 +77,6 @@ import coffeeImages from '../../../data/coffeeImages.json' with { type: 'json' }
 - **Variables/functions**: camelCase
 - **Constants**: UPPER_SNAKE_CASE
 
-### Formatting (Prettier)
-
-- Print width: 120, Single quotes: true, Semicolons: true
-- Trailing commas: none, Arrow parens: always, Tab width: 2
-
 ### Astro Components
 
 ```astro
@@ -140,8 +134,6 @@ Tests run against `http://localhost:4321` (started automatically by Playwright)
 
 - **Astro** 6.x with Cloudflare adapter
 - **Playwright** 1.58+ for testing
-- **ESLint** 9.x (flat config)
-- **Prettier** 3.x
 - **Turso** (libSQL) for database
 - Node 24+
 

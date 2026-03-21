@@ -1,34 +1,27 @@
 {
   "name": "coffee",
-  "packageManager": "yarn@4.12.0",
   "private": true,
-  "type": "module",
-  "engines": {
-    "node": "24"
-  },
   "workspaces": [
     "packages/*"
   ],
+  "type": "module",
   "scripts": {
     "build": "yarn workspace @centralbeans/website build",
     "dev": "yarn workspace @centralbeans/website dev",
     "export:data": "yarn workspace @centralbeans/website export:data",
     "export:data:ci": "yarn workspace @centralbeans/website export:data:ci",
-    "format": "prettier --write .",
-    "lint": "eslint . --quiet",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "lint": "oxlint",
     "recommendations:ci": "yarn workspace @centralbeans/website recommendations:ci"
   },
   "devDependencies": {
-    "@eslint/css": "^0.14.1",
-    "eslint": "^9.39.4",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-import-resolver-node": "^0.3.9",
-    "eslint-plugin-astro": "^1.6.0",
-    "eslint-plugin-import": "^2.32.0",
-    "globals": "^17.4.0",
-    "prettier": "^3.8.1",
-    "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-sql": "^0.19.2",
+    "oxfmt": "^0.41.0",
+    "oxlint": "^1.56.0",
     "supports-color": "^10.2.2"
-  }
+  },
+  "engines": {
+    "node": "24"
+  },
+  "packageManager": "yarn@4.13.0"
 }

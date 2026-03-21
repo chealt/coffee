@@ -13,11 +13,8 @@ class CoffeePricePerGram extends HTMLElement {
     const chartData = this.dataset.chartData;
     const chart = this.querySelector('[data-chart]');
 
-    console.log({
-      currency,
-      price,
-      weight
-    });
+    // oxlint-disable-next-line
+    console.log(currency, price, weight, percentage, chartData, chart);
   }
 }
 

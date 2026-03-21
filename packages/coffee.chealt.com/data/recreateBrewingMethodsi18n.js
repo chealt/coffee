@@ -1,3 +1,4 @@
+/* oxlint-disable no-console */
 import { createClient } from '@libsql/client';
 
 import brewingMethods from './brewingMethods.json' with { type: 'json' };

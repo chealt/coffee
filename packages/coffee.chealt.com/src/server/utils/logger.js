@@ -1,3 +1,4 @@
+/* oxlint-disable no-console */
 const logger = (() => {
   const debug = (message) => {
     console.debug(message);

@@ -1,3 +1,4 @@
+/* oxlint-disable no-console */
 import { translate } from './AWS.js';
 import client from './Turso.js';
 

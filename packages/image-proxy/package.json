@@ -1,17 +1,17 @@
 {
   "name": "@chealt/image-proxy",
-  "type": "module",
+  "homepage": "https://github.com/chealt/coffee",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chealt/coffee.git"
   },
-  "homepage": "https://github.com/chealt/coffee",
-  "engines": {
-    "node": ">=22"
-  },
-  "license": "MIT",
+  "type": "module",
   "main": "src/index.js",
   "devDependencies": {
     "wrangler": "^4.71.0"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

@@ -26,7 +26,9 @@ const { id } = Astro.props;
 const { name } = countries.find(
   ({ country_id, language_code }) => country_id === id && language_code === Astro.currentLocale
 );
-const countryRoasters = roastersWithCoffees.filter(({ country_id }) => country_id === id).map(({ id }) => id);
+const countryRoasters = roastersWithCoffees
+  .filter(({ country_id }) => country_id === id)
+  .map(({ id: roasterId }) => roasterId);
 const coffees = allCoffees.filter(({ roaster_id: roasterId }) => countryRoasters.includes(roasterId));
 const priciestCoffees = coffees
   .sort(

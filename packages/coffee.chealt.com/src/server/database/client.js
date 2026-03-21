@@ -25,15 +25,11 @@ const getClient = (username) => {
     throw new Error(`No database URL found for user ${username}`);
   }
 
-  try {
-    const client = createClient({ url, authToken });
+  const client = createClient({ url, authToken });
 
-    clients[username] = client;
+  clients[username] = client;
 
-    return client;
-  } catch (error) {
-    throw error;
-  }
+  return client;
 };
 
 export { getClient };

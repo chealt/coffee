@@ -98,7 +98,7 @@ const tasteNoteGroup =
   );
 const variety = varietyId && varieties.find(({ id }) => id === varietyId);
 
-let coffees = [];
+const coffees = [];
 
 for (const coffee of allCoffees) {
   const { id, brewing_method_id, origin_country_id, processing_method_id, roaster_id } = coffee;
@@ -115,7 +115,7 @@ for (const coffee of allCoffees) {
     continue;
   }
 
-  if (countryId && roasters.find((roaster) => roaster.id === roaster_id).country_id !== countryId) {
+  if (countryId && roasters.find((r) => r.id === roaster_id).country_id !== countryId) {
     continue;
   }
 
