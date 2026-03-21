@@ -79,7 +79,9 @@ export default defineConfig({
       authToken: process.env.SENTRY_AUTH_TOKEN,
       clientInitPath: 'sentry.client.config.js',
       serverInitPath: null,
-      autoInstrumentServer: false,
+      autoInstrumentation: {
+        requestHandler: false,
+      },
       telemetry: false
     })
   ],
