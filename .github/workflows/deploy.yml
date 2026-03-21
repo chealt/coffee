@@ -116,6 +116,14 @@ jobs:
               - packages/send-registration-code/package.json
               - packages/send-registration-code/.yarnrc-lambda.yml
               - packages/send-registration-code/src/**
+            website:
+              - yarn.lock
+              - .github/workflows/deploy.yml
+              - packages/coffee.chealt.com/*.js
+              - packages/coffee.chealt.com/*.json
+              - packages/coffee.chealt.com/data/**
+              - packages/coffee.chealt.com/public/**
+              - packages/coffee.chealt.com/src/**
             webshop-item-processor:
               - yarn.lock
               - .github/workflows/deploy.yml
@@ -391,5 +399,34 @@ jobs:
         with:
           tag_name: '@centralbeans/webshop-processor@${{ steps.webshop-processor.outputs.version }}'
           release_name: Release @centralbeans/webshop-processor v${{ steps.webshop-processor.outputs.version }}
+          draft: false
+          prerelease: false
+      - name: website
+        id: website
+        if: steps.changed-files-yaml.outputs.website_any_changed == 'true'
+        env:
+          NODE_ENV: production
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          yarn workspace @centralbeans/website build
+          version=$(git rev-parse --short HEAD)
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Deploy website
+        id: website-deploy
+        if: steps.changed-files-yaml.outputs.website_any_changed == 'true' && steps.website.conclusion == 'success'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: pages deploy packages/coffee.chealt.com/dist --project-name coffee
+      - name: Release website
+        if: steps.changed-files-yaml.outputs.website_any_changed == 'true' && steps.website.conclusion == 'success' && steps.website-deploy.conclusion == 'success'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: '@centralbeans/website@${{ steps.website.outputs.version }}'
+          release_name: Release @centralbeans/website v${{ steps.website.outputs.version }}
           draft: false
           prerelease: false
