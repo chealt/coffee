@@ -6,8 +6,8 @@
     "deploy": "aws lambda update-function-code --function-name importCurrencies --zip-file fileb://package.zip --publish"
   },
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.1005.0",
-    "@libsql/client": "^0.17.0",
-    "@sentry/aws-serverless": "^10.43.0"
+    "@aws-sdk/client-secrets-manager": "^3.1014.0",
+    "@libsql/client": "^0.17.2",
+    "@sentry/aws-serverless": "^10.45.0"
   }
 }

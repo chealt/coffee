@@ -6,8 +6,8 @@
     "deploy": "aws lambda update-function-code --function-name registerNewUser --zip-file fileb://package.zip --publish"
   },
   "dependencies": {
-    "@aws-sdk/client-sesv2": "^3.1005.0",
+    "@aws-sdk/client-sesv2": "^3.1014.0",
     "@centralbeans/email": "workspace:*",
-    "@sentry/aws-serverless": "^10.43.0"
+    "@sentry/aws-serverless": "^10.45.0"
   }
 }
