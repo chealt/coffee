@@ -80,7 +80,7 @@ export default defineConfig({
       clientInitPath: 'sentry.client.config.js',
       serverInitPath: null,
       autoInstrumentation: {
-        requestHandler: false,
+        requestHandler: false
       },
       telemetry: false
     })
