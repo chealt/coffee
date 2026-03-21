@@ -1,8 +1,8 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
 
-import processingMethods from '../../../data/processingMethods.json';
-import allCoffees from '../../../data/coffees.json';
+import processingMethods from '../../../data/processingMethods.json' with { type: 'json' };
+import allCoffees from '../../../data/coffees.json' with { type: 'json' };
 
 import { convertToUSD } from '../coffees/utils.js';
 import Button from '../form/button/button.astro';
@@ -10,7 +10,7 @@ import Coffees from '../coffees/list.astro';
 import Common from '../common/common.astro';
 import Icon from '../icon/icon.astro';
 
-import allLocaleTranslations from '../common/common.json';
+import allLocaleTranslations from '../common/common.json' with { type: 'json' };
 
 const t = allLocaleTranslations[Astro.currentLocale];
 

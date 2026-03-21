@@ -1,8 +1,8 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
 
-import coffees from '../../../../data/coffees.json';
-import tasteNoteGroups from '../../../../data/tasteNoteGroups.json';
+import coffees from '../../../../data/coffees.json' with { type: 'json' };
+import tasteNoteGroups from '../../../../data/tasteNoteGroups.json' with { type: 'json' };
 
 import { getTasteNoteGroup } from '../utils.js';
 import { convertToUSD } from '../../coffees/utils.js';
@@ -11,7 +11,7 @@ import Common from '../../common/common.astro';
 import Coffees from '../../coffees/list.astro';
 import Icon from '../../icon/icon.astro';
 
-import allLocaleTranslations from '../../common/common.json';
+import allLocaleTranslations from '../../common/common.json' with { type: 'json' };
 import { encodeSafeURL } from '../../../utils/string.js';
 
 const t = allLocaleTranslations[Astro.currentLocale];

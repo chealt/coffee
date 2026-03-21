@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import { getClient } from './client.js';
 import { getValue } from './formData.js';
-import coffees from '../../../data/coffees.json';
+import coffees from '../../../data/coffees.json' with { type: 'json' };
 import { convertToUSD } from '../../components/coffees/utils.js';
 import logger from '../../components/errors/utils.js';
 import { getImageUrl } from '../AWS/storage.js';

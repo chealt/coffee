@@ -6,7 +6,7 @@ import Input from '../input/input.astro';
 
 import './select.css';
 
-import allLocaleTranslations from '../../common/common.json';
+import allLocaleTranslations from '../../common/common.json' with { type: 'json' };
 
 const t = allLocaleTranslations[Astro.currentLocale];
 

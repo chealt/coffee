@@ -3,7 +3,7 @@ import sentry from '@sentry/astro';
 import { defineConfig } from 'astro/config';
 // import { visualizer } from 'rollup-plugin-visualizer';
 
-import supportedLanguages from './data/supportedLanguages.json';
+import supportedLanguages from './data/supportedLanguages.json' with { type: 'json' };
 
 const locales = supportedLanguages.map(({ locale }) => locale);
 

@@ -1,14 +1,14 @@
 ---
 import FilteredListStats from '@components/coffees/filtered-list-stats.astro';
-import brewingMethods from '@data/brewingMethods.json';
-import brewingMethodGroups from '@data/brewingMethodGroups.json';
-import countries from '@data/countries.json';
-import originCountries from '@data/originCountries.json';
-import processingMethods from '@data/processingMethods.json';
-import roasters from '@data/roasters.json';
-import tasteNotes from '@data/tasteNotes.json';
-import tasteNoteGroups from '@data/tasteNoteGroups.json';
-import varieties from '@data/varieties.json';
+import brewingMethods from '@data/brewingMethods.json' with { type: 'json' };
+import brewingMethodGroups from '@data/brewingMethodGroups.json' with { type: 'json' };
+import countries from '@data/countries.json' with { type: 'json' };
+import originCountries from '@data/originCountries.json' with { type: 'json' };
+import processingMethods from '@data/processingMethods.json' with { type: 'json' };
+import roasters from '@data/roasters.json' with { type: 'json' };
+import tasteNotes from '@data/tasteNotes.json' with { type: 'json' };
+import tasteNoteGroups from '@data/tasteNoteGroups.json' with { type: 'json' };
+import varieties from '@data/varieties.json' with { type: 'json' };
 import { decodeSafeURL } from '@utils/string.js';
 
 const {

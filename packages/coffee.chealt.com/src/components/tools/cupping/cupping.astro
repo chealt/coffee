@@ -12,7 +12,7 @@ import Textarea from '../../form/input/textarea.astro';
 
 import './cupping.css';
 
-import allLocaleTranslations from './locales.json';
+import allLocaleTranslations from './locales.json' with { type: 'json' };
 
 const { locale } = Astro.params;
 

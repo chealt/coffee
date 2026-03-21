@@ -58,7 +58,7 @@ Import order (enforced by ESLint):
 
 ```javascript
 import { createClient } from '@libsql/client';
-import cheapestCoffees from '@data/cheapestCoffees.json';
+import cheapestCoffees from '@data/cheapestCoffees.json' with { type: 'json' };
 import { convertToUSD } from '../coffees/utils.js';
 import Coffees from '../coffees/list.astro';
 import './styles.css';
@@ -81,7 +81,7 @@ import coffeeImages from '../../../data/coffeeImages.json' with { type: 'json' }
 
 ```astro
 ---
-import cheapestCoffees from '@data/cheapestCoffees.json';
+import cheapestCoffees from '@data/cheapestCoffees.json' with { type: 'json' };
 const t = allLocaleTranslations[Astro.currentLocale];
 const { loggedInUser } = Astro.locals;
 ---

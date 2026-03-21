@@ -1,6 +1,6 @@
 ---
 import FilteredList from '@components/coffees/filtered-list.astro';
-import originCountries from '@data/originCountries.json';
+import originCountries from '@data/originCountries.json' with { type: 'json' };
 import { decodeSafeURL } from '@utils/string.js';
 
 const { originCountry } = Astro.params;

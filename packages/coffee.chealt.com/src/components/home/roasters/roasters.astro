@@ -1,6 +1,6 @@
 ---
 import Roasters from '../../roasters/list.astro';
-import roasters from '@data/roastersWithCoffees.json';
+import roasters from '@data/roastersWithCoffees.json' with { type: 'json' };
 ---
 
 <Roasters roasters={roasters} />

@@ -2,7 +2,7 @@
 import { getConvertedPrice } from '../../../../coffees/utils.js';
 import Label from '../../../../form/label/label.astro';
 
-import allLocaleTranslations from './locales.json';
+import allLocaleTranslations from './locales.json' with { type: 'json' };
 
 const { chartData, pricePerGram, priceIndex } = Astro.props;
 

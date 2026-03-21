@@ -1,7 +1,7 @@
 ---
 import Common from '../common/common.astro';
 
-import allLocaleCommonTranslations from '../common/common.json';
+import allLocaleCommonTranslations from '../common/common.json' with { type: 'json' };
 
 const t = allLocaleCommonTranslations[Astro.currentLocale];
 ---

@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-import supportedLanguages from '../data/supportedLanguages.json';
+import supportedLanguages from '../data/supportedLanguages.json' with { type: 'json' };
 import { getImageUrl } from './server/AWS/storage.js';
 import { cookieNameSession, sessionSecret } from './server/authentication/config.js';
 import { getUsername } from './server/authentication/cookies.js';

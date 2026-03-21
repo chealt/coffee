@@ -7,7 +7,7 @@ import loaderImage from './loader.svg';
 
 import './common.css';
 
-import allLocaleTranslations from './common.json';
+import allLocaleTranslations from './common.json' with { type: 'json' };
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
