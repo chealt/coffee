@@ -17,7 +17,9 @@
     "select": "Select",
     "tasteNotes": "Taste Notes",
     "title": "Central Beans",
-    "unknown": "unknown"
+    "unknown": "unknown",
+    "website": "Website",
+    "instagram": "Instagram"
   },
   "pl": {
     "404": "Strona nie została znaleziona",
@@ -37,6 +39,8 @@
     "select": "Wybierz",
     "tasteNotes": "Smaki",
     "title": "Central Beans",
-    "unknown": "nieznany"
+    "unknown": "nieznany",
+    "website": "Strona internetowa",
+    "instagram": "Instagram"
   }
 }
