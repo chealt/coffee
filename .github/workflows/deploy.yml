@@ -632,10 +632,9 @@ jobs:
         if: steps.changed-files.outputs.any_changed == 'true'
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        working-directory: packages/coffee.chealt.com
         run: |
-          yarn workspaces focus
-          NODE_ENV=production yarn build
+          yarn install --immutable
+          NODE_ENV=production yarn workspace @centralbeans/website build
           version=$(git rev-parse --short HEAD)
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: deploy
@@ -646,7 +645,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          command: pages deploy packages/coffee.chealt.com/dist --project-name coffee
+          command: deploy --config packages/coffee.chealt.com/wrangler.toml
       - name: Release coffee.chealt.com
         if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
         uses: actions/create-release@v1
