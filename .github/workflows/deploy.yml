@@ -13,395 +13,623 @@ permissions:
 concurrency:
   group: deploy
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  create-user:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            yarn.lock
+            .github/workflows/deploy.yml
+            packages/create-user/package.json
+            packages/create-user/.yarnrc-lambda.yml
+            packages/create-user/src/**
       - uses: aws-actions/configure-aws-credentials@v4
+        if: steps.changed-files.outputs.any_changed == 'true'
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       - uses: actions/setup-node@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
         with:
           node-version-file: 'package.json'
           cache: 'yarn'
-      - name: Check changed files
-        id: changed-files-yaml
-        uses: tj-actions/changed-files@v47
-        with:
-          files_yaml: |
-            create-user:
-              - yarn.lock
-              - .github/workflows/deploy.yml
-              - packages/create-user/package.json
-              - packages/create-user/.yarnrc-lambda.yml
-              - packages/create-user/src/**
-            delete-user:
-              - yarn.lock
-              - .github/workflows/deploy.yml
-              - packages/delete-user/package.json
-              - packages/delete-user/.yarnrc-lambda.yml
-              - packages/delete-user/src/**
-            flag-removed:
-              - yarn.lock
-              - .github/workflows/deploy.yml
-              - packages/flag-removed/package.json
-              - packages/flag-removed/.yarnrc-lambda.yml
-              - packages/flag-removed/src/**
-            image-processor:
-              - yarn.lock
-              - .github/workflows/deploy.yml
-              - packages/image-processor/package.json
-              - packages/image-processor/.yarnrc-lambda.yml
-              - packages/image-processor/src/**
-            image-text-interpreter:
-              - yarn.lock
-              - .github/workflows/deploy.yml
-              - packages/image-text-interpreter/package.json
-              - packages/image-text-interpreter/.yarnrc-lambda.yml
-              - packages/image-text-interpreter/src/**
-            import-currencies:
-              - yarn.lock
-              - .github/workflows/deploy.yml
-              - packages/import-currencies/package.json
-              - packages/import-currencies/.yarnrc-lambda.yml
-              - packages/import-currencies/src/**
-            invoke-flag-removed:
-              - yarn.lock
-              - .github/workflows/deploy.yml
-              - packages/invoke-flag-removed/package.json
-              - packages/invoke-flag-removed/.yarnrc-lambda.yml
-              - packages/invoke-flag-removed/src/**
-            notifications:
-              - yarn.lock
-              - .github/workflows/deploy.yml
-              - packages/coffee.chealt.com/data/**
-              - packages/notifications/package.json
-              - packages/notifications/.yarnrc-lambda.yml
-              - packages/notifications/src/**
-            record-roaster-webshop:
-              - yarn.lock
-              - .github/workflows/deploy.yml
-              - packages/coffee.chealt.com/data/roasters.json
-              - packages/record-roaster-webshop/package.json
-              - packages/record-roaster-webshop/.yarnrc-lambda.yml
-              - packages/record-roaster-webshop/src/**
-            record-roaster-webshop-infra:
-              - .github/workflows/deploy.yml
-              - packages/record-roaster-webshop/infra/**
-            record-webshop-item:
-              - yarn.lock
-              - .github/workflows/deploy.yml
-              - packages/record-webshop-item/package.json
-              - packages/record-webshop-item/.yarnrc-lambda.yml
-              - packages/record-webshop-item/src/**
-            record-webshop-item-details:
-              - yarn.lock
-              - .github/workflows/deploy.yml
-              - packages/record-webshop-item-details/package.json
-              - packages/record-webshop-item-details/.yarnrc-lambda.yml
-              - packages/record-webshop-item-details/src/**
-            register-new-user:
-              - yarn.lock
-              - .github/workflows/deploy.yml
-              - packages/register-new-user/package.json
-              - packages/register-new-user/.yarnrc-lambda.yml
-              - packages/register-new-user/src/**
-            send-registration-code:
-              - yarn.lock
-              - .github/workflows/deploy.yml
-              - packages/send-registration-code/package.json
-              - packages/send-registration-code/.yarnrc-lambda.yml
-              - packages/send-registration-code/src/**
-            website:
-              - yarn.lock
-              - .github/workflows/deploy.yml
-              - packages/coffee.chealt.com/*.js
-              - packages/coffee.chealt.com/*.json
-              - packages/coffee.chealt.com/data/**
-              - packages/coffee.chealt.com/public/**
-              - packages/coffee.chealt.com/src/**
-            webshop-item-processor:
-              - yarn.lock
-              - .github/workflows/deploy.yml
-              - packages/coffee.chealt.com/data/**
-              - packages/webshop-item-processor/package.json
-              - packages/webshop-item-processor/.yarnrc-lambda.yml
-              - packages/webshop-item-processor/src/**
-            webshop-processor:
-              - yarn.lock
-              - .github/workflows/deploy.yml
-              - packages/webshop-processor/package.json
-              - packages/webshop-processor/.yarnrc-lambda.yml
-              - packages/webshop-processor/src/**
-      - name: create-user
-        id: create-user
-        if: steps.changed-files-yaml.outputs.create-user_any_changed == 'true'
+      - name: deploy
+        id: deploy
+        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           yarn workspace @centralbeans/create-user build
           version=$(yarn workspace @centralbeans/create-user deploy | jq -r '.Version')
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release create-user
-        if: steps.changed-files-yaml.outputs.create-user_any_changed == 'true'
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: '@centralbeans/create-user@${{ steps.create-user.outputs.version }}'
-          release_name: Release @centralbeans/create-user v${{ steps.create-user.outputs.version }}
+          tag_name: '@centralbeans/create-user@${{ steps.deploy.outputs.version }}'
+          release_name: Release @centralbeans/create-user v${{ steps.deploy.outputs.version }}
           draft: false
           prerelease: false
-      - name: delete-user
-        id: delete-user
-        if: steps.changed-files-yaml.outputs.delete-user_any_changed == 'true'
+  delete-user:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            yarn.lock
+            .github/workflows/deploy.yml
+            packages/delete-user/package.json
+            packages/delete-user/.yarnrc-lambda.yml
+            packages/delete-user/src/**
+      - uses: aws-actions/configure-aws-credentials@v4
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-node@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: deploy
+        id: deploy
+        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           yarn workspace @centralbeans/delete-user build
           version=$(yarn workspace @centralbeans/delete-user deploy | jq -r '.Version')
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release delete-user
-        if: steps.changed-files-yaml.outputs.delete-user_any_changed == 'true'
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: '@centralbeans/delete-user@${{ steps.delete-user.outputs.version }}'
-          release_name: Release @centralbeans/delete-user v${{ steps.delete-user.outputs.version }}
+          tag_name: '@centralbeans/delete-user@${{ steps.deploy.outputs.version }}'
+          release_name: Release @centralbeans/delete-user v${{ steps.deploy.outputs.version }}
           draft: false
           prerelease: false
-      - name: flag-removed
-        id: flag-removed
-        if: steps.changed-files-yaml.outputs.flag-removed_any_changed == 'true'
+  flag-removed:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            yarn.lock
+            .github/workflows/deploy.yml
+            packages/flag-removed/package.json
+            packages/flag-removed/.yarnrc-lambda.yml
+            packages/flag-removed/src/**
+      - uses: aws-actions/configure-aws-credentials@v4
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-node@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: deploy
+        id: deploy
+        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           yarn workspace @centralbeans/flag-removed build
           version=$(yarn workspace @centralbeans/flag-removed deploy | jq -r '.Version')
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release flag-removed
-        if: steps.changed-files-yaml.outputs.flag-removed_any_changed == 'true'
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: '@centralbeans/flag-removed@${{ steps.flag-removed.outputs.version }}'
-          release_name: Release @centralbeans/flag-removed v${{ steps.flag-removed.outputs.version }}
+          tag_name: '@centralbeans/flag-removed@${{ steps.deploy.outputs.version }}'
+          release_name: Release @centralbeans/flag-removed v${{ steps.deploy.outputs.version }}
           draft: false
           prerelease: false
-      - name: image-processor
-        id: image-processor
-        if: steps.changed-files-yaml.outputs.image-processor_any_changed == 'true'
+  image-processor:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            yarn.lock
+            .github/workflows/deploy.yml
+            packages/image-processor/package.json
+            packages/image-processor/.yarnrc-lambda.yml
+            packages/image-processor/src/**
+      - uses: aws-actions/configure-aws-credentials@v4
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-node@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: deploy
+        id: deploy
+        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           yarn workspace @centralbeans/image-processor build
           version=$(yarn workspace @centralbeans/image-processor deploy | jq -r '.Version')
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release image-processor
-        if: steps.changed-files-yaml.outputs.image-processor_any_changed == 'true'
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: '@centralbeans/image-processor@${{ steps.image-processor.outputs.version }}'
-          release_name: Release @centralbeans/image-processor v${{ steps.image-processor.outputs.version }}
+          tag_name: '@centralbeans/image-processor@${{ steps.deploy.outputs.version }}'
+          release_name: Release @centralbeans/image-processor v${{ steps.deploy.outputs.version }}
           draft: false
           prerelease: false
-      - name: image-text-interpreter
-        id: image-text-interpreter
-        if: steps.changed-files-yaml.outputs.image-text-interpreter_any_changed == 'true'
+  image-text-interpreter:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            yarn.lock
+            .github/workflows/deploy.yml
+            packages/image-text-interpreter/package.json
+            packages/image-text-interpreter/.yarnrc-lambda.yml
+            packages/image-text-interpreter/src/**
+      - uses: aws-actions/configure-aws-credentials@v4
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-node@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: deploy
+        id: deploy
+        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           yarn workspace @centralbeans/image-text-interpreter build
           version=$(yarn workspace @centralbeans/image-text-interpreter deploy | jq -r '.Version')
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release image-text-interpreter
-        if: steps.changed-files-yaml.outputs.image-text-interpreter_any_changed == 'true'
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: '@centralbeans/image-text-interpreter@${{ steps.image-text-interpreter.outputs.version }}'
-          release_name: Release @centralbeans/image-text-interpreter v${{ steps.image-text-interpreter.outputs.version }}
+          tag_name: '@centralbeans/image-text-interpreter@${{ steps.deploy.outputs.version }}'
+          release_name: Release @centralbeans/image-text-interpreter v${{ steps.deploy.outputs.version }}
           draft: false
           prerelease: false
-      - name: import-currencies
-        id: import-currencies
-        if: steps.changed-files-yaml.outputs.import-currencies_any_changed == 'true'
+  import-currencies:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            yarn.lock
+            .github/workflows/deploy.yml
+            packages/import-currencies/package.json
+            packages/import-currencies/.yarnrc-lambda.yml
+            packages/import-currencies/src/**
+      - uses: aws-actions/configure-aws-credentials@v4
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-node@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: deploy
+        id: deploy
+        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           yarn workspace @centralbeans/import-currencies build
           version=$(yarn workspace @centralbeans/import-currencies deploy | jq -r '.Version')
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release import-currencies
-        if: steps.changed-files-yaml.outputs.import-currencies_any_changed == 'true'
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: '@centralbeans/import-currencies@${{ steps.import-currencies.outputs.version }}'
-          release_name: Release @centralbeans/import-currencies v${{ steps.import-currencies.outputs.version }}
+          tag_name: '@centralbeans/import-currencies@${{ steps.deploy.outputs.version }}'
+          release_name: Release @centralbeans/import-currencies v${{ steps.deploy.outputs.version }}
           draft: false
           prerelease: false
-      - name: invoke-flag-removed
-        id: invoke-flag-removed
-        if: steps.changed-files-yaml.outputs.invoke-flag-removed_any_changed == 'true'
+  invoke-flag-removed:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            yarn.lock
+            .github/workflows/deploy.yml
+            packages/invoke-flag-removed/package.json
+            packages/invoke-flag-removed/.yarnrc-lambda.yml
+            packages/invoke-flag-removed/src/**
+      - uses: aws-actions/configure-aws-credentials@v4
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-node@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: deploy
+        id: deploy
+        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           yarn workspace @centralbeans/invoke-flag-removed build
           version=$(yarn workspace @centralbeans/invoke-flag-removed deploy | jq -r '.Version')
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release invoke-flag-removed
-        if: steps.changed-files-yaml.outputs.invoke-flag-removed_any_changed == 'true'
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: '@centralbeans/invoke-flag-removed@${{ steps.invoke-flag-removed.outputs.version }}'
-          release_name: Release @centralbeans/invoke-flag-removed v${{ steps.invoke-flag-removed.outputs.version }}
+          tag_name: '@centralbeans/invoke-flag-removed@${{ steps.deploy.outputs.version }}'
+          release_name: Release @centralbeans/invoke-flag-removed v${{ steps.deploy.outputs.version }}
           draft: false
           prerelease: false
-      - name: notifications
-        id: notifications
-        if: steps.changed-files-yaml.outputs.notifications_any_changed == 'true'
+  notifications:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            yarn.lock
+            .github/workflows/deploy.yml
+            packages/coffee.chealt.com/data/**
+            packages/notifications/package.json
+            packages/notifications/.yarnrc-lambda.yml
+            packages/notifications/src/**
+      - uses: aws-actions/configure-aws-credentials@v4
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-node@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: deploy
+        id: deploy
+        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           yarn workspace @centralbeans/notifications build
           version=$(yarn workspace @centralbeans/notifications deploy | jq -r '.Version')
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release notifications
-        if: steps.changed-files-yaml.outputs.notifications_any_changed == 'true'
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: '@centralbeans/notifications@${{ steps.notifications.outputs.version }}'
-          release_name: Release @centralbeans/notifications v${{ steps.notifications.outputs.version }}
+          tag_name: '@centralbeans/notifications@${{ steps.deploy.outputs.version }}'
+          release_name: Release @centralbeans/notifications v${{ steps.deploy.outputs.version }}
           draft: false
           prerelease: false
-      - name: record-roaster-webshop
-        id: record-roaster-webshop
-        if: steps.changed-files-yaml.outputs.record-roaster-webshop_any_changed == 'true'
+  record-roaster-webshop:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            yarn.lock
+            .github/workflows/deploy.yml
+            packages/coffee.chealt.com/data/roasters.json
+            packages/record-roaster-webshop/package.json
+            packages/record-roaster-webshop/.yarnrc-lambda.yml
+            packages/record-roaster-webshop/src/**
+      - uses: aws-actions/configure-aws-credentials@v4
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-node@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: deploy
+        id: deploy
+        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           yarn workspace @centralbeans/record-roaster-webshop build
           version=$(yarn workspace @centralbeans/record-roaster-webshop deploy | jq -r '.Version')
           echo "version=$version" >> $GITHUB_OUTPUT
-      - name: record-roaster-webshop-infra
-        id: record-roaster-webshop-infra
-        if: steps.changed-files-yaml.outputs.record-roaster-webshop-infra_any_changed == 'true'
-        uses: aws-actions/aws-cloudformation-github-deploy@v2
-        with:
-          name: record-roaster-webshop-schedules
-          template: packages/record-roaster-webshop/infra/schedules.yml
-          capabilities: CAPABILITY_IAM
-          fail-on-empty-changeset: false
       - name: Release record-roaster-webshop
-        if: steps.changed-files-yaml.outputs.record-roaster-webshop_any_changed == 'true'
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: '@centralbeans/record-roaster-webshop@${{ steps.record-roaster-webshop.outputs.version }}'
-          release_name: Release @centralbeans/record-roaster-webshop v${{ steps.record-roaster-webshop.outputs.version }}
+          tag_name: '@centralbeans/record-roaster-webshop@${{ steps.deploy.outputs.version }}'
+          release_name: Release @centralbeans/record-roaster-webshop v${{ steps.deploy.outputs.version }}
           draft: false
           prerelease: false
-      - name: record-webshop-item
-        id: record-webshop-item
-        if: steps.changed-files-yaml.outputs.record-webshop-item_any_changed == 'true'
+  record-roaster-webshop-infra:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          files: yarn.lock
+            .github/workflows/deploy.yml
+            packages/record-roaster-webshop/infra/**
+      - uses: aws-actions/configure-aws-credentials@v4
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-node@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: deploy
+        id: deploy
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          yarn workspace @centralbeans/record-roaster-webshop-infra build
+          version=$(yarn workspace @centralbeans/record-roaster-webshop-infra deploy | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release record-roaster-webshop-infra
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: '@centralbeans/record-roaster-webshop-infra@${{ steps.deploy.outputs.version }}'
+          release_name: Release @centralbeans/record-roaster-webshop-infra v${{ steps.deploy.outputs.version }}
+          draft: false
+          prerelease: false
+  record-webshop-item:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            yarn.lock
+            .github/workflows/deploy.yml
+            packages/record-webshop-item/package.json
+            packages/record-webshop-item/.yarnrc-lambda.yml
+            packages/record-webshop-item/src/**
+      - uses: aws-actions/configure-aws-credentials@v4
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-node@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: deploy
+        id: deploy
+        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           yarn workspace @centralbeans/record-webshop-item build
           version=$(yarn workspace @centralbeans/record-webshop-item deploy | jq -r '.Version')
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release record-webshop-item
-        if: steps.changed-files-yaml.outputs.record-webshop-item_any_changed == 'true'
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: '@centralbeans/record-webshop-item@${{ steps.record-webshop-item.outputs.version }}'
-          release_name: Release @centralbeans/record-webshop-item v${{ steps.record-webshop-item.outputs.version }}
+          tag_name: '@centralbeans/record-webshop-item@${{ steps.deploy.outputs.version }}'
+          release_name: Release @centralbeans/record-webshop-item v${{ steps.deploy.outputs.version }}
           draft: false
           prerelease: false
-      - name: record-webshop-item-details
-        id: record-webshop-item-details
-        if: steps.changed-files-yaml.outputs.record-webshop-item-details_any_changed == 'true'
+  record-webshop-item-details:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            yarn.lock
+            .github/workflows/deploy.yml
+            packages/record-webshop-item-details/package.json
+            packages/record-webshop-item-details/.yarnrc-lambda.yml
+            packages/record-webshop-item-details/src/**
+      - uses: aws-actions/configure-aws-credentials@v4
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-node@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: deploy
+        id: deploy
+        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           yarn workspace @centralbeans/record-webshop-item-details build
           version=$(yarn workspace @centralbeans/record-webshop-item-details deploy | jq -r '.Version')
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release record-webshop-item-details
-        if: steps.changed-files-yaml.outputs.record-webshop-item-details_any_changed == 'true'
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: '@centralbeans/record-webshop-item-details@${{ steps.record-webshop-item-details.outputs.version }}'
-          release_name: Release @centralbeans/record-webshop-item-details v${{ steps.record-webshop-item-details.outputs.version }}
+          tag_name: '@centralbeans/record-webshop-item-details@${{ steps.deploy.outputs.version }}'
+          release_name: Release @centralbeans/record-webshop-item-details v${{ steps.deploy.outputs.version }}
           draft: false
           prerelease: false
-      - name: register-new-user
-        id: register-new-user
-        if: steps.changed-files-yaml.outputs.register-new-user_any_changed == 'true'
+  register-new-user:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            yarn.lock
+            .github/workflows/deploy.yml
+            packages/register-new-user/package.json
+            packages/register-new-user/.yarnrc-lambda.yml
+            packages/register-new-user/src/**
+      - uses: aws-actions/configure-aws-credentials@v4
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-node@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: deploy
+        id: deploy
+        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           yarn workspace @centralbeans/register-new-user build
           version=$(yarn workspace @centralbeans/register-new-user deploy | jq -r '.Version')
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release register-new-user
-        if: steps.changed-files-yaml.outputs.register-new-user_any_changed == 'true'
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: '@centralbeans/register-new-user@${{ steps.register-new-user.outputs.version }}'
-          release_name: Release @centralbeans/register-new-user v${{ steps.register-new-user.outputs.version }}
+          tag_name: '@centralbeans/register-new-user@${{ steps.deploy.outputs.version }}'
+          release_name: Release @centralbeans/register-new-user v${{ steps.deploy.outputs.version }}
           draft: false
           prerelease: false
-      - name: send-registration-code
-        id: send-registration-code
-        if: steps.changed-files-yaml.outputs.send-registration-code_any_changed == 'true'
+  send-registration-code:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            yarn.lock
+            .github/workflows/deploy.yml
+            packages/send-registration-code/package.json
+            packages/send-registration-code/.yarnrc-lambda.yml
+            packages/send-registration-code/src/**
+      - uses: aws-actions/configure-aws-credentials@v4
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-node@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: deploy
+        id: deploy
+        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           yarn workspace @centralbeans/send-registration-code build
           version=$(yarn workspace @centralbeans/send-registration-code deploy | jq -r '.Version')
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release send-registration-code
-        if: steps.changed-files-yaml.outputs.send-registration-code_any_changed == 'true'
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: '@centralbeans/send-registration-code@${{ steps.send-registration-code.outputs.version }}'
-          release_name: Release @centralbeans/send-registration-code v${{ steps.send-registration-code.outputs.version }}
+          tag_name: '@centralbeans/send-registration-code@${{ steps.deploy.outputs.version }}'
+          release_name: Release @centralbeans/send-registration-code v${{ steps.deploy.outputs.version }}
           draft: false
           prerelease: false
-      - name: webshop-item-processor
-        id: webshop-item-processor
-        if: steps.changed-files-yaml.outputs.webshop-item-processor_any_changed == 'true'
-        run: |
-          yarn workspace @centralbeans/webshop-item-processor build
-          version=$(yarn workspace @centralbeans/webshop-item-processor deploy | jq -r '.Version')
-          echo "version=$version" >> $GITHUB_OUTPUT
-      - name: Release webshop-item-processor
-        if: steps.changed-files-yaml.outputs.webshop-item-processor_any_changed == 'true'
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  website:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
         with:
-          tag_name: '@centralbeans/webshop-item-processor@${{ steps.webshop-item-processor.outputs.version }}'
-          release_name: Release @centralbeans/webshop-item-processor v${{ steps.webshop-item-processor.outputs.version }}
-          draft: false
-          prerelease: false
-      - name: webshop-processor
-        id: webshop-processor
-        if: steps.changed-files-yaml.outputs.webshop-processor_any_changed == 'true'
-        run: |
-          yarn workspace @centralbeans/webshop-processor build
-          version=$(yarn workspace @centralbeans/webshop-processor deploy | jq -r '.Version')
-          echo "version=$version" >> $GITHUB_OUTPUT
-      - name: Release webshop-processor
-        if: steps.changed-files-yaml.outputs.webshop-processor_any_changed == 'true'
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            yarn.lock
+            .github/workflows/deploy.yml
+            packages/coffee.chealt.com/*.js
+            packages/coffee.chealt.com/*.json
+            packages/coffee.chealt.com/data/**
+            packages/coffee.chealt.com/public/**
+            packages/coffee.chealt.com/src/**
+      - uses: aws-actions/configure-aws-credentials@v4
+        if: steps.changed-files.outputs.any_changed == 'true'
         with:
-          tag_name: '@centralbeans/webshop-processor@${{ steps.webshop-processor.outputs.version }}'
-          release_name: Release @centralbeans/webshop-processor v${{ steps.webshop-processor.outputs.version }}
-          draft: false
-          prerelease: false
-      - name: website
-        id: website
-        if: steps.changed-files-yaml.outputs.website_any_changed == 'true'
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-node@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: build
+        id: build
+        if: steps.changed-files.outputs.any_changed == 'true'
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         working-directory: packages/coffee.chealt.com
@@ -410,22 +638,106 @@ jobs:
           NODE_ENV=production yarn build
           version=$(git rev-parse --short HEAD)
           echo "version=$version" >> $GITHUB_OUTPUT
-      - name: Deploy website
-        id: website-deploy
-        if: steps.changed-files-yaml.outputs.website_any_changed == 'true' && steps.website.conclusion == 'success'
+      - name: deploy
+        id: deploy
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.build.conclusion == 'success'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           command: pages deploy packages/coffee.chealt.com/dist --project-name coffee
-      - name: Release website
-        if: steps.changed-files-yaml.outputs.website_any_changed == 'true' && steps.website.conclusion == 'success' && steps.website-deploy.conclusion == 'success'
+      - name: Release coffee.chealt.com
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: '@centralbeans/website@${{ steps.website.outputs.version }}'
-          release_name: Release @centralbeans/website v${{ steps.website.outputs.version }}
+          tag_name: '@centralbeans/website@${{ steps.build.outputs.version }}'
+          release_name: Release @centralbeans/website v${{ steps.build.outputs.version }}
+          draft: false
+          prerelease: false
+  webshop-item-processor:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            yarn.lock
+            .github/workflows/deploy.yml
+            packages/webshop-item-processor/package.json
+            packages/webshop-item-processor/.yarnrc-lambda.yml
+            packages/webshop-item-processor/src/**
+      - uses: aws-actions/configure-aws-credentials@v4
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-node@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: deploy
+        id: deploy
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          yarn workspace @centralbeans/webshop-item-processor build
+          version=$(yarn workspace @centralbeans/webshop-item-processor deploy | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release webshop-item-processor
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: '@centralbeans/webshop-item-processor@${{ steps.deploy.outputs.version }}'
+          release_name: Release @centralbeans/webshop-item-processor v${{ steps.deploy.outputs.version }}
+          draft: false
+          prerelease: false
+  webshop-processor:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            yarn.lock
+            .github/workflows/deploy.yml
+            packages/webshop-processor/package.json
+            packages/webshop-processor/.yarnrc-lambda.yml
+            packages/webshop-processor/src/**
+      - uses: aws-actions/configure-aws-credentials@v4
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-node@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: deploy
+        id: deploy
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          yarn workspace @centralbeans/webshop-processor build
+          version=$(yarn workspace @centralbeans/webshop-processor deploy | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release webshop-processor
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: '@centralbeans/webshop-processor@${{ steps.deploy.outputs.version }}'
+          release_name: Release @centralbeans/webshop-processor v${{ steps.deploy.outputs.version }}
           draft: false
           prerelease: false
