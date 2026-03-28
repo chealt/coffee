@@ -40,9 +40,13 @@ const handler = async (event) => {
 
   // call lambda serially so we don't run into rate limits
   for (const productUrl of productLinks) {
-    logger.info(`Invoking record lambda for ${productUrl}`);
-
-    await callRecordWebshopItem({ url: productUrl, roasterId });
+    if (!event.isTest) {
+      logger.info(`Invoking record lambda for ${productUrl}`);
+      await callRecordWebshopItem({ url: productUrl, roasterId });
+    } else {
+      // eslint-disable-next-line no-console
+      console.log(productUrl);
+    }
   }
 
   return { success: true };

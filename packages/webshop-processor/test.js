@@ -1,10 +1,18 @@
 import { handler } from './src/index.js';
 import { deflateSync } from 'node:zlib';
+import roasters from '../coffee.chealt.com/data/roasters.json' with { type: 'json' };
 
-const invokeLambda = async ({ payload }) => handler(payload);
+const roasterId = process.env.ROASTER_ID;
 
-const url = 'https://bemybean.pl/sklep';
-const roasterId = 39;
+if (!roasterId) {
+  throw new Error('No roaster id found, please provide a ROASTER_ID environment variable');
+}
+
+const url = roasters.find(({ id }) => id === Number(roasterId))?.webshop;
+
+if (!url) {
+  throw new Error(`No webshop url found for roaster id ${roasterId}`);
+}
 
 const response = await fetch(url);
 
@@ -16,9 +24,6 @@ const html = (await response.text()).match(/<body[^>]*>[\s\S]*<\/body>/giu)[0];
 
 console.info(`Invoke webshop processor for ${roasterId} and url: ${url}`);
 
-const result = await invokeLambda({
-  functionName: 'webshopProcessor',
-  payload: { url, roasterId, html: deflateSync(html).toString('base64') }
-});
+const result = await handler({ url, roasterId, html: deflateSync(html).toString('base64'), isTest: true });
 
 console.log(result);
