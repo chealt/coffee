@@ -184,9 +184,9 @@ const parsers = {
     const document = getDocument(html);
     const { origin } = new URL(url);
 
-    return Array.from(document.querySelectorAll('.product-card-wrapper .full-unstyled-link[id^="CardLink"]')).map(
-      ({ href }) => `${origin}${href}`
-    );
+    return Array.from(document.querySelectorAll('.product-card-wrapper .full-unstyled-link[id^="CardLink"]'))
+      .filter(({ href }) => !href.includes('paper-filters'))
+      .map(({ href }) => `${origin}${href}`);
   },
   // Stow
   286: async ({ html }) => {
