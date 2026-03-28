@@ -44,9 +44,12 @@ const handler = async (event) => {
       logger.info(`Invoking record lambda for ${productUrl}`);
       await callRecordWebshopItem({ url: productUrl, roasterId });
     } else {
-      // eslint-disable-next-line no-console
-      console.log(productUrl);
+      logger.info(productUrl);
     }
+  }
+
+  if (event.isTest) {
+    return productLinks;
   }
 
   return { success: true };

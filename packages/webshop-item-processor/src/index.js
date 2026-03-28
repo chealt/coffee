@@ -82,8 +82,12 @@ const handler = async (event) => {
     return responses.outOfStock;
   }
 
-  logger.info(`Calling record webshop item details for ${url}`);
-  await callRecordWebshopItemDetails({ url, details });
+  if (event.isTest) {
+    logger.info(details);
+  } else {
+    logger.info(`Calling record webshop item details for ${url}`);
+    await callRecordWebshopItemDetails({ url, details });
+  }
 
   return responses.success;
 };

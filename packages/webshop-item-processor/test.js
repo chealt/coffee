@@ -1,40 +1,48 @@
 import { handler } from './src/index.js';
+import { handler as webshopProcessorHandler } from '../webshop-processor/src/index.js';
 import { deflateSync } from 'node:zlib';
+import roasters from '../coffee.chealt.com/data/roasters.json' with { type: 'json' };
 
-const urls = [
-  'https://bemybean.pl/produkt/italo-disco-espresso/',
-  'https://bemybean.pl/produkt/etiopia-gera-2/',
-  'https://bemybean.pl/produkt/honduras-caviflor/',
-  'https://bemybean.pl/produkt/brazylia-monte-carmelo/',
-  'https://bemybean.pl/produkt/bold-bean/',
-  'https://bemybean.pl/produkt/kolumbia-valle-del-cauca/',
-  'https://bemybean.pl/produkt/decaf-espresso-kolumbia-popayan/',
-  'https://bemybean.pl/produkt/heavy-bean/',
-  'https://bemybean.pl/produkt/funky-bean-espresso/',
-  'https://bemybean.pl/produkt/boogie-bean-espresso/',
-  'https://bemybean.pl/produkt/happy-bean-sumatra/',
-  'https://bemybean.pl/produkt/kostaryka-hacienda-sonora/',
-  'https://bemybean.pl/produkt/kostaryka-corazon-de-jesus/',
-  'https://bemybean.pl/produkt/rwanda-kiwu/',
-  'https://bemybean.pl/produkt/kolumbia-el-recreo/',
-  'https://bemybean.pl/produkt/kolumbia-alonso-bustos/',
-  'https://bemybean.pl/produkt/etiopia-shakiso/',
-  'https://bemybean.pl/produkt/kolumbia-las-garzas-2025/',
-  'https://bemybean.pl/produkt/decaf-filter-kolumbia-popayan/'
-];
-const roasterId = 39;
+const roasterId = process.env.ROASTER_ID;
+
+if (!roasterId) {
+  throw new Error('No roaster id found, please provide a ROASTER_ID environment variable');
+}
+
+const webshopUrl = roasters.find(({ id }) => id === Number(roasterId))?.webshop;
+
+if (!webshopUrl) {
+  throw new Error(`No webshop url found for roaster id ${roasterId}`);
+}
+
+const response = await fetch(webshopUrl);
+
+if (!response.ok) {
+  throw new Error(`Failed to fetch webshop page ${webshopUrl}`);
+}
+
+const html = (await response.text()).match(/<body[^>]*>[\s\S]*<\/body>/giu)[0];
+
+console.info(`Invoke webshop processor for ${roasterId} and url: ${webshopUrl}`);
+
+const urls = await webshopProcessorHandler({
+  url: webshopUrl,
+  roasterId,
+  html: deflateSync(html).toString('base64'),
+  isTest: true
+});
 
 for (const url of urls) {
-  const response = await fetch(url);
+  const itemResponse = await fetch(url);
 
-  if (!response.ok) {
+  if (!itemResponse.ok) {
     throw new Error(`Failed to fetch webshop page ${url}`);
   }
 
-  const html = (await response.text()).match(/<body[^>]*>[\s\S]*<\/body>/giu)[0];
+  const itemHtml = (await itemResponse.text()).match(/<body[^>]*>[\s\S]*<\/body>/giu)[0];
 
   try {
-    await handler({ url, roasterId, html: deflateSync(html).toString('base64') });
+    await handler({ url, roasterId, html: deflateSync(itemHtml).toString('base64'), isTest: true });
   } catch (error) {
     console.error(`Failed to process ${url}`, error);
   }
