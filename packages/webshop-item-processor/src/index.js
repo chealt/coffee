@@ -38,6 +38,12 @@ const handler = async (event) => {
 
   const details = await parser({ html, url, roasterId });
 
+  if (details.isOutOfStock) {
+    logger.info(`Skipping out of stock item ${url}`);
+
+    return responses.success;
+  }
+
   if (details.isBlend) {
     logger.info(`Skipping blend ${url}`);
 

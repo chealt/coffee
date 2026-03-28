@@ -47,6 +47,15 @@ const parsers = {
 
     const title = document.querySelector('h1.product-title').textContent.toLowerCase().trim();
 
+    const options = document.querySelectorAll('#pa_opakowanie option');
+    const isOutOfStock = options.length === 1 && options[0].textContent.toLowerCase().includes('choose an option');
+
+    if (isOutOfStock) {
+      logger.info(`Out of stock for ${url}`);
+
+      return { isOutOfStock: true };
+    }
+
     const price = Number(
       document.querySelector('.price .woocommerce-Price-amount').textContent.replaceAll(' zł', '').replaceAll(',', '.')
     ).toFixed(2);
