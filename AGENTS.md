@@ -70,7 +70,9 @@ import './styles.css';
 import coffeeImages from '../../../data/coffeeImages.json' with { type: 'json' };
 ```
 
+
 ### Naming Conventions
+- **General**: Use English for all naming (variables, functions, files, etc.). Avoid using other languages (e.g. Polish) in variable names, even when parsing content from foreign websites.
 
 - **Files**: kebab-case (`home.astro`, `utils.js`)
 - **Components**: PascalCase (`Coffees.astro`)

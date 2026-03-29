@@ -2276,6 +2276,131 @@ const parsers = {
       webshopItemLink: url,
       weight
     };
+  },
+  // Craft Beans
+  297: async ({ html, url, roasterId }) => {
+    logger.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const priceText = document.querySelector('.JsPrice')?.dataset?.price;
+    const basePrice = parseFloat(priceText || 0);
+
+    if (!basePrice || isNaN(basePrice)) {
+      logger.error(`No base price found for ${url}`);
+      throw new Error(errors.priceMissing);
+    }
+
+    const currency = currencyCodes['zł'];
+
+    const weightOptions = Array.from(document.querySelectorAll('.jsProductWeight option'));
+    const parsedWeights = weightOptions
+      .map((o) => {
+        const txt = o.textContent.trim().toLowerCase();
+        const impact = parseFloat(o.dataset.impact || 0);
+        let weight = null;
+        if (txt.includes('g') || txt.includes('kg')) {
+          const num = parseFloat(txt.replace(/[^0-9.]/g, ''));
+          if (txt.includes('kg')) weight = num * 1000;
+          else weight = num;
+        }
+        return { weight, price: basePrice + impact };
+      })
+      .filter((w) => w.weight && w.weight <= 1000); // Filter out bulk packs like 3x1kg
+
+    const selectedWeight = parsedWeights.find((w) => w.weight === 250) || parsedWeights[0];
+
+    if (!selectedWeight) {
+      logger.error(`No weight found for ${url}`);
+      throw new Error(errors.weightMissing);
+    }
+
+    const weight = selectedWeight.weight;
+    const price = selectedWeight.price;
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const title = document.querySelector('h1')?.textContent.trim().toLowerCase() || '';
+    const textContent = document.body.textContent.toLowerCase();
+
+    const originCountryId = originCountries.find(({ name }) => textContent.includes(name))?.origin_country_id || null;
+
+    if (!originCountryId && !url.includes('bezkofeinowe')) {
+      logger.error(`No origin country found for ${url}`);
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const isDecaf = url.includes('bezkofeinowe') || url.includes('decaf') || title.includes('decaf');
+
+    const itemImage = document.querySelector('.woocommerce-product-gallery__image img')?.src;
+    const wpImage = document.querySelector('.wp-post-image')?.src;
+    const pictureImage = document.querySelector('picture img')?.src;
+    const thumbsImage = document.querySelector('img[src*="files/thumbs"]')?.src;
+
+    let image = itemImage || wpImage || pictureImage || thumbsImage;
+
+    if (image) {
+      image = image.replace(/&amp;/g, '&');
+    }
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+      throw new Error(errors.imageMissing);
+    }
+    
+    const lines = document.body.textContent.toLowerCase().split(/\n|\r/);
+    let tasteNotesDescription = lines.find((l) => l.includes('nuty smakowe:') || l.includes('w smaku dominują')) || '';
+    
+    tasteNotesDescription = tasteNotesDescription
+      .replace(/czarnych porzeczek/g, 'czarna porzeczka')
+      .replace(/jagód/g, 'jagody')
+      .replace(/czekoladowo-orzechowe/g, 'czekolada orzechy')
+      .replace(/orzechow[ae]\b/g, 'orzechy')
+      .replace(/czekoladow[ae]\b/g, 'czekolada')
+      .replace(/miodowym\b/g, 'miód')
+      .replace(/orzech prażony/g, 'orzechy');
+
+    const tasteNoteIds = Array.from(
+      new Set(
+        tasteNotes
+          .filter(({ name, alias }) => tasteNotesDescription.includes(name.toLowerCase()) || (alias && tasteNotesDescription.includes(alias.toLowerCase())))
+          .map(({ taste_note_id: id }) => id)
+      )
+    );
+
+    const varietyDescription = lines.find((l) => l.includes('odmiana:') || l.includes('odmiana botaniczna:')) || '';
+    const varietyIds = Array.from(
+      new Set(
+        varieties
+          .filter(({ name, alias }) => varietyDescription.includes(name.toLowerCase()) || (alias && varietyDescription.includes(alias.toLowerCase())))
+          .map(({ id }) => id)
+      )
+    );
+
+    const isEspresso = url.includes('espresso') || title.includes('espresso');
+    const isFilter = url.includes('przelew');
+    
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) =>
+          (isFilter && isEspresso && name === 'omni') ||
+          (isEspresso && !isFilter && name === 'espresso') ||
+          (!isEspresso && isFilter && name === 'filter')
+      )?.brewing_method_id || brewingMethods.find(({ name }) => name === 'omni')?.brewing_method_id;
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      price,
+      pricePerGram,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
   }
 };
 
