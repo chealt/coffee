@@ -11,7 +11,7 @@ function packages. It uses Yarn 4 workspaces with Playwright for testing.
 yarn install          # Install all dependencies
 yarn build            # Build the website
 yarn dev              # Start dev server at localhost:4321
-yarn lint             # Run ESLint on all files
+yarn lint             # Run oxlint on all files
 ```
 
 ### Running Tests
@@ -66,13 +66,13 @@ yarn recommendations:ci   # Generate recommendations for CI
 ### General Principles
 
 - Use ES modules (`import`/`export`), not CommonJS
-- Enable ESLint rules: prefer-arrow-callback, no-var, object-shorthand, prefer-const
+- Enable standard rules (enforced by oxlint)
 - Use `async`/`await` over raw promises
-- Avoid console.log in Astro components (ESLint will error); use it in Node packages
+- Avoid console.log in Astro components (oxlint will error); use it in Node packages
 
 ### Imports and Exports
 
-Import order (enforced by ESLint):
+Import order (enforced by oxlint):
 
 1. External packages (node_modules) 2. Internal packages (workspace) 3. Relative imports (../, ./) 4. CSS files
 
@@ -90,10 +90,13 @@ import './styles.css';
 import coffeeImages from '../../../data/coffeeImages.json' with { type: 'json' };
 ```
 
+### Editor Configuration
+
+When modifying `.vscode/settings.json` or other editor configuration files, ensure that language-specific formatting settings (e.g., `[html]`, `[javascript]`) are grouped together and sorted alphabetically.
+
 ### Naming Conventions
 
 - **General**: Use English for all naming (variables, functions, files, etc.). Avoid using other languages (e.g. Polish) in variable names, even when parsing content from foreign websites.
-
 - **Files**: kebab-case (`home.astro`, `utils.js`)
 - **Components**: PascalCase (`Coffees.astro`)
 - **Variables/functions**: camelCase
@@ -158,7 +161,6 @@ Tests run against `http://localhost:4321` (started automatically by Playwright)
 - **Playwright** 1.58+ for testing
 - **Turso** (libSQL) for database
 - Node 24+
-
 
 ## Common Tasks
 
