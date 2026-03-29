@@ -31,12 +31,20 @@ yarn workspace @centralbeans/website playwright test --project chromium
 
 # Run with UI (for debugging)
 yarn workspace @centralbeans/website playwright test --ui
+
+# Run tests for webshop-processor
+ROASTER_ID=297 yarn workspace @centralbeans/webshop-processor test
+
+# Run tests for webshop-item-processor
+ROASTER_ID=297 yarn workspace @centralbeans/webshop-item-processor test
 ```
+
+To test the parsers for `webshop-processor` and `webshop-item-processor`, always use the yarn workspace test script and provide the `ROASTER_ID` environment variable. The `ROASTER_ID` matches the ID found in `data/roasters.json`.
 
 ### Data Export/Import
 
 ```bash
-yarn export:data           # Export data (requires .env)
+yarn export:data          # Export data (requires .env)
 yarn export:data:ci       # Export for CI (no .env)
 yarn recommendations:ci   # Generate recommendations for CI
 ```
@@ -70,8 +78,8 @@ import './styles.css';
 import coffeeImages from '../../../data/coffeeImages.json' with { type: 'json' };
 ```
 
-
 ### Naming Conventions
+
 - **General**: Use English for all naming (variables, functions, files, etc.). Avoid using other languages (e.g. Polish) in variable names, even when parsing content from foreign websites.
 
 - **Files**: kebab-case (`home.astro`, `utils.js`)
@@ -138,6 +146,7 @@ Tests run against `http://localhost:4321` (started automatically by Playwright)
 - **Playwright** 1.58+ for testing
 - **Turso** (libSQL) for database
 - Node 24+
+
 
 ## Common Tasks
 
