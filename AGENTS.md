@@ -16,6 +16,8 @@ yarn lint             # Run ESLint on all files
 
 ### Running Tests
 
+#### Website
+
 ```bash
 # Run all website tests
 yarn workspace @centralbeans/website playwright test
@@ -31,15 +33,25 @@ yarn workspace @centralbeans/website playwright test --project chromium
 
 # Run with UI (for debugging)
 yarn workspace @centralbeans/website playwright test --ui
+```
 
+#### Webshop Processor
+
+To test the parsers for `webshop-processor`, always use the yarn workspace test script and provide the `ROASTER_ID` environment variable. The `ROASTER_ID` matches the ID found in `data/roasters.json`.
+
+```bash
 # Run tests for webshop-processor
 ROASTER_ID=297 yarn workspace @centralbeans/webshop-processor test
+```
 
+#### Webshop Item Processor
+
+To test the parsers for `webshop-item-processor`, always use the yarn workspace test script and provide the `ROASTER_ID` environment variable. The `ROASTER_ID` matches the ID found in `data/roasters.json`.
+
+```bash
 # Run tests for webshop-item-processor
 ROASTER_ID=297 yarn workspace @centralbeans/webshop-item-processor test
 ```
-
-To test the parsers for `webshop-processor` and `webshop-item-processor`, always use the yarn workspace test script and provide the `ROASTER_ID` environment variable. The `ROASTER_ID` matches the ID found in `data/roasters.json`.
 
 ### Data Export/Import
 
