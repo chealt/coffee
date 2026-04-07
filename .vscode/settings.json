@@ -3,24 +3,6 @@
     "**/.yarn": true,
     "**/.pnp.*": true
   },
-  "[html]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
-  },
-  "[javascript]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
-  },
-  "[json]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
-  },
-  "[toml]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
-  },
-  "[yaml]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
-  },
   "typescript.validate.enable": false,
   "editor.formatOnSave": true,
   "cSpell.words": [
@@ -62,5 +44,26 @@
     "varios",
     "webshop",
     "woocommerce"
-  ]
+  ],
+  "[html]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[toml]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  }
 }
