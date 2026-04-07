@@ -39,7 +39,7 @@
     "@axe-core/playwright": "^4.11.1",
     "axe-html-reporter": "^2.2.11",
     "rollup-plugin-visualizer": "^7.0.1",
-    "vite": "8.0.1",
+    "vite": "8.0.5",
     "wrangler": "^4.80.0"
   },
   "engines": {
