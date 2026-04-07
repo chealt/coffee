@@ -16,8 +16,8 @@
     "recommendations:ci": "yarn workspace @centralbeans/website recommendations:ci"
   },
   "devDependencies": {
-    "oxfmt": "^0.41.0",
-    "oxlint": "^1.56.0",
+    "oxfmt": "^0.44.0",
+    "oxlint": "^1.59.0",
     "supports-color": "^10.2.2"
   },
   "engines": {

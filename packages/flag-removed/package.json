@@ -6,10 +6,10 @@
     "deploy": "aws lambda update-function-code --function-name flagRemoved --zip-file fileb://package.zip --publish"
   },
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.1014.0",
+    "@aws-sdk/client-secrets-manager": "^3.1025.0",
     "@libsql/client": "^0.17.2",
-    "@sentry/aws-serverless": "^10.45.0",
-    "jsdom": "27.0.0",
-    "undici": "^7.22.0"
+    "@sentry/aws-serverless": "^10.47.0",
+    "jsdom": "^29.0.2",
+    "undici": "^8.0.2"
   }
 }
