@@ -49,10 +49,10 @@ const { chromium } = require('playwright');
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
   await page.goto('YOUR_URL_HERE', { waitUntil: 'networkidle' });
-  
+
   // Accept cookies if necessary to see the full page
-  // await page.click('button.accept-cookies'); 
-  
+  // await page.click('button.accept-cookies');
+
   await page.screenshot({ path: 'screenshot.png', fullPage: true });
   await browser.close();
   console.log('Saved screenshot to screenshot.png');
@@ -61,7 +61,7 @@ const { chromium } = require('playwright');
 
 Run it via `node test_screenshot.cjs`, then use the `Read` tool on `/absolute/path/to/screenshot.png` to analyze the visual output. Ensure that all the taste notes, varieties, origin details, weight, and price listed on the image are accurately reflected in your parser's JSON output.
 
-**Critical Requirement:** When parsing the HTML or visually validating via screenshot, ensure you are strictly extracting data belonging to the *primary product* on the page. Many webshops display "You may also like" or "Related Products" sections. Be extremely careful not to accidentally parse titles, taste notes, or prices from these secondary/recommended products.
+**Critical Requirement:** When parsing the HTML or visually validating via screenshot, ensure you are strictly extracting data belonging to the _primary product_ on the page. Many webshops display "You may also like" or "Related Products" sections. Be extremely careful not to accidentally parse titles, taste notes, or prices from these secondary/recommended products.
 
 **Cleanup:** Make sure that you delete any temporary files and screenshots generated during your visual validation before creating any Git commits. Do not commit `.png`, `.jpg`, `.html` or `.cjs` scripts created for debugging.
 

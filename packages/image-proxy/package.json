@@ -9,7 +9,7 @@
   "type": "module",
   "main": "src/index.js",
   "devDependencies": {
-    "wrangler": "^4.76.0"
+    "wrangler": "^4.80.0"
   },
   "engines": {
     "node": ">=22"

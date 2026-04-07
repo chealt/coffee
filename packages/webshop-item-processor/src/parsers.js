@@ -2346,10 +2346,10 @@ const parsers = {
       logger.error(`No image found for ${url}`);
       throw new Error(errors.imageMissing);
     }
-    
+
     const lines = document.body.textContent.toLowerCase().split(/\n|\r/);
     let tasteNotesDescription = lines.find((l) => l.includes('nuty smakowe:') || l.includes('w smaku dominują')) || '';
-    
+
     tasteNotesDescription = tasteNotesDescription
       .replace(/czarnych porzeczek/g, 'czarna porzeczka')
       .replace(/jagód/g, 'jagody')
@@ -2362,7 +2362,11 @@ const parsers = {
     const tasteNoteIds = Array.from(
       new Set(
         tasteNotes
-          .filter(({ name, alias }) => tasteNotesDescription.includes(name.toLowerCase()) || (alias && tasteNotesDescription.includes(alias.toLowerCase())))
+          .filter(
+            ({ name, alias }) =>
+              tasteNotesDescription.includes(name.toLowerCase()) ||
+              (alias && tasteNotesDescription.includes(alias.toLowerCase()))
+          )
           .map(({ taste_note_id: id }) => id)
       )
     );
@@ -2371,14 +2375,18 @@ const parsers = {
     const varietyIds = Array.from(
       new Set(
         varieties
-          .filter(({ name, alias }) => varietyDescription.includes(name.toLowerCase()) || (alias && varietyDescription.includes(alias.toLowerCase())))
+          .filter(
+            ({ name, alias }) =>
+              varietyDescription.includes(name.toLowerCase()) ||
+              (alias && varietyDescription.includes(alias.toLowerCase()))
+          )
           .map(({ id }) => id)
       )
     );
 
     const isEspresso = url.includes('espresso') || title.includes('espresso');
     const isFilter = url.includes('przelew');
-    
+
     const brewingMethodId =
       brewingMethods.find(
         ({ name }) =>

@@ -253,11 +253,11 @@ const parsers = {
     const document = getDocument(html);
 
     const allLinks = Array.from(document.querySelectorAll('a')).map((a) => a.href);
-    const coffeeLinks = Array.from(new Set(allLinks.filter((l) => l.includes('sklep/kawy/') && l.split('/').length > 6)));
-    
-    return coffeeLinks.filter(
-      (l) => !l.includes('/zestawy') && !l.includes('zestaw-') && !l.includes('mieszanki')
+    const coffeeLinks = Array.from(
+      new Set(allLinks.filter((l) => l.includes('sklep/kawy/') && l.split('/').length > 6))
     );
+
+    return coffeeLinks.filter((l) => !l.includes('/zestawy') && !l.includes('zestaw-') && !l.includes('mieszanki'));
   }
 };
 
