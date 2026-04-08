@@ -5,7 +5,7 @@ const test = baseTest.extend(fixtures);
 const { expect } = test;
 
 const config = {
-  url: 'http://localhost:4321'
+  url: process.env.baseUrl || 'http://localhost:4321'
 };
 
 export { test, expect, config };
