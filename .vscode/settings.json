@@ -3,7 +3,7 @@
     "**/.yarn": true,
     "**/.pnp.*": true
   },
-  "typescript.validate.enable": false,
+  "js/ts.validate.enabled": false,
   "editor.formatOnSave": true,
   "cSpell.words": [
     "aeropress",
