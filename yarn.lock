@@ -5,16 +5,16 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@asamuzakjp/css-color@npm:^4.1.1":
-  version: 4.1.2
-  resolution: "@asamuzakjp/css-color@npm:4.1.2"
+"@asamuzakjp/css-color@npm:4.1.1":
+  version: 4.1.1
+  resolution: "@asamuzakjp/css-color@npm:4.1.1"
   dependencies:
-    "@csstools/css-calc": "npm:^3.0.0"
-    "@csstools/css-color-parser": "npm:^4.0.1"
-    "@csstools/css-parser-algorithms": "npm:^4.0.0"
-    "@csstools/css-tokenizer": "npm:^4.0.0"
-    lru-cache: "npm:^11.2.5"
-  checksum: 10c0/e432fdef978b37654a2ca31169a149b9173e708f70c82612acb123a36dbc7dd99913c48cbf2edd6fe3652cc627d4bc94bf87571463da0b788f15b973d4ce5b0f
+    "@csstools/css-calc": "npm:^2.1.4"
+    "@csstools/css-color-parser": "npm:^3.1.0"
+    "@csstools/css-parser-algorithms": "npm:^3.0.5"
+    "@csstools/css-tokenizer": "npm:^3.0.4"
+    lru-cache: "npm:^11.2.4"
+  checksum: 10c0/2948ae9cd4c2f326ab5470d6ac7d415bb8062150ef254f830d774b6a77d6dccfbdb4b84ed4ef5c86c5643d42c52d77204b8d94d0d90f2e2cea9ec9b6cbb9c336
   languageName: node
   linkType: hard
 
@@ -1763,42 +1763,42 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@csstools/color-helpers@npm:^6.0.2":
-  version: 6.0.2
-  resolution: "@csstools/color-helpers@npm:6.0.2"
-  checksum: 10c0/4c66574563d7c960010c11e41c2673675baff07c427cca6e8dddffa5777de45770d13ff3efce1c0642798089ad55de52870d9d8141f78db3fa5bba012f2d3789
+"@csstools/color-helpers@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "@csstools/color-helpers@npm:5.1.0"
+  checksum: 10c0/b7f99d2e455cf1c9b41a67a5327d5d02888cd5c8802a68b1887dffef537d9d4bc66b3c10c1e62b40bbed638b6c1d60b85a232f904ed7b39809c4029cb36567db
   languageName: node
   linkType: hard
 
-"@csstools/css-calc@npm:^3.0.0, @csstools/css-calc@npm:^3.1.1":
-  version: 3.1.1
-  resolution: "@csstools/css-calc@npm:3.1.1"
+"@csstools/css-calc@npm:^2.1.4":
+  version: 2.1.4
+  resolution: "@csstools/css-calc@npm:2.1.4"
   peerDependencies:
-    "@csstools/css-parser-algorithms": ^4.0.0
-    "@csstools/css-tokenizer": ^4.0.0
-  checksum: 10c0/6efcc016d988edf66e54c7bad03e352d61752cbd1b56c7557fd013868aab23505052ded8f912cd4034e216943ea1e04c957d81012489e3eddc14a57b386510ef
+    "@csstools/css-parser-algorithms": ^3.0.5
+    "@csstools/css-tokenizer": ^3.0.4
+  checksum: 10c0/42ce5793e55ec4d772083808a11e9fb2dfe36db3ec168713069a276b4c3882205b3507c4680224c28a5d35fe0bc2d308c77f8f2c39c7c09aad8747708eb8ddd8
   languageName: node
   linkType: hard
 
-"@csstools/css-color-parser@npm:^4.0.1":
-  version: 4.0.2
-  resolution: "@csstools/css-color-parser@npm:4.0.2"
+"@csstools/css-color-parser@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "@csstools/css-color-parser@npm:3.1.0"
   dependencies:
-    "@csstools/color-helpers": "npm:^6.0.2"
-    "@csstools/css-calc": "npm:^3.1.1"
+    "@csstools/color-helpers": "npm:^5.1.0"
+    "@csstools/css-calc": "npm:^2.1.4"
   peerDependencies:
-    "@csstools/css-parser-algorithms": ^4.0.0
-    "@csstools/css-tokenizer": ^4.0.0
-  checksum: 10c0/487cf507ef4630f74bd67d84298294ed269900b206ade015a968d20047e07ff46f235b72e26fe0c6b949a03f8f9f00a22c363da49c1b06ca60b32d0188e546be
+    "@csstools/css-parser-algorithms": ^3.0.5
+    "@csstools/css-tokenizer": ^3.0.4
+  checksum: 10c0/0e0c670ad54ec8ec4d9b07568b80defd83b9482191f5e8ca84ab546b7be6db5d7cc2ba7ac9fae54488b129a4be235d6183d3aab4416fec5e89351f73af4222c5
   languageName: node
   linkType: hard
 
-"@csstools/css-parser-algorithms@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "@csstools/css-parser-algorithms@npm:4.0.0"
+"@csstools/css-parser-algorithms@npm:^3.0.5":
+  version: 3.0.5
+  resolution: "@csstools/css-parser-algorithms@npm:3.0.5"
   peerDependencies:
-    "@csstools/css-tokenizer": ^4.0.0
-  checksum: 10c0/94558c2428d6ef0ddef542e86e0a8376aa1263a12a59770abb13ba50d7b83086822c75433f32aa2e7fef00555e1cc88292f9ca5bce79aed232bb3fed73b1528d
+    "@csstools/css-tokenizer": ^3.0.4
+  checksum: 10c0/d9a1c888bd43849ae3437ca39251d5c95d2c8fd6b5ccdb7c45491dfd2c1cbdc3075645e80901d120e4d2c1993db9a5b2d83793b779dbbabcfb132adb142eb7f7
   languageName: node
   linkType: hard
 
@@ -1814,10 +1814,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@csstools/css-tokenizer@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "@csstools/css-tokenizer@npm:4.0.0"
-  checksum: 10c0/669cf3d0f9c8e1ffdf8c9955ad8beba0c8cfe03197fe29a4fcbd9ee6f7a18856cfa42c62670021a75183d9ab37f5d14a866e6a9df753a6c07f59e36797a9ea9f
+"@csstools/css-tokenizer@npm:^3.0.4":
+  version: 3.0.4
+  resolution: "@csstools/css-tokenizer@npm:3.0.4"
+  checksum: 10c0/3b589f8e9942075a642213b389bab75a2d50d05d203727fcdac6827648a5572674caff07907eff3f9a2389d86a4ee47308fafe4f8588f4a77b7167c588d2559f
   languageName: node
   linkType: hard
 
@@ -8187,7 +8187,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lru-cache@npm:^11.2.4, lru-cache@npm:^11.2.5, lru-cache@npm:^11.2.6":
+"lru-cache@npm:^11.2.4, lru-cache@npm:^11.2.6":
   version: 11.3.2
   resolution: "lru-cache@npm:11.3.2"
   checksum: 10c0/1981baec397c1e7875ac7456ea123e1f8016b878bf3a88b083bbe3f791ba77212d0507751a069f3d4c12441d70ca255d150c2a1c489d3cbe5ed6b8c625bb1be2
