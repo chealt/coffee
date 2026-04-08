@@ -6333,6 +6333,7 @@ __metadata:
     oxfmt: "npm:^0.44.0"
     oxlint: "npm:^1.59.0"
     supports-color: "npm:^10.2.2"
+    wrangler: "npm:^4.81.0"
   languageName: unknown
   linkType: soft
 

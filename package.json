@@ -18,7 +18,8 @@
   "devDependencies": {
     "oxfmt": "^0.44.0",
     "oxlint": "^1.59.0",
-    "supports-color": "^10.2.2"
+    "supports-color": "^10.2.2",
+    "wrangler": "^4.81.0"
   },
   "resolutions": {
     "@asamuzakjp/css-color": "4.1.1"
