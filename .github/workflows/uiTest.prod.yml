@@ -1,0 +1,73 @@
+name: UI Tests - Prod
+on:
+  push:
+    tags: ['@centralbeans/website@*']
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Get Playwright version
+        id: playwright_version
+        working-directory: packages/coffee.chealt.com
+        shell: bash
+        run: |
+          version=$(yarn info @playwright/test --json | jq -r '.children.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
+        name: Get Playwright from cache
+        id: cache
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-chromium-${{ steps.playwright_version.outputs.version }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-chromium-
+      - name: Install Playwright Browsers
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: yarn workspace @centralbeans/website playwright install --with-deps chromium
+      - name: Run Playwright tests
+        run: baseUrl=https://centralbeans.com yarn workspace @centralbeans/website playwright test --project chromium
+      - uses: actions/upload-artifact@v4
+        name: Upload Playwright report
+        if: always()
+        with:
+          name: playwright-report
+          path: packages/coffee.chealt.com/playwright-report/
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        name: Upload A11y report
+        if: always()
+        with:
+          name: a11y-report
+          path: packages/coffee.chealt.com/a11y-report/
+          retention-days: 30
+      - uses: aws-actions/configure-aws-credentials@v4
+        if: always()
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - name: Upload files to AWS
+        id: report-upload
+        if: always()
+        run: |
+          aws s3 sync packages/coffee.chealt.com/playwright-report/ s3://centralbeans-playwright-reports/test-reports/prod/${{ github.ref_name }}
+          aws s3 sync packages/coffee.chealt.com/a11y-report/ s3://centralbeans-playwright-reports/a11y-reports/prod/${{ github.ref_name }}
+      - name: Report test report upload status
+        if: always()
+        run: |
+          curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+              https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
+              -d '{"context":"UI Tests / report","state":"${{ steps.report-upload.outcome }}","target_url":"https://playwright-reports.centralbeans.com/test-reports/prod/${{ github.ref_name }}/index.html"}'
