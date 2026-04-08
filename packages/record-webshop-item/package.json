@@ -6,7 +6,7 @@
     "deploy": "aws lambda update-function-code --function-name recordWebshopItem --zip-file fileb://package.zip --publish"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.1025.0",
+    "@aws-sdk/client-lambda": "^3.1026.0",
     "@sentry/aws-serverless": "^10.47.0"
   }
 }
