@@ -35,6 +35,12 @@ class CoffeeCollection extends HTMLElement {
     this.editCollectionsTrigger.addEventListener('click', this.updateCollectionCheckboxes.bind(this));
 
     window.addEventListener('beforeunload', this.clearTimer.bind(this));
+
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) {
+        this.querySelectorAll('.in-progress').forEach((element) => element.classList.remove('in-progress'));
+      }
+    });
   }
 
   addInProgressClass(event) {
