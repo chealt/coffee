@@ -1,9 +1,9 @@
 name: Lint
 on:
   push:
-    branches: main
+    branches: [main]
   pull_request:
-    branches: main
+    branches: [main]
 jobs:
   lint:
     runs-on: blacksmith-4vcpu-ubuntu-2404
