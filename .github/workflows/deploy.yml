@@ -647,7 +647,7 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           command: deploy --config packages/coffee.chealt.com/wrangler.toml
-      - name: Release coffee.chealt.com
+      - name: Release centralbeans.com
         if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
