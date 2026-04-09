@@ -124,18 +124,18 @@ Resources:
         RoleArn: !GetAtt SchedulerExecutionRole.Arn
         Input: '{"roasterId": 82}'
 
-  MeronSchedule:
-    Type: AWS::Scheduler::Schedule
-    Properties:
-      Name: MeronSchedule
-      FlexibleTimeWindow:
-        Mode: 'FLEXIBLE'
-        MaximumWindowInMinutes: !Ref FlexibilityWindow
-      ScheduleExpression: 'cron(10 1 ? * MON *)'
-      Target:
-        Arn: !Ref RecordLambdaArn
-        RoleArn: !GetAtt SchedulerExecutionRole.Arn
-        Input: '{"roasterId": 252}'
+  # MeronSchedule:
+  #   Type: AWS::Scheduler::Schedule
+  #   Properties:
+  #     Name: MeronSchedule
+  #     FlexibleTimeWindow:
+  #       Mode: 'FLEXIBLE'
+  #       MaximumWindowInMinutes: !Ref FlexibilityWindow
+  #     ScheduleExpression: 'cron(10 1 ? * MON *)'
+  #     Target:
+  #       Arn: !Ref RecordLambdaArn
+  #       RoleArn: !GetAtt SchedulerExecutionRole.Arn
+  #       Input: '{"roasterId": 252}'
 
   FathersSchedule:
     Type: AWS::Scheduler::Schedule
