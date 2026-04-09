@@ -48,14 +48,14 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release create-user
         if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: '@centralbeans/create-user@${{ steps.deploy.outputs.version }}'
-          release_name: Release @centralbeans/create-user v${{ steps.deploy.outputs.version }}
-          draft: false
-          prerelease: false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create '@centralbeans/create-user@${{ steps.deploy.outputs.version }}' \
+            --title "Release @centralbeans/create-user v${{ steps.deploy.outputs.version }}" \
+            --notes "Automated release" \
+            --draft=false \
+            --prerelease=false
   delete-user:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
@@ -90,14 +90,14 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release delete-user
         if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: '@centralbeans/delete-user@${{ steps.deploy.outputs.version }}'
-          release_name: Release @centralbeans/delete-user v${{ steps.deploy.outputs.version }}
-          draft: false
-          prerelease: false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create '@centralbeans/delete-user@${{ steps.deploy.outputs.version }}' \
+            --title "Release @centralbeans/delete-user v${{ steps.deploy.outputs.version }}" \
+            --notes "Automated release" \
+            --draft=false \
+            --prerelease=false
   flag-removed:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
@@ -132,14 +132,14 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release flag-removed
         if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: '@centralbeans/flag-removed@${{ steps.deploy.outputs.version }}'
-          release_name: Release @centralbeans/flag-removed v${{ steps.deploy.outputs.version }}
-          draft: false
-          prerelease: false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create '@centralbeans/flag-removed@${{ steps.deploy.outputs.version }}' \
+            --title "Release @centralbeans/flag-removed v${{ steps.deploy.outputs.version }}" \
+            --notes "Automated release" \
+            --draft=false \
+            --prerelease=false
   image-processor:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
@@ -174,14 +174,14 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release image-processor
         if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: '@centralbeans/image-processor@${{ steps.deploy.outputs.version }}'
-          release_name: Release @centralbeans/image-processor v${{ steps.deploy.outputs.version }}
-          draft: false
-          prerelease: false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create '@centralbeans/image-processor@${{ steps.deploy.outputs.version }}' \
+            --title "Release @centralbeans/image-processor v${{ steps.deploy.outputs.version }}" \
+            --notes "Automated release" \
+            --draft=false \
+            --prerelease=false
   image-text-interpreter:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
@@ -216,14 +216,14 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release image-text-interpreter
         if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: '@centralbeans/image-text-interpreter@${{ steps.deploy.outputs.version }}'
-          release_name: Release @centralbeans/image-text-interpreter v${{ steps.deploy.outputs.version }}
-          draft: false
-          prerelease: false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create '@centralbeans/image-text-processor@${{ steps.deploy.outputs.version }}' \
+            --title "Release @centralbeans/image-text-processor v${{ steps.deploy.outputs.version }}" \
+            --notes "Automated release" \
+            --draft=false \
+            --prerelease=false
   import-currencies:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
@@ -258,14 +258,14 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release import-currencies
         if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: '@centralbeans/import-currencies@${{ steps.deploy.outputs.version }}'
-          release_name: Release @centralbeans/import-currencies v${{ steps.deploy.outputs.version }}
-          draft: false
-          prerelease: false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create '@centralbeans/import-currencies@${{ steps.deploy.outputs.version }}' \
+            --title "Release @centralbeans/import-currencies v${{ steps.deploy.outputs.version }}" \
+            --notes "Automated release" \
+            --draft=false \
+            --prerelease=false
   invoke-flag-removed:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
@@ -300,14 +300,14 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release invoke-flag-removed
         if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: '@centralbeans/invoke-flag-removed@${{ steps.deploy.outputs.version }}'
-          release_name: Release @centralbeans/invoke-flag-removed v${{ steps.deploy.outputs.version }}
-          draft: false
-          prerelease: false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create '@centralbeans/invoke-flag-removed@${{ steps.deploy.outputs.version }}' \
+            --title "Release @centralbeans/invoke-flag-removed v${{ steps.deploy.outputs.version }}" \
+            --notes "Automated release" \
+            --draft=false \
+            --prerelease=false
   notifications:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
@@ -343,14 +343,14 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release notifications
         if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: '@centralbeans/notifications@${{ steps.deploy.outputs.version }}'
-          release_name: Release @centralbeans/notifications v${{ steps.deploy.outputs.version }}
-          draft: false
-          prerelease: false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create '@centralbeans/notifications@${{ steps.deploy.outputs.version }}' \
+            --title "Release @centralbeans/notifications v${{ steps.deploy.outputs.version }}" \
+            --notes "Automated release" \
+            --draft=false \
+            --prerelease=false
   record-roaster-webshop:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
@@ -386,14 +386,14 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release record-roaster-webshop
         if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: '@centralbeans/record-roaster-webshop@${{ steps.deploy.outputs.version }}'
-          release_name: Release @centralbeans/record-roaster-webshop v${{ steps.deploy.outputs.version }}
-          draft: false
-          prerelease: false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create '@centralbeans/record-roaster-webshop@${{ steps.deploy.outputs.version }}' \
+            --title "Release @centralbeans/record-roaster-webshop v${{ steps.deploy.outputs.version }}" \
+            --notes "Automated release" \
+            --draft=false \
+            --prerelease=false
   record-roaster-webshop-infra:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
@@ -425,14 +425,14 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release record-roaster-webshop-infra
         if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: '@centralbeans/record-roaster-webshop-infra@${{ steps.deploy.outputs.version }}'
-          release_name: Release @centralbeans/record-roaster-webshop-infra v${{ steps.deploy.outputs.version }}
-          draft: false
-          prerelease: false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create '@centralbeans/record-roaster-webshop-infra@${{ steps.deploy.outputs.version }}' \
+            --title "Release @centralbeans/record-roaster-webshop-infra v${{ steps.deploy.outputs.version }}" \
+            --notes "Automated release" \
+            --draft=false \
+            --prerelease=false
   record-webshop-item:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
@@ -467,14 +467,14 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release record-webshop-item
         if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: '@centralbeans/record-webshop-item@${{ steps.deploy.outputs.version }}'
-          release_name: Release @centralbeans/record-webshop-item v${{ steps.deploy.outputs.version }}
-          draft: false
-          prerelease: false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create '@centralbeans/record-webshop-item@${{ steps.deploy.outputs.version }}' \
+            --title "Release @centralbeans/record-webshop-item v${{ steps.deploy.outputs.version }}" \
+            --notes "Automated release" \
+            --draft=false \
+            --prerelease=false
   record-webshop-item-details:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
@@ -509,14 +509,14 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release record-webshop-item-details
         if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: '@centralbeans/record-webshop-item-details@${{ steps.deploy.outputs.version }}'
-          release_name: Release @centralbeans/record-webshop-item-details v${{ steps.deploy.outputs.version }}
-          draft: false
-          prerelease: false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create '@centralbeans/record-webshop-item-details@${{ steps.deploy.outputs.version }}' \
+            --title "Release @centralbeans/record-webshop-item-details v${{ steps.deploy.outputs.version }}" \
+            --notes "Automated release" \
+            --draft=false \
+            --prerelease=false
   register-new-user:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
@@ -551,14 +551,14 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release register-new-user
         if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: '@centralbeans/register-new-user@${{ steps.deploy.outputs.version }}'
-          release_name: Release @centralbeans/register-new-user v${{ steps.deploy.outputs.version }}
-          draft: false
-          prerelease: false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create '@centralbeans/register-new-user@${{ steps.deploy.outputs.version }}' \
+            --title "Release @centralbeans/register-new-user v${{ steps.deploy.outputs.version }}" \
+            --notes "Automated release" \
+            --draft=false \
+            --prerelease=false
   send-registration-code:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
@@ -593,14 +593,14 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release send-registration-code
         if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: '@centralbeans/send-registration-code@${{ steps.deploy.outputs.version }}'
-          release_name: Release @centralbeans/send-registration-code v${{ steps.deploy.outputs.version }}
-          draft: false
-          prerelease: false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create '@centralbeans/send-registration-code@${{ steps.deploy.outputs.version }}' \
+            --title "Release @centralbeans/send-registration-code v${{ steps.deploy.outputs.version }}" \
+            --notes "Automated release" \
+            --draft=false \
+            --prerelease=false
   website:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
@@ -649,14 +649,14 @@ jobs:
           command: deploy --config packages/coffee.chealt.com/wrangler.toml
       - name: Release coffee.chealt.com
         if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: '@centralbeans/website@${{ steps.build.outputs.version }}'
-          release_name: Release @centralbeans/website v${{ steps.build.outputs.version }}
-          draft: false
-          prerelease: false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create '@centralbeans/website@${{ steps.deploy.outputs.version }}' \
+            --title "Release @centralbeans/website v${{ steps.deploy.outputs.version }}" \
+            --notes "Automated release" \
+            --draft=false \
+            --prerelease=false
   website-test:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     needs: website
@@ -724,7 +724,7 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
               https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
-              -d '{"context":"UI Tests / report","state":"${{ steps.report-upload.outcome }}","target_url":"https://playwright-reports.centralbeans.com/test-reports/prod/${{ github.ref_name }}/index.html"}'
+              -d '{"context":"UI Tests - prod / report","state":"${{ steps.report-upload.outcome }}","target_url":"https://playwright-reports.centralbeans.com/test-reports/prod/${{ github.ref_name }}/index.html"}'
   webshop-item-processor:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
@@ -759,14 +759,14 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release webshop-item-processor
         if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: '@centralbeans/webshop-item-processor@${{ steps.deploy.outputs.version }}'
-          release_name: Release @centralbeans/webshop-item-processor v${{ steps.deploy.outputs.version }}
-          draft: false
-          prerelease: false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create '@centralbeans/webshop-item-processor@${{ steps.deploy.outputs.version }}' \
+            --title "Release @centralbeans/webshop-item-processor v${{ steps.deploy.outputs.version }}" \
+            --notes "Automated release" \
+            --draft=false \
+            --prerelease=false
   webshop-processor:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
@@ -801,11 +801,11 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Release webshop-processor
         if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: '@centralbeans/webshop-processor@${{ steps.deploy.outputs.version }}'
-          release_name: Release @centralbeans/webshop-processor v${{ steps.deploy.outputs.version }}
-          draft: false
-          prerelease: false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create '@centralbeans/webshop-processor@${{ steps.deploy.outputs.version }}' \
+            --title "Release @centralbeans/webshop-processor v${{ steps.deploy.outputs.version }}" \
+            --notes "Automated release" \
+            --draft=false \
+            --prerelease=false
