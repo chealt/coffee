@@ -49,7 +49,7 @@ jobs:
           name: a11y-report
           path: packages/coffee.chealt.com/a11y-report/
           retention-days: 30
-      - uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@v6
         if: always()
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
