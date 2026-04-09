@@ -652,8 +652,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create '@centralbeans/website@${{ steps.deploy.outputs.version }}' \
-            --title "Release @centralbeans/website v${{ steps.deploy.outputs.version }}" \
+          gh release create '@centralbeans/website@${{ steps.build.outputs.version }}' \
+            --title "Release @centralbeans/website v${{ steps.build.outputs.version }}" \
             --notes "Automated release" \
             --draft=false \
             --prerelease=false
