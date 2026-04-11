@@ -1,32 +1,41 @@
 ---
-import { getConvertedPrice } from '../../../../coffees/utils.js';
-import Label from '../../../../form/label/label.astro';
+import { getConvertedPrice } from "../../../../coffees/utils.js";
+import Label from "../../../../form/label/label.astro";
 
-import allLocaleTranslations from './locales.json' with { type: 'json' };
+import allLocaleTranslations from "./locales.json" with { type: "json" };
 
-const { chartData, pricePerGram, priceIndex } = Astro.props;
+const { pricePerGram } = Astro.props;
 
 const { currency } = Astro.locals;
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
-const priceIndexPercentage = priceIndex && Math.round(priceIndex * 100);
+const pricePerGramInCurrency = getConvertedPrice({
+  price: pricePerGram,
+  currency,
+});
 ---
 
 <Label>
-  <coffee-price-per-gram data-percentage={priceIndexPercentage} data-chart-data={chartData}>
-    <div class="name">
-      {
-        `${t.pricePerGram}: ${Intl.NumberFormat(Astro.currentLocale, {
-          style: 'currency',
-          currency,
-          currencyDisplay: 'narrowSymbol',
-          maximumFractionDigits: 2
-        }).format(getConvertedPrice({ price: pricePerGram, currency }))}`
-      }
-    </div>
-    <div data-chart></div>
-  </coffee-price-per-gram>
+  <div class="name">
+    {
+      pricePerGramInCurrency && (
+        <>
+          <span>{t.pricePerGram}:</span>
+          <span
+            data-static-values={JSON.stringify({ locale: Astro.currentLocale })}
+            data-update-keys="[name=currency],[name=price],[name=weight]"
+            data-api-endpoint="/api/price-per-gram.json"
+          >
+            {Intl.NumberFormat(Astro.currentLocale, {
+              style: "currency",
+              currency,
+              currencyDisplay: "narrowSymbol",
+              maximumFractionDigits: 2,
+            }).format(pricePerGramInCurrency)}
+          </span>
+        </>
+      )
+    }
+  </div>
 </Label>
-
-<script src="./price-per-gram.js"></script>

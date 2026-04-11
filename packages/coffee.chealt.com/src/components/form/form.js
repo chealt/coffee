@@ -289,6 +289,7 @@ class ChealtForm extends HTMLElement {
     this.sumGroups = this.form.querySelectorAll('[data-sum-group-name]');
     this.canShare = this.form.dataset.canShare;
     this.resetButtons = document.querySelectorAll(`[data-reset="${this.name}"]`) || [];
+    this.updateOnChange = this.form.querySelectorAll('[data-update-keys]');
 
     if (this.storage) {
       if (this.storage === 'api' && !this.saveEndpoint) {
@@ -360,6 +361,8 @@ class ChealtForm extends HTMLElement {
     }
 
     attachResetHandlers({ form: this.form, resetButtons: this.resetButtons });
+
+    this.attachUpdateOnChangeHandler();
   }
 
   changeFormDataOnNameChange() {
@@ -370,6 +373,46 @@ class ChealtForm extends HTMLElement {
     observer.observe(this.form, { attributes: true, attributeFilter: ['name'] });
 
     setFormData({ form: this.form, storage: this.storage });
+  }
+
+  attachUpdateOnChangeHandler() {
+    this.updateOnChange.forEach((element) => {
+      const keysToUpdate = element.dataset.updateKeys.split(',');
+      const apiEndpoint = element.dataset.apiEndpoint;
+      const staticValues = element.dataset.staticValues ? JSON.parse(element.dataset.staticValues) : {};
+
+      keysToUpdate.forEach((key) => {
+        this.querySelector(key)?.addEventListener('input', async () => {
+          const data = keysToUpdate.reduce((acc, curr) => {
+            const { name, value } = this.querySelector(curr);
+
+            acc[name] = value;
+
+            return acc;
+          }, staticValues);
+
+          const response = await fetch(apiEndpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          });
+
+          if (!response.ok) {
+            logger.error(response);
+          }
+
+          const { success, pricePerGram } = await response.json();
+
+          if (success) {
+            element.textContent = pricePerGram;
+          } else {
+            logger.error(`API error: ${response.statusText}`);
+          }
+        });
+      });
+    });
   }
 
   static isStorageTypeImplemented(storage) {
