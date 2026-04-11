@@ -21,14 +21,14 @@
   },
   "dependencies": {
     "@astrojs/cloudflare": "12.6.13",
-    "@aws-sdk/client-lambda": "^3.1026.0",
-    "@aws-sdk/client-s3": "^3.1026.0",
-    "@aws-sdk/s3-request-presigner": "^3.1026.0",
+    "@aws-sdk/client-lambda": "^3.1029.0",
+    "@aws-sdk/client-s3": "^3.1029.0",
+    "@aws-sdk/s3-request-presigner": "^3.1029.0",
     "@libsql/client": "^0.17.2",
     "@playwright-testing-library/test": "^4.5.0",
     "@playwright/test": "^1.59.1",
-    "@sentry/astro": "^10.47.0",
-    "@sentry/cloudflare": "^10.47.0",
+    "@sentry/astro": "^10.48.0",
+    "@sentry/cloudflare": "^10.48.0",
     "@simplewebauthn/browser": "^13.3.0",
     "@simplewebauthn/server": "^13.3.0",
     "@tursodatabase/api": "^1.9.2",
@@ -39,8 +39,8 @@
     "@axe-core/playwright": "^4.11.1",
     "axe-html-reporter": "^2.2.11",
     "rollup-plugin-visualizer": "^7.0.1",
-    "vite": "8.0.7",
-    "wrangler": "^4.81.0"
+    "vite": "8.0.8",
+    "wrangler": "^4.81.1"
   },
   "engines": {
     "node": ">=24"

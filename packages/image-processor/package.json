@@ -9,12 +9,12 @@
     "deploy": "yarn upload > /dev/null && yarn update > /dev/null && yarn run version"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.1026.0",
-    "@aws-sdk/client-s3": "^3.1026.0",
-    "@aws-sdk/client-secrets-manager": "^3.1026.0",
-    "@aws-sdk/client-textract": "^3.1026.0",
+    "@aws-sdk/client-lambda": "^3.1029.0",
+    "@aws-sdk/client-s3": "^3.1029.0",
+    "@aws-sdk/client-secrets-manager": "^3.1029.0",
+    "@aws-sdk/client-textract": "^3.1029.0",
     "@libsql/client": "^0.17.2",
-    "@sentry/aws-serverless": "^10.47.0",
+    "@sentry/aws-serverless": "^10.48.0",
     "sharp": "^0.34.5"
   }
 }
