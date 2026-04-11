@@ -11,7 +11,7 @@
     "@centralbeans/email": "workspace:^",
     "@libsql/client": "^0.17.2",
     "@sentry/aws-serverless": "^10.48.0",
-    "@tursodatabase/api": "^1.9.2",
+    "@tursodatabase/api": "^2.0.0",
     "jsonwebtoken": "^9.0.3"
   }
 }

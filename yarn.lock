@@ -1388,7 +1388,7 @@ __metadata:
     "@centralbeans/email": "workspace:^"
     "@libsql/client": "npm:^0.17.2"
     "@sentry/aws-serverless": "npm:^10.48.0"
-    "@tursodatabase/api": "npm:^1.9.2"
+    "@tursodatabase/api": "npm:^2.0.0"
     jsonwebtoken: "npm:^9.0.3"
   languageName: unknown
   linkType: soft
@@ -1400,7 +1400,7 @@ __metadata:
     "@aws-sdk/client-secrets-manager": "npm:^3.1029.0"
     "@libsql/client": "npm:^0.17.2"
     "@sentry/aws-serverless": "npm:^10.48.0"
-    "@tursodatabase/api": "npm:^1.9.2"
+    "@tursodatabase/api": "npm:^2.0.0"
   languageName: unknown
   linkType: soft
 
@@ -1476,7 +1476,7 @@ __metadata:
     "@centralbeans/email": "workspace:^"
     "@libsql/client": "npm:^0.17.2"
     "@sentry/aws-serverless": "npm:^10.48.0"
-    "@tursodatabase/api": "npm:^1.9.2"
+    "@tursodatabase/api": "npm:^2.0.0"
   languageName: unknown
   linkType: soft
 
@@ -1530,7 +1530,7 @@ __metadata:
     "@centralbeans/email": "workspace:^"
     "@libsql/client": "npm:^0.17.2"
     "@sentry/aws-serverless": "npm:^10.48.0"
-    "@tursodatabase/api": "npm:^1.9.2"
+    "@tursodatabase/api": "npm:^2.0.0"
     jsonwebtoken: "npm:^9.0.3"
   languageName: unknown
   linkType: soft
@@ -1581,7 +1581,7 @@ __metadata:
     "@sentry/cloudflare": "npm:^10.48.0"
     "@simplewebauthn/browser": "npm:^13.3.0"
     "@simplewebauthn/server": "npm:^13.3.0"
-    "@tursodatabase/api": "npm:^1.9.2"
+    "@tursodatabase/api": "npm:^2.0.0"
     astro: "npm:6.1.5"
     axe-html-reporter: "npm:^2.2.11"
     jsonwebtoken: "npm:^9.0.3"
@@ -5678,12 +5678,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tursodatabase/api@npm:^1.9.2":
-  version: 1.9.2
-  resolution: "@tursodatabase/api@npm:1.9.2"
+"@tursodatabase/api@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@tursodatabase/api@npm:2.0.0"
   dependencies:
     whatwg-fetch: "npm:^3.6.19"
-  checksum: 10c0/e52dfa4a75c340e32a05f37effe35af22e720e87b47ebff0d6dfb5358b227b3fe02733c6e1853ac92a3bd803e2a55c44c3f94b2f54ff611f04e78c2994bbc47a
+  checksum: 10c0/3c1d7494c4265ba807b101be6121ec90988d448f9625d327115462fc48b70eef846bd5a83c53f60cb648fbc77c78efbb9a8d863d4f58c56b4cad1dc9bbb1cfbc
   languageName: node
   linkType: hard
 
