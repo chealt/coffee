@@ -1,4 +1,28 @@
 {
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[toml]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
   "search.exclude": {
     "**/.yarn": true,
     "**/.pnp.*": true
@@ -44,29 +68,5 @@
     "varios",
     "webshop",
     "woocommerce"
-  ],
-  "[html]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
-  },
-  "[javascript]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
-  },
-  "[json]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
-  },
-  "[markdown]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
-  },
-  "[toml]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
-  },
-  "[yaml]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
-  },
-  "[github-actions-workflow]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
-  }
+  ]
 }
