@@ -258,6 +258,104 @@ const parsers = {
     );
 
     return coffeeLinks.filter((l) => !l.includes('/zestawy') && !l.includes('zestaw-') && !l.includes('mieszanki'));
+  },
+  // Coffee Grange
+  234: async ({ html }) => {
+    const document = getDocument(html);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('.category-item a'))
+          .map((a) => a.href)
+          .filter((href) => href.includes('/produkt/'))
+      )
+    );
+  },
+  // ICKPA
+  276: async ({ html }) => {
+    const document = getDocument(html);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('a'))
+          .map((a) => a.href)
+          .filter((href) => href.includes('/products/'))
+      )
+    );
+  },
+  // Manhattan
+  305: async ({ html }) => {
+    const document = getDocument(html);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('.product a'))
+          .map((a) => a.href)
+          .filter((href) => href.includes('/product/'))
+      )
+    );
+  },
+  // Poma
+  307: async ({ html, url }) => {
+    const document = getDocument(html);
+    const { origin } = new URL(url);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('a'))
+          .map((a) => a.href)
+          .filter((href) => href.includes('/products/') && !href.includes('?'))
+          .map((href) => (href.startsWith('/') ? `${origin}${href}` : href))
+      )
+    );
+  },
+  // Fat Duck (redirects to Ljoma)
+  243: async ({ html }) => {
+    const document = getDocument(html);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('a'))
+          .map((a) => a.href)
+          .filter((href) => href.includes('/products/'))
+      )
+    );
+  },
+  // Noma Kaffe
+  309: async ({ html }) => {
+    const document = getDocument(html);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('a'))
+          .map((a) => a.href)
+          .filter((href) => href.includes('/products/'))
+      )
+    );
+  },
+  // Substance
+  295: async ({ html }) => {
+    const document = getDocument(html);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('a'))
+          .map((a) => a.href)
+          .filter((href) => href.includes('/product/'))
+      )
+    );
+  },
+  // Coffea Circulor
+  308: async ({ html }) => {
+    const document = getDocument(html);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('a'))
+          .map((a) => a.href)
+          .filter((href) => href.includes('/products/'))
+      )
+    );
   }
 };
 
