@@ -14,8 +14,4 @@ const selectedTasteNotes = tasteNotes.filter(
 );
 ---
 
-<TasteNotes
-  data-update-keys="[name='tasteNoteIds[]']"
-  data-api-endpoint={getRelativeLocaleUrl(Astro.currentLocale, "/taste-notes")}
-  tasteNotes={selectedTasteNotes}
-/>
+<TasteNotes tasteNotes={selectedTasteNotes} />
