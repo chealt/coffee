@@ -121,18 +121,6 @@ const getSimilarCoffeePrices = ({ originCountry, originRegion, originFarm, proce
     )
     .map(({ currency, price_per_gram: pricePerGram }) => convertToUSD({ price: pricePerGram, currency }));
 
-const getPriceIndex = ({ details, pricePerGram }) => {
-  const similarCoffeePrices = getSimilarCoffeePrices(details);
-
-  if (similarCoffeePrices.length < 3) {
-    return undefined;
-  }
-
-  const cheaperCount = similarCoffeePrices.filter((price) => price < pricePerGram).length;
-
-  return cheaperCount / similarCoffeePrices.length;
-};
-
 const getCollections = async (user) => {
   const collections = await queryCollections(user);
   const collectionItems = await queryCollectionItems(user);
@@ -226,8 +214,7 @@ const getCollectionItem = async (user, itemId) => {
     })),
     details: {
       ...details,
-      pricePerGram,
-      priceIndex: pricePerGram ? getPriceIndex({ details, pricePerGram }) : undefined
+      pricePerGram
     },
     extractedDetails,
     review,
@@ -374,6 +361,7 @@ export {
   deleteCollectionItem,
   getCollections,
   getCollectionItem,
+  getSimilarCoffeePrices,
   updateCollectionName,
   updateRanks
 };
