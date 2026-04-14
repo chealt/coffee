@@ -74,6 +74,7 @@ export default defineConfig({
   },
   integrations: [
     sentry({
+      enabled: Boolean(process.env.NODE_ENV === 'production' && process.env.SENTRY_AUTH_TOKEN),
       project: 'website',
       org: 'central-beans',
       authToken: process.env.SENTRY_AUTH_TOKEN,
