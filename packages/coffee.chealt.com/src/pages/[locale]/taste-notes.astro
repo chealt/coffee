@@ -1,8 +1,6 @@
 ---
 export const partial = true;
 
-import { getRelativeLocaleUrl } from "astro:i18n";
-
 import tasteNotes from "../../../data/tasteNotes.json" with { type: "json" };
 import TasteNotes from "../../components/taste-notes/taste-notes.astro";
 
@@ -14,4 +12,9 @@ const selectedTasteNotes = tasteNotes.filter(
 );
 ---
 
-<TasteNotes tasteNotes={selectedTasteNotes} />
+{
+  (selectedTasteNotes.length && (
+    <TasteNotes tasteNotes={selectedTasteNotes} />
+  )) ||
+    null
+}

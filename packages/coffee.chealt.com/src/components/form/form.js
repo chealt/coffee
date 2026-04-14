@@ -393,7 +393,7 @@ class ChealtForm extends HTMLElement {
 
                 const selectedElements = Array.from(elements).filter(({ checked }) => checked);
 
-                const name = selectedElements[0]?.name.replace('[]', '');
+                const name = curr.replace("[name='", '').replace('[]', '').replace("']", '');
                 const values = selectedElements.map(({ value }) => value);
 
                 acc[name] = values;

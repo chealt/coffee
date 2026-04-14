@@ -1,0 +1,17 @@
+---
+export const partial = true;
+
+import varieties from "../../../data/varieties.json" with { type: "json" };
+import Varieties from "../../components/varieties/list.astro";
+
+const data = await Astro.request.json();
+
+const selectedVarieties = varieties.filter(({ id }) =>
+  data.varieties.includes(String(id)),
+);
+---
+
+{
+  (selectedVarieties.length && <Varieties varieties={selectedVarieties} />) ||
+    null
+}

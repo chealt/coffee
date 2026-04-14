@@ -1,32 +1,52 @@
 ---
-import Button from '../button/button.astro';
-import Dialog from '../../dialog/dialog.astro';
-import Icon from '../../icon/icon.astro';
-import Input from '../input/input.astro';
+import Button from "../button/button.astro";
+import Dialog from "../../dialog/dialog.astro";
+import Icon from "../../icon/icon.astro";
+import Input from "../input/input.astro";
 
-import './select.css';
+import "./select.css";
 
-import allLocaleTranslations from '../../common/common.json' with { type: 'json' };
+import allLocaleTranslations from "../../common/common.json" with { type: "json" };
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
-const { id, name, multiple, searchable, selected, selectedValue, selectedLabel, showEmpty, ...props } = Astro.props;
+const {
+  id,
+  name,
+  multiple,
+  reloadOnChange,
+  searchable,
+  selected,
+  selectedValue,
+  selectedLabel,
+  showEmpty,
+  ...props
+} = Astro.props;
 ---
 
 {
   ((multiple || searchable) && (
     <coffee-select data-searchable>
       {searchable && <input type="hidden" name={name} value={selectedValue} />}
-      <Button id={id} data-dialog-id={name} class={`column input ${searchable ? 'combobox' : ''}`} role="combobox">
-        {(searchable && <div class="input-value">{selectedLabel || t.unknown}</div>) || (
+      <Button
+        id={id}
+        data-dialog-id={name}
+        class={`column input ${searchable ? "combobox" : ""}`}
+        role="combobox"
+      >
+        {(searchable && (
+          <div class="input-value">{selectedLabel || t.unknown}</div>
+        )) || (
           <Fragment>
             <Icon type="edit" />
             {t.select}
           </Fragment>
         )}
       </Button>
-      <Dialog id={name} class="drawer fixed" reloadOnChange>
-        <chealt-filter data-filter-selector={`${multiple ? `li:has([name='${name}[]'])` : `li[name='${name}[]']`}`}>
+      <Dialog id={name} class="drawer fixed" reloadOnChange={reloadOnChange}>
+        <chealt-filter
+          data-filter-selector={`${multiple ? `li:has([name='${name}[]'])` : `li[name='${name}[]']`}`}
+        >
           <Input name={`${name}-filter`} placeholder={t.search} data-exclude />
         </chealt-filter>
         <ul role="listbox">
