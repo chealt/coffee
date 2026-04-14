@@ -1,6 +1,4 @@
 ---
-import { getRelativeLocaleUrl } from "astro:i18n";
-
 import allCoffees from "@data/coffees.json" with { type: "json" };
 import coffeeTasteNotes from "@data/coffeeTasteNotes.json" with { type: "json" };
 import coffeeVarieties from "@data/coffeeVarieties.json" with { type: "json" };
@@ -21,7 +19,6 @@ import OriginCountrySelector from "./selectors/origin-country.astro";
 import ProcessingMethodSelector from "./selectors/processing-method.astro";
 import RoasterSelector from "./selectors/roaster.astro";
 import TasteNoteGroupSelector from "./selectors/taste-note-group.astro";
-import TasteNoteSelector from "./selectors/taste-note.astro";
 import VarietySelector from "./selectors/variety.astro";
 import NewSelector from "./selectors/new-selector.astro";
 import { convertToUSD } from "./utils.js";
@@ -30,8 +27,8 @@ import Coffees from "./list.astro";
 import Common from "../common/common.astro";
 import Dialog from "../dialog/dialog.astro";
 import Icon from "../icon/icon.astro";
-import { capitalize, encodeSafeURL } from "../../utils/string.js";
-import { getSafeUrl, getSafeUrlWithStats } from "../utils/url.js";
+import { capitalize } from "../../utils/string.js";
+import { getSafeUrlWithStats } from "../utils/url.js";
 import { getTasteNoteGroupByNoteId } from "../taste-notes/utils.js";
 
 import "./filtered-list.css";
@@ -291,18 +288,6 @@ const statsLink = getSafeUrlWithStats({
         tasteNoteGroup={tasteNoteGroup}
         variety={variety}
       />
-      <!-- <TasteNoteSelector
-        brewingMethod={brewingMethod}
-        brewingMethodGroup={brewingMethodGroup}
-        country={country}
-        originCountry={originCountry}
-        processingMethod={processingMethod}
-        roaster={roaster}
-        tasteNote={tasteNote}
-        tasteNoteId={tasteNoteId}
-        tasteNoteGroup={tasteNoteGroup}
-        variety={variety}
-      /> -->
       <TasteNoteGroupSelector
         brewingMethod={brewingMethod}
         brewingMethodGroup={brewingMethodGroup}
