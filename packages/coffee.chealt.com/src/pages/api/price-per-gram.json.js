@@ -13,7 +13,9 @@ const POST = async (context) => {
     maximumFractionDigits: 2
   }).format(Number(price) / Number(weight));
 
-  return new Response(JSON.stringify({ success: true, pricePerGram }));
+  return new Response(
+    JSON.stringify({ success: true, values: [{ selector: '[data-price-per-gram]', value: pricePerGram }] })
+  );
 };
 
 export { POST };

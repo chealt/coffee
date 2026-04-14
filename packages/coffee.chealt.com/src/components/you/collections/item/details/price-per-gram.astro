@@ -23,6 +23,7 @@ const pricePerGramInCurrency = getConvertedPrice({
         <>
           <span>{t.pricePerGram}:</span>
           <span
+            data-price-per-gram
             data-static-values={JSON.stringify({ locale: Astro.currentLocale })}
             data-update-keys="[name=currency],[name=price],[name=weight]"
             data-api-endpoint="/api/price-per-gram.json"

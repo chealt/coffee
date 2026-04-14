@@ -403,10 +403,14 @@ class ChealtForm extends HTMLElement {
             logger.error(response);
           }
 
-          const { success, pricePerGram } = await response.json();
+          const { success, values } = await response.json();
 
           if (success) {
-            element.textContent = pricePerGram;
+            values.forEach(({ selector, value }) => {
+              const elementToUpdate = this.querySelector(selector);
+
+              elementToUpdate.innerHTML = value;
+            });
           } else {
             logger.error(`API error: ${response.statusText}`);
           }
