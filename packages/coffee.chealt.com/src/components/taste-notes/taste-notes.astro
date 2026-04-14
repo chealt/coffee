@@ -1,26 +1,36 @@
 ---
-import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getRelativeLocaleUrl } from "astro:i18n";
 
-import { encodeSafeURL } from '../../utils/string.js';
-import { getTasteNoteGroupByNoteId } from './utils.js';
+import { encodeSafeURL } from "../../utils/string.js";
+import { getTasteNoteGroupByNoteId } from "./utils.js";
 
-import './taste-notes.css';
+import "./taste-notes.css";
 
 const { tasteNotes } = Astro.props;
 
 const tasteNotesWithGroup = tasteNotes.map((tasteNote) => ({
   ...tasteNote,
-  group: getTasteNoteGroupByNoteId(tasteNote.taste_note_id)
+  group: getTasteNoteGroupByNoteId(tasteNote.taste_note_id),
 }));
 ---
 
 <ul>
   {
     tasteNotesWithGroup.map(({ name, group }) => (
-      <li class="chip" style={group?.color ? `background-color: ${group.color}` : 'border: 1px dashed'}>
+      <li
+        class="chip"
+        style={
+          group?.color
+            ? `background-color: ${group.color}`
+            : "border: 1px dashed"
+        }
+      >
         {(group && (
           <a
-            href={getRelativeLocaleUrl(Astro.currentLocale, `/taste-note-groups/${encodeSafeURL(group.name)}`)}
+            href={getRelativeLocaleUrl(
+              Astro.currentLocale,
+              `/taste-note-groups/${encodeSafeURL(group.name)}`,
+            )}
             style={`color: ${group.text_color}`}
           >
             {name}

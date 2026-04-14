@@ -379,41 +379,79 @@ class ChealtForm extends HTMLElement {
     this.updateOnChange.forEach((element) => {
       const keysToUpdate = element.dataset.updateKeys.split(',');
       const apiEndpoint = element.dataset.apiEndpoint;
+      const elementToUpdateSelector = element.dataset.elementToUpdate;
       const staticValues = element.dataset.staticValues ? JSON.parse(element.dataset.staticValues) : {};
 
       keysToUpdate.forEach((key) => {
-        this.querySelector(key)?.addEventListener('input', async () => {
-          const data = keysToUpdate.reduce((acc, curr) => {
-            const { name, value } = this.querySelector(curr);
+        const inputElements = key.includes('[]') ? this.querySelectorAll(key) : [this.querySelector(key)];
 
-            acc[name] = value;
+        inputElements.forEach((input) => {
+          input.addEventListener('input', async () => {
+            const data = keysToUpdate.reduce((acc, curr) => {
+              if (curr.includes('[]')) {
+                const elements = this.querySelectorAll(curr);
 
-            return acc;
-          }, staticValues);
+                const selectedElements = Array.from(elements).filter(({ checked }) => checked);
 
-          const response = await fetch(apiEndpoint, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
+                const name = selectedElements[0]?.name.replace('[]', '');
+                const values = selectedElements.map(({ value }) => value);
+
+                acc[name] = values;
+
+                return acc;
+              }
+
+              const { name, value } = this.querySelector(curr);
+
+              acc[name] = value;
+
+              return acc;
+            }, staticValues);
+
+            if (!apiEndpoint.includes('.json.js')) {
+              const response = await fetch(apiEndpoint, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+              });
+
+              if (response.ok) {
+                const responseText = await response.text();
+
+                const elementToUpdate = elementToUpdateSelector ? this.querySelector(elementToUpdateSelector) : element;
+
+                elementToUpdate.innerHTML = responseText;
+              } else {
+                logger.error(response);
+              }
+            } else {
+              const response = await fetch(apiEndpoint, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+              });
+
+              if (!response.ok) {
+                logger.error(response);
+              }
+
+              const { success, values } = await response.json();
+
+              if (success) {
+                values.forEach(({ selector, value }) => {
+                  const elementToUpdate = this.querySelector(selector);
+
+                  elementToUpdate.innerHTML = value;
+                });
+              } else {
+                logger.error(`API error: ${response.statusText}`);
+              }
+            }
           });
-
-          if (!response.ok) {
-            logger.error(response);
-          }
-
-          const { success, values } = await response.json();
-
-          if (success) {
-            values.forEach(({ selector, value }) => {
-              const elementToUpdate = this.querySelector(selector);
-
-              elementToUpdate.innerHTML = value;
-            });
-          } else {
-            logger.error(`API error: ${response.statusText}`);
-          }
         });
       });
     });

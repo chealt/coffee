@@ -1,4 +1,6 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
+
 import tasteNotes from "../../../../../../data/tasteNotes.json" with { type: "json" };
 
 import Button from "../../../../form/button/button.astro";
@@ -49,52 +51,57 @@ const notSelectedTasteNotes = tasteNotes
     <Icon type="edit" />
     {t.select}
   </Button>
-  {
-    (selectedTasteNotes.length && (
-      <TasteNotes tasteNotes={selectedTasteNotes} />
-    )) ||
-      null
-  }
+  <div
+    data-update-keys="[name='tasteNoteIds[]']"
+    data-api-endpoint={getRelativeLocaleUrl(
+      Astro.currentLocale,
+      "/taste-notes",
+    )}
+  >
+    {
+      (selectedTasteNotes.length && (
+        <TasteNotes tasteNotes={selectedTasteNotes} />
+      )) ||
+        null
+    }
+  </div>
 </Label>
-<coffee-taste-notes-dialog>
-  <Dialog class="drawer fixed" id="edit-taste-notes">
-    <chealt-filter data-filter-selector="li:has(input[name='tasteNoteIds[]'])">
-      <Input name="taste-note-filter" placeholder={t.search} data-exclude />
-    </chealt-filter>
-    <ul>
-      {
-        selectedTasteNotes.map(({ taste_note_id: id, name, group }) => (
-          <li
-            style={
-              group?.color
-                ? `border-left: 4px solid ${group.color}`
-                : "border-left: 4px solid transparent"
-            }
-          >
-            <Checkbox name="tasteNoteIds[]" value={id} checked>
-              {name}
-            </Checkbox>
-          </li>
-        ))
-      }
-      {
-        notSelectedTasteNotes.map(({ taste_note_id: id, name, group }) => (
-          <li
-            style={
-              group?.color
-                ? `border-left: 4px solid ${group.color}`
-                : "border-left: 4px solid transparent"
-            }
-          >
-            <Checkbox name="tasteNoteIds[]" value={id}>
-              {name}
-            </Checkbox>
-          </li>
-        ))
-      }
-    </ul>
-  </Dialog>
-</coffee-taste-notes-dialog>
+<Dialog class="drawer fixed" id="edit-taste-notes">
+  <chealt-filter data-filter-selector="li:has(input[name='tasteNoteIds[]'])">
+    <Input name="taste-note-filter" placeholder={t.search} data-exclude />
+  </chealt-filter>
+  <ul>
+    {
+      selectedTasteNotes.map(({ taste_note_id: id, name, group }) => (
+        <li
+          style={
+            group?.color
+              ? `border-left: 4px solid ${group.color}`
+              : "border-left: 4px solid transparent"
+          }
+        >
+          <Checkbox name="tasteNoteIds[]" value={id} checked>
+            {name}
+          </Checkbox>
+        </li>
+      ))
+    }
+    {
+      notSelectedTasteNotes.map(({ taste_note_id: id, name, group }) => (
+        <li
+          style={
+            group?.color
+              ? `border-left: 4px solid ${group.color}`
+              : "border-left: 4px solid transparent"
+          }
+        >
+          <Checkbox name="tasteNoteIds[]" value={id}>
+            {name}
+          </Checkbox>
+        </li>
+      ))
+    }
+  </ul>
+</Dialog>
 
-<script src="./taste-notes-dialog.js"></script>
 <script src="../../../../chealt-filter.js"></script>

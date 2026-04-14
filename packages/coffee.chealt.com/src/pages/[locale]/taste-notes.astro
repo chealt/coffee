@@ -1,0 +1,21 @@
+---
+export const partial = true;
+
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+import tasteNotes from "../../../data/tasteNotes.json" with { type: "json" };
+import TasteNotes from "../../components/taste-notes/taste-notes.astro";
+
+const { tasteNoteIds } = await Astro.request.json();
+
+const selectedTasteNotes = tasteNotes.filter(
+  ({ taste_note_id: id, language_code: languageCode }) =>
+    tasteNoteIds.includes(String(id)) && languageCode === Astro.currentLocale,
+);
+---
+
+<TasteNotes
+  data-update-keys="[name='tasteNoteIds[]']"
+  data-api-endpoint={getRelativeLocaleUrl(Astro.currentLocale, "/taste-notes")}
+  tasteNotes={selectedTasteNotes}
+/>
