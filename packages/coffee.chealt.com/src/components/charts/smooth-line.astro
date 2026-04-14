@@ -1,0 +1,60 @@
+---
+// Destructure props directly with default values (no interface needed)
+const {
+  points = [],
+  width = "100%",
+  height = "100%",
+  strokeColor = "cornflowerblue",
+  strokeWidth = 3,
+} = Astro.props;
+
+// Calculate the smooth path entirely on the server using plain JS
+const getSmoothPath = () => {
+  if (!points || points.length === 0) return "";
+  if (points.length === 1) return `M ${points[0].x},${points[0].y}`;
+
+  const smoothing = 0.2;
+
+  const line = (a, b) => {
+    const lengthX = b.x - a.x;
+    const lengthY = b.y - a.y;
+    return {
+      length: Math.sqrt(Math.pow(lengthX, 2) + Math.pow(lengthY, 2)),
+      angle: Math.atan2(lengthY, lengthX),
+    };
+  };
+
+  const controlPoint = (current, previous, next, reverse) => {
+    const p = previous || current;
+    const n = next || current;
+    const o = line(p, n);
+    const angle = o.angle + (reverse ? Math.PI : 0);
+    const length = o.length * smoothing;
+    const x = current.x + Math.cos(angle) * length;
+    const y = current.y + Math.sin(angle) * length;
+    return `${x},${y}`;
+  };
+
+  let d = `M ${points[0].x},${points[0].y}`;
+
+  for (let i = 1; i < points.length; i++) {
+    const cps = controlPoint(points[i - 1], points[i - 2], points[i]);
+    const cpe = controlPoint(points[i], points[i - 1], points[i + 1], true);
+    d += ` C ${cps} ${cpe} ${points[i].x},${points[i].y}`;
+  }
+
+  return d;
+};
+
+const pathD = getSmoothPath();
+---
+
+<svg width={width} height={height} style="overflow: visible;">
+  <path
+    d={pathD}
+    fill="none"
+    stroke={strokeColor}
+    stroke-width={strokeWidth}
+    stroke-linecap="round"
+    stroke-linejoin="round"></path>
+</svg>
