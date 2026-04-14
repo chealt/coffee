@@ -402,7 +402,8 @@ jobs:
         id: changed-files
         uses: tj-actions/changed-files@v47
         with:
-          files: yarn.lock
+          files: |
+            yarn.lock
             .github/workflows/deploy.yml
             packages/record-roaster-webshop/infra/**
       - uses: aws-actions/configure-aws-credentials@v6
