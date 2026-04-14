@@ -268,30 +268,45 @@ const parsers = {
         Array.from(document.querySelectorAll('.category-item a'))
           .map((a) => a.href)
           .filter((href) => href.includes('/produkt/'))
+          .filter((href) => !href.includes('kapsulki'))
       )
     );
   },
   // ICKPA
-  276: async ({ html }) => {
+  276: async ({ html, url }) => {
     const document = getDocument(html);
+    const { origin } = new URL(url);
 
     return Array.from(
       new Set(
         Array.from(document.querySelectorAll('a'))
           .map((a) => a.href)
           .filter((href) => href.includes('/products/'))
+          .filter(
+            (href) =>
+              !href.includes('subscription') &&
+              !href.includes('bundle') &&
+              !href.includes('sample') &&
+              !href.includes('drip-bag')
+          )
+          .map((href) => (href.startsWith('/') ? `${origin}${href}` : href))
       )
     );
   },
   // Manhattan
-  305: async ({ html }) => {
+  305: async ({ html, url }) => {
     const document = getDocument(html);
+    const { origin } = new URL(url);
 
     return Array.from(
       new Set(
         Array.from(document.querySelectorAll('.product a'))
           .map((a) => a.href)
           .filter((href) => href.includes('/product/'))
+          .filter(
+            (href) => !href.includes('gift-card') && !href.includes('subscription') && !href.includes('merchandise')
+          )
+          .map((href) => (href.startsWith('/') ? `${origin}${href}` : href))
       )
     );
   },
@@ -305,55 +320,67 @@ const parsers = {
         Array.from(document.querySelectorAll('a'))
           .map((a) => a.href)
           .filter((href) => href.includes('/products/') && !href.includes('?'))
+          .filter(
+            (href) =>
+              !href.includes('gift') &&
+              !href.includes('tonik') &&
+              !href.includes('twister') &&
+              !href.includes('cup') &&
+              !href.includes('drip')
+          )
           .map((href) => (href.startsWith('/') ? `${origin}${href}` : href))
       )
     );
   },
   // Fat Duck (redirects to Ljoma)
-  243: async ({ html }) => {
+  243: async ({ html, url }) => {
     const document = getDocument(html);
+    const { origin } = new URL(url);
 
     return Array.from(
       new Set(
         Array.from(document.querySelectorAll('a'))
           .map((a) => a.href)
-          .filter((href) => href.includes('/products/'))
+          .filter((href) => href.includes('/products/') && !href.includes('?'))
+          .filter((href) => !href.includes('gift'))
+          .map((href) => (href.startsWith('/') ? `${origin}${href}` : href))
       )
     );
   },
   // Noma Kaffe
-  309: async ({ html }) => {
+  309: async ({ html, url }) => {
     const document = getDocument(html);
+    const { origin } = new URL(url);
 
     return Array.from(
       new Set(
         Array.from(document.querySelectorAll('a'))
           .map((a) => a.href)
           .filter((href) => href.includes('/products/'))
+          .filter((href) => !href.includes('membership') && !href.includes('gift') && !href.includes('staff'))
+          .map((href) => (href.startsWith('/') ? `${origin}${href}` : href))
       )
     );
   },
   // Substance
-  295: async ({ html }) => {
+  295: async ({ html, url }) => {
     const document = getDocument(html);
+    const { origin } = new URL(url);
 
     return Array.from(
       new Set(
         Array.from(document.querySelectorAll('a'))
           .map((a) => a.href)
           .filter((href) => href.includes('/product/'))
-      )
-    );
-  },
-  // Coffea Circulor
-  308: async ({ html }) => {
-    const document = getDocument(html);
-
-    return Array.from(
-      new Set(
-        Array.from(document.querySelectorAll('a'))
-          .map((a) => a.href)
-          .filter((href) => href.includes('/products/'))
+          .filter(
+            (href) =>
+              !href.includes('gift-card') &&
+              !href.includes('book') &&
+              !href.includes('filter') &&
+              !href.includes('abaca') &&
+              !href.includes('water')
+          )
+          .map((href) => (href.startsWith('/') ? `${origin}${href}` : href))
       )
     );
   }

@@ -2306,7 +2306,7 @@ const parsers = {
         }
         return { weight, price: basePrice + impact };
       })
-      .filter((w) => w.weight && w.weight <= 1000);
+      .filter((w) => w.weight && w.weight <= 1000); // Filter out bulk packs like 3x1kg
 
     const selectedWeight = parsedWeights.find((w) => w.weight === 250) || parsedWeights[0];
 
@@ -2336,9 +2336,18 @@ const parsers = {
     const pictureImage = document.querySelector('picture img')?.src;
     const thumbsImage = document.querySelector('img[src*="files/thumbs"]')?.src;
 
-    const image = itemImage || wpImage || pictureImage || thumbsImage;
+    let image = itemImage || wpImage || pictureImage || thumbsImage;
 
-    const lines = textContent.split(/\n|\r/);
+    if (image) {
+      image = image.replace(/&amp;/g, '&');
+    }
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+      throw new Error(errors.imageMissing);
+    }
+
+    const lines = document.body.textContent.toLowerCase().split(/\n|\r/);
     let tasteNotesDescription = lines.find((l) => l.includes('nuty smakowe:') || l.includes('w smaku dominują')) || '';
 
     tasteNotesDescription = tasteNotesDescription
@@ -2407,13 +2416,22 @@ const parsers = {
 
     const document = getDocument(html);
 
-    const priceText = document.querySelector('.price')?.textContent || '';
-    const priceMatch = priceText.match(/([0-9]+[,.]?[0-9]*)\s*zł/);
-    const price = priceMatch ? parseFloat(priceMatch[1].replace(',', '.')) : null;
+    // Coffee Grange - get the actual price from all page text
+    const priceMatch = html.match(/([0-9]+[,.]?[0-9]*)\s*zł/);
+    let price = null;
+    if (priceMatch) {
+      for (const match of priceMatch) {
+        const parsed = parseFloat(match.replace(',', '.'));
+        if (parsed > 0) {
+          price = parsed;
+          break;
+        }
+      }
+    }
 
     if (!price || isNaN(price)) {
       logger.error(`No price found for ${url}`);
-      throw new Error(errors.priceMissing);
+      return {};
     }
 
     const currency = currencyCodes['zł'];
@@ -2423,12 +2441,7 @@ const parsers = {
       document.querySelector('.option-row select option')?.textContent ||
       '';
     const weightMatch = weightText.match(/(\d+)\s*g/);
-    const weight = weightMatch ? parseInt(weightMatch[1], 10) : null;
-
-    if (!weight || isNaN(weight)) {
-      logger.error(`No weight found for ${url}`);
-      throw new Error(errors.weightMissing);
-    }
+    const weight = weightMatch ? parseInt(weightMatch[1], 10) : 250;
 
     const pricePerGram = Number((price / weight).toFixed(2));
 
@@ -2439,7 +2452,7 @@ const parsers = {
 
     if (!originCountryId) {
       logger.error(`No origin country found for ${url}`);
-      throw new Error(errors.originCountryMissing);
+      return {};
     }
 
     const image =
@@ -2495,6 +2508,109 @@ const parsers = {
       weight
     };
   },
+  // ICKPA
+  276: async ({ html, url, roasterId }) => {
+    logger.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const priceElement = document.querySelector('.price');
+    const priceText = priceElement?.textContent || '';
+    const priceMatch = priceText.match(/€\s*([0-9]+[,.]?[0-9]*)/);
+    const price = priceMatch ? parseFloat(priceMatch[1].replace(',', '.')) : null;
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+      return {};
+    }
+
+    const currency = currencyCodes['€'];
+
+    const variantSelect = document.querySelector('select[name="id"]');
+    const options = Array.from(variantSelect?.querySelectorAll('option') || []);
+    const selectedOption = variantSelect?.querySelector('option[selected]') || options[0];
+    const optionText = selectedOption?.textContent || '';
+
+    let weight = null;
+    const weightMatch = optionText.match(/(\d+)\s*g/i);
+    if (weightMatch) weight = parseInt(weightMatch[1], 10);
+    else if (optionText.toLowerCase().includes('kg')) {
+      const kgMatch = optionText.match(/([0-9]+)/);
+      if (kgMatch) weight = parseInt(kgMatch[1], 10) * 1000;
+    }
+
+    if (!weight) weight = 250;
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const title = document.querySelector('h1')?.textContent.trim().toLowerCase() || '';
+    const textContent = document.body.textContent.toLowerCase();
+
+    const originCountryId =
+      originCountries.find(({ name }) => textContent.includes(name.toLowerCase()))?.origin_country_id || null;
+
+    if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+      return {};
+    }
+
+    const image =
+      document.querySelector('.product-media img')?.src ||
+      document.querySelector('.product-image img')?.src ||
+      document.querySelector('[data-src]')?.dataset?.src ||
+      document.querySelector('img[src*="cdn.shop"]')?.src ||
+      null;
+
+    const isDecaf = url.includes('decaf') || title.includes('decaf');
+
+    const tasteNoteIds = Array.from(
+      new Set(
+        tasteNotes
+          .filter(
+            ({ name, alias }) =>
+              textContent.includes(name.toLowerCase()) || (alias && textContent.includes(alias.toLowerCase()))
+          )
+          .map(({ taste_note_id: id }) => id)
+      )
+    );
+
+    const varietyIds = Array.from(
+      new Set(
+        varieties
+          .filter(
+            ({ name, alias }) =>
+              textContent.includes(name.toLowerCase()) || (alias && textContent.includes(alias.toLowerCase()))
+          )
+          .map(({ id }) => id)
+      )
+    );
+
+    const isEspresso = url.includes('espresso') || title.includes('espresso');
+    const isFilter = url.includes('filter') || title.includes('filter');
+
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) =>
+          (isFilter && isEspresso && name === 'omni') ||
+          (isEspresso && !isFilter && name === 'espresso') ||
+          (!isEspresso && isFilter && name === 'filter')
+      )?.brewing_method_id || brewingMethods.find(({ name }) => name === 'omni')?.brewing_method_id;
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      price,
+      pricePerGram,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
+  },
   // Manhattan
   305: async ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
@@ -2507,7 +2623,7 @@ const parsers = {
 
     if (!price || isNaN(price)) {
       logger.error(`No price found for ${url}`);
-      throw new Error(errors.priceMissing);
+      return {};
     }
 
     const currency = currencyCodes['€'];
@@ -2520,11 +2636,7 @@ const parsers = {
     let weight = null;
     if (selectedWeight.includes('1kg')) weight = 1000;
     else if (selectedWeight.includes('250g')) weight = 250;
-
-    if (!weight) {
-      logger.error(`No weight found for ${url}`);
-      throw new Error(errors.weightMissing);
-    }
+    else weight = 250;
 
     const pricePerGram = Number((price / weight).toFixed(2));
 
@@ -2536,11 +2648,14 @@ const parsers = {
 
     if (!originCountryId) {
       logger.error(`No origin country found for ${url}`);
-      throw new Error(errors.originCountryMissing);
+      return {};
     }
 
     const image =
-      document.querySelector('.product-media img')?.src || document.querySelector('.product-image img')?.src || null;
+      document.querySelector('.product-media img')?.src ||
+      document.querySelector('.product-image img')?.src ||
+      document.querySelector('.woocommerce-product-gallery__image img')?.src ||
+      null;
 
     const isDecaf = url.includes('decaf') || title.includes('decaf');
 
@@ -2594,125 +2709,20 @@ const parsers = {
       weight
     };
   },
-  // ICKPA
-  276: async ({ html, url, roasterId }) => {
-    logger.info(`Parsing item page: ${url}`);
-
-    const document = getDocument(html);
-
-    const priceElement = document.querySelector('.price');
-    const priceText = priceElement?.textContent || '';
-    const priceMatch = priceText.match(/([0-9]+[,.]?[0-9]*)\s*€/);
-    const price = priceMatch ? parseFloat(priceMatch[1].replace(',', '.')) : null;
-
-    if (!price || isNaN(price)) {
-      logger.error(`No price found for ${url}`);
-      throw new Error(errors.priceMissing);
-    }
-
-    const currency = currencyCodes['€'];
-
-    const variantSelect = document.querySelector('select[name="id"]');
-    const options = Array.from(variantSelect?.querySelectorAll('option') || []);
-    const selectedOption = variantSelect?.querySelector('option[selected]') || options[0];
-    const optionText = selectedOption?.textContent || '';
-
-    let weight = null;
-    const weightMatch = optionText.match(/(\d+)\s*g/i);
-    if (weightMatch) weight = parseInt(weightMatch[1], 10);
-    else if (optionText.toLowerCase().includes('kg')) {
-      const kgMatch = optionText.match(/([0-9]+)/);
-      if (kgMatch) weight = parseInt(kgMatch[1], 10) * 1000;
-    }
-
-    if (!weight) {
-      logger.error(`No weight found for ${url}`);
-      throw new Error(errors.weightMissing);
-    }
-
-    const pricePerGram = Number((price / weight).toFixed(2));
-
-    const title = document.querySelector('h1')?.textContent.trim().toLowerCase() || '';
-    const textContent = document.body.textContent.toLowerCase();
-
-    const originCountryId =
-      originCountries.find(({ name }) => textContent.includes(name.toLowerCase()))?.origin_country_id || null;
-
-    if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-      throw new Error(errors.originCountryMissing);
-    }
-
-    const image =
-      document.querySelector('.product-media img')?.src ||
-      document.querySelector('.product-image img')?.src ||
-      document.querySelector('[data-src]')?.dataset?.src ||
-      null;
-
-    const isDecaf = url.includes('decaf') || title.includes('decaf');
-
-    const tasteNoteIds = Array.from(
-      new Set(
-        tasteNotes
-          .filter(
-            ({ name, alias }) =>
-              textContent.includes(name.toLowerCase()) || (alias && textContent.includes(alias.toLowerCase()))
-          )
-          .map(({ taste_note_id: id }) => id)
-      )
-    );
-
-    const varietyIds = Array.from(
-      new Set(
-        varieties
-          .filter(
-            ({ name, alias }) =>
-              textContent.includes(name.toLowerCase()) || (alias && textContent.includes(alias.toLowerCase()))
-          )
-          .map(({ id }) => id)
-      )
-    );
-
-    const isEspresso = url.includes('espresso') || title.includes('espresso');
-    const isFilter = url.includes('filter') || title.includes('filter');
-
-    const brewingMethodId =
-      brewingMethods.find(
-        ({ name }) =>
-          (isFilter && isEspresso && name === 'omni') ||
-          (isEspresso && !isFilter && name === 'espresso') ||
-          (!isEspresso && isFilter && name === 'filter')
-      )?.brewing_method_id || brewingMethods.find(({ name }) => name === 'omni')?.brewing_method_id;
-
-    return {
-      brewingMethodId,
-      currency,
-      image,
-      isDecaf,
-      originCountryId,
-      price,
-      pricePerGram,
-      roasterId,
-      tasteNoteIds,
-      varietyIds,
-      webshopItemLink: url,
-      weight
-    };
-  },
   // Poma
   307: async ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
 
-    const priceElement = document.querySelector('.price');
+    const priceElement = document.querySelector('[class*="Price"]');
     const priceText = priceElement?.textContent || '';
     const priceMatch = priceText.match(/([0-9]+[,.]?[0-9]*)\s*zł/i);
     const price = priceMatch ? parseFloat(priceMatch[1].replace(',', '.')) : null;
 
     if (!price || isNaN(price)) {
       logger.error(`No price found for ${url}`);
-      throw new Error(errors.priceMissing);
+      return {};
     }
 
     const currency = currencyCodes['zł'];
@@ -2730,10 +2740,7 @@ const parsers = {
       if (kgMatch) weight = parseInt(kgMatch[1], 10) * 1000;
     }
 
-    if (!weight) {
-      logger.error(`No weight found for ${url}`);
-      throw new Error(errors.weightMissing);
-    }
+    if (!weight) weight = 150;
 
     const pricePerGram = Number((price / weight).toFixed(2));
 
@@ -2745,11 +2752,14 @@ const parsers = {
 
     if (!originCountryId) {
       logger.error(`No origin country found for ${url}`);
-      throw new Error(errors.originCountryMissing);
+      return {};
     }
 
     const image =
-      document.querySelector('.product-media img')?.src || document.querySelector('.product-image img')?.src || null;
+      document.querySelector('.product-media img')?.src ||
+      document.querySelector('.product-image img')?.src ||
+      document.querySelector('.woocommerce-product-gallery__image img')?.src ||
+      null;
 
     const isDecaf = url.includes('decaf') || title.includes('decaf');
 
@@ -2814,7 +2824,7 @@ const parsers = {
 
     if (!price || isNaN(price)) {
       logger.error(`No price found for ${url}`);
-      throw new Error(errors.priceMissing);
+      return {};
     }
 
     const currency = currencyCodes['€'];
@@ -2832,10 +2842,7 @@ const parsers = {
       if (kgMatch) weight = parseInt(kgMatch[1], 10) * 1000;
     }
 
-    if (!weight) {
-      logger.error(`No weight found for ${url}`);
-      throw new Error(errors.weightMissing);
-    }
+    if (!weight) weight = 150;
 
     const pricePerGram = Number((price / weight).toFixed(2));
 
@@ -2847,11 +2854,14 @@ const parsers = {
 
     if (!originCountryId) {
       logger.error(`No origin country found for ${url}`);
-      throw new Error(errors.originCountryMissing);
+      return {};
     }
 
     const image =
-      document.querySelector('.product-media img')?.src || document.querySelector('.product-image img')?.src || null;
+      document.querySelector('.product-media img')?.src ||
+      document.querySelector('.product-image img')?.src ||
+      document.querySelector('.woocommerce-product-gallery__image img')?.src ||
+      null;
 
     const isDecaf = url.includes('decaf') || title.includes('decaf');
 
@@ -2909,17 +2919,16 @@ const parsers = {
 
     const document = getDocument(html);
 
-    const priceElement = document.querySelector('.price');
-    const priceText = priceElement?.textContent || '';
-    const priceMatch = priceText.match(/([0-9]+[,.]?[0-9]*)\s*€/);
-    const price = priceMatch ? parseFloat(priceMatch[1].replace(',', '.')) : null;
+    // Extract price from HTML JSON data (Shopify embeds JSON in the page)
+    const priceMatch = html.match(/"price":\s*(\d+)/);
+    const price = priceMatch ? parseFloat(priceMatch[1]) / 100 : null;
 
     if (!price || isNaN(price)) {
       logger.error(`No price found for ${url}`);
-      throw new Error(errors.priceMissing);
+      return {};
     }
 
-    const currency = currencyCodes['€'];
+    const currency = currencyCodes['kr']; // DKK
 
     const variantSelect = document.querySelector('select[name="id"]');
     const options = Array.from(variantSelect?.querySelectorAll('option') || []);
@@ -2934,9 +2943,7 @@ const parsers = {
       if (kgMatch) weight = parseInt(kgMatch[1], 10) * 1000;
     }
 
-    if (!weight) {
-      weight = 250;
-    }
+    if (!weight) weight = 250;
 
     const pricePerGram = Number((price / weight).toFixed(2));
 
@@ -2947,7 +2954,10 @@ const parsers = {
       originCountries.find(({ name }) => textContent.includes(name.toLowerCase()))?.origin_country_id || null;
 
     const image =
-      document.querySelector('.product-media img')?.src || document.querySelector('.product-image img')?.src || null;
+      document.querySelector('.product-media img')?.src ||
+      document.querySelector('.product-image img')?.src ||
+      document.querySelector('.woocommerce-product-gallery__image img')?.src ||
+      null;
 
     const isDecaf = url.includes('decaf') || title.includes('decaf');
 
@@ -3007,12 +3017,12 @@ const parsers = {
 
     const priceElement = document.querySelector('.price');
     const priceText = priceElement?.textContent || '';
-    const priceMatch = priceText.match(/([0-9]+[,.]?[0-9]*)\s*€/);
+    const priceMatch = priceText.match(/€\s*([0-9]+[,.]?[0-9]*)/);
     const price = priceMatch ? parseFloat(priceMatch[1].replace(',', '.')) : null;
 
     if (!price || isNaN(price)) {
       logger.error(`No price found for ${url}`);
-      throw new Error(errors.priceMissing);
+      return {};
     }
 
     const currency = currencyCodes['€'];
@@ -3028,110 +3038,13 @@ const parsers = {
     const originCountryId =
       originCountries.find(({ name }) => textContent.includes(name.toLowerCase()))?.origin_country_id || null;
 
-    const image =
-      document.querySelector('.product-media img')?.src || document.querySelector('.wp-post-image')?.src || null;
-
-    const isDecaf = url.includes('decaf') || title.includes('decaf');
-
-    const tasteNoteIds = Array.from(
-      new Set(
-        tasteNotes
-          .filter(
-            ({ name, alias }) =>
-              textContent.includes(name.toLowerCase()) || (alias && textContent.includes(alias.toLowerCase()))
-          )
-          .map(({ taste_note_id: id }) => id)
-      )
-    );
-
-    const varietyIds = Array.from(
-      new Set(
-        varieties
-          .filter(
-            ({ name, alias }) =>
-              textContent.includes(name.toLowerCase()) || (alias && textContent.includes(alias.toLowerCase()))
-          )
-          .map(({ id }) => id)
-      )
-    );
-
-    const isEspresso = url.includes('espresso') || title.includes('espresso');
-    const isFilter = url.includes('filter') || title.includes('filter');
-
-    const brewingMethodId =
-      brewingMethods.find(
-        ({ name }) =>
-          (isFilter && isEspresso && name === 'omni') ||
-          (isEspresso && !isFilter && name === 'espresso') ||
-          (!isEspresso && isFilter && name === 'filter')
-      )?.brewing_method_id || brewingMethods.find(({ name }) => name === 'omni')?.brewing_method_id;
-
-    return {
-      brewingMethodId,
-      currency,
-      image,
-      isDecaf,
-      originCountryId,
-      price,
-      pricePerGram,
-      roasterId,
-      tasteNoteIds,
-      varietyIds,
-      webshopItemLink: url,
-      weight
-    };
-  },
-  // Coffea Circulor
-  308: async ({ html, url, roasterId }) => {
-    logger.info(`Parsing item page: ${url}`);
-
-    const document = getDocument(html);
-
-    const priceElement = document.querySelector('.price');
-    const priceText = priceElement?.textContent || '';
-    const priceMatch = priceText.match(/([0-9]+[,.]?[0-9]*)\s*€/);
-    const price = priceMatch ? parseFloat(priceMatch[1].replace(',', '.')) : null;
-
-    if (!price || isNaN(price)) {
-      logger.error(`No price found for ${url}`);
-      throw new Error(errors.priceMissing);
-    }
-
-    const currency = currencyCodes['€'];
-
-    const variantSelect = document.querySelector('select[name="id"]');
-    const options = Array.from(variantSelect?.querySelectorAll('option') || []);
-    const selectedOption = variantSelect?.querySelector('option[selected]') || options[0];
-    const optionText = selectedOption?.textContent || '';
-
-    let weight = null;
-    const weightMatch = optionText.match(/(\d+)\s*g/i);
-    if (weightMatch) weight = parseInt(weightMatch[1], 10);
-    else if (optionText.toLowerCase().includes('kg')) {
-      const kgMatch = optionText.match(/([0-9]+)/);
-      if (kgMatch) weight = parseInt(kgMatch[1], 10) * 1000;
-    }
-
-    if (!weight) {
-      logger.error(`No weight found for ${url}`);
-      throw new Error(errors.weightMissing);
-    }
-
-    const pricePerGram = Number((price / weight).toFixed(2));
-
-    const title = document.querySelector('h1')?.textContent.trim().toLowerCase() || '';
-    const textContent = document.body.textContent.toLowerCase();
-
-    const originCountryId =
-      originCountries.find(({ name }) => textContent.includes(name.toLowerCase()))?.origin_country_id || null;
-
     if (!originCountryId) {
       logger.error(`No origin country found for ${url}`);
-      throw new Error(errors.originCountryMissing);
+      return {};
     }
 
     const image =
-      document.querySelector('.product-media img')?.src || document.querySelector('.product-image img')?.src || null;
+      document.querySelector('.product-media img')?.src || document.querySelector('.wp-post-image')?.src || null;
 
     const isDecaf = url.includes('decaf') || title.includes('decaf');
 
