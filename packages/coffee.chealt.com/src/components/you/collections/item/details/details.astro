@@ -57,14 +57,7 @@ const {
     />
     <Price price={details?.price} selectedCurrency={details?.currency} />
     <Weight value={details?.weight} />
-    {
-      details?.pricePerGram && (
-        <PricePerGram
-          pricePerGram={details.pricePerGram}
-          priceIndex={details?.priceIndex}
-        />
-      )
-    }
+    <PricePerGram pricePerGram={details.pricePerGram} />
     <Decaf checked={details?.isDecaf} />
   </Form>
 </section>

@@ -408,7 +408,13 @@ class ChealtForm extends HTMLElement {
               return acc;
             }, staticValues);
 
-            if (!apiEndpoint.includes('.json.js')) {
+            if (Object.values(data).some((value) => value === undefined || value === '')) {
+              element.innerHTML = '';
+
+              return;
+            }
+
+            if (!apiEndpoint.includes('.json')) {
               const response = await fetch(apiEndpoint, {
                 method: 'POST',
                 headers: {
