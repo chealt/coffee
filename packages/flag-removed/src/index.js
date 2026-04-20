@@ -1,5 +1,5 @@
 import { JSDOM } from 'jsdom';
-import { Agent } from 'undici';
+import { fetch, Agent } from 'undici';
 
 import logger from './Sentry/logger.js';
 import client from './Turso.js';
@@ -62,7 +62,7 @@ const isOutOfStock = ({ html, roasterId, webshopItemLink }) => {
 };
 
 // eslint-disable-next-line complexity
-export const handler = async ({ id, webshopItemLink, roasterId }) => {
+export const handler = async ({ id, webshopItemLink, roasterId, isTest }) => {
   if (!id) {
     logger.error('No id provided');
 
@@ -91,8 +91,9 @@ export const handler = async ({ id, webshopItemLink, roasterId }) => {
         connectTimeout: 10 * 1000 * 1000 // 10 seconds
       })
     });
-  } catch {
-    logger.error(`Fetch failed for ${webshopItemLink}`);
+  } catch (error) {
+    logger.error(error);
+    logger.error(`Fetch failed for ${webshopItemLink} with error: ${error.message}`);
 
     return;
   }
@@ -105,10 +106,12 @@ export const handler = async ({ id, webshopItemLink, roasterId }) => {
   ) {
     logger.info(`Flagging coffee with id ${id} as removed...`);
 
-    await client.execute({
-      sql: 'UPDATE coffees SET is_removed = true WHERE id = :id',
-      args: { id }
-    });
+    if (!isTest) {
+      await client.execute({
+        sql: 'UPDATE coffees SET is_removed = true WHERE id = :id',
+        args: { id }
+      });
+    }
 
     logger.info(`Coffee with id ${id} is flagged as removed.`);
   }
