@@ -114,6 +114,10 @@ const { loggedInUser } = Astro.locals;
 <Common><h1>{t.title}</h1></Common>
 ```
 
+#### Origin Country Maps
+
+The maps are shown as SVGs, their name is the ID field from the origin countries data.
+
 ### Error Handling
 
 - Prefer returning `undefined` over throwing for optional lookups:
