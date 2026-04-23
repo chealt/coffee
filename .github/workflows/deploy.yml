@@ -584,6 +584,8 @@ jobs:
           tags: ${{ steps.login-ecr.outputs.registry }}/centralbeans/screenshot-lambda:${{ steps.git-hash.outputs.hash }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          provenance: false
+          sbom: false
       - name: Deploy
         if: steps.changed-files.outputs.any_changed == 'true'
         uses: aws-actions/aws-cloudformation-github-deploy@v2
