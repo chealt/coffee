@@ -539,7 +539,7 @@ jobs:
         with:
           context: packages/screenshot-lambda
           push: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/screenshot-lambda:${{ steps.git-hash.outputs.hash }}
+          tags: ${{ steps.login-ecr.outputs.registry }}/centralbeans/screenshot-lambda:${{ steps.git-hash.outputs.hash }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Deploy
@@ -549,7 +549,7 @@ jobs:
           name: screenshot-lambda
           template: packages/screenshot-lambda/infra/template.yaml
           capabilities: CAPABILITY_IAM
-          parameter-overrides: ImageUri=${{ steps.login-ecr.outputs.registry }}/screenshot-lambda:${{ steps.git-hash.outputs.hash }}
+          parameter-overrides: ImageUri=${{ steps.login-ecr.outputs.registry }}/centralbeans/screenshot-lambda:${{ steps.git-hash.outputs.hash }}
   register-new-user:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
