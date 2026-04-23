@@ -504,6 +504,48 @@ jobs:
             --notes "Automated release" \
             --draft=false \
             --prerelease=false
+  register-new-user:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            yarn.lock
+            .github/workflows/deploy.yml
+            packages/register-new-user/package.json
+            packages/register-new-user/.yarnrc-lambda.yml
+            packages/register-new-user/src/**
+      - uses: aws-actions/configure-aws-credentials@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-node@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: deploy
+        id: deploy
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          yarn workspace @centralbeans/register-new-user build
+          version=$(yarn workspace @centralbeans/register-new-user deploy | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release register-new-user
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create '@centralbeans/register-new-user@${{ steps.deploy.outputs.version }}' \
+            --title "Release @centralbeans/register-new-user v${{ steps.deploy.outputs.version }}" \
+            --notes "Automated release" \
+            --draft=false \
+            --prerelease=false
   screenshot-lambda:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
@@ -550,48 +592,6 @@ jobs:
           template: packages/screenshot-lambda/infra/template.yaml
           capabilities: CAPABILITY_IAM
           parameter-overrides: ImageUri=${{ steps.login-ecr.outputs.registry }}/centralbeans/screenshot-lambda:${{ steps.git-hash.outputs.hash }}
-  register-new-user:
-    runs-on: blacksmith-4vcpu-ubuntu-2404
-    steps:
-      - uses: actions/checkout@v6
-      - name: Check changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v47
-        with:
-          files: |
-            yarn.lock
-            .github/workflows/deploy.yml
-            packages/register-new-user/package.json
-            packages/register-new-user/.yarnrc-lambda.yml
-            packages/register-new-user/src/**
-      - uses: aws-actions/configure-aws-credentials@v6
-        if: steps.changed-files.outputs.any_changed == 'true'
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - uses: actions/setup-node@v6
-        if: steps.changed-files.outputs.any_changed == 'true'
-        with:
-          node-version-file: 'package.json'
-          cache: 'yarn'
-      - name: deploy
-        id: deploy
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: |
-          yarn workspace @centralbeans/register-new-user build
-          version=$(yarn workspace @centralbeans/register-new-user deploy | jq -r '.Version')
-          echo "version=$version" >> $GITHUB_OUTPUT
-      - name: Release register-new-user
-        if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release create '@centralbeans/register-new-user@${{ steps.deploy.outputs.version }}' \
-            --title "Release @centralbeans/register-new-user v${{ steps.deploy.outputs.version }}" \
-            --notes "Automated release" \
-            --draft=false \
-            --prerelease=false
   send-registration-code:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
