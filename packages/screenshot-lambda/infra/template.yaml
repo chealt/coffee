@@ -35,7 +35,7 @@ Resources:
   ScreenshotLambda:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: screenshot-lambda
+      FunctionName: createWebsiteScreenshot
       PackageType: Image
       Code:
         ImageUri: !Ref ImageUri
