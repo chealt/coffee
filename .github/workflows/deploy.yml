@@ -504,6 +504,52 @@ jobs:
             --notes "Automated release" \
             --draft=false \
             --prerelease=false
+  screenshot-lambda:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            yarn.lock
+            .github/workflows/deploy.yml
+            packages/screenshot-lambda/**
+      - uses: aws-actions/configure-aws-credentials@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - name: Login to ECR
+        if: steps.changed-files.outputs.any_changed == 'true'
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: Get Git Hash
+        if: steps.changed-files.outputs.any_changed == 'true'
+        id: git-hash
+        run: echo "hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      - name: Build
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          docker build -t screenshot-lambda packages/screenshot-lambda
+      - name: Tag
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          docker tag screenshot-lambda:latest ${{ steps.login-ecr.outputs.registry }}/screenshot-lambda:${{ steps.git-hash.outputs.hash }}
+      - name: Push
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          docker push ${{ steps.login-ecr.outputs.registry }}/screenshot-lambda:${{ steps.git-hash.outputs.hash }}
+      - name: Deploy
+        if: steps.changed-files.outputs.any_changed == 'true'
+        uses: aws-actions/aws-cloudformation-github-deploy@v2
+        with:
+          name: screenshot-lambda
+          template: packages/screenshot-lambda/infra/template.yaml
+          capabilities: CAPABILITY_IAM
+          parameter-overrides: ImageUri=${{ steps.login-ecr.outputs.registry }}/screenshot-lambda:${{ steps.git-hash.outputs.hash }}
   register-new-user:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:

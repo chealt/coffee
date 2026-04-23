@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Screenshot Lambda Infrastructure
+
+Parameters:
+  ImageUri:
+    Type: String
+    Description: The ECR URI of the Lambda image
+
+Resources:
+  ScreenshotBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: coffee-screenshots
+
+  ScreenshotLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: S3Access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                Resource: !Sub 'arn:aws:s3:::coffee-screenshots/*'
+
+  ScreenshotLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: screenshot-lambda
+      PackageType: Image
+      Code:
+        ImageUri: !Ref ImageUri
+      Role: !GetAtt ScreenshotLambdaRole.Arn
+      MemorySize: 2048
+      Timeout: 60
