@@ -40,6 +40,7 @@ export const handler = async (event) => {
       return { statusCode: 200, body: `Screenshot saved locally at ${outputPath}` };
     }
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error during execution:', error);
 
     throw error;
