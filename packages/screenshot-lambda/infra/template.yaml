@@ -10,7 +10,12 @@ Resources:
   ScreenshotBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: coffee-screenshots
+      BucketName: centralbeans-screenshot-lambda
+
+  ScreenshotRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: centralbeans/screenshot-lambda
 
   ScreenshotLambdaRole:
     Type: AWS::IAM::Role
@@ -30,7 +35,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - s3:PutObject
-                Resource: !Sub 'arn:aws:s3:::coffee-screenshots/*'
+                Resource: !Sub 'arn:aws:s3:::centralbeans-screenshot-lambda/*'
 
   ScreenshotLambda:
     Type: AWS::Lambda::Function
