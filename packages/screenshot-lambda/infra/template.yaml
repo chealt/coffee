@@ -12,11 +12,6 @@ Resources:
     Properties:
       BucketName: centralbeans-screenshot-lambda
 
-  ScreenshotRepository:
-    Type: AWS::ECR::Repository
-    Properties:
-      RepositoryName: centralbeans/screenshot-lambda
-
   ScreenshotLambdaRole:
     Type: AWS::IAM::Role
     Properties:
