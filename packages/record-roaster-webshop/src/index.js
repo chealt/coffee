@@ -44,9 +44,12 @@ export const handler = async ({ isTest, roasterId, debug }) => {
     });
 
     if (debug) {
+      logger.info(`Storing the HTML of the roaster webshop with url: ${url}, and roaster id ${roasterId}`);
+
       await putObject({
         bucketName: 'centralbeans-roaster-webshop',
-        key: `${roasterId}/${url}/${Date.now()}.html`
+        key: `${roasterId}/${url}/${Date.now()}.html`,
+        data: html
       });
     }
   }
