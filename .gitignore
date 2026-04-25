@@ -38,4 +38,5 @@ playwright/.auth/
 .dev.vars
 
 # Testing Lambdas
+packages/record-roaster-webshop/data
 packages/webshop-item-processor/data

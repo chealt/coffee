@@ -4,7 +4,7 @@ import logger from './Sentry/logger.js';
 import roasters from '../data/roasters.json' with { type: 'json' };
 import { deflateSync } from 'node:zlib';
 
-export const handler = async ({ roasterId }) => {
+export const handler = async ({ isTest, roasterId }) => {
   logger.info(`Recording webshop for ${roasterId}`);
 
   const roaster = roasters.find(({ id }) => id === roasterId);
@@ -31,8 +31,12 @@ export const handler = async ({ roasterId }) => {
 
   logger.info(`Invoke webshop processor for ${roasterId} and url: ${url}`);
 
-  await invokeLambda({
-    functionName: 'webshopProcessor',
-    payload: { url, roasterId, html: deflateSync(html).toString('base64') }
-  });
+  if (isTest) {
+    logger.info({ html });
+  } else {
+    await invokeLambda({
+      functionName: 'webshopProcessor',
+      payload: { url, roasterId, html: deflateSync(html).toString('base64') }
+    });
+  }
 };

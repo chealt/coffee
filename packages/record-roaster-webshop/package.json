@@ -3,7 +3,8 @@
   "type": "module",
   "scripts": {
     "build": "cp .yarnrc-lambda.yml .yarnrc.yml && mkdir -p data && cp ../coffee.chealt.com/data/roasters.json data/roasters.json && yarn workspaces focus --production && zip -rq package.zip . -x .yarnrc.yml .yarnrc-lambda.yml && rm .yarnrc.yml",
-    "deploy": "aws lambda update-function-code --function-name recordRoasterWebshop --zip-file fileb://package.zip --publish"
+    "deploy": "aws lambda update-function-code --function-name recordRoasterWebshop --zip-file fileb://package.zip --publish",
+    "test": "mkdir -p data && cp ../coffee.chealt.com/data/roasters.json data/roasters.json && node ./test.js"
   },
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.1035.0",
