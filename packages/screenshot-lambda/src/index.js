@@ -40,6 +40,8 @@ export const handler = async (event) => {
         })
       );
       await page.close();
+
+      // eslint-disable no-else-return
       return { statusCode: 200, body: 'Screenshot uploaded to S3' };
     } else {
       const outputPath = `/var/task/test-results/${filename}`;
