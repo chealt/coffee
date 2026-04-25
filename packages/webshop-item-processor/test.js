@@ -9,11 +9,13 @@ if (!roasterId) {
   throw new Error('No roaster id found, please provide a ROASTER_ID environment variable');
 }
 
-const webshopUrl = roasters.find(({ id }) => id === Number(roasterId))?.webshop;
+const roaster = roasters.find(({ id }) => id === Number(roasterId));
 
-if (!webshopUrl) {
-  throw new Error(`No webshop url found for roaster id ${roasterId}`);
+if (!roaster?.webshop) {
+  throw new Error(`No webshop url found for roaster id ${roasterId} (${roaster?.name})`);
 }
+
+const { webshop: webshopUrl, name: roasterName } = roaster;
 
 const response = await fetch(webshopUrl);
 
@@ -23,7 +25,7 @@ if (!response.ok) {
 
 const html = (await response.text()).match(/<body[^>]*>[\s\S]*<\/body>/giu)[0];
 
-console.info(`Invoke webshop processor for ${roasterId} and url: ${webshopUrl}`);
+console.info(`Invoke webshop processor for ${roasterId} (${roasterName}) and url: ${webshopUrl}`);
 
 const urls = await webshopProcessorHandler({
   url: webshopUrl,

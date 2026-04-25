@@ -259,6 +259,18 @@ const parsers = {
 
     return coffeeLinks.filter((l) => !l.includes('/zestawy') && !l.includes('zestaw-') && !l.includes('mieszanki'));
   },
+  // A.M.O.C.
+  94: ({ html }) => {
+    const document = getDocument(html);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('a.woocommerce-loop-product__link'))
+          .filter(({ href }) => !href.includes('drip-bags') && !href.includes('/archive/'))
+          .map(({ href }) => href)
+      )
+    );
+  },
   // La Cabra
   10: async ({ html, url }) => {
     const document = getDocument(html);

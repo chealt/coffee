@@ -2572,6 +2572,164 @@ const parsers = {
       webshopItemLink: url,
       weight
     };
+  },
+  // A.M.O.C.
+  94: ({ html, url, roasterId }) => {
+    logger.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const variationsData = document.querySelector('.variations_form')?.dataset?.product_variations;
+
+    if (!variationsData) {
+      logger.error(`No variation data found for ${url}`);
+
+      throw new Error(errors.detailsMissing);
+    }
+
+    const variations = JSON.parse(variationsData);
+    const availableVariants = variations
+      .filter((v) => v.is_in_stock && !v.attributes.attribute_pa_contents?.includes('1000'))
+      .sort((a, b) => parseFloat(a.weight) - parseFloat(b.weight));
+
+    if (!availableVariants.length) {
+      logger.info(`Out of stock for ${url}`);
+
+      return { isOutOfStock: true };
+    }
+
+    const smallestVariant = availableVariants[0];
+    const price = Number(smallestVariant.display_price.toFixed(2));
+    const weight = Number(smallestVariant.attributes.attribute_pa_contents?.match(/\d+/)?.[0]);
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
+      throw new Error(errors.weightMissing);
+    }
+
+    const currency = 'EUR';
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const details = Array.from(document.querySelectorAll('h4')).reduce((_details, h4) => {
+      const key = h4.textContent.trim().toLowerCase();
+      const value = h4.closest('td')?.nextElementSibling?.textContent?.trim().toLowerCase();
+
+      if (value) {
+        _details[key] = value;
+      }
+
+      return _details;
+    }, {});
+
+    const originText = details.origin || '';
+    const titleText = document.querySelector('h1.product_title')?.textContent.trim().toLowerCase() || '';
+    const originCountryId =
+      originCountries.find(({ name }) => originText.includes(name))?.origin_country_id ||
+      originCountries.find(({ name }) => titleText.includes(name))?.origin_country_id ||
+      null;
+
+    if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const originRegionId = originRegions.find(({ name }) => originText.includes(name))?.origin_region_id || null;
+
+    if (!originRegionId) {
+      logger.info(`Missing origin region: ${originText}`);
+    }
+
+    const processingText = details.processing || '';
+    const processingMethodId =
+      processingMethods.find(({ name }) => name === processingText)?.processing_method_id ||
+      processingMethods.find(({ name }) => processingText.includes(name))?.processing_method_id ||
+      null;
+
+    if (!processingMethodId) {
+      logger.info(`Missing processing method: ${processingText}`);
+    }
+
+    const varietyText = details.variety || '';
+    const varietiesStrings = varietyText
+      .toLowerCase()
+      .split(/[|,&—/]/)
+      .map((s) => s.replace(/\*/g, '').trim())
+      .filter(Boolean);
+    const varietyIds = varieties
+      .filter(
+        ({ name, alias }) =>
+          varietiesStrings.includes(name.toLowerCase()) || (alias && varietiesStrings.includes(alias.toLowerCase()))
+      )
+      .map(({ id }) => id);
+
+    if (!varietyIds.length) {
+      logger.info(`Missing varieties: ${varietiesStrings}`);
+    }
+
+    const profileText = details.profile || '';
+    const tasteNoteStrings = profileText
+      .split(/[,&+]/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const tasteNoteIds = tasteNoteStrings
+      .map(
+        (note) =>
+          tasteNotes.find(({ name }) => name === note)?.taste_note_id ||
+          tasteNotes.find(({ name }) => note.includes(name))?.taste_note_id
+      )
+      .filter(Boolean);
+
+    const missingTasteNotes = tasteNoteStrings.filter((note) => !tasteNotes.some(({ name }) => name === note));
+
+    if (missingTasteNotes.length) {
+      logger.info(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
+    }
+
+    const roastAttr = smallestVariant.attributes.attribute_pa_roast;
+    const brewingMethodId =
+      brewingMethods.find(({ name }) => name === roastAttr)?.brewing_method_id ||
+      brewingMethods.find(({ name }) => roastAttr?.includes(name))?.brewing_method_id ||
+      null;
+
+    if (!brewingMethodId) {
+      logger.info(`Missing brewing method: ${roastAttr}`);
+    }
+
+    const title = document.querySelector('h1.product_title')?.textContent.trim().toLowerCase() || '';
+    const isDecaf = title.includes('decaf') || url.includes('decaf');
+
+    const image = document.querySelector('.woocommerce-product-gallery__image img')?.src;
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
   }
 };
 
