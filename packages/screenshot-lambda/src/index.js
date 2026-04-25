@@ -11,21 +11,21 @@ export const handler = async (event) => {
   const { url, filename, bucketName } = event;
 
   try {
-    if (!browser) {
+    if (!browser || !browser.isConnected()) {
       logger.info('Launching browser...');
       browser = await chromium.launch({
-        args: ['--disable-dev-shm-usage', '--no-sandbox', '--disable-gpu']
+        args: ['--disable-dev-shm-usage', '--no-sandbox', '--disable-gpu', '--no-zygote']
       });
     }
 
-    // Try to use the first context, otherwise create a new one
-    const context = browser.contexts().length > 0 ? browser.contexts()[0] : await browser.newContext();
+    const context = await browser.newContext();
     const page = await context.newPage();
 
     logger.info(`Navigating to: ${url}`);
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
 
     const screenshot = await page.screenshot({ fullPage: true });
+    await context.close();
 
     if (!process.env.IS_LOCAL) {
       if (!s3Client) {
@@ -39,16 +39,13 @@ export const handler = async (event) => {
           ContentType: 'image/png'
         })
       );
-      await page.close();
 
-      // eslint-disable no-else-return
       return { statusCode: 200, body: 'Screenshot uploaded to S3' };
-    } else {
-      const outputPath = `/var/task/test-results/${filename}`;
-      await fs.writeFile(outputPath, screenshot);
-      await page.close();
-      return { statusCode: 200, body: `Screenshot saved locally at ${outputPath}` };
     }
+
+    const outputPath = `/var/task/test-results/${filename}`;
+    await fs.writeFile(outputPath, screenshot);
+    return { statusCode: 200, body: `Screenshot saved locally at ${outputPath}` };
   } catch (error) {
     logger.error(`Error during execution: ${error.message}`);
     // If the browser crashed, clear the reference so it re-launches next time
