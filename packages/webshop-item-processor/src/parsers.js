@@ -356,8 +356,6 @@ const parsers = {
     const document = getDocument(html);
 
     if (document.querySelector('.product__title').textContent.toLowerCase().includes('blend')) {
-      logger.info(`Skipping blend: ${url}`);
-
       return { isBlend: true };
     }
 
@@ -2403,6 +2401,171 @@ const parsers = {
       originCountryId,
       price,
       pricePerGram,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
+  },
+  // La Cabra
+  10: async ({ html, url, roasterId }) => {
+    logger.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const allScripts = Array.from(document.querySelectorAll('script:not([src])'));
+    const variantScript = allScripts.find(
+      (s) => s.textContent.includes('"available"') && s.textContent.includes('"option1"')
+    );
+
+    if (!variantScript) {
+      logger.error(`No variant data found for ${url}`);
+
+      throw new Error(errors.detailsMissing);
+    }
+
+    const variants = JSON.parse(variantScript.textContent);
+    const availableVariants = variants.filter((v) => v.available);
+
+    if (!availableVariants.length) {
+      logger.info(`Out of stock for ${url}`);
+
+      return { isOutOfStock: true };
+    }
+
+    const smallestVariant = availableVariants.sort((a, b) => a.weight - b.weight)[0];
+    const price = Number((smallestVariant.price / 100).toFixed(2));
+    const weight = smallestVariant.weight;
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
+      throw new Error(errors.weightMissing);
+    }
+
+    const currency = 'DKK';
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const originCountryText = document
+      .querySelector('.product__title .product__text')
+      ?.textContent.trim()
+      .toLowerCase();
+
+    const richTextEls = Array.from(document.querySelectorAll('.metafield-rich_text_field'));
+    const uniqueRichTextEls = richTextEls.filter(
+      (el, index, arr) => arr.findIndex((e) => e.textContent.trim() === el.textContent.trim()) === index
+    );
+
+    const aboutEl = uniqueRichTextEls.find((el) => el.textContent.includes('About'));
+    const aboutText = aboutEl?.textContent.toLowerCase() || '';
+
+    const accordionText = Array.from(document.querySelectorAll('.product__accordion p'))
+      .map((el) => el.textContent.toLowerCase())
+      .join(' ');
+
+    if (aboutText.includes('blend') || accordionText.includes('blend')) {
+      return { isBlend: true };
+    }
+
+    const originCountryId = originCountries.find(({ name }) => name === originCountryText)?.origin_country_id || null;
+
+    if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const techDataEl = uniqueRichTextEls.find((el) => el.textContent.includes('Technical Data'));
+    const techData = Array.from(techDataEl?.querySelectorAll('strong') || []).reduce((_details, strongEl) => {
+      const key = strongEl.textContent.trim().toLowerCase();
+      const value = strongEl.nextSibling?.textContent?.trim().toLowerCase();
+
+      if (value) {
+        _details[key] = value;
+      }
+
+      return _details;
+    }, {});
+
+    const originRegionId = originRegions.find(({ name }) => techData.region?.includes(name))?.origin_region_id || null;
+
+    if (!originRegionId) {
+      logger.info(`Missing origin region: ${techData.region}`);
+    }
+
+    const processingMethodId =
+      processingMethods.find(({ name }) => name === techData.process)?.processing_method_id ||
+      processingMethods.find(({ name }) => techData.process?.includes(name))?.processing_method_id ||
+      null;
+
+    if (!processingMethodId) {
+      logger.info(`Missing processing method: ${techData.process}`);
+    }
+
+    const varietiesStrings = techData.varietal
+      ? techData.varietal
+          .split(/[,/&]/)
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
+    const varietyIds = varieties
+      .filter(
+        ({ name, alias }) =>
+          varietiesStrings.includes(name.toLowerCase()) || (alias && varietiesStrings.includes(alias.toLowerCase()))
+      )
+      .map(({ id }) => id);
+
+    if (!varietyIds.length) {
+      logger.info(`Missing varieties: ${varietiesStrings}`);
+    }
+
+    const isFilter = aboutText.includes('filter');
+    const isEspresso = aboutText.includes('espresso');
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) =>
+          (isFilter && isEspresso && name === 'omni') ||
+          (isFilter && !isEspresso && name === 'filter') ||
+          (isEspresso && !isFilter && name === 'espresso')
+      )?.brewing_method_id || null;
+
+    if (!brewingMethodId) {
+      logger.info(`Missing brewing method for ${url}`);
+    }
+
+    const tasteNotesFound = tasteNotes.filter(({ name }) => aboutText.includes(name));
+    const distinctTasteNotes = tasteNotesFound.filter(
+      ({ name }) => !tasteNotesFound.some(({ name: n }) => n !== name && n.includes(name))
+    );
+    const tasteNoteIds = distinctTasteNotes.map(({ taste_note_id: id }) => id);
+
+    const image = document.querySelector('.product__media img')?.src;
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    const isDecaf = url.includes('decaf');
+
+    return {
+      brewingMethodId,
+      currency,
+      image: `https:${image}`,
+      isDecaf,
+      originCountryId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
       roasterId,
       tasteNoteIds,
       varietyIds,

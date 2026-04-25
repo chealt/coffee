@@ -258,6 +258,20 @@ const parsers = {
     );
 
     return coffeeLinks.filter((l) => !l.includes('/zestawy') && !l.includes('zestaw-') && !l.includes('mieszanki'));
+  },
+  // La Cabra
+  10: async ({ html, url }) => {
+    const document = getDocument(html);
+
+    const { origin } = new URL(url);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('.coffee-product a'))
+          .filter(({ href }) => !href.includes('subscription'))
+          .map(({ href }) => `${origin}${href.trim()}`)
+      )
+    );
   }
 };
 

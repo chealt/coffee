@@ -250,3 +250,16 @@ Resources:
         Arn: !Ref RecordLambdaArn
         RoleArn: !GetAtt SchedulerExecutionRole.Arn
         Input: '{"roasterId": 297}'
+
+  LaCabraSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: LaCabraSchedule
+      FlexibleTimeWindow:
+        Mode: 'FLEXIBLE'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
+      ScheduleExpression: 'cron(40 2 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 10}'
