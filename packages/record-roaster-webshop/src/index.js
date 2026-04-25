@@ -21,11 +21,7 @@ export const handler = async ({ isTest, roasterId, debug }) => {
 
   logger.info(`Fetching webshop page ${url}`);
 
-  const response = await fetch(url, {
-    headers: {
-      Cookie: 'selectedRegion=eu' // La Cabra
-    }
-  });
+  const response = await fetch(url);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch webshop page ${url}`);

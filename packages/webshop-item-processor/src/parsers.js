@@ -2450,7 +2450,7 @@ const parsers = {
       throw new Error(errors.weightMissing);
     }
 
-    const currency = 'DKK';
+    const currency = document.querySelector('[property="og:price:currency"]').content;
     const pricePerGram = Number((price / weight).toFixed(2));
 
     const originCountryText = document
