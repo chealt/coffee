@@ -2457,7 +2457,9 @@ const parsers = {
       throw new Error(errors.weightMissing);
     }
 
-    const currency = window.Shopify.currency.active;
+    const currency = JSON.parse(
+      allScripts.find(({ textContent }) => textContent.includes('http://schema.org/'))?.textContent
+    ).offers[0].priceCurrency;
     const pricePerGram = Number((price / weight).toFixed(2));
 
     const originCountryText = document
