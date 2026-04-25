@@ -42,9 +42,8 @@ const handler = async (event) => {
   for (const productUrl of productLinks) {
     if (!event.isTest) {
       logger.info(`Invoking record lambda for ${productUrl}`);
+
       await callRecordWebshopItem({ url: productUrl, roasterId });
-    } else {
-      logger.info(productUrl);
     }
   }
 

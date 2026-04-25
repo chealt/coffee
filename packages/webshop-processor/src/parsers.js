@@ -82,6 +82,37 @@ const parsers = {
       (href) => href.includes(origin) && !href.includes('blend') && !href.includes('zestaw-prezentowy') // remove blends and gift sets
     );
   },
+  // april
+  47: async ({ html, url }) => {
+    const document = getDocument(html);
+    const { origin } = new URL(url);
+
+    // espresso links
+    const espressoLink = document.querySelector('.navmenu-id-espresso-beans a');
+
+    const espressoResponse = await fetch(espressoLink.href);
+    const espressoHtml = await espressoResponse.text();
+
+    const espressoDocument = getDocument(espressoHtml);
+
+    const espressoLinks = espressoDocument.querySelectorAll('a.productitem--image-link');
+
+    // alternative links
+    const alternativeLink = document.querySelector('.navmenu-id-filter-beans a');
+
+    const alternativeResponse = await fetch(alternativeLink.href);
+    const alternativeHtml = await alternativeResponse.text();
+
+    const alternativeDocument = getDocument(alternativeHtml);
+
+    const alternativeLinks = alternativeDocument.querySelectorAll('a.productitem--image-link');
+
+    const productLinks = [...espressoLinks, ...alternativeLinks];
+
+    return Array.from(new Set(Array.from(productLinks).map((productLink) => productLink.href)))
+      .filter((href) => !href.includes('box') && !href.includes('giftcard') && !href.includes('subscription'))
+      .map((href) => `${origin}${href}`);
+  },
   // Heresy
   65: async ({ html }) => {
     const document = getDocument(html);
