@@ -23,6 +23,12 @@ const getDocument = (html) => {
   return document;
 };
 
+const getWindow = (html) => {
+  const { window } = new JSDOM(html);
+
+  return window;
+};
+
 const errors = {
   brewingMethodMissing: 'Missing brewing method',
   currencyMissing: 'Missing currency',
@@ -2412,7 +2418,8 @@ const parsers = {
   10: async ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
 
-    const document = getDocument(html);
+    const window = getWindow(html);
+    const document = window.document;
 
     const allScripts = Array.from(document.querySelectorAll('script:not([src])'));
     const variantScript = allScripts.find(
@@ -2450,7 +2457,7 @@ const parsers = {
       throw new Error(errors.weightMissing);
     }
 
-    const currency = document.querySelector('[property="og:price:currency"]').content;
+    const currency = window.Shopify.currency.active;
     const pricePerGram = Number((price / weight).toFixed(2));
 
     const originCountryText = document
