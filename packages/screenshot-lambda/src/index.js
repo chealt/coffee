@@ -1,28 +1,36 @@
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { chromium } from 'playwright';
 import fs from 'fs/promises';
+import logger from './Sentry/logger.js';
 
+let s3Client;
 let browser;
 
 export const handler = async (event) => {
   const { url, filename, bucketName } = event;
 
-  if (!browser) {
-    browser = await chromium.launch({
-      args: ['--disable-dev-shm-usage', '--no-sandbox']
-    });
-  }
-
-  const page = await browser.newPage();
   try {
-    // Navigate with a timeout
+    if (!browser) {
+      logger.info('Launching browser...');
+      browser = await chromium.launch({
+        args: ['--disable-dev-shm-usage', '--no-sandbox', '--disable-gpu']
+      });
+    }
+
+    // Try to use the first context, otherwise create a new one
+    const context = browser.contexts().length > 0 ? browser.contexts()[0] : await browser.newContext();
+    const page = await context.newPage();
+
+    logger.info('Navigating to:', url);
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
 
-    // Take full page screenshot
     const screenshot = await page.screenshot({ fullPage: true });
 
     if (!process.env.IS_LOCAL) {
-      const s3Client = new S3Client({ region: process.env.AWS_REGION || 'eu-central-1' });
+      if (!s3Client) {
+        s3Client = new S3Client({ region: process.env.AWS_REGION || 'eu-central-1' });
+      }
+
       await s3Client.send(
         new PutObjectCommand({
           Bucket: bucketName,
@@ -31,20 +39,27 @@ export const handler = async (event) => {
           ContentType: 'image/png'
         })
       );
+      await page.close();
 
       // eslint-disable-next-line no-else-return
       return { statusCode: 200, body: 'Screenshot uploaded to S3' };
     } else {
       const outputPath = `/var/task/test-results/${filename}`;
       await fs.writeFile(outputPath, screenshot);
+      await page.close();
+
       return { statusCode: 200, body: `Screenshot saved locally at ${outputPath}` };
     }
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error during execution:', error);
+    logger.error('Error during execution:', error);
+
+    // If the browser crashed, clear the reference so it re-launches next time
+    if (browser) {
+      await browser.close().catch(() => {});
+
+      browser = null;
+    }
 
     throw error;
-  } finally {
-    await page.close();
   }
 };
