@@ -1,10 +1,10 @@
-import { invokeLambda } from './AWS.js';
+import { invokeLambda, putObject } from './AWS.js';
 import logger from './Sentry/logger.js';
 // eslint-disable-next-line import/no-unresolved
 import roasters from '../data/roasters.json' with { type: 'json' };
 import { deflateSync } from 'node:zlib';
 
-export const handler = async ({ isTest, roasterId }) => {
+export const handler = async ({ isTest, roasterId, debug }) => {
   logger.info(`Recording webshop for ${roasterId}`);
 
   const roaster = roasters.find(({ id }) => id === roasterId);
@@ -42,5 +42,12 @@ export const handler = async ({ isTest, roasterId }) => {
       functionName: 'webshopProcessor',
       payload: { url, roasterId, html: deflateSync(html).toString('base64') }
     });
+
+    if (debug) {
+      await putObject({
+        bucketName: 'centralbeans-roaster-webshop',
+        key: `${roasterId}/${url}/${Date.now()}.html`
+      });
+    }
   }
 };
