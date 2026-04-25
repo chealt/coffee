@@ -1526,6 +1526,7 @@ __metadata:
   resolution: "@centralbeans/screenshot-lambda@workspace:packages/screenshot-lambda"
   dependencies:
     "@aws-sdk/client-s3": "npm:^3.0.0"
+    "@sentry/aws-serverless": "npm:^10.50.0"
     aws-lambda-ric: "npm:^4.0.2"
     playwright: "npm:1.59.1"
   languageName: unknown
