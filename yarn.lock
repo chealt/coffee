@@ -1521,6 +1521,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@centralbeans/screenshot-lambda@workspace:packages/screenshot-lambda":
+  version: 0.0.0-use.local
+  resolution: "@centralbeans/screenshot-lambda@workspace:packages/screenshot-lambda"
+  dependencies:
+    "@aws-sdk/client-s3": "npm:^3.0.0"
+    aws-lambda-ric: "npm:^4.0.2"
+    playwright: "npm:1.59.1"
+  languageName: unknown
+  linkType: soft
+
 "@centralbeans/send-registration-code@workspace:packages/send-registration-code":
   version: 0.0.0-use.local
   resolution: "@centralbeans/send-registration-code@workspace:packages/send-registration-code"
@@ -1753,16 +1763,6 @@ __metadata:
   checksum: 10c0/931bc1566dc61ea48e78dbd6a3c3d50465bf5031e66f9d19b085cc9b106f110f625b35d5258c111e41fa45a37fd8f84920ce1aecc8f1cb66a282179e5e8b96ae
   languageName: node
   linkType: hard
-
-"@coffee/screenshot-lambda@workspace:packages/screenshot-lambda":
-  version: 0.0.0-use.local
-  resolution: "@coffee/screenshot-lambda@workspace:packages/screenshot-lambda"
-  dependencies:
-    "@aws-sdk/client-s3": "npm:^3.0.0"
-    aws-lambda-ric: "npm:^4.0.2"
-    playwright: "npm:1.59.1"
-  languageName: unknown
-  linkType: soft
 
 "@cspotcode/source-map-support@npm:0.8.1":
   version: 0.8.1
