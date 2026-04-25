@@ -594,6 +594,22 @@ jobs:
           template: packages/screenshot-lambda/infra/template.yaml
           capabilities: CAPABILITY_IAM
           parameter-overrides: ImageUri=${{ steps.login-ecr.outputs.registry }}/centralbeans/screenshot-lambda:${{ steps.git-hash.outputs.hash }}
+      - name: Publish Lambda Version
+        if: steps.changed-files.outputs.any_changed == 'true'
+        id: publish-version
+        run: |
+          version=$(aws lambda publish-version --function-name createWebsiteScreenshot | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release screenshot-lambda
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.publish-version.conclusion == 'success'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create '@centralbeans/screenshot-lambda@${{ steps.publish-version.outputs.version }}' \
+            --title "Release @centralbeans/screenshot-lambda v${{ steps.publish-version.outputs.version }}" \
+            --notes "Automated release" \
+            --draft=false \
+            --prerelease=false
   send-registration-code:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
