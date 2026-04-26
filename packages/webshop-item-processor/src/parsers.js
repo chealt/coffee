@@ -523,6 +523,198 @@ const parsers = {
       weight
     };
   },
+  // Friedhats
+  12: ({ html, url, roasterId }) => {
+    logger.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const ldJsonScript = Array.from(document.querySelectorAll('script[type="application/ld+json"]')).find((script) =>
+      script.textContent.includes('"Product"')
+    );
+
+    if (!ldJsonScript) {
+      logger.error(`No product JSON-LD found for ${url}`);
+
+      throw new Error(errors.detailsMissing);
+    }
+
+    const productData = JSON.parse(ldJsonScript.textContent);
+    const productName = productData.name?.toLowerCase() || '';
+
+    if (productName.includes('blend')) {
+      return { isBlend: true };
+    }
+
+    if (productData.offers?.availability && !productData.offers.availability.includes('InStock')) {
+      logger.info(`Out of stock for ${url}`);
+
+      return { isOutOfStock: true };
+    }
+
+    const price = Number(productData.offers?.price).toFixed(2);
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    const currency = productData.offers?.priceCurrency;
+
+    if (!currency) {
+      logger.error(`No currency found for ${url}`);
+
+      throw new Error(errors.currencyMissing);
+    }
+
+    const sizeMatch = productData.offers?.url?.match(/Size=(\d+)gr?/iu);
+    const weight = sizeMatch ? Number(sizeMatch[1]) : null;
+
+    if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
+      throw new Error(errors.weightMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const image = Array.isArray(productData.image) ? productData.image[0] : productData.image;
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    const detailKeys = ['variety', 'processing', 'flavour notes', 'producer', 'farm', 'region', 'altitude', 'country'];
+    const details = Array.from(document.querySelectorAll('span.uppercase')).reduce((acc, keyEl) => {
+      const key = keyEl.textContent.trim().toLowerCase();
+
+      if (!detailKeys.includes(key)) {
+        return acc;
+      }
+
+      const value = keyEl.nextElementSibling?.textContent.trim().toLowerCase();
+
+      if (value) {
+        acc[key] = value;
+      }
+
+      return acc;
+    }, {});
+
+    const originCountry = details.country;
+
+    if (originCountry?.includes('&') || originCountry?.includes('%')) {
+      return { isBlend: true };
+    }
+
+    const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
+
+    if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const originRegion = details.region;
+    const originRegionId =
+      originRegions.find(({ name }) => name === originRegion)?.origin_region_id ||
+      originRegions.find(({ name }) => originRegion?.includes(name))?.origin_region_id ||
+      null;
+
+    if (!originRegionId && originRegion) {
+      logger.info(`Missing origin region: ${originRegion}`);
+    }
+
+    const originFarm = details.farm;
+    const originFarmId =
+      originFarms.find(({ name }) => name?.toLowerCase() === originFarm)?.id ||
+      originFarms.find(({ name }) => originFarm?.includes(name?.toLowerCase()))?.id ||
+      null;
+
+    const processingMethod = details.processing;
+    const processingMethodId =
+      processingMethods.find(({ name }) => name === processingMethod)?.processing_method_id ||
+      processingMethods.find(({ name }) => processingMethod?.includes(name))?.processing_method_id ||
+      null;
+
+    if (!processingMethodId) {
+      logger.info(`Missing processing method: ${processingMethod}`);
+    }
+
+    const varietyText = details.variety || '';
+    const varietiesStrings = varietyText
+      .split(/[,/&]| and /u)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const varietyIds = varieties
+      .filter(
+        ({ name, alias }) =>
+          varietiesStrings.includes(name.toLowerCase()) ||
+          (alias && varietiesStrings.includes(alias.toLowerCase())) ||
+          varietiesStrings.some((v) => v.includes(name.toLowerCase()))
+      )
+      .filter(({ name }) => name.toLowerCase() !== originCountry)
+      .map(({ id }) => id);
+
+    if (!varietyIds.length) {
+      logger.info(`Missing varieties: ${varietiesStrings}`);
+    }
+
+    const flavourNotes = details['flavour notes'] || '';
+    const tasteNotesStrings = flavourNotes
+      .split(/,| and /u)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const tasteNotesFound = tasteNotes.filter(({ name }) => tasteNotesStrings.includes(name));
+    const distinctTasteNotes = tasteNotesFound.filter(
+      ({ name }) => !tasteNotesFound.some(({ name: n }) => n !== name && n.includes(name))
+    );
+    const tasteNoteIds = Array.from(new Set(distinctTasteNotes.map(({ taste_note_id: id }) => id)));
+
+    const imageUrls = (Array.isArray(productData.image) ? productData.image : [productData.image]).filter(Boolean);
+    const hasEspressoBag = imageUrls.some((img) => /[-_]espresso[-_.]/iu.test(img));
+    const hasFilterBag = imageUrls.some((img) => /[-_]filter[-_.]/iu.test(img));
+    const hasOmniBag = imageUrls.some((img) => /[-_]omni[-_.]/iu.test(img));
+    const urlRoast = productData.offers?.url?.match(/Roast=([A-Za-z]+)/iu)?.[1].toLowerCase();
+    const isOmni =
+      hasOmniBag || (hasEspressoBag && hasFilterBag) || (!hasEspressoBag && !hasFilterBag && urlRoast === 'omni');
+    const isEspresso = !isOmni && (hasEspressoBag || (!hasFilterBag && urlRoast === 'espresso'));
+    const isFilter = !isOmni && (hasFilterBag || (!hasEspressoBag && urlRoast === 'filter'));
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) =>
+          (isOmni && name === 'omni') ||
+          (isFilter && !isEspresso && name === 'filter') ||
+          (isEspresso && !isFilter && name === 'espresso')
+      )?.brewing_method_id || null;
+
+    if (!brewingMethodId) {
+      logger.info(`Missing brewing method for ${url}`);
+    }
+
+    const isDecaf = /decaf|no.?caf/iu.test(productName) || /decaf|no.?caf/iu.test(url);
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
+  },
   // Typika
   14: ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);

@@ -51,6 +51,28 @@ const parsers = {
       )
     );
   },
+  // Friedhats
+  12: ({ html }) => {
+    const document = getDocument(html);
+
+    const ldJsonScript = Array.from(document.querySelectorAll('script[type="application/ld+json"]')).find(
+      (script) => script.textContent.includes('"CollectionPage"')
+    );
+
+    if (!ldJsonScript) {
+      return [];
+    }
+
+    const data = JSON.parse(ldJsonScript.textContent);
+
+    return Array.from(
+      new Set(
+        (data.mainEntity?.itemListElement || [])
+          .map(({ item }) => item?.url)
+          .filter((href) => href && !href.includes('blend'))
+      )
+    );
+  },
   // Typika
   14: async ({ html, url }) => {
     const document = getDocument(html);
