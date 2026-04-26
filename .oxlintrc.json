@@ -124,7 +124,7 @@
       }
     },
     {
-      "files": ["**/coffee-admin/**/*.js", "**/Sentry/logger.js", "**/test.js"],
+      "files": ["**/coffee-admin/**/*.js", "**/Sentry/logger.js", "**/test.js", "**/save-html.js"],
       "rules": {
         "no-console": "off"
       }
