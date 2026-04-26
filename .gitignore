@@ -40,3 +40,4 @@ playwright/.auth/
 # Testing Lambdas
 packages/record-roaster-webshop/data
 packages/webshop-item-processor/data
+test-html/

@@ -53,6 +53,17 @@ To test the parsers for `webshop-item-processor`, always use the yarn workspace 
 ROASTER_ID=297 yarn workspace @centralbeans/webshop-item-processor test
 ```
 
+##### Saving HTML for Local Analysis
+
+When writing or debugging a parser, avoid fetching live pages repeatedly. Instead, save all HTML files once with the `save-html.js` script, then read them locally.
+
+```bash
+# Save all product HTML files for a roaster (run once from repo root)
+ROASTER_ID=47 node --env-file=packages/coffee-admin/.env packages/webshop-item-processor/save-html.js
+```
+
+Files are saved to `test-html/<ROASTER_ID>/`. They are gitignored. Use the saved files to inspect HTML structure, test regex patterns, and understand the page layout without hitting the network. Only re-run the save script when the live site changes or you need fresh data.
+
 ### Data Export/Import
 
 ```bash
