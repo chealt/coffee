@@ -55,8 +55,8 @@ const parsers = {
   12: ({ html }) => {
     const document = getDocument(html);
 
-    const ldJsonScript = Array.from(document.querySelectorAll('script[type="application/ld+json"]')).find(
-      (script) => script.textContent.includes('"CollectionPage"')
+    const ldJsonScript = Array.from(document.querySelectorAll('script[type="application/ld+json"]')).find((script) =>
+      script.textContent.includes('"CollectionPage"')
     );
 
     if (!ldJsonScript) {
