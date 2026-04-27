@@ -9,6 +9,15 @@ const getDocument = (html) => {
 };
 
 const parsers = {
+  // Prolog
+  1: async ({ url }) => {
+    const { origin, pathname } = new URL(url);
+
+    const response = await fetch(`${origin}${pathname}/products.json?limit=250`);
+    const { products } = await response.json();
+
+    return products.map(({ handle }) => `${origin}/products/${handle}`);
+  },
   // Sheep & Raven
   6: ({ html }) => {
     const document = getDocument(html);

@@ -45,6 +45,212 @@ const cleanPrice = ({ priceElement, currencySymbol = '€' }) =>
   Number(priceElement.textContent.toLowerCase().replaceAll(currencySymbol, '').replaceAll(',', '.').trim()).toFixed(2);
 
 const parsers = {
+  // Prolog
+  1: ({ html, url, roasterId }) => {
+    logger.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const productScript = Array.from(document.querySelectorAll('script[type="application/json"]')).find((script) =>
+      script.textContent.includes('"product":')
+    );
+
+    if (!productScript) {
+      logger.error(`No product data found for ${url}`);
+
+      throw new Error(errors.detailsMissing);
+    }
+
+    const { product } = JSON.parse(productScript.textContent);
+
+    const availableVariants = product.variants.filter((variant) => variant.available);
+
+    if (!availableVariants.length) {
+      return { isOutOfStock: true };
+    }
+
+    const parseVariantWeight = (title) => {
+      const match = title.match(/(\d+)\s*(g|kg)/i);
+
+      if (!match) {
+        return undefined;
+      }
+
+      const num = Number(match[1]);
+
+      return match[2].toLowerCase() === 'kg' ? num * 1000 : num;
+    };
+
+    const sortedVariants = [...availableVariants].sort(
+      (a, b) => parseVariantWeight(a.title) - parseVariantWeight(b.title)
+    );
+    const smallestVariant = sortedVariants[0];
+
+    const price = Number((smallestVariant.price / 100).toFixed(2));
+    const weight = parseVariantWeight(smallestVariant.title);
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
+      throw new Error(errors.weightMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const ldScripts = Array.from(document.querySelectorAll('script[type="application/ld+json"]'));
+    const productLd = ldScripts
+      .map((script) => {
+        try {
+          return JSON.parse(script.textContent);
+        } catch {
+          return null;
+        }
+      })
+      .find((data) => data?.['@type'] === 'Product');
+
+    const currency = productLd?.offers?.priceCurrency || productLd?.offers?.[0]?.priceCurrency;
+
+    if (!currency) {
+      logger.error(`No currency found for ${url}`);
+
+      throw new Error(errors.currencyMissing);
+    }
+
+    const image = product.featured_image ? `https:${product.featured_image}` : null;
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    const descriptionDocument = getDocument(product.description || '');
+    const specs = {};
+
+    descriptionDocument.querySelectorAll('table tr').forEach((row) => {
+      const cells = row.querySelectorAll('td');
+
+      if (cells.length >= 2) {
+        const key = cells[0].textContent.trim().toLowerCase();
+        // Normalize curly apostrophes so values match data dictionaries (e.g. "murang’a" → "murang'a")
+        const value = cells[1].textContent
+          .trim()
+          .toLowerCase()
+          .replace(/[‘’]/g, "'");
+
+        if (key && value) {
+          specs[key] = value;
+        }
+      }
+    });
+
+    const countryText = specs.country || product.vendor?.toLowerCase() || '';
+    const originCountryId = originCountries.find(({ name }) => name === countryText)?.origin_country_id || null;
+
+    if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const regionText = specs.region || '';
+    const originRegionId = originRegions.find(({ name }) => regionText.includes(name))?.origin_region_id || null;
+
+    if (!originRegionId) {
+      logger.info(`Missing origin region: ${regionText}`);
+    }
+
+    const farmerText = specs.farmer || specs.producer || '';
+    const originFarmId =
+      originFarms.find(({ name }) => farmerText.includes(name))?.id ||
+      originFarms.find(({ name }) => product.title.toLowerCase().includes(name))?.id ||
+      null;
+
+    const processingText = specs.process || '';
+    const sortedProcessingMethods = [...processingMethods].sort((a, b) => b.name.length - a.name.length);
+    const processingMethodId =
+      sortedProcessingMethods.find(({ name }) => processingText === name)?.processing_method_id ||
+      sortedProcessingMethods.find(({ name }) => processingText.includes(name))?.processing_method_id ||
+      null;
+
+    if (!processingMethodId) {
+      logger.info(`Missing processing method: ${processingText}`);
+    }
+
+    const varietyText = specs.variety || '';
+    const varietyStrings = varietyText
+      .split(/[,/&+]/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const varietyIds = Array.from(
+      new Set(
+        varieties
+          .filter(({ name, alias }) =>
+            varietyStrings.some(
+              (s) =>
+                name.toLowerCase() === s ||
+                (alias && alias.toLowerCase() === s) ||
+                s.includes(name.toLowerCase()) ||
+                (alias && s.includes(alias.toLowerCase()))
+            )
+          )
+          .map(({ id }) => id)
+      )
+    );
+
+    if (!varietyIds.length) {
+      logger.info(`Missing varieties: ${varietyStrings}`);
+    }
+
+    const brewingMethodId = brewingMethods.find(({ name }) => name === 'omni')?.brewing_method_id || null;
+
+    const tasteNotesText = specs['tasting notes'] || specs['flavour notes'] || specs['flavor notes'] || '';
+    const tasteNoteStrings = tasteNotesText
+      .split(/[,&]/)
+      .map((s) => s.trim().replace(/\.$/, ''))
+      .filter(Boolean);
+    const tasteNoteIds = Array.from(
+      new Set(
+        tasteNoteStrings
+          .map(
+            (note) =>
+              tasteNotes.find(({ name }) => name === note)?.taste_note_id ||
+              tasteNotes.find(({ name }) => note.includes(name))?.taste_note_id
+          )
+          .filter(Boolean)
+      )
+    );
+
+    if (!tasteNoteIds.length) {
+      logger.info(`Missing taste notes: ${tasteNoteStrings}`);
+    }
+
+    const isDecaf = url.includes('decaf') || product.title.toLowerCase().includes('decaf');
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
+  },
   // Sheep & Raven
   6: ({ html, url, roasterId }) => {
     logger.info(`Parsing webshop item page ${url}`);
