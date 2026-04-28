@@ -346,6 +346,18 @@ const parsers = {
     );
 
     return coffeeLinks.filter((l) => !l.includes('/zestawy') && !l.includes('zestaw-') && !l.includes('mieszanki'));
+  },
+  // naughty dog
+  310: ({ html }) => {
+    const document = getDocument(html);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('div[class*="category_item_"] a[href*="-the-naughty-dog/"]'))
+          .map(({ href }) => href)
+          .filter((href) => !href.includes('/reviews') && !href.includes('-blend') && !/-1000-?g/.test(href))
+      )
+    );
   }
 };
 
