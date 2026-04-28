@@ -40,9 +40,9 @@ const parsers = {
 
     return Array.from(
       new Set(
-        Array.from(document.querySelectorAll(`.product-miniature:not(:has(.out_of_stock)) a.product-thumbnail`)).map(
-          ({ href }) => href
-        )
+        Array.from(document.querySelectorAll(`.product-miniature:not(:has(.out_of_stock)) a.product-thumbnail`))
+          .map(({ href }) => href)
+          .filter((url) => !url.includes('drippera'))
       )
     );
   },
