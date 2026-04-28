@@ -34,7 +34,7 @@ const urls = await webshopProcessorHandler({
 for (const url of urls) {
   const itemResponse = await fetch(url);
   const itemHtml = (await itemResponse.text()).match(/<body[^>]*>[\s\S]*<\/body>/giu)[0];
-  const filename = url.replace(/\/$/, '').split('/').pop().replace(/[^a-z0-9-]/g, '-');
+  const filename = url.split('#')[0].replace(/\/$/, '').split('/').pop().replace(/\.html?$/i, '').replace(/[^a-z0-9-]/g, '-');
   writeFileSync(`${dir}/${filename}.html`, itemHtml);
   console.info(`Saved ${filename}`);
 }

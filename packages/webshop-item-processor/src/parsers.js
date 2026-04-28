@@ -443,18 +443,22 @@ const parsers = {
 
     const pricePerGram = Number((price / weight).toFixed(2));
 
-    let detailsElements = document.querySelectorAll('.data-sheet dt');
+    const collectDetails = (selector) =>
+      Array.from(document.querySelectorAll(selector)).reduce((newDetails, nameElement) => {
+        const name = nameElement.textContent.toLowerCase().trim();
+        const value = nameElement.nextElementSibling?.textContent.toLowerCase().trim();
 
-    if (!detailsElements.length) {
-      detailsElements = document.querySelectorAll('.product-description td:has(strong)');
-    }
+        if (!name || !value) {
+          return newDetails;
+        }
 
-    const details = Array.from(detailsElements).reduce((newDetails, nameElement) => {
-      const name = nameElement.textContent.toLowerCase();
-      const value = nameElement.nextElementSibling.textContent.toLowerCase();
+        return { ...newDetails, [name]: value };
+      }, {});
 
-      return { ...newDetails, [name]: value };
-    }, {});
+    const details = {
+      ...collectDetails('.product-description td:has(strong)'),
+      ...collectDetails('.data-sheet dt')
+    };
 
     if (details['skład']?.includes('robusta')) {
       logger.info(`Skipping robusta: ${url}`);
@@ -470,13 +474,25 @@ const parsers = {
       null;
 
     if (!originCountryId) {
+      const fullDescription = Array.from(document.querySelectorAll('.product-description'))
+        .map((el) => el.textContent.toLowerCase())
+        .join(' ');
+
+      if (/\brobust/i.test(fullDescription) || fullDescription.includes('mieszanka')) {
+        return { isBlend: true };
+      }
+
       logger.error(`No origin country found for ${url}`);
 
       throw new Error(errors.originCountryMissing);
     }
 
     const originRegion = details.region;
-    const originRegionId = originRegions.find(({ name }) => name === originRegion)?.origin_region_id || null;
+    const originRegionId =
+      originRegion
+        ?.split(/,\s*/)
+        .map((part) => originRegions.find(({ name }) => name === part.trim())?.origin_region_id)
+        .find(Boolean) || null;
 
     if (!originRegionId) {
       logger.info(
@@ -518,7 +534,7 @@ const parsers = {
     }
 
     const varietiesStrings =
-      details['odmiana botaniczna']?.split(', ').map((name) => name.trim().toLocaleLowerCase()) || [];
+      details['odmiana botaniczna']?.split(/,\s*/).map((name) => name.trim().toLocaleLowerCase()) || [];
     const varietyIds = varieties
       .filter(
         ({ name, alias }) =>
