@@ -3268,10 +3268,32 @@ const parsers = {
       })
       .filter((w) => w.weight && w.weight <= 1000); // Filter out bulk packs like 3x1kg
 
-    const selectedWeight = parsedWeights.find((w) => w.weight === 250) || parsedWeights[0];
+    let selectedWeight = parsedWeights.find((w) => w.weight === 250) || parsedWeights[0];
+
+    if (!selectedWeight) {
+      const titleText = document.querySelector('h1')?.textContent || '';
+      const bodyText = document.body.textContent;
+      const sachetMatch = `${titleText} ${bodyText}`.match(/(\d+)\s*saszet\w*\s*[x×]\s*(\d+(?:[.,]\d+)?)\s*g/i);
+      const singleSachetMatch = titleText.match(/saszetka\s*(\d+(?:[.,]\d+)?)\s*g/i);
+      const netWeightMatch = bodyText.match(/waga\s+netto:?\s*(\d+(?:[.,]\d+)?)\s*g/i);
+
+      let fallbackWeight = null;
+      if (sachetMatch) {
+        fallbackWeight = parseInt(sachetMatch[1], 10) * parseFloat(sachetMatch[2].replace(',', '.'));
+      } else if (singleSachetMatch) {
+        fallbackWeight = parseFloat(singleSachetMatch[1].replace(',', '.'));
+      } else if (netWeightMatch) {
+        fallbackWeight = parseFloat(netWeightMatch[1].replace(',', '.'));
+      }
+
+      if (fallbackWeight && fallbackWeight <= 1000) {
+        selectedWeight = { weight: fallbackWeight, price: basePrice };
+      }
+    }
 
     if (!selectedWeight) {
       logger.error(`No weight found for ${url}`);
+
       throw new Error(errors.weightMissing);
     }
 
