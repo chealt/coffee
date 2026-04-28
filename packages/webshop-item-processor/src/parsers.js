@@ -2601,10 +2601,7 @@ const parsers = {
               ({ textContent }) => textContent.includes('Teža') || textContent.toLowerCase().includes('weight')
             )[0]
             ?.textContent.toLowerCase()
-            .match(/(weight|teža): \d*g/giu)[0]
-            .replace('weight: ', '')
-            .replace('teža: ', '')
-            .replace('g', '')
+            .match(/(?:weight|teža):\s*(\d+)\s*g/iu)?.[1]
         );
 
     if (!weight || isNaN(weight)) {
@@ -2772,8 +2769,8 @@ const parsers = {
     }, {});
 
     const processingMethodId =
-      processingMethods.find(({ name }) => name === details.process) ||
-      processingMethods.find(({ name }) => details.process.includes(name))?.processing_method_id ||
+      processingMethods.find(({ name }) => name === details.process)?.processing_method_id ||
+      processingMethods.find(({ name }) => details.process?.includes(name))?.processing_method_id ||
       null;
 
     if (!processingMethodId) {
@@ -2788,7 +2785,7 @@ const parsers = {
 
     const originFarmId = originFarms.find(({ name }) => details.producer?.includes(name))?.id || null;
 
-    const varietiesStrings = details.variety || details.varieties;
+    const varietiesStrings = details.variety || details.varieties || '';
     const varietyIds = varieties
       .filter(
         ({ name, alias }) =>
@@ -2799,6 +2796,7 @@ const parsers = {
       .split(', ')
       .filter(
         (name) =>
+          name &&
           !varieties.map((variety) => variety.name.toLowerCase()).includes(name) &&
           !varieties.map((variety) => variety.alias?.toLowerCase()).includes(name)
       );
@@ -2807,7 +2805,7 @@ const parsers = {
       logger.debug(`Missing varieties: ${missingVarieties}`);
     }
 
-    const tasteNoteStrings = (details.notes || details['taste notes']).split(', ');
+    const tasteNoteStrings = (details.notes || details['taste notes'] || '').split(', ').filter(Boolean);
     const tasteNoteIds = tasteNoteStrings
       .filter((note) => tasteNotes.find(({ name }) => name === note))
       .map((note) => tasteNotes.find(({ name }) => name === note).taste_note_id);
