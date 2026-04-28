@@ -313,7 +313,7 @@ const parsers = {
 
       productLinks.push(
         ...Array.from(pageDocument.querySelectorAll('a.product-link'))
-          .filter(({ href }) => !href.includes('blend') && !href.includes('pack'))
+          .filter(({ href }) => !href.includes('blend') && !href.includes('pack') && !href.includes('-tea'))
           .map(({ href }) => `${origin}${href}`)
       );
     }

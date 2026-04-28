@@ -3051,7 +3051,10 @@ const parsers = {
 
     const currency = currencyCodes[currencySymbol];
 
-    const weight = details.includes('250g') ? 250 : undefined;
+    const weightMatch = details.match(/(\d+(?:[.,]\d+)?)\s*(kg|g)\b/i);
+    const weight = weightMatch
+      ? Math.round(parseFloat(weightMatch[1].replace(',', '.')) * (weightMatch[2].toLowerCase() === 'kg' ? 1000 : 1))
+      : undefined;
 
     if (!weight || isNaN(weight)) {
       logger.error(`No weight found for ${url}`);
