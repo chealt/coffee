@@ -2505,7 +2505,10 @@ const parsers = {
     }, {});
 
     const originCountry = details.country;
-    const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
+    const originCountryId =
+      originCountries.find(({ name }) => name === originCountry)?.origin_country_id ||
+      originCountries.find(({ name }) => name.replaceAll(' ', '') === originCountry)?.origin_country_id ||
+      null;
 
     if (!originCountryId) {
       logger.error(`No origin country found for ${url}`);
