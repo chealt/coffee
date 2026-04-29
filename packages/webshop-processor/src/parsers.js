@@ -60,6 +60,37 @@ const parsers = {
       )
     );
   },
+  // Coffee Collective
+  11: async ({ html, url }) => {
+    const document = getDocument(html);
+    const { origin } = new URL(url);
+
+    // espresso links
+    const espressoLink = document.querySelector('a#HeaderDrawer-shop-espresso');
+
+    const espressoResponse = await fetch(`${origin}${espressoLink.href}`);
+    const espressoHtml = await espressoResponse.text();
+
+    const espressoDocument = getDocument(espressoHtml);
+
+    const espressoLinks = espressoDocument.querySelectorAll('#product-grid a.full-unstyled-link');
+
+    // alternative links
+    const alternativeLink = document.querySelector('a#HeaderDrawer-shop-filter-coffee');
+
+    const alternativeResponse = await fetch(`${origin}${alternativeLink.href}`);
+    const alternativeHtml = await alternativeResponse.text();
+
+    const alternativeDocument = getDocument(alternativeHtml);
+
+    const alternativeLinks = alternativeDocument.querySelectorAll('#product-grid a.full-unstyled-link');
+
+    const productLinks = [...espressoLinks, ...alternativeLinks];
+
+    return Array.from(new Set(Array.from(productLinks).map((productLink) => productLink.href)))
+      .map((href) => `${origin}${href}`)
+      .filter((itemUrl) => !itemUrl.includes('pack') && !itemUrl.includes('blend'));
+  },
   // Friedhats
   12: ({ html }) => {
     const document = getDocument(html);
