@@ -378,6 +378,18 @@ const parsers = {
 
     return coffeeLinks.filter((l) => !l.includes('/zestawy') && !l.includes('zestaw-') && !l.includes('mieszanki'));
   },
+  // Manhattan
+  305: async ({ html }) => {
+    const document = getDocument(html);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('.woocommerce-LoopProduct-link'))
+          .map(({ href }) => href)
+          .filter((href) => !href.includes('gift') && !href.includes('subscription'))
+      )
+    );
+  },
   // naughty dog
   310: ({ html }) => {
     const document = getDocument(html);
