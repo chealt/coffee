@@ -3553,6 +3553,199 @@ const parsers = {
       weight
     };
   },
+  // Manhattan
+  305: ({ html, url, roasterId }) => {
+    logger.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const variationsData = document.querySelector('.variations_form')?.dataset?.product_variations;
+
+    if (!variationsData) {
+      logger.error(`No variation data found for ${url}`);
+
+      throw new Error(errors.detailsMissing);
+    }
+
+    const variations = JSON.parse(variationsData);
+    const availableVariants = variations
+      .filter((v) => v.is_in_stock)
+      .sort((a, b) => parseFloat(a.weight) - parseFloat(b.weight));
+
+    if (!availableVariants.length) {
+      logger.info(`Out of stock for ${url}`);
+
+      return { isOutOfStock: true };
+    }
+
+    const smallestVariant = availableVariants[0];
+    const price = Number(smallestVariant.display_price.toFixed(2));
+    const weight = Number(smallestVariant.weight) * 1000;
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
+      throw new Error(errors.weightMissing);
+    }
+
+    const currency = 'EUR';
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const originText =
+      document.querySelector('.product-drilldown__content--info__location')?.textContent.trim().toLowerCase() || '';
+
+    if (originText.includes('&')) {
+      return { isBlend: true };
+    }
+
+    const originCountryId =
+      originCountries.find(({ name }) => name === originText)?.origin_country_id ||
+      originCountries.find(({ name }) => originText.includes(name))?.origin_country_id ||
+      null;
+
+    if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const details = Array.from(document.querySelectorAll('.product-drilldown__content--detail')).reduce(
+      (_details, element) => {
+        const key = element.querySelector('.detail-label')?.textContent.trim().toLowerCase();
+        const value = element.querySelector('.detail-value')?.textContent.trim().toLowerCase();
+
+        if (key && value) {
+          _details[key] = value;
+        }
+
+        return _details;
+      },
+      {}
+    );
+
+    const regionText = details.region || '';
+    const originRegionId = originRegions.find(({ name }) => regionText.includes(name))?.origin_region_id || null;
+
+    if (!originRegionId) {
+      logger.info(`Missing origin region: ${regionText}`);
+    }
+
+    const farmText = details.farm || '';
+    const title = document.querySelector('h1.product_title')?.textContent.trim().toLowerCase() || '';
+    const originFarmId =
+      originFarms.find(({ name }) => name === farmText)?.id ||
+      originFarms.find(({ name }) => farmText.includes(name))?.id ||
+      originFarms.find(({ name }) => title.includes(name))?.id ||
+      null;
+
+    const processingText = details.processing || '';
+    const sortedProcessingMethods = [...processingMethods].sort((a, b) => b.name.length - a.name.length);
+    const processingMethodId =
+      sortedProcessingMethods.find(({ name }) => name === processingText)?.processing_method_id ||
+      sortedProcessingMethods.find(({ name }) => processingText.includes(name))?.processing_method_id ||
+      null;
+
+    if (!processingMethodId) {
+      logger.info(`Missing processing method: ${processingText}`);
+    }
+
+    const varietyText = details.variety || '';
+    const varietyStrings = varietyText
+      .split(/[,/&\n]/u)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const varietyIds = Array.from(
+      new Set(
+        varieties
+          .filter(({ name, alias }) =>
+            varietyStrings.some((s) => name.toLowerCase() === s || (alias && alias.toLowerCase() === s))
+          )
+          .map(({ id }) => id)
+      )
+    );
+
+    if (!varietyIds.length) {
+      logger.info(`Missing varieties: ${varietyStrings}`);
+    }
+
+    const tasteNotesElement = document.querySelector('.product-drilldown__content--info__tastes-like .subtitle');
+    const tasteNoteStrings = (tasteNotesElement?.textContent || '')
+      .toLowerCase()
+      .split(/[•\n]/u)
+      .map((s) => s.trim().replace(/\.$/u, ''))
+      .filter(Boolean);
+    const tasteNoteIds = Array.from(
+      new Set(
+        tasteNoteStrings
+          .map(
+            (note) =>
+              tasteNotes.find(({ name }) => name === note)?.taste_note_id ||
+              tasteNotes.find(({ name }) => note.includes(name))?.taste_note_id
+          )
+          .filter(Boolean)
+      )
+    );
+
+    if (!tasteNoteIds.length) {
+      logger.info(`Missing taste notes: ${tasteNoteStrings}`);
+    }
+
+    const roastedForValues = new Set(
+      availableVariants.map((v) => v.attributes['attribute_pa_roasted-for']).filter(Boolean)
+    );
+    const isEspresso = roastedForValues.has('espresso');
+    const isFilter = roastedForValues.has('filter');
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) =>
+          (isEspresso && isFilter && name === 'omni') ||
+          (isFilter && !isEspresso && name === 'filter') ||
+          (isEspresso && !isFilter && name === 'espresso')
+      )?.brewing_method_id || null;
+
+    if (!brewingMethodId) {
+      logger.info(`Missing brewing method`);
+    }
+
+    const isDecaf = url.includes('decaf') || title.includes('decaf');
+
+    const image =
+      smallestVariant.image?.full_src ||
+      smallestVariant.image?.url ||
+      smallestVariant.image?.src ||
+      document.querySelector('.woocommerce-product-gallery__image img')?.src ||
+      document.querySelector('.wp-post-image')?.src;
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
+  },
   // naughty dog
   310: ({ html, url, roasterId }) => {
     logger.info(`Parsing webshop item page ${url}`);
