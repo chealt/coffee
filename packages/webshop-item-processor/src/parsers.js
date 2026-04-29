@@ -864,8 +864,6 @@ const parsers = {
 
     if (missingTasteNotes.length) {
       logger.info(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
-
-      missingTasteNotes.forEach((note) => console.log(`'${note}'`));
     }
 
     const image = document.querySelector('.product img').src;
