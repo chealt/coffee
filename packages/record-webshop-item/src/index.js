@@ -21,7 +21,12 @@ const handler = async (event) => {
 
   logger.info(`Fetching webshop item page ${url}`);
 
-  const response = await fetch(url);
+  const cacheBustedUrl = new URL(url);
+  cacheBustedUrl.searchParams.set('_cb', Date.now().toString());
+
+  const response = await fetch(cacheBustedUrl, {
+    headers: { 'Cache-Control': 'no-cache', Pragma: 'no-cache' }
+  });
 
   if (!response.ok) {
     logger.error(`Failed to fetch webshop item page ${url}`);
