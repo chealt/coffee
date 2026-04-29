@@ -3,7 +3,7 @@ import logger from './Sentry/logger.js';
 import { deflateSync } from 'node:zlib';
 
 const handler = async (event) => {
-  const { roasterId, url } = event;
+  const { roasterId, url, isTest } = event;
 
   if (!roasterId) {
     logger.error(`roasterId is missing from the event`);
@@ -19,11 +19,10 @@ const handler = async (event) => {
 
   logger.info(`Recording webshop for ${roasterId}`);
 
-  logger.info(`Fetching webshop item page ${url}`);
-
   const cacheBustedUrl = new URL(url);
   cacheBustedUrl.searchParams.set('_cb', Date.now().toString());
 
+  logger.info(`Fetching webshop item page ${cacheBustedUrl}`);
   const response = await fetch(cacheBustedUrl, {
     headers: { 'Cache-Control': 'no-cache', Pragma: 'no-cache' }
   });
@@ -38,7 +37,11 @@ const handler = async (event) => {
 
   logger.info(`Recording webshop item page for "${url}" and roaster id: ${roasterId}`);
 
-  await callWebshopItemProcessor({ url, html: deflateSync(html).toString('base64'), roasterId });
+  if (!isTest) {
+    await callWebshopItemProcessor({ url, html: deflateSync(html).toString('base64'), roasterId });
+  } else {
+    logger.info(html);
+  }
 
   return { success: true };
 };
