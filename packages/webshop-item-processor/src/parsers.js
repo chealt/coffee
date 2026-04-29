@@ -866,7 +866,7 @@ const parsers = {
       logger.info(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
     }
 
-    const image = document.querySelector('.product img').src;
+    const image = `https:${document.querySelector('.product img').src}`;
 
     return {
       brewingMethodId,
