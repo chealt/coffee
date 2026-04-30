@@ -8,6 +8,7 @@ const getDocument = (html) => {
   return document;
 };
 
+// Parsers ordered by roaster ID
 const parsers = {
   // Prolog
   1: async ({ url }) => {
@@ -266,6 +267,20 @@ const parsers = {
           !href.includes('500g') && !href.includes('1kg') && !href.includes('1000g') && !href.includes('blend')
       )
       .map(({ href }) => href);
+  },
+  // Pikola
+  265: ({ html, url }) => {
+    const document = getDocument(html);
+    const { origin } = new URL(url);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('article.card-item[data-href]'))
+          .map((article) => article.getAttribute('data-href'))
+          .filter((href) => /-(espresso|filtr|omni)$/u.test(href))
+          .map((href) => (href.startsWith('http') ? href : `${origin}${href}`))
+      )
+    );
   },
   // Father's (Czech)
   277: async ({ html }) => {

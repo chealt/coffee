@@ -341,3 +341,16 @@ Resources:
         Arn: !Ref RecordLambdaArn
         RoleArn: !GetAtt SchedulerExecutionRole.Arn
         Input: '{"roasterId": 305}'
+
+  PikolaSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: PikolaSchedule
+      FlexibleTimeWindow:
+        Mode: 'FLEXIBLE'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
+      ScheduleExpression: 'cron(50 3 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 265}'
