@@ -129,28 +129,6 @@ const storeDetails = async ({
     throw new Error(`Failed to retrieve coffee ID for: ${webshopItemLink}`);
   }
 
-  if (!tasteNoteIds.length) {
-    logger.info(`Removing coffee without taste notes: ${coffeeId}`);
-
-    await client.batch([
-      { sql: 'UPDATE coffees SET is_removed = true WHERE id = :coffeeId', args: { coffeeId } },
-      {
-        sql: 'DELETE FROM coffee_taste_notes WHERE coffee_id = :coffeeId',
-        args: { coffeeId }
-      },
-      {
-        sql: 'DELETE FROM coffee_varieties WHERE coffee_id = :coffeeId',
-        args: { coffeeId }
-      },
-      {
-        sql: 'DELETE FROM coffee_images WHERE coffee_id = :coffeeId',
-        args: { coffeeId }
-      }
-    ]);
-
-    return;
-  }
-
   logger.info('Clearing taste notes...');
   await client.execute({
     sql: `DELETE FROM coffee_taste_notes WHERE coffee_id = :coffeeId AND taste_note_id NOT IN (${tasteNoteIds.join(',')})`,
