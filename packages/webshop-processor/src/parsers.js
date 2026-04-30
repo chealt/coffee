@@ -393,6 +393,19 @@ const parsers = {
 
     return coffeeLinks.filter((l) => !l.includes('/zestawy') && !l.includes('zestaw-') && !l.includes('mieszanki'));
   },
+  // Datura
+  304: ({ html, url }) => {
+    const document = getDocument(html);
+    const { origin } = new URL(url);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('.product-card-wrapper .full-unstyled-link[id^="CardLink"]'))
+          .filter(({ href }) => !href.includes('2x25g') && !href.includes('blend'))
+          .map(({ href }) => `${origin}${href}`)
+      )
+    );
+  },
   // Manhattan
   305: async ({ html }) => {
     const document = getDocument(html);

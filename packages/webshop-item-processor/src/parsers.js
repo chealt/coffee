@@ -3820,6 +3820,215 @@ const parsers = {
       weight
     };
   },
+  // Datura
+  304: ({ html, url, roasterId }) => {
+    logger.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const ldScripts = Array.from(document.querySelectorAll('script[type="application/ld+json"]'));
+    const ldData = ldScripts
+      .map((script) => {
+        try {
+          return JSON.parse(script.textContent);
+        } catch {
+          return null;
+        }
+      })
+      .find((data) => data?.['@type'] === 'ProductGroup' || data?.['@type'] === 'Product');
+
+    if (!ldData) {
+      logger.error(`No product data found for ${url}`);
+
+      throw new Error(errors.detailsMissing);
+    }
+
+    const parseWeight = (text) => {
+      const match = text.match(/(\d+(?:\.\d+)?)\s*(g|kg)\b/iu);
+
+      if (!match) {
+        return undefined;
+      }
+
+      const num = Number(match[1]);
+
+      return match[2].toLowerCase() === 'kg' ? num * 1000 : num;
+    };
+
+    const variantSources =
+      ldData['@type'] === 'ProductGroup' ? ldData.hasVariant || [] : [ldData];
+
+    const unitPriceWeight = parseWeight(
+      document.querySelector('.unit-price .price-item')?.textContent || ''
+    );
+
+    const availableVariants = variantSources
+      .filter((variant) => variant?.offers?.availability === 'http://schema.org/InStock')
+      .map((variant) => ({
+        price: Number(variant.offers.price),
+        currency: variant.offers.priceCurrency,
+        weight: parseWeight(variant.name || '') || unitPriceWeight,
+        image: variant.image
+      }))
+      .filter((variant) => variant.weight)
+      .sort((a, b) => a.weight - b.weight);
+
+    if (!availableVariants.length) {
+      return { isOutOfStock: true };
+    }
+
+    const smallestVariant = availableVariants[0];
+    const price = Number(smallestVariant.price.toFixed(2));
+    const weight = smallestVariant.weight;
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
+      throw new Error(errors.weightMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const currency = smallestVariant.currency;
+
+    if (!currency) {
+      logger.error(`No currency found for ${url}`);
+
+      throw new Error(errors.currencyMissing);
+    }
+
+    const image = smallestVariant.image;
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    const title = (ldData.name || '').replace(/\s+/gu, ' ').trim().toLowerCase();
+    const description = ldData.description || '';
+
+    const specs = {};
+
+    description.split(/\r?\n/u).forEach((line) => {
+      const match = line.match(/^([^:]{1,40}?)\s*:\s*(.+)$/u);
+
+      if (!match) {
+        return;
+      }
+
+      const key = match[1].trim().toLowerCase();
+      const value = match[2]
+        .trim()
+        .toLowerCase()
+        .replace(/[‘’]/gu, "'")
+        .normalize('NFD')
+        .replace(/[̀-ͯ]/gu, '');
+
+      if (value && !specs[key]) {
+        specs[key] = value;
+      }
+    });
+
+    const originText = specs.origin || '';
+    const [countryText, ...regionParts] = originText.split(/\s*[-–]\s*/u);
+    const regionText = regionParts.join(' ').trim();
+
+    const originCountryId =
+      originCountries.find(({ name }) => name === countryText.trim())?.origin_country_id ||
+      originCountries.find(({ name }) => countryText.includes(name))?.origin_country_id ||
+      null;
+
+    if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const originRegionId =
+      originRegions.find(({ name }) => name === regionText)?.origin_region_id ||
+      originRegions.find(({ name }) => regionText.includes(name))?.origin_region_id ||
+      null;
+
+    if (!originRegionId) {
+      logger.info(`Missing origin region: ${regionText}`);
+    }
+
+    const farmText = specs.farm || '';
+    const producerText = specs.producer || '';
+    const originFarmId =
+      originFarms.find(({ name }) => name === farmText)?.id ||
+      originFarms.find(({ name }) => farmText.includes(name))?.id ||
+      originFarms.find(({ name }) => producerText.includes(name))?.id ||
+      originFarms.find(({ name }) => title.includes(name))?.id ||
+      null;
+
+    const processingText = specs.process || '';
+    const sortedProcessingMethods = [...processingMethods].sort((a, b) => b.name.length - a.name.length);
+    const processingMethodId =
+      sortedProcessingMethods.find(({ name }) => name === processingText)?.processing_method_id ||
+      sortedProcessingMethods.find(({ name }) => processingText.includes(name))?.processing_method_id ||
+      null;
+
+    if (!processingMethodId) {
+      logger.info(`Missing processing method: ${processingText}`);
+    }
+
+    const varietyText = specs.variety || '';
+    const varietyStrings = varietyText
+      .split(/[,/&+]|\s+-\s+/u)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const varietyIds = Array.from(
+      new Set(
+        varieties
+          .filter(({ name, alias }) =>
+            varietyStrings.some(
+              (s) =>
+                name.toLowerCase() === s ||
+                (alias && alias.toLowerCase() === s) ||
+                s.includes(name.toLowerCase()) ||
+                (alias && s.includes(alias.toLowerCase()))
+            )
+          )
+          .map(({ id }) => id)
+      )
+    );
+
+    if (!varietyIds.length) {
+      logger.info(`Missing varieties: ${varietyStrings}`);
+    }
+
+    const brewingMethodId = brewingMethods.find(({ name }) => name === 'omni')?.brewing_method_id || null;
+
+    const tasteNoteIds = [];
+
+    const isDecaf = url.includes('decaf') || title.includes('decaf');
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
+  },
   // Manhattan
   305: ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
