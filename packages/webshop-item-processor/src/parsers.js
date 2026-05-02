@@ -3855,12 +3855,9 @@ const parsers = {
       return match[2].toLowerCase() === 'kg' ? num * 1000 : num;
     };
 
-    const variantSources =
-      ldData['@type'] === 'ProductGroup' ? ldData.hasVariant || [] : [ldData];
+    const variantSources = ldData['@type'] === 'ProductGroup' ? ldData.hasVariant || [] : [ldData];
 
-    const unitPriceWeight = parseWeight(
-      document.querySelector('.unit-price .price-item')?.textContent || ''
-    );
+    const unitPriceWeight = parseWeight(document.querySelector('.unit-price .price-item')?.textContent || '');
 
     const availableVariants = variantSources
       .filter((variant) => variant?.offers?.availability === 'http://schema.org/InStock')
