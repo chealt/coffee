@@ -1,4 +1,7 @@
 {
+  "[css]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
+  },
   "[github-actions-workflow]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },

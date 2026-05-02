@@ -81,7 +81,8 @@ body {
 }
 
 body {
-  padding-bottom: 100px; /* leave space for bottom controls */
+  padding-bottom: 100px;
+  /* leave space for bottom controls */
 }
 
 main {
@@ -117,7 +118,7 @@ h5 {
     align-items: center;
     gap: var(--gap--s);
 
-    & > * {
+    &>* {
       flex-grow: 1;
     }
 
@@ -317,7 +318,7 @@ sup {
     box-sizing: border-box;
     overflow: hidden;
 
-    > a {
+    >a {
       position: relative;
       border: none;
       width: 100%;
