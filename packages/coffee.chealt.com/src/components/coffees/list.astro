@@ -1,23 +1,14 @@
 ---
-import { getDetails } from './utils.js';
-import Item from './item.astro';
+import { getDetails } from "./utils.js";
+import Item from "./item.astro";
 
 const { coffees, isRecommendedList } = Astro.props;
 
-await import.meta.glob('/public/coffees/*.*', { eager: true });
+await import.meta.glob("/public/coffees/*.*", { eager: true });
 
-const recommendationsData = import.meta.glob('../../../data/recommendations/*.json', { eager: true });
-const { loggedInUser } = Astro.locals;
-const recommendedKey = Object.keys(recommendationsData).find(
-  (key) => key === `../../../data/recommendations/${loggedInUser ? loggedInUser.username : 'anonymous'}.json`
+const coffeesWithDetails = coffees.map(
+  getDetails({ locale: Astro.currentLocale }),
 );
-const recommended = recommendationsData[recommendedKey];
-
-const coffeesWithDetails = coffees.map(getDetails({ locale: Astro.currentLocale })).map(({ id, ...rest }) => ({
-  id,
-  isRecommended: !isRecommendedList && recommended?.coffees?.some(({ id: coffeeId }) => coffeeId === id),
-  ...rest
-}));
 ---
 
 <div class="list-container">
@@ -25,7 +16,11 @@ const coffeesWithDetails = coffees.map(getDetails({ locale: Astro.currentLocale 
     {
       coffeesWithDetails.map((details, index) => (
         <li class="item" itemtype="https://schema.org/Product" itemscope>
-          <Item {...details} highPriority={index < 1 && isRecommendedList} />
+          <Item
+            {...details}
+            highPriority={index < 1 && isRecommendedList}
+            isRecommendedList={isRecommendedList}
+          />
         </li>
       ))
     }

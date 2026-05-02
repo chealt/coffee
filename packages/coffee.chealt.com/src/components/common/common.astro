@@ -1,13 +1,13 @@
 ---
-import Analytics from './analytics.astro';
-import IosPolyfills from './ios-polyfills.astro';
-import Login from '../login/login.astro';
-import Nav from './nav.astro';
-import loaderImage from './loader.svg';
+import Analytics from "./analytics.astro";
+import IosPolyfills from "./ios-polyfills.astro";
+import Login from "../login/login.astro";
+import Nav from "./nav.astro";
+import loaderImage from "./loader.svg";
 
-import './common.css';
+import "./common.css";
 
-import allLocaleTranslations from './common.json' with { type: 'json' };
+import allLocaleTranslations from "./common.json" with { type: "json" };
 
 const t = allLocaleTranslations[Astro.currentLocale];
 
@@ -30,9 +30,13 @@ const isProd = import.meta.env.PROD;
   </head>
   <body>
     <chealt-data>
-      <main class={Astro.props.class}>
-        {shouldAuthenticate ? <Login redirectUrl={redirectUrl} /> : <slot />}
-      </main>
+      <coffee-recommendations
+        data-recommendations-url="/api/recommendations/all.json"
+      >
+        <main class={Astro.props.class}>
+          {shouldAuthenticate ? <Login redirectUrl={redirectUrl} /> : <slot />}
+        </main>
+      </coffee-recommendations>
       {!hideNav && <Nav />}
     </chealt-data>
     <img src={loaderImage.src} class="visually-hidden" aria-hidden="true" />
@@ -42,3 +46,4 @@ const isProd = import.meta.env.PROD;
 
 <script src="./service-worker-init.js"></script>
 <script src="../chealt-data.js"></script>
+<script src="./recommendations.js"></script>

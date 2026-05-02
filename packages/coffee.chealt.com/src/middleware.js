@@ -179,7 +179,7 @@ export const onRequest = async (context, next) => {
     return redirect(url);
   }
 
-  if (page === 'api' && params[0] !== 'authentication') {
+  if (page === 'api' && params[0] !== 'authentication' && params[0] !== 'recommendations') {
     try {
       authenticate(context);
     } catch (error) {

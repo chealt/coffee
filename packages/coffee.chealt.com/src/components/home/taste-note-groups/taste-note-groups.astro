@@ -1,19 +1,13 @@
 ---
-import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getRelativeLocaleUrl } from "astro:i18n";
 
-import './taste-note-groups.css';
-import { encodeSafeURL } from '../../../utils/string.js';
-import allLocaleCommonTranslations from '../../common/common.json' with { type: 'json' };
+import "./taste-note-groups.css";
+import { encodeSafeURL } from "../../../utils/string.js";
+import allLocaleCommonTranslations from "../../common/common.json" with { type: "json" };
 
 const tc = allLocaleCommonTranslations[Astro.currentLocale];
 
 const { groups } = Astro.props;
-const recommendationsData = import.meta.glob('../../../../data/recommendations/*.json', { eager: true });
-const { loggedInUser } = Astro.locals;
-const recommendedKey = Object.keys(recommendationsData).find(
-  (key) => key === `../../../../data/recommendations/${loggedInUser ? loggedInUser.username : 'anonymous'}.json`
-);
-const recommended = recommendationsData[recommendedKey];
 ---
 
 <div class="list-container">
@@ -21,11 +15,25 @@ const recommended = recommendationsData[recommendedKey];
     {
       groups.map(({ taste_note_group_id: id, name, color, text_color }) => (
         <li class="item">
-          <a href={getRelativeLocaleUrl(Astro.currentLocale, `/taste-note-groups/${encodeSafeURL(name)}`)} class="card">
-            <div class="name" style={`background-color: ${color}; color: ${text_color}`}>
+          <a
+            href={getRelativeLocaleUrl(
+              Astro.currentLocale,
+              `/taste-note-groups/${encodeSafeURL(name)}`,
+            )}
+            class="card"
+          >
+            <div
+              class="name"
+              style={`background-color: ${color}; color: ${text_color}`}
+            >
               {name}
             </div>
-            {recommended?.tasteNoteGroups?.includes(id) && <span class="tag primary left">{tc.recommended}</span>}
+            <span
+              class="tag primary left hidden"
+              data-recommendation-key={`tasteNoteGroups-${id}`}
+            >
+              {tc.recommended}
+            </span>
           </a>
         </li>
       ))
