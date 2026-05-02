@@ -268,6 +268,20 @@ const parsers = {
       )
       .map(({ href }) => href);
   },
+  // Nolens Volens
+  258: ({ html }) => {
+    const document = getDocument(html);
+
+    const productSelectors = [
+      '.instock.product_cat-espresso a.ast-loop-product__link',
+      '.instock.product_cat-filtr a.ast-loop-product__link',
+      '.instock.product_cat-omniroast a.ast-loop-product__link'
+    ];
+
+    return Array.from(
+      new Set(Array.from(document.querySelectorAll(productSelectors.join(','))).map(({ href }) => href))
+    );
+  },
   // Pikola
   265: ({ html, url }) => {
     const document = getDocument(html);

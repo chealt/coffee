@@ -2326,6 +2326,175 @@ const parsers = {
       weight
     };
   },
+  // Nolens Volens
+  258: ({ html, url, roasterId }) => {
+    logger.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const variationsAttr = document.querySelector('.variations_form')?.getAttribute('data-product_variations');
+
+    if (!variationsAttr) {
+      logger.error(`No variations found for ${url}`);
+
+      throw new Error(errors.detailsMissing);
+    }
+
+    const variations = JSON.parse(variationsAttr).filter((v) => v.is_in_stock && v.is_purchasable);
+
+    if (!variations.length) {
+      return { isOutOfStock: true };
+    }
+
+    const smallest = [...variations].sort((a, b) => Number(a.weight) - Number(b.weight))[0];
+    const price = Number(smallest.display_price).toFixed(2);
+    const weight = Number(smallest.weight);
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
+      throw new Error(errors.weightMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const priceHtmlDocument = getDocument(smallest.price_html || '');
+    const currencySymbol = priceHtmlDocument.querySelector('.woocommerce-Price-currencySymbol')?.textContent.trim();
+    const currency = currencyCodes[currencySymbol];
+
+    if (!currency) {
+      logger.error(`Unknown currency: ${currencySymbol}`);
+
+      throw new Error(errors.currencyMissing);
+    }
+
+    const image = smallest.image?.url;
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    const slugWords = url.replace(/\/$/u, '').split('/').pop().toLowerCase().replace(/-/gu, ' ');
+    const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+    const wordBoundary = (text, term) => new RegExp(`(?<!\\p{L})${escapeRegex(term)}(?!\\p{L})`, 'iu').test(text);
+
+    const sortedCountries = [...originCountries].sort((a, b) => b.name.length - a.name.length);
+    const originCountryEntry = sortedCountries.find(({ name }) => wordBoundary(slugWords, name));
+    const originCountryId = originCountryEntry?.origin_country_id || null;
+
+    if (!originCountryId) {
+      return { isBlend: true };
+    }
+
+    const categoryText = document.querySelector('.single-product-category')?.textContent.toLowerCase() || '';
+    const isEspresso = wordBoundary(categoryText, 'espresso') || /-espresso(\b|$)/u.test(url.toLowerCase());
+    const isFilter = wordBoundary(categoryText, 'filtr') || /-filtr(\b|$)/u.test(url.toLowerCase());
+    const isOmni = categoryText.includes('omniroast') || url.toLowerCase().includes('omniroast');
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) =>
+          (isOmni && name === 'omni') ||
+          (!isOmni && isEspresso && isFilter && name === 'omni') ||
+          (!isOmni && isEspresso && !isFilter && name === 'espresso') ||
+          (!isOmni && !isEspresso && isFilter && name === 'filter')
+      )?.brewing_method_id || null;
+
+    // Spec text excludes paragraphs longer than 100 chars (free-form descriptions) so
+    // names like "caturra" mentioned in marketing copy don't match as varieties
+    const specText = Array.from(document.querySelectorAll('.woocommerce-product-details__short-description p'))
+      .map((p) => p.textContent.trim().toLowerCase())
+      .filter((p) => p && p.length < 100)
+      .join(' ');
+    const searchText = `${specText} ${slugWords}`;
+    const tasteNotesText =
+      document.querySelector('.woocommerce-product-details__short-description p')?.textContent.toLowerCase().trim() ||
+      '';
+
+    const sortedTasteNotes = [...tasteNotes]
+      .filter(({ language_code: lc }) => lc === 'pl')
+      .sort((a, b) => b.name.length - a.name.length);
+    const matchedTasteNotes = sortedTasteNotes.filter(({ name }) => wordBoundary(tasteNotesText, name));
+    // exclude taste notes that include each other like 'orzechy' and 'orzechy laskowe'
+    const tasteNoteIds = Array.from(
+      new Set(
+        matchedTasteNotes
+          .filter(({ name }) => !matchedTasteNotes.some(({ name: n }) => n !== name && n.includes(name)))
+          .map(({ taste_note_id: id }) => id)
+      )
+    );
+
+    if (!tasteNoteIds.length) {
+      logger.info(`Missing taste notes: ${tasteNotesText}`);
+    }
+
+    const sortedProcessing = [...processingMethods].sort((a, b) => b.name.length - a.name.length);
+    const processingMethodId =
+      sortedProcessing.find(({ name }) => wordBoundary(searchText, name))?.processing_method_id || null;
+
+    if (!processingMethodId) {
+      logger.info(`Missing processing method: ${searchText}`);
+    }
+
+    const sortedVarieties = [...varieties].sort((a, b) => b.name.length - a.name.length);
+    const varietyIds = Array.from(
+      new Set(
+        sortedVarieties
+          .filter(({ name, alias }) => wordBoundary(searchText, name) || (alias && wordBoundary(searchText, alias)))
+          .filter(({ name }) => name.toLowerCase() !== originCountryEntry.name.toLowerCase())
+          .map(({ id }) => id)
+      )
+    );
+
+    if (!varietyIds.length) {
+      logger.info(`Missing varieties: ${searchText}`);
+    }
+
+    const originRegionId =
+      originRegions
+        .filter(({ origin_country_id: countryId }) => countryId === originCountryId) // eslint-disable-line camelcase
+        .sort((a, b) => b.name.length - a.name.length)
+        .find(({ name }) => slugWords.includes(name) || specText.includes(name))?.origin_region_id || null;
+
+    if (!originRegionId) {
+      logger.info(`Missing origin region: ${slugWords}`);
+    }
+
+    const originFarmId =
+      originFarms.find(
+        ({ name, origin_country_id: countryId }) =>
+          // eslint-disable-line camelcase
+          countryId === originCountryId &&
+          (slugWords.includes(name.toLowerCase()) || specText.includes(name.toLowerCase()))
+      )?.id || null;
+
+    const isDecaf = url.toLowerCase().includes('decaf') || specText.includes('decaf');
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
+  },
   // Pikola
   265: async ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
