@@ -429,6 +429,21 @@ const parsers = {
           .filter((href) => !href.includes('/reviews') && !href.includes('-blend') && !/-1000-?g/.test(href))
       )
     );
+  },
+  // Doubleshot
+  311: ({ html, url }) => {
+    const document = getDocument(html);
+    const { origin } = new URL(url);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('.productBox a.productBox-link'))
+          .map(({ href }) => href)
+          .filter((href) => href.includes('/products/'))
+          .filter((href) => !href.includes('capsules') && !href.includes('steeped'))
+          .map((href) => (href.startsWith('http') ? href : `${origin}${href}`))
+      )
+    );
   }
 };
 

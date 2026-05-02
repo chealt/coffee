@@ -4397,6 +4397,197 @@ const parsers = {
       webshopItemLink: url,
       weight
     };
+  },
+  // Doubleshot
+  311: ({ html, url, roasterId }) => {
+    logger.info(`Parsing webshop item page ${url}`);
+
+    const document = getDocument(html);
+
+    const title = (document.querySelector('h1')?.textContent.trim() || '').toLowerCase();
+    const headerBarItems = Array.from(document.querySelectorAll('.productPage-header-bar-item')).map((el) =>
+      el.textContent.replace(/\s+/g, ' ').trim()
+    );
+    const countryText = (headerBarItems[0] || '').toLowerCase();
+
+    if (countryText.includes('&') || countryText.includes(',')) {
+      return { isBlend: true };
+    }
+
+    const variants = Array.from(document.querySelectorAll('.productPrice-price[data-variant]'))
+      .filter((el) => !el.getAttribute('data-variant').includes('_recurrent'))
+      .map((el) => {
+        const priceCents = Number(el.getAttribute('data-variant-pricecents'));
+        const packaging = el.getAttribute('data-option-packaging') || '';
+        const weightMatch = packaging.match(/(\d+)\s*(kg|g)/iu);
+        const variantWeight = weightMatch
+          ? Number(weightMatch[1]) * (weightMatch[2].toLowerCase() === 'kg' ? 1000 : 1)
+          : null;
+
+        return { priceCents, weight: variantWeight };
+      })
+      .filter(({ weight: w, priceCents }) => w && priceCents > 0);
+
+    if (!variants.length) {
+      return { isOutOfStock: true };
+    }
+
+    const smallest = [...variants].sort((a, b) => a.weight - b.weight)[0];
+    const price = Number((smallest.priceCents / 100).toFixed(2));
+    const weight = smallest.weight;
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
+      throw new Error(errors.weightMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const currencyScript = Array.from(document.querySelectorAll('script')).find((s) =>
+      /currencyCode:\s*['"][^'"]+['"]/u.test(s.textContent)
+    );
+    const currency = currencyScript?.textContent.match(/currencyCode:\s*['"]([^'"]+)['"]/u)?.[1].toUpperCase() || null;
+
+    if (!currency) {
+      logger.error(`No currency found for ${url}`);
+
+      throw new Error(errors.currencyMissing);
+    }
+
+    const originCountryId =
+      originCountries.find(({ name }) => name === countryText)?.origin_country_id ||
+      originCountries.find(({ name }) => countryText.includes(name))?.origin_country_id ||
+      null;
+
+    if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const image =
+      Array.from(document.querySelectorAll('.productPage img'))
+        .map((el) => el.src)
+        .find((src) => src && src.startsWith('https://img.doubleshot.cz/')) || null;
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    const sections = {};
+
+    document.querySelectorAll('details.accordion-item').forEach((el) => {
+      const header = el.querySelector('.accordion-header')?.textContent.replace(/\s+/g, ' ').trim().toLowerCase();
+      const key = header?.split(' ')[0];
+      const content = el.querySelector('.accordion-content')?.textContent.replace(/\s+/g, ' ').trim() || '';
+
+      if (key) {
+        sections[key] = content;
+      }
+    });
+
+    const originText = (sections.origin || '').toLowerCase();
+    const processingText = (sections.processing || sections.variety || '').toLowerCase();
+    const brewingText = (sections.brewing || '').toLowerCase();
+    const flavourText = (sections.flavour || '').toLowerCase();
+
+    const originRegionId =
+      originRegions
+        .filter(({ origin_country_id }) => origin_country_id === originCountryId)
+        .find(({ name }) => originText.includes(name))?.origin_region_id || null;
+
+    if (!originRegionId) {
+      logger.info(`Missing origin region: ${originText}`);
+    }
+
+    const originFarmId =
+      originFarms.find(({ name }) => originText.includes(name.toLowerCase()))?.id ||
+      originFarms.find(({ name }) => title.includes(name.toLowerCase()))?.id ||
+      null;
+
+    const isEspresso = url.toLowerCase().includes('espresso') || /\b\d+-\d+\s*seconds\b/u.test(brewingText);
+    const isFilter =
+      url.toLowerCase().includes('filter') ||
+      /single[- ]origin filter/u.test(`${flavourText} ${processingText} ${originText}`) ||
+      /extraction time:\s*approx\.?\s*\d+\s*min/u.test(brewingText);
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) =>
+          (isFilter && isEspresso && name === 'omni') ||
+          (isFilter && !isEspresso && name === 'filter') ||
+          (isEspresso && !isFilter && name === 'espresso')
+      )?.brewing_method_id || null;
+
+    const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+    const varietyIds = Array.from(
+      new Set(
+        varieties
+          .filter(({ name, alias }) => {
+            const nameRe = new RegExp(`(?<!\\p{L})${escapeRegex(name.toLowerCase())}(?!\\p{L})`, 'iu');
+            const aliasRe = alias ? new RegExp(`(?<!\\p{L})${escapeRegex(alias.toLowerCase())}(?!\\p{L})`, 'iu') : null;
+
+            return nameRe.test(processingText) || (aliasRe && aliasRe.test(processingText));
+          })
+          .map(({ id }) => id)
+      )
+    );
+
+    if (!varietyIds.length) {
+      logger.info(`Missing varieties: ${processingText}`);
+    }
+
+    const sortedProcessingMethods = [...processingMethods].sort((a, b) => b.name.length - a.name.length);
+    const processingMethodId =
+      sortedProcessingMethods.find(({ name }) => processingText.includes(name))?.processing_method_id || null;
+
+    if (!processingMethodId) {
+      logger.info(`Missing processing method: ${processingText}`);
+    }
+
+    const sortedTasteNotes = [...tasteNotes]
+      .filter(({ language_code }) => language_code === 'en')
+      .sort((a, b) => b.name.length - a.name.length);
+    const tasteNoteIds = Array.from(
+      new Set(
+        sortedTasteNotes
+          .filter(({ name }) => name && flavourText.includes(name.toLowerCase()))
+          .map(({ taste_note_id }) => taste_note_id)
+      )
+    );
+
+    if (!tasteNoteIds.length) {
+      logger.info(`Missing taste notes: ${flavourText}`);
+    }
+
+    const isDecaf =
+      url.toLowerCase().includes('decaf') || title.includes('decaf') || processingText.includes('decaffeinat');
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
   }
 };
 
