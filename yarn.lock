@@ -1611,29 +1611,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@chealt/ocr-worker@workspace:packages/ocr-worker":
-  version: 0.0.0-use.local
-  resolution: "@chealt/ocr-worker@workspace:packages/ocr-worker"
-  dependencies:
-    "@techstark/opencv-js": "npm:^4.12.0-release.1"
-    js-clipper: "npm:^1.0.1"
-    onnxruntime-web: "npm:^1.26.0"
-    sharp: "npm:^0.34.5"
-    tiny-invariant: "npm:^1.3.3"
-  languageName: unknown
-  linkType: soft
-
-"@chealt/ocr@workspace:packages/ocr":
-  version: 0.0.0-use.local
-  resolution: "@chealt/ocr@workspace:packages/ocr"
-  dependencies:
-    "@techstark/opencv-js": "npm:^4.12.0-release.1"
-    js-clipper: "npm:^1.0.1"
-    onnxruntime-web: "npm:^1.26.0"
-    tiny-invariant: "npm:^1.3.3"
-  languageName: unknown
-  linkType: soft
-
 "@clack/core@npm:1.2.0":
   version: 1.2.0
   resolution: "@clack/core@npm:1.2.0"
@@ -4046,79 +4023,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@protobufjs/aspromise@npm:^1.1.1, @protobufjs/aspromise@npm:^1.1.2":
-  version: 1.1.2
-  resolution: "@protobufjs/aspromise@npm:1.1.2"
-  checksum: 10c0/a83343a468ff5b5ec6bff36fd788a64c839e48a07ff9f4f813564f58caf44d011cd6504ed2147bf34835bd7a7dd2107052af755961c6b098fd8902b4f6500d0f
-  languageName: node
-  linkType: hard
-
-"@protobufjs/base64@npm:^1.1.2":
-  version: 1.1.2
-  resolution: "@protobufjs/base64@npm:1.1.2"
-  checksum: 10c0/eec925e681081af190b8ee231f9bad3101e189abbc182ff279da6b531e7dbd2a56f1f306f37a80b1be9e00aa2d271690d08dcc5f326f71c9eed8546675c8caf6
-  languageName: node
-  linkType: hard
-
-"@protobufjs/codegen@npm:^2.0.4":
-  version: 2.0.4
-  resolution: "@protobufjs/codegen@npm:2.0.4"
-  checksum: 10c0/26ae337c5659e41f091606d16465bbcc1df1f37cc1ed462438b1f67be0c1e28dfb2ca9f294f39100c52161aef82edf758c95d6d75650a1ddf31f7ddee1440b43
-  languageName: node
-  linkType: hard
-
-"@protobufjs/eventemitter@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@protobufjs/eventemitter@npm:1.1.0"
-  checksum: 10c0/1eb0a75180e5206d1033e4138212a8c7089a3d418c6dfa5a6ce42e593a4ae2e5892c4ef7421f38092badba4040ea6a45f0928869989411001d8c1018ea9a6e70
-  languageName: node
-  linkType: hard
-
-"@protobufjs/fetch@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@protobufjs/fetch@npm:1.1.0"
-  dependencies:
-    "@protobufjs/aspromise": "npm:^1.1.1"
-    "@protobufjs/inquire": "npm:^1.1.0"
-  checksum: 10c0/cda6a3dc2d50a182c5865b160f72077aac197046600091dbb005dd0a66db9cce3c5eaed6d470ac8ed49d7bcbeef6ee5f0bc288db5ff9a70cbd003e5909065233
-  languageName: node
-  linkType: hard
-
-"@protobufjs/float@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "@protobufjs/float@npm:1.0.2"
-  checksum: 10c0/18f2bdede76ffcf0170708af15c9c9db6259b771e6b84c51b06df34a9c339dbbeec267d14ce0bddd20acc142b1d980d983d31434398df7f98eb0c94a0eb79069
-  languageName: node
-  linkType: hard
-
-"@protobufjs/inquire@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@protobufjs/inquire@npm:1.1.0"
-  checksum: 10c0/64372482efcba1fb4d166a2664a6395fa978b557803857c9c03500e0ac1013eb4b1aacc9ed851dd5fc22f81583670b4f4431bae186f3373fedcfde863ef5921a
-  languageName: node
-  linkType: hard
-
-"@protobufjs/path@npm:^1.1.2":
-  version: 1.1.2
-  resolution: "@protobufjs/path@npm:1.1.2"
-  checksum: 10c0/cece0a938e7f5dfd2fa03f8c14f2f1cf8b0d6e13ac7326ff4c96ea311effd5fb7ae0bba754fbf505312af2e38500250c90e68506b97c02360a43793d88a0d8b4
-  languageName: node
-  linkType: hard
-
-"@protobufjs/pool@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@protobufjs/pool@npm:1.1.0"
-  checksum: 10c0/eda2718b7f222ac6e6ad36f758a92ef90d26526026a19f4f17f668f45e0306a5bd734def3f48f51f8134ae0978b6262a5c517c08b115a551756d1a3aadfcf038
-  languageName: node
-  linkType: hard
-
-"@protobufjs/utf8@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@protobufjs/utf8@npm:1.1.0"
-  checksum: 10c0/a3fe31fe3fa29aa3349e2e04ee13dc170cc6af7c23d92ad49e3eeaf79b9766264544d3da824dba93b7855bd6a2982fb40032ef40693da98a136d835752beb487
-  languageName: node
-  linkType: hard
-
 "@rolldown/binding-android-arm64@npm:1.0.0-rc.18":
   version: 1.0.0-rc.18
   resolution: "@rolldown/binding-android-arm64@npm:1.0.0-rc.18"
@@ -5618,13 +5522,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@techstark/opencv-js@npm:^4.12.0-release.1":
-  version: 4.12.0-release.1
-  resolution: "@techstark/opencv-js@npm:4.12.0-release.1"
-  checksum: 10c0/3e0976f489c775135904a5181c7f28c44b966d33f2b5334af0bb7f282c3a07863ce1ce72eaed46cda6991ea53e3c0a60a70876396dcc60637d0aeb4bbf2a9409
-  languageName: node
-  linkType: hard
-
 "@testing-library/dom@npm:^7.31.2":
   version: 7.31.2
   resolution: "@testing-library/dom@npm:7.31.2"
@@ -5766,7 +5663,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:>=13.7.0":
+"@types/node@npm:*":
   version: 24.10.1
   resolution: "@types/node@npm:24.10.1"
   dependencies:
@@ -7235,13 +7132,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"flatbuffers@npm:^25.1.24":
-  version: 25.9.23
-  resolution: "flatbuffers@npm:25.9.23"
-  checksum: 10c0/957c4ae2a02be1703c98b36b4dc8ceb81613cf8e2333026afc95a7b68b088bed5458056dc29d0ab7ce8bc403b8c003732b0968d24aba46f5e7c8f71789a6bd9e
-  languageName: node
-  linkType: hard
-
 "flattie@npm:^1.1.1":
   version: 1.1.1
   resolution: "flattie@npm:1.1.1"
@@ -7424,13 +7314,6 @@ __metadata:
   version: 4.2.11
   resolution: "graceful-fs@npm:4.2.11"
   checksum: 10c0/386d011a553e02bc594ac2ca0bd6d9e4c22d7fa8cfbfc448a6d148c59ea881b092db9dbe3547ae4b88e55f1b01f7c4a2ecc53b310c042793e63aa44cf6c257f2
-  languageName: node
-  linkType: hard
-
-"guid-typescript@npm:^1.0.9":
-  version: 1.0.9
-  resolution: "guid-typescript@npm:1.0.9"
-  checksum: 10c0/fa0a2b2b4e06e0976a81c947b74e114b92f6647e84b52e24ab0981d2fdbaa1a640641d8fd269004dd7c581baebeb4f9d9782b74391e717e47c9b822bea4b3be6
   languageName: node
   linkType: hard
 
@@ -7839,13 +7722,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-clipper@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "js-clipper@npm:1.0.1"
-  checksum: 10c0/53e6a1fed2ed8e082fe1542eb4be82c8ba99d16379254ce00bc6cc9c664b60ff4ba9082136f61a80a6c0aec9aacb091ab115f0abd4acbab309ea81de9b7159e0
-  languageName: node
-  linkType: hard
-
 "js-tokens@npm:^4.0.0":
   version: 4.0.0
   resolution: "js-tokens@npm:4.0.0"
@@ -8182,13 +8058,6 @@ __metadata:
   version: 4.1.1
   resolution: "lodash.once@npm:4.1.1"
   checksum: 10c0/46a9a0a66c45dd812fcc016e46605d85ad599fe87d71a02f6736220554b52ffbe82e79a483ad40f52a8a95755b0d1077fba259da8bfb6694a7abbf4a48f1fc04
-  languageName: node
-  linkType: hard
-
-"long@npm:^5.0.0, long@npm:^5.2.3":
-  version: 5.3.2
-  resolution: "long@npm:5.3.2"
-  checksum: 10c0/7130fe1cbce2dca06734b35b70d380ca3f70271c7f8852c922a7c62c86c4e35f0c39290565eca7133c625908d40e126ac57c02b1b1a4636b9457d77e1e60b981
   languageName: node
   linkType: hard
 
@@ -9227,27 +9096,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"onnxruntime-common@npm:1.26.0":
-  version: 1.26.0
-  resolution: "onnxruntime-common@npm:1.26.0"
-  checksum: 10c0/220679e2b0129fcc8efd710e1502f792ee5583173d261840369c2dd07bbfdcb9dbbeb027002131094f05e0d287354f7cf66605084b6eb0d90d9543fe485c8c6f
-  languageName: node
-  linkType: hard
-
-"onnxruntime-web@npm:^1.26.0":
-  version: 1.26.0
-  resolution: "onnxruntime-web@npm:1.26.0"
-  dependencies:
-    flatbuffers: "npm:^25.1.24"
-    guid-typescript: "npm:^1.0.9"
-    long: "npm:^5.2.3"
-    onnxruntime-common: "npm:1.26.0"
-    platform: "npm:^1.3.6"
-    protobufjs: "npm:^7.2.4"
-  checksum: 10c0/6e63265dd2810c22897843c140b5c6b5912f285274f5f743af83ebdfeded863e5dea9f92e5f246cf72a0eb8ae4f38e64990869f6cd7472a0f20940b19b362c83
-  languageName: node
-  linkType: hard
-
 "open@npm:^11.0.0":
   version: 11.0.0
   resolution: "open@npm:11.0.0"
@@ -9619,13 +9467,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"platform@npm:^1.3.6":
-  version: 1.3.6
-  resolution: "platform@npm:1.3.6"
-  checksum: 10c0/69f2eb692e15f1a343dd0d9347babd9ca933824c8673096be746ff66f99f2bdc909fadd8609076132e6ec768349080babb7362299f2a7f885b98f1254ae6224b
-  languageName: node
-  linkType: hard
-
 "playwright-core@npm:1.59.1":
   version: 1.59.1
   resolution: "playwright-core@npm:1.59.1"
@@ -9788,26 +9629,6 @@ __metadata:
   version: 7.1.0
   resolution: "property-information@npm:7.1.0"
   checksum: 10c0/e0fe22cff26103260ad0e82959229106563fa115a54c4d6c183f49d88054e489cc9f23452d3ad584179dc13a8b7b37411a5df873746b5e4086c865874bfa968e
-  languageName: node
-  linkType: hard
-
-"protobufjs@npm:^7.2.4":
-  version: 7.5.4
-  resolution: "protobufjs@npm:7.5.4"
-  dependencies:
-    "@protobufjs/aspromise": "npm:^1.1.2"
-    "@protobufjs/base64": "npm:^1.1.2"
-    "@protobufjs/codegen": "npm:^2.0.4"
-    "@protobufjs/eventemitter": "npm:^1.1.0"
-    "@protobufjs/fetch": "npm:^1.1.0"
-    "@protobufjs/float": "npm:^1.0.2"
-    "@protobufjs/inquire": "npm:^1.1.0"
-    "@protobufjs/path": "npm:^1.1.2"
-    "@protobufjs/pool": "npm:^1.1.0"
-    "@protobufjs/utf8": "npm:^1.1.0"
-    "@types/node": "npm:>=13.7.0"
-    long: "npm:^5.0.0"
-  checksum: 10c0/913b676109ffb3c05d3d31e03a684e569be91f3bba8613da4a683d69d9dba948daa2afd7d2e7944d1aa6c417890c35d9d9a8883c1160affafb0f9670d59ef722
   languageName: node
   linkType: hard
 
@@ -10741,13 +10562,6 @@ __metadata:
   version: 1.0.3
   resolution: "tiny-inflate@npm:1.0.3"
   checksum: 10c0/fab687537254f6ec44c9a2e880048fe70da3542aba28f73cda3e74c95cabf342a339372f2a6c032e322324f01accc03ca26c04ba2bad9b3eb8cf3ee99bba7f9b
-  languageName: node
-  linkType: hard
-
-"tiny-invariant@npm:^1.3.3":
-  version: 1.3.3
-  resolution: "tiny-invariant@npm:1.3.3"
-  checksum: 10c0/65af4a07324b591a059b35269cd696aba21bef2107f29b9f5894d83cc143159a204b299553435b03874ebb5b94d019afa8b8eff241c8a4cfee95872c2e1c1c4a
   languageName: node
   linkType: hard
 
