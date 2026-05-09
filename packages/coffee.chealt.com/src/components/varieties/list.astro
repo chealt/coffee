@@ -1,5 +1,5 @@
 ---
-import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getRelativeLocaleUrl } from "astro:i18n";
 
 const { varieties } = Astro.props;
 ---
@@ -8,7 +8,13 @@ const { varieties } = Astro.props;
   {
     varieties.map(({ name, alias }) => (
       <li class="chip">
-        <a href={getRelativeLocaleUrl(Astro.currentLocale, `/varieties/${encodeURIComponent(name.toLowerCase())}`)}>
+        <a
+          href={getRelativeLocaleUrl(
+            Astro.currentLocale,
+            `/varieties/${encodeURIComponent(name.toLowerCase())}`,
+          )}
+          data-astro-prefetch="viewport"
+        >
           {name}
           {alias && ` (${alias})`}
         </a>

@@ -32,6 +32,7 @@ const tasteNotesWithGroup = tasteNotes.map((tasteNote) => ({
               `/taste-note-groups/${encodeSafeURL(group.name)}`,
             )}
             style={`color: ${group.text_color}`}
+            data-astro-prefetch="viewport"
           >
             {name}
           </a>

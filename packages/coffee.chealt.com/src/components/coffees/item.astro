@@ -99,6 +99,7 @@ const { currency } = Astro.locals;
           `/roasters/${encodeSafeURL(roaster.name)}`,
         )}
         class="chip bordered"
+        data-astro-prefetch="viewport"
       >
         {roaster.name}
       </a>
@@ -109,6 +110,7 @@ const { currency } = Astro.locals;
           `/countries/${encodeSafeURL(roaster.country.name)}`,
         )}
         class="chip bordered"
+        data-astro-prefetch="viewport"
       >
         {roaster.country.code.toUpperCase()}
       </a>
@@ -123,6 +125,7 @@ const { currency } = Astro.locals;
               `/origin-countries/${encodeSafeURL(originCountry.name)}`,
             )}
             class="chip bordered"
+            data-astro-prefetch="viewport"
           >
             {originCountry.name}
           </a>
@@ -150,6 +153,7 @@ const { currency } = Astro.locals;
                       : `/brewing-methods/${encodeSafeURL(brewingMethod.name)}`,
                   )}
                   class="chip"
+                  data-astro-prefetch="viewport"
                 >
                   {(brewingMethodImages[
                     `/public/icons/brewing-methods/${brewingMethod.name}.svg`
@@ -174,6 +178,7 @@ const { currency } = Astro.locals;
                     `/processing-methods/${encodeSafeURL(processingMethod.name)}`,
                   )}
                   class="chip"
+                  data-astro-prefetch="viewport"
                 >
                   {processingMethod.name}
                 </a>
