@@ -4922,8 +4922,7 @@ const parsers = {
     }
 
     const isEspresso = url.toLowerCase().includes('espresso') || title.includes('espresso');
-    const isFilter =
-      url.toLowerCase().includes('filter') || title.includes('filter') || title.includes('filtr');
+    const isFilter = url.toLowerCase().includes('filter') || title.includes('filter') || title.includes('filtr');
     const isOmni = url.toLowerCase().includes('omni') || title.includes('omni');
     const brewingMethodId =
       brewingMethods.find(
