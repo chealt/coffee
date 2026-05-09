@@ -458,6 +458,19 @@ const parsers = {
           .map((href) => (href.startsWith('http') ? href : `${origin}${href}`))
       )
     );
+  },
+  // Serce Kawy
+  314: ({ html, url }) => {
+    const document = getDocument(html);
+    const { origin } = new URL(url);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('a[href*="/pl/p/"]'))
+          .map(({ href }) => href)
+          .map((href) => (href.startsWith('http') ? href : `${origin}${href}`))
+      )
+    );
   }
 };
 

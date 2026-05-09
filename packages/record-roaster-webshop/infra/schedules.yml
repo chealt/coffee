@@ -393,3 +393,16 @@ Resources:
         Arn: !Ref RecordLambdaArn
         RoleArn: !GetAtt SchedulerExecutionRole.Arn
         Input: '{"roasterId": 258}'
+
+  SerceKawySchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: SerceKawySchedule
+      FlexibleTimeWindow:
+        Mode: 'FLEXIBLE'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
+      ScheduleExpression: 'cron(30 4 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 314}'

@@ -4757,6 +4757,206 @@ const parsers = {
       webshopItemLink: url,
       weight
     };
+  },
+  // Serce Kawy
+  314: ({ html, url, roasterId }) => {
+    logger.info(`Parsing webshop item page ${url}`);
+
+    const document = getDocument(html);
+
+    const title = (document.querySelector('h1')?.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+
+    const ldScripts = Array.from(document.querySelectorAll('script[type="application/ld+json"]'));
+    const ldData = ldScripts
+      .map((script) => {
+        try {
+          return JSON.parse(script.textContent);
+        } catch {
+          return null;
+        }
+      })
+      .filter(Boolean);
+
+    const productOffer = ldData.find((d) => d?.offers?.price)?.offers;
+    const availability = ldData.find((d) => d?.offers?.availability)?.offers?.availability || '';
+    const imageData = ldData.find((d) => Array.isArray(d?.image));
+    const descriptionLower = (document.querySelector('.product-description__content')?.textContent || '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
+
+    if (availability && !availability.includes('InStock')) {
+      return { isOutOfStock: true };
+    }
+
+    const variantWeights = Array.from(document.querySelectorAll('input[type="radio"][data-user-value]'))
+      .map((input) => {
+        const value = (input.getAttribute('data-user-value') || '').toLowerCase();
+        const match = value.match(/(\d+(?:[.,]\d+)?)\s*(kg|g)/iu);
+
+        if (!match) {
+          return null;
+        }
+
+        const num = Number(match[1].replace(',', '.'));
+
+        return match[2].toLowerCase() === 'kg' ? num * 1000 : num;
+      })
+      .filter((w) => w && !isNaN(w));
+
+    const weight = variantWeights.length ? Math.min(...variantWeights) : null;
+
+    if (!weight) {
+      logger.error(`No weight found for ${url}`);
+
+      throw new Error(errors.weightMissing);
+    }
+
+    const price = productOffer?.price ? Number(Number(productOffer.price).toFixed(2)) : null;
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const currency = productOffer?.priceCurrency || null;
+
+    if (!currency) {
+      logger.error(`No currency found for ${url}`);
+
+      throw new Error(errors.currencyMissing);
+    }
+
+    const image = imageData?.image?.[0] || null;
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    const attributes = {};
+
+    document.querySelectorAll('li.product-attributes__attribute').forEach((li) => {
+      const name = li.querySelector('.product-attributes__attribute-name')?.textContent.trim().toLowerCase();
+      const value = li.querySelector('.product-attributes__attribute-value')?.textContent.trim().toLowerCase();
+
+      if (name && value) {
+        attributes[name] = value;
+      }
+    });
+
+    const sortedCountries = [...originCountries].sort((a, b) => b.name.length - a.name.length);
+    const originCountryId =
+      sortedCountries.find(({ name }) => descriptionLower.includes(name.toLowerCase()))?.origin_country_id || null;
+
+    if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const regionText = attributes.region || '';
+    const originRegionId =
+      originRegions
+        .filter(({ origin_country_id: countryId }) => countryId === originCountryId) // eslint-disable-line camelcase
+        .find(({ name }) => regionText.includes(name.toLowerCase()))?.origin_region_id || null;
+
+    if (!originRegionId) {
+      logger.info(`Missing origin region: ${regionText}`);
+    }
+
+    const farmText = attributes.producent || '';
+    const originFarmId =
+      originFarms.find(({ name }) => farmText.includes(name.toLowerCase()))?.id ||
+      originFarms.find(({ name }) => descriptionLower.includes(name.toLowerCase()))?.id ||
+      null;
+
+    const processingText = attributes['metoda obróbki'] || '';
+    const sortedProcessingMethods = [...processingMethods].sort((a, b) => b.name.length - a.name.length);
+    const processingMethodId =
+      sortedProcessingMethods.find(({ name }) => processingText === name.toLowerCase())?.processing_method_id ||
+      sortedProcessingMethods.find(({ name }) => processingText.includes(name.toLowerCase()))?.processing_method_id ||
+      null;
+
+    if (!processingMethodId) {
+      logger.info(`Missing processing method: ${processingText}`);
+    }
+
+    const tasteNotesText = attributes['nuty smakowe'] || '';
+    const sortedTasteNotes = [...tasteNotes].sort((a, b) => b.name.length - a.name.length);
+    const tasteNoteIds = Array.from(
+      new Set(
+        sortedTasteNotes
+          .filter(
+            ({ name, alias }) =>
+              tasteNotesText.includes(name.toLowerCase()) || (alias && tasteNotesText.includes(alias.toLowerCase()))
+          )
+          .map(({ taste_note_id: id }) => id)
+      )
+    );
+
+    if (!tasteNoteIds.length) {
+      logger.info(`Missing taste notes: ${tasteNotesText}`);
+    }
+
+    const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+    const varietyIds = Array.from(
+      new Set(
+        varieties
+          .filter(({ name, alias }) => {
+            const nameRe = new RegExp(`(?<!\\p{L})${escapeRegex(name.toLowerCase())}(?!\\p{L})`, 'iu');
+            const aliasRe = alias ? new RegExp(`(?<!\\p{L})${escapeRegex(alias.toLowerCase())}(?!\\p{L})`, 'iu') : null;
+
+            return nameRe.test(descriptionLower) || (aliasRe && aliasRe.test(descriptionLower));
+          })
+          .map(({ id }) => id)
+      )
+    );
+
+    if (!varietyIds.length) {
+      logger.info(`Missing varieties for ${url}`);
+    }
+
+    const isEspresso = url.toLowerCase().includes('espresso') || title.includes('espresso');
+    const isFilter =
+      url.toLowerCase().includes('filter') || title.includes('filter') || title.includes('filtr');
+    const isOmni = url.toLowerCase().includes('omni') || title.includes('omni');
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) =>
+          (isOmni && name === 'omni') ||
+          (!isOmni && isEspresso && isFilter && name === 'omni') ||
+          (!isOmni && isEspresso && !isFilter && name === 'espresso') ||
+          (!isOmni && !isEspresso && isFilter && name === 'filter')
+      )?.brewing_method_id || null;
+
+    const isDecaf =
+      url.toLowerCase().includes('decaf') ||
+      title.includes('decaf') ||
+      descriptionLower.includes('decaf') ||
+      descriptionLower.includes('bezkofeinow');
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
   }
 };
 
