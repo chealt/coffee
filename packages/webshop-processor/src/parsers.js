@@ -507,6 +507,15 @@ const parsers = {
     const { origin } = new URL(url);
 
     return Array.from(new Set(links)).map((href) => (href.startsWith('http') ? href : `${origin}${href}`));
+  },
+  // Leń
+  317: async ({ url }) => {
+    const { origin, pathname } = new URL(url);
+
+    const response = await fetch(`${origin}${pathname}/products.json?limit=250`);
+    const { products } = await response.json();
+
+    return products.map(({ handle }) => `${origin}/products/${handle}`);
   }
 };
 

@@ -5179,6 +5179,233 @@ const parsers = {
       webshopItemLink: url,
       weight
     };
+  },
+  // Leń
+  317: async ({ html, url, roasterId }) => {
+    logger.info(`Parsing webshop item page ${url}`);
+
+    const document = getDocument(html);
+
+    const variantScript = document.querySelector('script[data-js-variant-data]');
+
+    if (!variantScript) {
+      logger.error(`No variant data found for ${url}`);
+
+      throw new Error(errors.detailsMissing);
+    }
+
+    const defaultVariant = JSON.parse(variantScript.textContent);
+
+    const parseWeight = (value) => {
+      const match = (value || '').toLowerCase().match(/(\d+(?:[.,]\d+)?)\s*(kg|g)\b/iu);
+
+      if (!match) {
+        return null;
+      }
+
+      const num = Number(match[1].replace(',', '.'));
+
+      return match[2] === 'kg' ? num * 1000 : num;
+    };
+
+    const title = (document.querySelector('h1.product__title')?.textContent || '').trim().toLowerCase();
+    const gramaturaSelect = document.querySelector('select[id*="-gramatura-"]');
+
+    let weight, price;
+
+    if (gramaturaSelect) {
+      const variantMetafieldsScript = document.querySelector('script[data-variant-metafields-for-block]');
+      const metafields = variantMetafieldsScript ? JSON.parse(variantMetafieldsScript.textContent) : {};
+
+      const availableWeights = Array.from(gramaturaSelect.querySelectorAll('option'))
+        .filter((option) => option.dataset.available === 'true')
+        .map((option) => ({
+          weight: parseWeight(option.value),
+          variantId: option.dataset.variantId
+        }))
+        .filter((variant) => variant.weight)
+        .sort((a, b) => a.weight - b.weight);
+
+      if (!availableWeights.length) {
+        return { isOutOfStock: true };
+      }
+
+      const smallest = availableWeights[0];
+
+      weight = smallest.weight;
+      price = metafields[smallest.variantId]?.price
+        ? Number((metafields[smallest.variantId].price / 100).toFixed(2))
+        : Number((defaultVariant.price / 100).toFixed(2));
+    } else {
+      if (!defaultVariant.available) {
+        return { isOutOfStock: true };
+      }
+
+      weight = parseWeight(defaultVariant.option1) || parseWeight(title);
+      price = Number((defaultVariant.price / 100).toFixed(2));
+    }
+
+    if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
+      throw new Error(errors.weightMissing);
+    }
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+    const currency = 'PLN';
+
+    const imageRaw = document.querySelector('.product-gallery-item img')?.src;
+
+    if (!imageRaw) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    const image = imageRaw.startsWith('//') ? `https:${imageRaw}` : imageRaw;
+
+    const specs = {};
+    const specsHtml = document.querySelector('nutritional-info p')?.innerHTML || '';
+
+    for (const line of specsHtml.split(/<br\s*\/?>/iu)) {
+      const cleanLine = line.replace(/<[^>]+>/gu, '').trim();
+
+      if (!cleanLine) {
+        continue;
+      }
+
+      const commaIndex = cleanLine.indexOf(',');
+
+      if (commaIndex < 0) {
+        continue;
+      }
+
+      const key = cleanLine.slice(0, commaIndex).trim().toLowerCase();
+      const value = cleanLine.slice(commaIndex + 1).trim().toLowerCase();
+
+      if (key && value) {
+        specs[key] = value;
+      }
+    }
+
+    const titleFirstWord = title.split(/\s+/u)[0] || '';
+    const sortedCountries = [...originCountries].sort((a, b) => b.name.length - a.name.length);
+    const originCountryId =
+      sortedCountries.find(({ name }) => name.toLowerCase() === titleFirstWord)?.origin_country_id ||
+      sortedCountries.find(({ name }) => title.includes(name.toLowerCase()))?.origin_country_id ||
+      null;
+
+    if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const regionText = specs.region || '';
+    const sortedRegions = originRegions
+      .filter(({ origin_country_id: countryId }) => countryId === originCountryId) // eslint-disable-line camelcase
+      .sort((a, b) => b.name.length - a.name.length);
+    const originRegionId =
+      sortedRegions.find(({ name }) => regionText.includes(name.toLowerCase()))?.origin_region_id || null;
+
+    if (!originRegionId && regionText) {
+      logger.info(`Missing origin region: ${regionText}`);
+    }
+
+    const sortedFarms = [...originFarms].sort((a, b) => b.name.length - a.name.length);
+    const originFarmId = sortedFarms.find(({ name }) => title.includes(name.toLowerCase()))?.id || null;
+
+    const processingTextPl = specs['obróbka'] || specs.obrobka || '';
+    const translatedProcessing = processingTextPl
+      ? (await translate({ text: processingTextPl, from: 'pl', to: 'en' })).trim().toLowerCase()
+      : '';
+    const sortedProcessingMethods = [...processingMethods].sort((a, b) => b.name.length - a.name.length);
+    const processingMethodId =
+      sortedProcessingMethods.find(({ name }) => name.toLowerCase() === processingTextPl)?.processing_method_id ||
+      sortedProcessingMethods.find(({ name }) => name.toLowerCase() === translatedProcessing)?.processing_method_id ||
+      sortedProcessingMethods.find(({ name }) => processingTextPl.includes(name.toLowerCase()))?.processing_method_id ||
+      sortedProcessingMethods.find(({ name }) => translatedProcessing.includes(name.toLowerCase()))
+        ?.processing_method_id ||
+      null;
+
+    if (!processingMethodId && processingTextPl) {
+      logger.info(`Missing processing method: ${processingTextPl} (translated: ${translatedProcessing})`);
+    }
+
+    const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+    const varietyText = specs.odmiana || '';
+    const varietyIds = Array.from(
+      new Set(
+        varieties
+          .filter(({ name, alias }) => {
+            const nameRe = new RegExp(`(?<!\\p{L})${escapeRegex(name.toLowerCase())}(?!\\p{L})`, 'iu');
+            const aliasRe = alias ? new RegExp(`(?<!\\p{L})${escapeRegex(alias.toLowerCase())}(?!\\p{L})`, 'iu') : null;
+
+            return nameRe.test(varietyText) || (aliasRe && aliasRe.test(varietyText));
+          })
+          .map(({ id }) => id)
+      )
+    );
+
+    if (!varietyIds.length && varietyText) {
+      logger.info(`Missing varieties: ${varietyText}`);
+    }
+
+    const tasteNotesTextPl = specs['profil smakowy'] || '';
+    const translatedTasteNotes = tasteNotesTextPl
+      ? (await translate({ text: tasteNotesTextPl, from: 'pl', to: 'en' })).toLowerCase()
+      : '';
+    const translatedTasteNoteList = translatedTasteNotes
+      .split(',')
+      .map((note) => note.trim())
+      .filter(Boolean);
+    const sortedTasteNotes = [...tasteNotes].sort((a, b) => b.name.length - a.name.length);
+    const tasteNoteIds = Array.from(
+      new Set(
+        sortedTasteNotes
+          .filter(({ name, alias }) => {
+            const nameLower = name.toLowerCase();
+            const aliasLower = alias ? alias.toLowerCase() : null;
+
+            return translatedTasteNoteList.some(
+              (note) => note === nameLower || (aliasLower && note === aliasLower) || note.includes(nameLower)
+            );
+          })
+          .map(({ taste_note_id: id }) => id)
+      )
+    );
+
+    if (!tasteNoteIds.length && tasteNotesTextPl) {
+      logger.info(`Missing taste notes for ${url}: ${tasteNotesTextPl} -> ${translatedTasteNotes}`);
+    }
+
+    const brewingMethodId = brewingMethods.find(({ name }) => name === 'omni')?.brewing_method_id || null;
+
+    const isDecaf = url.toLowerCase().includes('decaf') || title.includes('decaf');
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
   }
 };
 
