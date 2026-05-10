@@ -458,3 +458,29 @@ Resources:
         Arn: !Ref RecordLambdaArn
         RoleArn: !GetAtt SchedulerExecutionRole.Arn
         Input: '{"roasterId": 313}'
+
+  NineteenGramsSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: NineteenGramsSchedule
+      FlexibleTimeWindow:
+        Mode: 'FLEXIBLE'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
+      ScheduleExpression: 'cron(20 5 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 284}'
+
+  SubstanceSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: SubstanceSchedule
+      FlexibleTimeWindow:
+        Mode: 'FLEXIBLE'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
+      ScheduleExpression: 'cron(30 5 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 295}'

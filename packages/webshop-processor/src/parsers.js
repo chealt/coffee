@@ -327,6 +327,42 @@ const parsers = {
 
     return Array.from(document.querySelectorAll('.wc-block-components-product-image a')).map((element) => element.href);
   },
+  // 19 Grams
+  284: ({ html, url }) => {
+    const document = getDocument(html);
+    const { origin } = new URL(url);
+
+    const excludedSlugs = [
+      'abo',
+      'barista',
+      'club',
+      'geschenkbox',
+      'geschenkkarte',
+      'gutschein',
+      'kaffee-sack',
+      'kaffeekurs',
+      'kaffeerosten-kurs',
+      'kaffeetraining',
+      'kurs',
+      'poster',
+      'probierset',
+      'scoring',
+      'sensory-training',
+      'test-box',
+      'testroestung',
+      'third-wave-water',
+      'training'
+    ];
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('.card.card--product a.card__media'))
+          .map(({ href }) => href)
+          .filter((href) => !excludedSlugs.some((slug) => href.includes(slug)))
+          .map((href) => (href.startsWith('http') ? href : `${origin}${href}`))
+      )
+    );
+  },
   // Bani Beans
   285: async ({ html, url }) => {
     const document = getDocument(html);
@@ -395,6 +431,18 @@ const parsers = {
     return Array.from(document.querySelectorAll('.product-tile a'))
       .filter(({ href }) => !href.includes('probki'))
       .map(({ href }) => href);
+  },
+  // Substance
+  295: ({ html }) => {
+    const document = getDocument(html);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('li.product.product_cat-coffee a.woocommerce-LoopProduct-link')).map(
+          ({ href }) => href
+        )
+      )
+    );
   },
   // Craft Beans
   297: async ({ html }) => {

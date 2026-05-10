@@ -155,8 +155,6 @@ const parsers = {
     const originCountryId = originCountries.find(({ name }) => name === countryText)?.origin_country_id || null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -324,8 +322,6 @@ const parsers = {
       null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -482,8 +478,6 @@ const parsers = {
       if (/\brobust/i.test(fullDescription) || fullDescription.includes('mieszanka')) {
         return { isBlend: true };
       }
-
-      logger.error(`No origin country found for ${url}`);
 
       throw new Error(errors.originCountryMissing);
     }
@@ -650,8 +644,6 @@ const parsers = {
     const originCountryId = originCountries.find(({ name }) => name === originCountryText)?.origin_country_id || null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -805,8 +797,6 @@ const parsers = {
       null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -977,8 +967,6 @@ const parsers = {
     const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -1136,8 +1124,6 @@ const parsers = {
     const originCountryId = originCountry?.origin_country_id || null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -1272,8 +1258,6 @@ const parsers = {
       null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -1498,8 +1482,6 @@ const parsers = {
     const originCountryId = originCountryEntry?.origin_country_id || null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -1672,8 +1654,6 @@ const parsers = {
     const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -1820,8 +1800,6 @@ const parsers = {
     const originCountryId = originCountry?.origin_country_id;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -1969,8 +1947,6 @@ const parsers = {
         : details.lokalita;
 
     if (!originCountry) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -1981,8 +1957,6 @@ const parsers = {
       null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -2105,8 +2079,6 @@ const parsers = {
       null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -2257,8 +2229,6 @@ const parsers = {
     const originCountryId = originCountry?.origin_country_id || null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -2600,8 +2570,6 @@ const parsers = {
     }
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -2974,8 +2942,6 @@ const parsers = {
     const originCountryId = originCountry?.origin_country_id || null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -3044,6 +3010,220 @@ const parsers = {
       weight
     };
   },
+  // 19 Grams
+  284: async ({ html, url, roasterId }) => {
+    logger.info(`Parsing webshop item page ${url}`);
+
+    const document = getDocument(html);
+
+    const ldScripts = Array.from(document.querySelectorAll('script[type="application/ld+json"]'));
+    const productLd = ldScripts
+      .map((script) => {
+        try {
+          return JSON.parse(script.textContent);
+        } catch {
+          return null;
+        }
+      })
+      .find((data) => data?.['@type'] === 'Product');
+
+    const variantsScript = Array.from(document.querySelectorAll('script[type="application/json"]')).find((script) => {
+      const text = script.textContent.trim();
+
+      return text.startsWith('[{') && text.includes('"available"') && text.includes('"price"');
+    });
+
+    if (!variantsScript) {
+      logger.error(`No variant data found for ${url}`);
+
+      throw new Error(errors.detailsMissing);
+    }
+
+    const variants = JSON.parse(variantsScript.textContent);
+    const availableVariants = variants
+      .filter((variant) => variant.available && variant.weight)
+      .sort((a, b) => a.weight - b.weight);
+
+    if (!availableVariants.length) {
+      return { isOutOfStock: true };
+    }
+
+    const smallestVariant = availableVariants[0];
+    const weight = smallestVariant.weight;
+    const price = Number((smallestVariant.price / 100).toFixed(2));
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+    const offerCurrency = Array.isArray(productLd?.offers)
+      ? productLd.offers[0]?.priceCurrency
+      : productLd?.offers?.priceCurrency;
+    const currency = offerCurrency || null;
+
+    if (!currency) {
+      logger.error(`No currency found for ${url}`);
+
+      throw new Error(errors.currencyMissing);
+    }
+
+    const variantImage = smallestVariant.featured_image?.src;
+    const ldImage = Array.isArray(productLd?.image) ? productLd.image[0] : productLd?.image;
+    const rawImage = variantImage || ldImage || null;
+    const image = rawImage?.startsWith('//') ? `https:${rawImage}` : rawImage;
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    const title = (document.querySelector('h1.product__heading')?.textContent || '')
+      .replace(/\s+/gu, ' ')
+      .trim()
+      .toLowerCase();
+    const descriptionText = (document.querySelector('.product__description')?.textContent || '')
+      .replace(/\s+/gu, ' ')
+      .trim()
+      .toLowerCase();
+
+    if (
+      url.toLowerCase().includes('-blend') ||
+      title.includes('blend') ||
+      descriptionText.includes('house blend') ||
+      descriptionText.includes('hausblend')
+    ) {
+      return { isBlend: true };
+    }
+
+    const germanCountryAliases = {
+      brasilien: 'brazil',
+      indien: 'india',
+      kolumbien: 'colombia',
+      mexiko: 'mexico',
+      ruanda: 'rwanda',
+      elfenbeinküste: 'ivory coast',
+      äthiopien: 'ethiopia',
+      tansania: 'tanzania',
+      kenia: 'kenya',
+      jemen: 'yemen'
+    };
+    const sortedCountries = [...originCountries].sort((a, b) => b.name.length - a.name.length);
+    const findCountryInText = (text) => {
+      const directMatch = sortedCountries.find(({ name }) => text.includes(name.toLowerCase()));
+
+      if (directMatch) {
+        return directMatch.origin_country_id;
+      }
+
+      for (const [german, english] of Object.entries(germanCountryAliases)) {
+        if (text.includes(german)) {
+          const match = sortedCountries.find(({ name }) => name.toLowerCase() === english);
+
+          if (match) {
+            return match.origin_country_id;
+          }
+        }
+      }
+
+      return null;
+    };
+    const originCountryId = findCountryInText(title) || findCountryInText(descriptionText) || null;
+
+    if (!originCountryId) {
+      // no way to judge if it is a blend so we don't throw here
+      return {};
+    }
+
+    const sortedRegions = originCountryId
+      ? originRegions
+          .filter(({ origin_country_id: countryId }) => countryId === originCountryId) // eslint-disable-line camelcase
+          .sort((a, b) => b.name.length - a.name.length)
+      : [];
+    const originRegionId =
+      sortedRegions.find(({ name }) => title.includes(name.toLowerCase()))?.origin_region_id ||
+      sortedRegions.find(({ name }) => descriptionText.includes(name.toLowerCase()))?.origin_region_id ||
+      null;
+
+    const sortedFarms = [...originFarms].sort((a, b) => b.name.length - a.name.length);
+    const originFarmId =
+      sortedFarms.find(({ name }) => title.includes(name.toLowerCase()))?.id ||
+      sortedFarms.find(({ name }) => descriptionText.includes(name.toLowerCase()))?.id ||
+      null;
+
+    const sortedProcessingMethods = [...processingMethods].sort((a, b) => b.name.length - a.name.length);
+    const processingMethodId =
+      sortedProcessingMethods.find(({ name }) => descriptionText.includes(name.toLowerCase()))?.processing_method_id ||
+      null;
+
+    const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+    const varietyIds = Array.from(
+      new Set(
+        varieties
+          .filter(({ name, alias }) => {
+            const nameRe = new RegExp(`(?<!\\p{L})${escapeRegex(name.toLowerCase())}(?!\\p{L})`, 'iu');
+            const aliasRe = alias ? new RegExp(`(?<!\\p{L})${escapeRegex(alias.toLowerCase())}(?!\\p{L})`, 'iu') : null;
+
+            return nameRe.test(title) || nameRe.test(descriptionText) || (aliasRe && aliasRe.test(descriptionText));
+          })
+          .map(({ id }) => id)
+      )
+    );
+
+    const tasteNoteStrings = await Promise.all(
+      (document.querySelector('.custom-field__flavour-nr-one .custom-field--value')?.textContent || '')
+        ?.trim()
+        .toLowerCase()
+        .split(', ')
+        .map((note) => note && translate({ text: note, from: 'de', to: 'en' }))
+    );
+
+    const tasteNoteIds = tasteNotes
+      .filter(({ name, alias }) => tasteNoteStrings.some((note) => note === name || (alias && note === alias)))
+      .map(({ taste_note_id: id }) => id);
+
+    const isEspresso = url.toLowerCase().includes('espresso') || title.includes('espresso');
+    const isFilter =
+      url.toLowerCase().includes('filter') ||
+      title.includes('filter') ||
+      title.includes('filterröstung') ||
+      title.includes('filterrostung');
+    const isOmni = isEspresso && isFilter;
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) =>
+          (isOmni && name === 'omni') ||
+          (!isOmni && isEspresso && name === 'espresso') ||
+          (!isOmni && isFilter && name === 'filter')
+      )?.brewing_method_id || null;
+
+    const isDecaf =
+      url.toLowerCase().includes('decaf') ||
+      url.toLowerCase().includes('entkoffeiniert') ||
+      title.includes('decaf') ||
+      title.includes('entkoffeiniert');
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
+  },
   // Bani Beans
   285: async ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
@@ -3104,8 +3284,6 @@ const parsers = {
       null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -3229,8 +3407,6 @@ const parsers = {
     const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -3342,8 +3518,6 @@ const parsers = {
     const originCountryId = originCountries.find(({ name }) => originCountry.includes(name))?.origin_country_id || null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -3520,8 +3694,6 @@ const parsers = {
         ?.origin_country_id || null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -3661,8 +3833,6 @@ const parsers = {
     const originCountryId = originCountries.find(({ name }) => details.includes(name))?.origin_country_id || null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -3747,8 +3917,6 @@ const parsers = {
     const originCountryId = originCountries.find(({ name }) => originCountry.includes(name))?.origin_country_id || null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -3823,6 +3991,201 @@ const parsers = {
       currency,
       image,
       originCountryId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
+  },
+  // Substance
+  295: ({ html, url, roasterId }) => {
+    logger.info(`Parsing webshop item page ${url}`);
+
+    const document = getDocument(html);
+
+    const productElement = document.querySelector('.product[id^="product-"]');
+
+    if (productElement?.classList.contains('outofstock')) {
+      return { isOutOfStock: true };
+    }
+
+    const title = (document.querySelector('h1.product_title')?.textContent || '').trim().toLowerCase();
+    const fullText = (document.querySelector('.summary')?.textContent || '').replace(/\s+/gu, ' ').trim().toLowerCase();
+
+    if (title.includes('blend')) {
+      return { isBlend: true };
+    }
+
+    const priceElement = document.querySelector('p.price .woocommerce-Price-amount');
+    const currencySymbol = document.querySelector('p.price .woocommerce-Price-currencySymbol')?.textContent.trim();
+    const currency = currencySymbol ? currencyCodes[currencySymbol.toLowerCase()] || null : null;
+
+    if (!currency) {
+      logger.error(`No currency found for ${url}`);
+
+      throw new Error(errors.currencyMissing);
+    }
+
+    const priceText = (priceElement?.textContent || '').replace(currencySymbol, '').replace(',', '.').trim();
+    const price = priceText ? Number(Number(priceText).toFixed(2)) : null;
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    const parseWeight = (text) => {
+      const match = (text || '').toLowerCase().match(/(\d+(?:[.,]\d+)?)\s*(kg|g)\b/iu);
+
+      if (!match) {
+        return null;
+      }
+
+      const num = Number(match[1].replace(',', '.'));
+
+      return match[2] === 'kg' ? num * 1000 : num;
+    };
+
+    const shortDescriptionText = (
+      document.querySelector('.woocommerce-product-details__short-description')?.textContent || ''
+    )
+      .replace(/\s+/gu, ' ')
+      .trim();
+    const weightAttrText = document
+      .querySelector('.woocommerce-product-attributes-item--weight .woocommerce-product-attributes-item__value')
+      ?.textContent.trim();
+    const weight = parseWeight(shortDescriptionText) || parseWeight(weightAttrText) || null;
+
+    if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
+      throw new Error(errors.weightMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const galleryImage = document.querySelector('.woocommerce-product-gallery img.wp-post-image');
+    const image = galleryImage?.dataset?.largeImage || galleryImage?.src || null;
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    const descriptionText = (
+      document.querySelector('#tab-description, .woocommerce-Tabs-panel--description')?.textContent || ''
+    )
+      .replace(/\s+/gu, ' ')
+      .trim()
+      .toLowerCase();
+
+    const specs = {};
+    const specMatches = descriptionText.matchAll(
+      /(country|region|farm|farmer|producer|varietal|variety|process|altitude|importer|crop|harvest)\s*:\s*([^\n:]+?)(?=\s+(?:country|region|farm|farmer|producer|varietal|variety|process|altitude|importer|crop|harvest|photos|in \d{4})\s*:|\s*$)/giu
+    );
+
+    for (const match of specMatches) {
+      const key = match[1].toLowerCase();
+      const value = match[2].trim();
+
+      if (key && value) {
+        specs[key] = value;
+      }
+    }
+
+    const sortedCountries = [...originCountries].sort((a, b) => b.name.length - a.name.length);
+    const countryText = specs.country || '';
+    const originCountryId =
+      sortedCountries.find(({ name }) => name.toLowerCase() === countryText)?.origin_country_id ||
+      sortedCountries.find(({ name }) => countryText.includes(name.toLowerCase()))?.origin_country_id ||
+      sortedCountries.find(({ name }) => title.includes(name.toLowerCase()))?.origin_country_id ||
+      sortedCountries.find(({ name }) => fullText.includes(name.toLowerCase()))?.origin_country_id ||
+      null;
+
+    if (!originCountryId) {
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const sortedRegions = originCountryId
+      ? originRegions
+          .filter(({ origin_country_id: countryId }) => countryId === originCountryId) // eslint-disable-line camelcase
+          .sort((a, b) => b.name.length - a.name.length)
+      : [];
+    const regionText = specs.region || '';
+    const originRegionId =
+      sortedRegions.find(({ name }) => regionText.includes(name.toLowerCase()))?.origin_region_id ||
+      sortedRegions.find(({ name }) => descriptionText.includes(name.toLowerCase()))?.origin_region_id ||
+      null;
+
+    const sortedFarms = [...originFarms].sort((a, b) => b.name.length - a.name.length);
+    const farmText = specs.farm || specs.farmer || '';
+    const originFarmId =
+      sortedFarms.find(({ name }) => farmText.includes(name.toLowerCase()))?.id ||
+      sortedFarms.find(({ name }) => title.includes(name.toLowerCase()))?.id ||
+      sortedFarms.find(({ name }) => descriptionText.includes(name.toLowerCase()))?.id ||
+      null;
+
+    const processingText = specs.process || '';
+    const sortedProcessingMethods = [...processingMethods].sort((a, b) => b.name.length - a.name.length);
+    const processingMethodId =
+      sortedProcessingMethods.find(({ name }) => name.toLowerCase() === processingText)?.processing_method_id ||
+      sortedProcessingMethods.find(({ name }) => processingText.includes(name.toLowerCase()))?.processing_method_id ||
+      sortedProcessingMethods.find(({ name }) => descriptionText.includes(name.toLowerCase()))?.processing_method_id ||
+      null;
+
+    const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+    const varietyText = specs.varietal || specs.variety || '';
+    const varietyIds = Array.from(
+      new Set(
+        varieties
+          .filter(({ name, alias }) => {
+            const nameRe = new RegExp(`(?<!\\p{L})${escapeRegex(name.toLowerCase())}(?!\\p{L})`, 'iu');
+            const aliasRe = alias ? new RegExp(`(?<!\\p{L})${escapeRegex(alias.toLowerCase())}(?!\\p{L})`, 'iu') : null;
+
+            return (
+              nameRe.test(varietyText) ||
+              (aliasRe && aliasRe.test(varietyText)) ||
+              nameRe.test(title) ||
+              nameRe.test(descriptionText) ||
+              (aliasRe && aliasRe.test(descriptionText))
+            );
+          })
+          .map(({ id }) => id)
+      )
+    );
+
+    const sortedTasteNotes = [...tasteNotes].sort((a, b) => b.name.length - a.name.length);
+    const tasteNoteIds = Array.from(
+      new Set(
+        sortedTasteNotes
+          .filter(({ name, alias }) => {
+            const nameRe = new RegExp(`(?<!\\p{L})${escapeRegex(name.toLowerCase())}(?!\\p{L})`, 'iu');
+            const aliasRe = alias ? new RegExp(`(?<!\\p{L})${escapeRegex(alias.toLowerCase())}(?!\\p{L})`, 'iu') : null;
+
+            return nameRe.test(descriptionText) || (aliasRe && aliasRe.test(descriptionText));
+          })
+          .map(({ taste_note_id: id }) => id)
+      )
+    );
+
+    const brewingMethodId = brewingMethods.find(({ name }) => name === 'omni')?.brewing_method_id || null;
+
+    const isDecaf = url.toLowerCase().includes('decaf') || title.includes('decaf');
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId,
       originRegionId,
       price,
       pricePerGram,
@@ -4112,8 +4475,6 @@ const parsers = {
       null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -4252,8 +4613,6 @@ const parsers = {
       null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -4472,8 +4831,6 @@ const parsers = {
       null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -4636,8 +4993,6 @@ const parsers = {
       null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -4862,8 +5217,6 @@ const parsers = {
       null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -5092,8 +5445,6 @@ const parsers = {
       null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -5288,8 +5639,6 @@ const parsers = {
       sortedCountries.find(({ name }) => descriptionLower.includes(name.toLowerCase()))?.origin_country_id || null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -5487,8 +5836,6 @@ const parsers = {
       null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
@@ -5739,8 +6086,6 @@ const parsers = {
       null;
 
     if (!originCountryId) {
-      logger.error(`No origin country found for ${url}`);
-
       throw new Error(errors.originCountryMissing);
     }
 
