@@ -4980,6 +4980,218 @@ const parsers = {
       weight
     };
   },
+  // Rebelbean
+  313: ({ html, url, roasterId }) => {
+    logger.info(`Parsing webshop item page ${url}`);
+
+    const document = getDocument(html);
+
+    const offers = Array.from(document.querySelectorAll('.p-detail span[itemprop="offers"]'));
+
+    if (!offers.length) {
+      logger.error(`No product offer found for ${url}`);
+
+      throw new Error(errors.detailsMissing);
+    }
+
+    const availableOffers = offers.filter((offer) =>
+      (offer.querySelector('link[itemprop="availability"]')?.getAttribute('href') || '').includes('InStock')
+    );
+
+    if (!availableOffers.length) {
+      return { isOutOfStock: true };
+    }
+
+    const parseWeight = (value) => {
+      const match = (value || '').toLowerCase().match(/(\d+(?:[.,]\d+)?)\s*(kg|g)\b/iu);
+
+      if (!match) {
+        return null;
+      }
+
+      const num = Number(match[1].replace(',', '.'));
+
+      return match[2] === 'kg' ? num * 1000 : num;
+    };
+
+    const grammageSelect = document.querySelector('select.parameter-id-218');
+    const weightOptions = grammageSelect
+      ? Array.from(grammageSelect.querySelectorAll('option'))
+          .filter((option) => option.value)
+          .map((option) => parseWeight(option.textContent))
+          .filter(Boolean)
+          .sort((a, b) => a - b)
+      : [];
+    const offerPrices = availableOffers
+      .map((offer) => Number(offer.querySelector('meta[itemprop="price"]')?.getAttribute('content')))
+      .filter((value) => value && !isNaN(value))
+      .sort((a, b) => a - b);
+
+    const weight = weightOptions[0] || 250;
+    const price = offerPrices[0] ? Number(offerPrices[0].toFixed(2)) : null;
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+    const currency =
+      availableOffers[0].querySelector('meta[itemprop="priceCurrency"]')?.getAttribute('content') || null;
+
+    if (!currency) {
+      logger.error(`No currency found for ${url}`);
+
+      throw new Error(errors.currencyMissing);
+    }
+
+    const image = document.querySelector('.p-detail meta[itemprop="image"]')?.getAttribute('content') || null;
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    const title = (document.querySelector('.p-detail h1')?.textContent || '')
+      .replace(/\s+/gu, ' ')
+      .trim()
+      .toLowerCase();
+
+    const specs = {};
+
+    document.querySelectorAll('table.detail-parameters.second tr').forEach((row) => {
+      const key = row.querySelector('th .row-header-label')?.textContent.replace(/[?:]+/gu, '').trim().toLowerCase();
+      const value = row.querySelector('td')?.textContent.replace(/\s+/gu, ' ').trim().toLowerCase();
+
+      if (key && value) {
+        specs[key] = value;
+      }
+    });
+
+    const varietyText = specs.variety || '';
+
+    if (
+      url.toLowerCase().includes('blend') ||
+      url.toLowerCase().includes('daily-mix') ||
+      varietyText === 'blend' ||
+      varietyText.includes('blend')
+    ) {
+      return { isBlend: true };
+    }
+
+    const sortedCountries = [...originCountries].sort((a, b) => b.name.length - a.name.length);
+    const originText = specs.origin || '';
+    const titleFirstSegment = title.split(/[,\s]+/u)[0] || '';
+    const originCountryId =
+      sortedCountries.find(({ name }) => name.toLowerCase() === originText)?.origin_country_id ||
+      sortedCountries.find(({ name }) => name.toLowerCase() === titleFirstSegment)?.origin_country_id ||
+      sortedCountries.find(({ name }) => originText.includes(name.toLowerCase()))?.origin_country_id ||
+      sortedCountries.find(({ name }) => title.includes(name.toLowerCase()))?.origin_country_id ||
+      null;
+
+    if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const regionText = specs.region || '';
+    const sortedRegions = originRegions
+      .filter(({ origin_country_id: countryId }) => countryId === originCountryId) // eslint-disable-line camelcase
+      .sort((a, b) => b.name.length - a.name.length);
+    const originRegionId =
+      sortedRegions.find(({ name }) => regionText.includes(name.toLowerCase()))?.origin_region_id || null;
+
+    if (!originRegionId && regionText) {
+      logger.info(`Missing origin region: ${regionText}`);
+    }
+
+    const sortedFarms = [...originFarms].sort((a, b) => b.name.length - a.name.length);
+    const farmText = specs.farm || specs.farmer || specs['farmers community'] || specs['washing station'] || '';
+    const originFarmId =
+      sortedFarms.find(({ name }) => farmText.includes(name.toLowerCase()))?.id ||
+      sortedFarms.find(({ name }) => title.includes(name.toLowerCase()))?.id ||
+      null;
+
+    const processingText = specs.processing || '';
+    const sortedProcessingMethods = [...processingMethods].sort((a, b) => b.name.length - a.name.length);
+    const processingMethodId =
+      sortedProcessingMethods.find(({ name }) => name.toLowerCase() === processingText)?.processing_method_id ||
+      sortedProcessingMethods.find(({ name }) => processingText.includes(name.toLowerCase()))?.processing_method_id ||
+      null;
+
+    if (!processingMethodId && processingText) {
+      logger.info(`Missing processing method: ${processingText}`);
+    }
+
+    const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+    const varietyIds = Array.from(
+      new Set(
+        varieties
+          .filter(({ name, alias }) => {
+            const nameRe = new RegExp(`(?<!\\p{L})${escapeRegex(name.toLowerCase())}(?!\\p{L})`, 'iu');
+            const aliasRe = alias ? new RegExp(`(?<!\\p{L})${escapeRegex(alias.toLowerCase())}(?!\\p{L})`, 'iu') : null;
+
+            return nameRe.test(varietyText) || (aliasRe && aliasRe.test(varietyText));
+          })
+          .map(({ id }) => id)
+      )
+    );
+
+    if (!varietyIds.length && varietyText) {
+      logger.info(`Missing varieties: ${varietyText}`);
+    }
+
+    const descriptionText = (document.querySelector('.p-short-description')?.textContent || '')
+      .replace(/\s+/gu, ' ')
+      .trim()
+      .toLowerCase();
+    const sortedTasteNotes = [...tasteNotes].sort((a, b) => b.name.length - a.name.length);
+    const tasteNoteIds = Array.from(
+      new Set(
+        sortedTasteNotes
+          .filter(({ name, alias }) => {
+            const nameRe = new RegExp(`(?<!\\p{L})${escapeRegex(name.toLowerCase())}(?!\\p{L})`, 'iu');
+            const aliasRe = alias ? new RegExp(`(?<!\\p{L})${escapeRegex(alias.toLowerCase())}(?!\\p{L})`, 'iu') : null;
+
+            return nameRe.test(descriptionText) || (aliasRe && aliasRe.test(descriptionText));
+          })
+          .map(({ taste_note_id: id }) => id)
+      )
+    );
+
+    if (!tasteNoteIds.length && descriptionText) {
+      logger.info(`Missing taste notes for ${url}: ${descriptionText}`);
+    }
+
+    const brewingMethodId = brewingMethods.find(({ name }) => name === 'omni')?.brewing_method_id || null;
+
+    const isDecaf =
+      url.toLowerCase().includes('decaf') ||
+      title.includes('decaf') ||
+      processingText.includes('decaf') ||
+      varietyText.includes('decaf');
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
+  },
   // Serce Kawy
   314: ({ html, url, roasterId }) => {
     logger.info(`Parsing webshop item page ${url}`);

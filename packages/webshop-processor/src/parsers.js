@@ -481,6 +481,26 @@ const parsers = {
       )
     );
   },
+  // Rebelbean
+  313: ({ html, url }) => {
+    const document = getDocument(html);
+    const { origin } = new URL(url);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('#products .product .p a.image'))
+          .map(({ href }) => href)
+          .filter(
+            (href) =>
+              !href.includes('coffee-tasting-set') &&
+              !href.includes('coffee-set') &&
+              !href.includes('subscription') &&
+              !href.includes('voucher')
+          )
+          .map((href) => (href.startsWith('http') ? href : `${origin}${href}`))
+      )
+    );
+  },
   // Serce Kawy
   314: ({ html, url }) => {
     const document = getDocument(html);
