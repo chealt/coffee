@@ -21,7 +21,7 @@ const saveBrewingMethodGroups = async () => {
 };
 
 const saveRoasters = async () => {
-  const results = await turso.execute('SELECT * FROM roasters ORDER BY name COLLATE nocase ASC');
+  const results = await turso.execute('SELECT * FROM roasters_all');
 
   return writeFile('./data/roasters.json', JSON.stringify(results.rows), { flag: 'w+' });
 };
@@ -33,7 +33,7 @@ const saveRoastersWithCoffees = async () => {
 };
 
 const saveRoastersBest = async () => {
-  const results = await turso.execute('SELECT * FROM roasters WHERE is_best = TRUE ORDER BY name COLLATE nocase ASC');
+  const results = await turso.execute('SELECT * FROM roasters_best');
 
   return writeFile('./data/roastersBest.json', JSON.stringify(results.rows), { flag: 'w+' });
 };
