@@ -1,7 +1,6 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
 
-import countries from "@data/countries.json" with { type: "json" };
 import { encodeSafeURL } from "../../utils/string.js";
 import Button from "../form/button/button.astro";
 import Icon from "../icon/icon.astro";
@@ -22,58 +21,69 @@ const { roasters } = Astro.props;
     {
       roasters
         .filter(({ logo }) => Boolean(logo))
-        .map(({ id, name, country_id, logo, website, instagram }) => (
-          <li data-country-id={country_id} class="item roaster">
-            <a
-              href={getRelativeLocaleUrl(
-                Astro.currentLocale,
-                `/roasters/${encodeSafeURL(name)}`,
-              )}
-            >
-              <div
-                class="image card"
-                style={`view-transition-name: roaster-${id}`}
+        .map(
+          ({
+            id,
+            name,
+            country_id,
+            logo,
+            website,
+            instagram,
+            coffee_count,
+          }) => (
+            <li data-country-id={country_id} class="item roaster">
+              <a
+                href={getRelativeLocaleUrl(
+                  Astro.currentLocale,
+                  `/roasters/${encodeSafeURL(name)}`,
+                )}
               >
-                <img
-                  src={`/roasters/${logo}`}
-                  alt={`${t.roasterLogo} ${name}`}
-                  loading="lazy"
-                />
+                <div
+                  class="image card"
+                  style={`view-transition-name: roaster-${id}`}
+                >
+                  <img
+                    src={`/roasters/${logo}`}
+                    alt={`${t.roasterLogo} ${name}`}
+                    loading="lazy"
+                  />
+                </div>
+                <span
+                  class="tag primary left hidden"
+                  data-recommendation-key={`roasters-${id}`}
+                >
+                  {tc.recommended}
+                </span>
+                <span class="bottom right banner">{coffee_count}</span>
+              </a>
+              <div class="name">
+                {website && (
+                  <Button
+                    class="tight"
+                    href={website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon class="icon-only" type="home" />
+                    <span class="visually-hidden">{tc.website}</span>
+                  </Button>
+                )}
+                <span class="text">{name}</span>
+                {instagram && (
+                  <Button
+                    class="tight"
+                    href={`https://instagram.com/${instagram}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon class="icon-only" type="instagram" />
+                    <span class="visually-hidden">{tc.instagram}</span>
+                  </Button>
+                )}
               </div>
-              <span
-                class="tag primary left hidden"
-                data-recommendation-key={`roasters-${id}`}
-              >
-                {tc.recommended}
-              </span>
-            </a>
-            <div class="name">
-              {website && (
-                <Button
-                  class="tight"
-                  href={website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Icon class="icon-only" type="home" />
-                  <span class="visually-hidden">{tc.website}</span>
-                </Button>
-              )}
-              <span class="text">{name}</span>
-              {instagram && (
-                <Button
-                  class="tight"
-                  href={`https://instagram.com/${instagram}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Icon class="icon-only" type="instagram" />
-                  <span class="visually-hidden">{tc.instagram}</span>
-                </Button>
-              )}
-            </div>
-          </li>
-        ))
+            </li>
+          ),
+        )
     }
   </ul>
 </div>

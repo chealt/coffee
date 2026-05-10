@@ -118,7 +118,7 @@ h5 {
     align-items: center;
     gap: var(--gap--s);
 
-    & > * {
+    &>* {
       flex-grow: 1;
     }
 
@@ -318,7 +318,7 @@ sup {
     box-sizing: border-box;
     overflow: hidden;
 
-    > a {
+    >a {
       position: relative;
       border: none;
       width: 100%;
@@ -327,6 +327,7 @@ sup {
       align-items: stretch;
       justify-content: stretch;
       box-sizing: border-box;
+      overflow: hidden;
     }
 
     .image {
@@ -437,6 +438,26 @@ sup {
     transform: rotate(-45deg);
     left: -50%;
     right: auto;
+  }
+}
+
+.banner {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  background-color: var(--color-background--alternative);
+  padding: var(--gap--s) 40px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.8rem;
+
+  &.bottom {
+    bottom: 7px;
+  }
+
+  &.right {
+    transform: rotate(-45deg);
+    right: -190px;
   }
 }
 
