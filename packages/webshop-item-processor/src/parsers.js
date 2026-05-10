@@ -1746,7 +1746,7 @@ const parsers = {
     );
 
     if (missingVarieties.length) {
-      logger.debug(`Missing varieties: ${missingVarieties.join(', ')}`);
+      logger.info(`Missing varieties: ${missingVarieties.join(', ')}`);
     }
 
     const image = document.querySelectorAll('.ct-product-gallery-container figure img')[0]?.src;
@@ -1885,7 +1885,7 @@ const parsers = {
     );
 
     if (missingVarieties.length) {
-      logger.debug(`Missing varieties: ${missingVarieties.join(', ')}`);
+      logger.info(`Missing varieties: ${missingVarieties.join(', ')}`);
     }
 
     const isDecaf = url.includes('decaf');
@@ -3398,7 +3398,7 @@ const parsers = {
       );
 
     if (missingVarieties.length) {
-      logger.debug(`Missing varieties: ${missingVarieties}`);
+      logger.info(`Missing varieties: ${missingVarieties}`);
     }
 
     const tasteNoteStrings = (details.notes || details['taste notes'] || '').split(', ').filter(Boolean);
@@ -3559,7 +3559,7 @@ const parsers = {
       );
 
     if (missingVarieties.length) {
-      logger.debug(`Missing varieties: ${missingVarieties}`);
+      logger.info(`Missing varieties: ${missingVarieties}`);
     }
 
     const tasteNoteStrings = details.taste.split(', ');
@@ -3783,7 +3783,7 @@ const parsers = {
     );
 
     if (missingVarieties.length) {
-      logger.debug(`Missing varieties: ${missingVarieties}`);
+      logger.info(`Missing varieties: ${missingVarieties}`);
     }
 
     const tasteNoteStrings = details.fields.tasting_notes.split(', ');
@@ -4918,7 +4918,7 @@ const parsers = {
     );
 
     if (!varietyIds.length) {
-      logger.info(`Missing varieties for ${url}`);
+      logger.info(`Missing varieties: ${descriptionLower}`);
     }
 
     const isEspresso = url.toLowerCase().includes('espresso') || title.includes('espresso');
@@ -4938,6 +4938,229 @@ const parsers = {
       title.includes('decaf') ||
       descriptionLower.includes('decaf') ||
       descriptionLower.includes('bezkofeinow');
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
+  },
+  // BeBerry
+  315: async ({ html, url, roasterId }) => {
+    logger.info(`Parsing webshop item page ${url}`);
+
+    const document = getDocument(html);
+
+    const variationsRaw = document.querySelector('form.variations_form')?.dataset?.product_variations;
+
+    if (!variationsRaw) {
+      logger.error(`No variations data found for ${url}`);
+
+      throw new Error(errors.detailsMissing);
+    }
+
+    const variations = JSON.parse(variationsRaw);
+
+    const parseWeight = (value) => {
+      const match = (value || '').toLowerCase().match(/(\d+(?:[.,]\d+)?)\s*(kg|g)/iu);
+
+      if (!match) {
+        return null;
+      }
+
+      const num = Number(match[1].replace(',', '.'));
+
+      return match[2] === 'kg' ? num * 1000 : num;
+    };
+
+    const inStockVariants = variations
+      .filter((variation) => variation.is_in_stock && variation.is_purchasable)
+      .map((variation) => ({
+        ...variation,
+        parsedWeight: parseWeight(variation.attributes?.attribute_pa_hmotnost)
+      }))
+      .filter((variation) => variation.parsedWeight)
+      .sort((a, b) => a.parsedWeight - b.parsedWeight);
+
+    if (!inStockVariants.length) {
+      return { isOutOfStock: true };
+    }
+
+    const smallestVariant = inStockVariants[0];
+
+    const weight = smallestVariant.parsedWeight;
+    const price = Number(Number(smallestVariant.display_price).toFixed(2));
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+    const currency = 'CZK';
+
+    const image =
+      smallestVariant.image?.url || document.querySelector('.woocommerce-product-gallery img.wp-post-image')?.src;
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    const decode = (text) => (text || '').replace(/&nbsp;/giu, ' ').replace(/&amp;/giu, '&');
+
+    const titleMain = decode(document.querySelector('.product-detail__title-main')?.textContent || '')
+      .trim()
+      .toLowerCase();
+    const titleSub = decode(document.querySelector('.product-detail__title-sub')?.textContent || '')
+      .trim()
+      .toLowerCase();
+    const fullTitle = `${titleMain} ${titleSub}`.trim();
+
+    const attributes = {};
+
+    document.querySelectorAll('.product-detail__content .product-attribute').forEach((node) => {
+      const label = decode(node.querySelector('.product-attribute__label')?.textContent || '')
+        .trim()
+        .toLowerCase();
+      const value = decode(node.querySelector('.product-attribute__value')?.textContent || '')
+        .trim()
+        .toLowerCase();
+
+      if (label && value) {
+        attributes[label] = value;
+      }
+    });
+
+    const sortedCountries = [...originCountries].sort((a, b) => b.name.length - a.name.length);
+    const originCountryId =
+      sortedCountries.find(({ name }) => titleMain === name.toLowerCase())?.origin_country_id ||
+      sortedCountries.find(({ name }) => fullTitle.includes(name.toLowerCase()))?.origin_country_id ||
+      null;
+
+    if (!originCountryId) {
+      logger.error(`No origin country found for ${url}`);
+
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const regionText = attributes.region || '';
+    const farmText = attributes.farma || '';
+    const farmerText = attributes['farmář'] || attributes.farmar || '';
+
+    const sortedRegions = originRegions
+      .filter(({ origin_country_id: countryId }) => countryId === originCountryId) // eslint-disable-line camelcase
+      .sort((a, b) => b.name.length - a.name.length);
+    const originRegionId =
+      sortedRegions.find(({ name }) => regionText.includes(name.toLowerCase()))?.origin_region_id || null;
+
+    if (!originRegionId && regionText) {
+      logger.info(`Missing origin region: ${regionText}`);
+    }
+
+    const sortedFarms = [...originFarms].sort((a, b) => b.name.length - a.name.length);
+    const originFarmId =
+      sortedFarms.find(({ name }) => farmText.includes(name.toLowerCase()))?.id ||
+      sortedFarms.find(({ name }) => farmerText.includes(name.toLowerCase()))?.id ||
+      null;
+
+    const processingTextCs = attributes['zpracování'] || attributes.zpracovani || '';
+    const translatedProcessing = processingTextCs
+      ? (await translate({ text: processingTextCs, from: 'cs', to: 'en' })).trim().toLowerCase()
+      : '';
+    const sortedProcessingMethods = [...processingMethods].sort((a, b) => b.name.length - a.name.length);
+    const processingMethodId =
+      sortedProcessingMethods.find(({ name }) => name.toLowerCase() === processingTextCs)?.processing_method_id ||
+      sortedProcessingMethods.find(({ name }) => name.toLowerCase() === translatedProcessing)?.processing_method_id ||
+      sortedProcessingMethods.find(({ name }) => translatedProcessing.includes(name.toLowerCase()))
+        ?.processing_method_id ||
+      sortedProcessingMethods.find(({ name }) => translatedProcessing === 'dry' && name.toLowerCase() === 'natural')
+        ?.processing_method_id ||
+      null;
+
+    if (!processingMethodId && processingTextCs) {
+      logger.info(`Missing processing method: ${processingTextCs} (translated: ${translatedProcessing})`);
+    }
+
+    const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+    const varietyText = (attributes['odrůda'] || attributes.odruda || '').toLowerCase();
+    const varietyIds = Array.from(
+      new Set(
+        varieties
+          .filter(({ name, alias }) => {
+            const nameRe = new RegExp(`(?<!\\p{L})${escapeRegex(name.toLowerCase())}(?!\\p{L})`, 'iu');
+            const aliasRe = alias ? new RegExp(`(?<!\\p{L})${escapeRegex(alias.toLowerCase())}(?!\\p{L})`, 'iu') : null;
+
+            return nameRe.test(varietyText) || (aliasRe && aliasRe.test(varietyText));
+          })
+          .map(({ id }) => id)
+      )
+    );
+
+    if (!varietyIds.length && varietyText) {
+      logger.info(`Missing varieties: ${varietyText}`);
+    }
+
+    const tasteNotesTextCs = attributes['chuťový profil'] || attributes['chutovy profil'] || '';
+    const translatedTasteNotes = tasteNotesTextCs
+      ? (await translate({ text: tasteNotesTextCs, from: 'cs', to: 'en' })).toLowerCase()
+      : '';
+    const translatedTasteNoteList = translatedTasteNotes
+      .split(',')
+      .map((note) => note.trim())
+      .filter(Boolean);
+    const sortedTasteNotes = [...tasteNotes].sort((a, b) => b.name.length - a.name.length);
+    const tasteNoteIds = Array.from(
+      new Set(
+        sortedTasteNotes
+          .filter(({ name, alias }) => {
+            const nameLower = name.toLowerCase();
+            const aliasLower = alias ? alias.toLowerCase() : null;
+
+            return translatedTasteNoteList.some(
+              (note) => note === nameLower || (aliasLower && note === aliasLower) || note.includes(nameLower)
+            );
+          })
+          .map(({ taste_note_id: id }) => id)
+      )
+    );
+
+    if (!tasteNoteIds.length && tasteNotesTextCs) {
+      logger.info(`Missing taste notes for ${url}: ${tasteNotesTextCs} -> ${translatedTasteNotes}`);
+    }
+
+    const categoryText = (
+      document.querySelector('.product-detail__tags .product-category')?.textContent || ''
+    ).toLowerCase();
+    const isOmni = categoryText.includes('omni');
+    const isEspresso = !isOmni && categoryText.includes('espresso');
+    const isFilter = !isOmni && !isEspresso && categoryText.includes('filtr');
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) =>
+          (isOmni && name === 'omni') || (isEspresso && name === 'espresso') || (isFilter && name === 'filter')
+      )?.brewing_method_id || null;
+
+    const isDecaf =
+      url.toLowerCase().includes('decaf') ||
+      titleMain.includes('decaf') ||
+      titleSub.includes('decaf') ||
+      processingTextCs.includes('decaf') ||
+      translatedProcessing.includes('decaf');
 
     return {
       brewingMethodId,

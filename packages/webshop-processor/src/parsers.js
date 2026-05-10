@@ -471,6 +471,42 @@ const parsers = {
           .map((href) => (href.startsWith('http') ? href : `${origin}${href}`))
       )
     );
+  },
+  // BeBerry
+  315: async ({ html, url }) => {
+    const coffeeCategorySelector = [
+      '.product.instock.product_cat-filtr',
+      '.product.instock.product_cat-espresso',
+      '.product.instock.product_cat-filtr-omni-roast'
+    ].join(',');
+
+    const collectLinks = (doc) =>
+      Array.from(doc.querySelectorAll(coffeeCategorySelector)).map(
+        (product) => product.querySelector('a.woocommerce-loop-product__link').href
+      );
+
+    const document = getDocument(html);
+    const links = collectLinks(document);
+
+    const pageLinks = Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('.woocommerce-pagination a.page-numbers'))
+          .map(({ href }) => href)
+          .filter((href) => href && /\/page\/\d+\/?$/u.test(href))
+      )
+    );
+
+    for (const pageUrl of pageLinks) {
+      const pageResponse = await fetch(pageUrl);
+      const pageHtml = await pageResponse.text();
+      const pageDocument = getDocument(pageHtml);
+
+      links.push(...collectLinks(pageDocument));
+    }
+
+    const { origin } = new URL(url);
+
+    return Array.from(new Set(links)).map((href) => (href.startsWith('http') ? href : `${origin}${href}`));
   }
 };
 
