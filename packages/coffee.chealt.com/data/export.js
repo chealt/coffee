@@ -111,21 +111,8 @@ const saveNewCoffees = async (newCoffees) => {
 
 const saveCoffees = async () => {
   const { rows: allCoffees } = await turso.execute('SELECT * FROM coffees_all WHERE NOT is_removed');
-
-  const priciestCoffees = allCoffees
-    .sort(
-      (a, b) =>
-        convertToUSD({ currency: b.currency, price: b.price_per_gram }) -
-        convertToUSD({ currency: a.currency, price: a.price_per_gram })
-    )
-    .slice(0, 10);
-  const cheapestCoffees = allCoffees
-    .sort(
-      (a, b) =>
-        convertToUSD({ currency: a.currency, price: a.price_per_gram }) -
-        convertToUSD({ currency: b.currency, price: b.price_per_gram })
-    )
-    .slice(0, 10);
+  const { rows: priciestCoffees } = await turso.execute('SELECT * FROM priciest_coffees LIMIT 10');
+  const { rows: cheapestCoffees } = await turso.execute('SELECT * FROM cheapest_coffees LIMIT 10');
 
   await Promise.all([
     writeFile('./data/coffees.json', JSON.stringify(allCoffees), { flag: 'w+' }),
