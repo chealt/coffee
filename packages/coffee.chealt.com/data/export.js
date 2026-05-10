@@ -1,7 +1,6 @@
 /* oxlint-disable no-console */
 import { createClient } from '@libsql/client';
 
-import { convertToUSD } from '../src/components/coffees/utils.js';
 import { readFile, writeFile } from 'node:fs/promises';
 
 const turso = createClient({
