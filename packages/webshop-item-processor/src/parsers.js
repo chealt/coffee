@@ -5350,7 +5350,11 @@ const parsers = {
             const nameRe = new RegExp(`(?<!\\p{L})${escapeRegex(name.toLowerCase())}(?!\\p{L})`, 'iu');
             const aliasRe = alias ? new RegExp(`(?<!\\p{L})${escapeRegex(alias.toLowerCase())}(?!\\p{L})`, 'iu') : null;
 
-            return nameRe.test(varietyText) || (aliasRe && aliasRe.test(varietyText));
+            return (
+              nameRe.test(varietyText) ||
+              (aliasRe && aliasRe.test(varietyText)) ||
+              (name.toLowerCase() === 'heirloom' && varietyText === 'hairloom') // typo
+            );
           })
           .map(({ id }) => id)
       )
