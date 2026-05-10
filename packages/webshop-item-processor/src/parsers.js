@@ -5287,7 +5287,10 @@ const parsers = {
       }
 
       const key = cleanLine.slice(0, commaIndex).trim().toLowerCase();
-      const value = cleanLine.slice(commaIndex + 1).trim().toLowerCase();
+      const value = cleanLine
+        .slice(commaIndex + 1)
+        .trim()
+        .toLowerCase();
 
       if (key && value) {
         specs[key] = value;
