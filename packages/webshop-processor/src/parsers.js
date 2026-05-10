@@ -459,6 +459,28 @@ const parsers = {
       )
     );
   },
+  // Mia
+  312: ({ html, url }) => {
+    const document = getDocument(html);
+    const { origin } = new URL(url);
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('a.aui-product-block'))
+          .map(({ href }) => href)
+          .filter(
+            (href) =>
+              !href.includes('capsules') &&
+              !href.includes('coffee-set') &&
+              !href.includes('selection-coffee-set') &&
+              !href.includes('selection-of-coffee') &&
+              !href.includes('instant-coffee') &&
+              !href.includes('brew-bags')
+          )
+          .map((href) => (href.startsWith('http') ? href : `${origin}${href}`))
+      )
+    );
+  },
   // Serce Kawy
   314: ({ html, url }) => {
     const document = getDocument(html);
