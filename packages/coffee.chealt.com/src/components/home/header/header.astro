@@ -1,0 +1,50 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+import roastersWithCoffees from "@data/roastersWithCoffees.json" with { type: "json" };
+
+import Button from "@components/form/button/button.astro";
+import Dialog from "@components/dialog/dialog.astro";
+import Icon from "@components/icon/icon.astro";
+import Input from "@components/form/input/input.astro";
+import { encodeSafeURL } from "../../../utils/string.js";
+
+import "./header.css";
+
+import allLocaleTranslations from "../../common/common.json" with { type: "json" };
+
+const t = allLocaleTranslations[Astro.currentLocale];
+---
+
+<header>
+  <slot />
+  <coffee-search class="search">
+    <Button data-dialog-id="search">
+      <Icon type="search" />
+      <span class="visually-hidden">{t.search}</span>
+    </Button>
+    <Dialog class="drawer fixed" id="search">
+      <chealt-filter data-filter-selector="[data-roaster]">
+        <Input name="search" placeholder={t.search} data-exclude />
+      </chealt-filter>
+      <ul>
+        {
+          roastersWithCoffees.map(({ name }) => (
+            <li data-roaster>
+              <a
+                href={getRelativeLocaleUrl(
+                  Astro.currentLocale,
+                  `/roasters/${encodeSafeURL(name)}`,
+                )}
+              >
+                {name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </Dialog>
+  </coffee-search>
+</header>
+
+<script src="../../chealt-filter.js"></script>

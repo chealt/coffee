@@ -6,6 +6,7 @@ import tasteNoteGroups from "@data/tasteNoteGroups.json" with { type: "json" };
 import Coffees from "../coffees/list.astro";
 import Common from "../common/common.astro";
 import Countries from "./countries/countries.astro";
+import Header from "./header/header.astro";
 import OriginCountries from "./origin-countries/origin-countries.astro";
 import Roasters from "./roasters/roasters.astro";
 import TasteNoteGroups from "./taste-note-groups/taste-note-groups.astro";
@@ -35,7 +36,9 @@ const recommended = recommendationsData[recommendedKey] || {};
 ---
 
 <Common>
-  <h1>{t.title}<sup>beta</sup></h1>
+  <Header>
+    <h1>{t.title}<sup>beta</sup></h1>
+  </Header>
   {
     recommended.coffees && (
       <section>
