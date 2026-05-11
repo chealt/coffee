@@ -1,6 +1,7 @@
 {
   "en": {
     "currency": "Currency",
+    "isTranslating": "Start translating",
     "language": "Language",
     "logout": "logout",
     "newCoffee": "new coffees",
@@ -11,10 +12,11 @@
   },
   "pl": {
     "currency": "Waluta",
-    "newCoffee": "nowe kawy",
-    "notifications": "Powiadomienia",
+    "isTranslating": "Zacznij tłumaczyć",
     "language": "Język",
     "logout": "wyloguj",
+    "newCoffee": "nowe kawy",
+    "notifications": "Powiadomienia",
     "rateLimitExceeded": "Zbyt wiele prób wysłania nowego kodu rejestracji. Proszę spróbować później.",
     "sendRegistrationCode": "Wyślij nowy kod rejestracji",
     "title": "Profil"

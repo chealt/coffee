@@ -99,6 +99,21 @@ const authenticate = (context) => {
   context.locals.loggedInUser = loggedInUser;
 };
 
+const translators = ['attilabartha', 'martyna'];
+const getCanTranslate = (context) => {
+  let canTranslate = false;
+
+  try {
+    const { username } = getSessionUser(context);
+
+    canTranslate = translators.includes(username);
+  } catch {
+    // DO NOTHING
+  }
+
+  return canTranslate;
+};
+
 const pages = [
   'brewing-methods',
   'login',
@@ -156,6 +171,9 @@ export const onRequest = async (context, next) => {
       const settings = await getValue({ user: { name: getSessionUser(context)?.username }, key: 'settings' });
 
       savedLocaleDB = settings?.language;
+
+      context.locals.canTranslate = getCanTranslate(context);
+      context.locals.isTranslating = settings?.isTranslating;
     } catch {
       // DO NOTHING
     }
