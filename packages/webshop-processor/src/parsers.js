@@ -606,6 +606,23 @@ const parsers = {
     const { products } = await response.json();
 
     return products.map(({ handle }) => `${origin}/products/${handle}`);
+  },
+  // Poma
+  307: async ({ url }) => {
+    const { origin, pathname } = new URL(url);
+
+    const response = await fetch(`${origin}${pathname}/products.json?limit=250`);
+    const { products } = await response.json();
+
+    return products
+      .filter(
+        ({ product_type, title, handle }) =>
+          product_type === 'Coffee' &&
+          !title.toLowerCase().startsWith('drip bag') &&
+          !handle.includes('box') &&
+          !handle.includes('pack')
+      )
+      .map(({ handle }) => `${origin}/products/${handle}`);
   }
 };
 

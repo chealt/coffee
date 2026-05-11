@@ -6192,6 +6192,186 @@ const parsers = {
       webshopItemLink: url,
       weight
     };
+  },
+  // Poma
+  307: ({ html, url, roasterId }) => {
+    logger.info(`Parsing webshop item page ${url}`);
+
+    const document = getDocument(html);
+
+    const ldScripts = Array.from(document.querySelectorAll('script[type="application/ld+json"]'));
+    const productLd = ldScripts
+      .map((script) => {
+        try {
+          return JSON.parse(script.textContent);
+        } catch {
+          return null;
+        }
+      })
+      .find((data) => data?.['@type'] === 'Product');
+
+    if (!productLd) {
+      logger.error(`No product data found for ${url}`);
+
+      throw new Error(errors.detailsMissing);
+    }
+
+    const variantWeightTexts = {};
+    const variantSelect = document.querySelector('select[name="id"]');
+
+    if (variantSelect) {
+      Array.from(variantSelect.querySelectorAll('option')).forEach((option) => {
+        variantWeightTexts[option.value] = option.textContent.trim();
+      });
+    }
+
+    const parseWeight = (text) => {
+      const match = (text || '').toLowerCase().match(/(\d+(?:[.,]\d+)?)\s*(kg|g)\b/iu);
+
+      if (!match) {
+        return null;
+      }
+
+      const num = Number(match[1].replace(',', '.'));
+
+      return match[2].toLowerCase() === 'kg' ? num * 1000 : num;
+    };
+
+    const offers = Array.isArray(productLd.offers) ? productLd.offers : [productLd.offers].filter(Boolean);
+    const availableVariants = offers
+      .filter((offer) => (offer.availability || '').includes('InStock'))
+      .map((offer) => ({
+        weight: parseWeight(variantWeightTexts[(offer.url || '').match(/[?&]variant=(\d+)/u)?.[1]]),
+        price: Number(offer.price),
+        currency: offer.priceCurrency
+      }))
+      .filter(({ weight, price }) => weight && price)
+      .sort((a, b) => a.weight - b.weight);
+
+    if (!availableVariants.length) {
+      return { isOutOfStock: true };
+    }
+
+    const smallest = availableVariants[0];
+    const weight = smallest.weight;
+    const price = Number(smallest.price.toFixed(2));
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+    const currency = smallest.currency;
+
+    if (!currency) {
+      logger.error(`No currency found for ${url}`);
+
+      throw new Error(errors.currencyMissing);
+    }
+
+    const imageRaw = document.querySelector('[data-product-image-index="0"] img')?.src;
+    const image = imageRaw?.startsWith('//') ? `https:${imageRaw}` : imageRaw;
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    const title = (document.querySelector('h1[data-product-title]')?.textContent || '').trim().toLowerCase();
+    const specs = {};
+
+    Array.from(document.querySelectorAll('h5')).forEach((h5) => {
+      const text = h5.textContent.trim();
+      const colonIndex = text.indexOf(':');
+
+      if (colonIndex < 0) {
+        return;
+      }
+
+      const key = text.slice(0, colonIndex).trim().toLowerCase();
+      const value = text.slice(colonIndex + 1).trim().toLowerCase();
+
+      if (key && value && !(key in specs)) {
+        specs[key] = value;
+      }
+    });
+
+    const originText = specs.origin || '';
+    const originSegments = originText
+      .split(/[,/]/u)
+      .map((segment) => segment.trim())
+      .filter(Boolean);
+    const sortedCountries = [...originCountries].sort((a, b) => b.name.length - a.name.length);
+    const findCountry = (text) =>
+      sortedCountries.find(({ name }) => text === name.toLowerCase())?.origin_country_id ||
+      sortedCountries.find(({ name }) => text.includes(name.toLowerCase()))?.origin_country_id ||
+      null;
+    const originCountryId =
+      originSegments.reduce((acc, segment) => acc || findCountry(segment), null) || findCountry(title);
+
+    if (!originCountryId) {
+      logger.info(`No origin country found for ${url}, skipping`);
+
+      return {};
+    }
+
+    const districtText = specs.district || specs.region || '';
+    const sortedRegions = originRegions
+      .filter(({ origin_country_id: countryId }) => countryId === originCountryId) // eslint-disable-line camelcase
+      .sort((a, b) => b.name.length - a.name.length);
+    const originRegionId =
+      sortedRegions.find(({ name }) => districtText.includes(name.toLowerCase()))?.origin_region_id || null;
+
+    const farmText = specs.farm || '';
+    const sortedFarms = [...originFarms].sort((a, b) => b.name.length - a.name.length);
+    const originFarmId =
+      sortedFarms.find(({ name }) => farmText.includes(name.toLowerCase()))?.id ||
+      sortedFarms.find(({ name }) => title.includes(name.toLowerCase()))?.id ||
+      null;
+
+    const processText = specs.process || '';
+    const sortedProcessingMethods = [...processingMethods].sort((a, b) => b.name.length - a.name.length);
+    const processingMethodId =
+      sortedProcessingMethods.find(({ name }) => name.toLowerCase() === processText)?.processing_method_id ||
+      sortedProcessingMethods.find(({ name }) => processText.includes(name.toLowerCase()))?.processing_method_id ||
+      null;
+
+    const varietyText = specs.variety || specs.varietal || '';
+    const varietyIds = Array.from(
+      new Set(
+        varieties
+          .filter(
+            ({ name, alias }) =>
+              name.toLowerCase() === varietyText ||
+              (alias && alias.toLowerCase() === varietyText)
+          )
+          .map(({ id }) => id)
+      )
+    );
+
+    const brewingMethodId = brewingMethods.find(({ name }) => name === 'omni')?.brewing_method_id || null;
+    const isDecaf = url.toLowerCase().includes('decaf') || title.includes('decaf');
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds: [],
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
   }
 };
 
