@@ -1922,7 +1922,7 @@ const parsers = {
       document.querySelector('[name=Packaging]:checked')?.value.replace('g', '') ||
       document.querySelector('[name=balenie]:checked')?.value.replace('g', '') ||
       document.querySelector('#template--24932172071240__main-1-0')?.value.replace('g', '');
-    const weight = parseFloat(weightElementValue);
+    const weight = parseFloat(weightElementValue) || 200; // sometimes the weight is missing
 
     if (!weight || isNaN(weight)) {
       logger.error(`No weight found for ${url}`);
