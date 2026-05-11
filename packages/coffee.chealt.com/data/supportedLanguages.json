@@ -7,5 +7,9 @@
     "locale": "en",
     "label": "english",
     "isDefault": true
+  },
+  {
+    "locale": "hu",
+    "label": "magyar"
   }
 ]

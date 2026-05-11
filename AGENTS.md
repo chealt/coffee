@@ -118,7 +118,7 @@ When modifying `.vscode/settings.json` or other editor configuration files, ensu
 ```astro
 ---
 import cheapestCoffees from '@data/cheapestCoffees.json' with { type: 'json' };
-const t = allLocaleTranslations[Astro.currentLocale];
+const t = allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
 const { loggedInUser } = Astro.locals;
 ---
 

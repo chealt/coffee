@@ -1,38 +1,42 @@
 ---
-import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getRelativeLocaleUrl } from "astro:i18n";
 
-import brewingMethods from '../../../data/brewingMethods.json' with { type: 'json' };
-import allCoffees from '../../../data/coffees.json' with { type: 'json' };
+import brewingMethods from "../../../data/brewingMethods.json" with { type: "json" };
+import allCoffees from "../../../data/coffees.json" with { type: "json" };
 
-import { convertToUSD } from '../coffees/utils.js';
-import Button from '../form/button/button.astro';
-import Coffees from '../coffees/list.astro';
-import Common from '../common/common.astro';
-import Icon from '../icon/icon.astro';
+import { convertToUSD } from "../coffees/utils.js";
+import Button from "../form/button/button.astro";
+import Coffees from "../coffees/list.astro";
+import Common from "../common/common.astro";
+import Icon from "../icon/icon.astro";
 
-import allLocaleTranslations from '../common/common.json' with { type: 'json' };
+import allLocaleTranslations from "../common/common.json" with { type: "json" };
 
-const t = allLocaleTranslations[Astro.currentLocale];
+const t =
+  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
 
 const { loggedInUser } = Astro.locals;
 const { id } = Astro.props;
 
 const { name } = brewingMethods.find(
-  ({ brewing_method_id, language_code }) => brewing_method_id === id && language_code === Astro.currentLocale
+  ({ brewing_method_id, language_code }) =>
+    brewing_method_id === id && language_code === Astro.currentLocale,
 );
-const coffees = allCoffees.filter(({ brewing_method_id }) => brewing_method_id === id);
+const coffees = allCoffees.filter(
+  ({ brewing_method_id }) => brewing_method_id === id,
+);
 const priciestCoffees = coffees
   .sort(
     (a, b) =>
       convertToUSD({ currency: b.currency, price: b.price_per_gram }) -
-      convertToUSD({ currency: a.currency, price: a.price_per_gram })
+      convertToUSD({ currency: a.currency, price: a.price_per_gram }),
   )
   .slice(0, 10);
 const cheapestCoffees = coffees
   .sort(
     (a, b) =>
       convertToUSD({ currency: a.currency, price: a.price_per_gram }) -
-      convertToUSD({ currency: b.currency, price: b.price_per_gram })
+      convertToUSD({ currency: b.currency, price: b.price_per_gram }),
   )
   .slice(0, 10);
 ---
@@ -42,7 +46,13 @@ const cheapestCoffees = coffees
     <div>{name}</div>
     {
       loggedInUser && (
-        <Button class="ghost small" href={getRelativeLocaleUrl(Astro.currentLocale, `/brewing-methods/${name}/stats`)}>
+        <Button
+          class="ghost small"
+          href={getRelativeLocaleUrl(
+            Astro.currentLocale,
+            `/brewing-methods/${name}/stats`,
+          )}
+        >
           <Icon type="chart" />
           <span class="visually-hidden">{t.chart}</span>
         </Button>

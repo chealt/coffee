@@ -13,7 +13,8 @@ import "./header.css";
 
 import allLocaleTranslations from "../../common/common.json" with { type: "json" };
 
-const t = allLocaleTranslations[Astro.currentLocale];
+const t =
+  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
 ---
 
 <header>

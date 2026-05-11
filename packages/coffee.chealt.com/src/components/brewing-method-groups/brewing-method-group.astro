@@ -1,42 +1,47 @@
 ---
-import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getRelativeLocaleUrl } from "astro:i18n";
 
-import brewingMethodGroups from '../../../data/brewingMethodGroups.json' with { type: 'json' };
-import brewingMethods from '../../../data/brewingMethods.json' with { type: 'json' };
-import allCoffees from '../../../data/coffees.json' with { type: 'json' };
+import brewingMethodGroups from "../../../data/brewingMethodGroups.json" with { type: "json" };
+import brewingMethods from "../../../data/brewingMethods.json" with { type: "json" };
+import allCoffees from "../../../data/coffees.json" with { type: "json" };
 
-import { convertToUSD } from '../coffees/utils.js';
-import Button from '../form/button/button.astro';
-import Coffees from '../coffees/list.astro';
-import Common from '../common/common.astro';
-import Icon from '../icon/icon.astro';
+import { convertToUSD } from "../coffees/utils.js";
+import Button from "../form/button/button.astro";
+import Coffees from "../coffees/list.astro";
+import Common from "../common/common.astro";
+import Icon from "../icon/icon.astro";
 
-import allLocaleTranslations from '../common/common.json' with { type: 'json' };
+import allLocaleTranslations from "../common/common.json" with { type: "json" };
 
-const t = allLocaleTranslations[Astro.currentLocale];
+const t =
+  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
 
 const { loggedInUser } = Astro.locals;
 const { id } = Astro.props;
 
 const { name } = brewingMethodGroups.find((group) => group.id === id);
 const brewingMethodIdsInGroup = brewingMethods
-  .filter(({ brewing_method_group_id }) => !brewing_method_group_id || brewing_method_group_id === id)
+  .filter(
+    ({ brewing_method_group_id }) =>
+      !brewing_method_group_id || brewing_method_group_id === id,
+  )
   .map(({ brewing_method_id }) => brewing_method_id);
 const coffees = allCoffees.filter(
-  ({ brewing_method_id }) => brewing_method_id && brewingMethodIdsInGroup.includes(brewing_method_id)
+  ({ brewing_method_id }) =>
+    brewing_method_id && brewingMethodIdsInGroup.includes(brewing_method_id),
 );
 const priciestCoffees = coffees
   .sort(
     (a, b) =>
       convertToUSD({ currency: b.currency, price: b.price_per_gram }) -
-      convertToUSD({ currency: a.currency, price: a.price_per_gram })
+      convertToUSD({ currency: a.currency, price: a.price_per_gram }),
   )
   .slice(0, 10);
 const cheapestCoffees = coffees
   .sort(
     (a, b) =>
       convertToUSD({ currency: a.currency, price: a.price_per_gram }) -
-      convertToUSD({ currency: b.currency, price: b.price_per_gram })
+      convertToUSD({ currency: b.currency, price: b.price_per_gram }),
   )
   .slice(0, 10);
 ---
@@ -48,7 +53,10 @@ const cheapestCoffees = coffees
       loggedInUser && (
         <Button
           class="ghost small"
-          href={getRelativeLocaleUrl(Astro.currentLocale, `/brewing-method-groups/${name}/stats`)}
+          href={getRelativeLocaleUrl(
+            Astro.currentLocale,
+            `/brewing-method-groups/${name}/stats`,
+          )}
         >
           <Icon type="chart" />
           <span class="visually-hidden">{t.chart}</span>

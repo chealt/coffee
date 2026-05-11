@@ -18,7 +18,7 @@ fieldset legend {
 
 input,
 textarea,
-[contenteditable] {
+[contenteditable]:not(chealt-translation) {
   display: block;
   width: 100%;
   border-radius: 0;

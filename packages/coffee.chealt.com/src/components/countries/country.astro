@@ -1,50 +1,58 @@
 ---
-import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getRelativeLocaleUrl } from "astro:i18n";
 
-import countries from '../../../data/countries.json' with { type: 'json' };
-import allCoffees from '../../../data/coffees.json' with { type: 'json' };
-import roastersWithCoffees from '../../../data/roastersWithCoffees.json' with { type: 'json' };
+import countries from "../../../data/countries.json" with { type: "json" };
+import allCoffees from "../../../data/coffees.json" with { type: "json" };
+import roastersWithCoffees from "../../../data/roastersWithCoffees.json" with { type: "json" };
 
-import { convertToUSD } from '../coffees/utils.js';
-import Button from '../form/button/button.astro';
-import Coffees from '../coffees/list.astro';
-import Common from '../common/common.astro';
-import Dialog from '../dialog/dialog.astro';
-import Icon from '../icon/icon.astro';
-import Roasters from '../roasters/list.astro';
-import { capitalize, encodeSafeURL } from '../../utils/string.js';
+import { convertToUSD } from "../coffees/utils.js";
+import Button from "../form/button/button.astro";
+import Coffees from "../coffees/list.astro";
+import Common from "../common/common.astro";
+import Dialog from "../dialog/dialog.astro";
+import Icon from "../icon/icon.astro";
+import Roasters from "../roasters/list.astro";
+import { capitalize, encodeSafeURL } from "../../utils/string.js";
 
-import allLocaleTranslations from './locales.json' with { type: 'json' };
-import allLocaleTranslationsCommon from '../common/common.json' with { type: 'json' };
+import allLocaleTranslations from "./locales.json" with { type: "json" };
+import allLocaleTranslationsCommon from "../common/common.json" with { type: "json" };
 
-const t = allLocaleTranslations[Astro.currentLocale];
-const tc = allLocaleTranslationsCommon[Astro.currentLocale];
+const t =
+  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
+const tc =
+  allLocaleTranslationsCommon[Astro.currentLocale] ||
+  allLocaleTranslationsCommon["en"];
 
 const { loggedInUser } = Astro.locals;
 const { id } = Astro.props;
 
 const { name } = countries.find(
-  ({ country_id, language_code }) => country_id === id && language_code === Astro.currentLocale
+  ({ country_id, language_code }) =>
+    country_id === id && language_code === Astro.currentLocale,
 );
 const countryRoasters = roastersWithCoffees
   .filter(({ country_id }) => country_id === id)
   .map(({ id: roasterId }) => roasterId);
-const coffees = allCoffees.filter(({ roaster_id: roasterId }) => countryRoasters.includes(roasterId));
+const coffees = allCoffees.filter(({ roaster_id: roasterId }) =>
+  countryRoasters.includes(roasterId),
+);
 const priciestCoffees = coffees
   .sort(
     (a, b) =>
       convertToUSD({ currency: b.currency, price: b.price_per_gram }) -
-      convertToUSD({ currency: a.currency, price: a.price_per_gram })
+      convertToUSD({ currency: a.currency, price: a.price_per_gram }),
   )
   .slice(0, 10);
 const cheapestCoffees = coffees
   .sort(
     (a, b) =>
       convertToUSD({ currency: a.currency, price: a.price_per_gram }) -
-      convertToUSD({ currency: b.currency, price: b.price_per_gram })
+      convertToUSD({ currency: b.currency, price: b.price_per_gram }),
   )
   .slice(0, 10);
-const roastersInCountry = roastersWithCoffees.filter(({ country_id }) => country_id === id);
+const roastersInCountry = roastersWithCoffees.filter(
+  ({ country_id }) => country_id === id,
+);
 ---
 
 <Common title={`${t.title} ${capitalize(name)}`}>
@@ -56,11 +64,16 @@ const roastersInCountry = roastersWithCoffees.filter(({ country_id }) => country
       <Dialog id="countries" class="drawer">
         {
           countries
-            .filter(({ language_code }) => language_code === Astro.currentLocale)
+            .filter(
+              ({ language_code }) => language_code === Astro.currentLocale,
+            )
             .map(({ name, country_id }) => (
               <Button
-                href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${encodeSafeURL(name)}`)}
-                class={country_id === id ? 'primary' : ''}
+                href={getRelativeLocaleUrl(
+                  Astro.currentLocale,
+                  `/countries/${encodeSafeURL(name)}`,
+                )}
+                class={country_id === id ? "primary" : ""}
               >
                 {name}
               </Button>
@@ -72,7 +85,10 @@ const roastersInCountry = roastersWithCoffees.filter(({ country_id }) => country
       loggedInUser && (
         <Button
           class="ghost small"
-          href={getRelativeLocaleUrl(Astro.currentLocale, `/countries/${encodeSafeURL(name)}/stats`)}
+          href={getRelativeLocaleUrl(
+            Astro.currentLocale,
+            `/countries/${encodeSafeURL(name)}/stats`,
+          )}
         >
           <Icon type="chart" />
           <span class="visually-hidden">{tc.chart}</span>

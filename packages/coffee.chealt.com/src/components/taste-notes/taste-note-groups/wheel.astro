@@ -1,27 +1,42 @@
 ---
-import { getRelativeLocaleUrl } from 'astro:i18n';
-import tasteNoteGroups from '../../../../data/tasteNoteGroups.json' with { type: 'json' };
+import { getRelativeLocaleUrl } from "astro:i18n";
+import tasteNoteGroups from "../../../../data/tasteNoteGroups.json" with { type: "json" };
 
-import Button from '../../form/button/button.astro';
+import Button from "../../form/button/button.astro";
 
-import './wheel.css';
-import '../../icon/arrow.css';
+import "./wheel.css";
+import "../../icon/arrow.css";
 
-import allLocaleTranslations from './locales.json' with { type: 'json' };
+import allLocaleTranslations from "./locales.json" with { type: "json" };
 
-const t = allLocaleTranslations[Astro.currentLocale];
+const t =
+  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
 
 const size = 180;
 const innerRadius = 20;
 const outerRadius = 90;
 
 const groups = tasteNoteGroups
-  .filter(({ name, language_code: languageCode }) => languageCode === Astro.currentLocale && name !== 'other')
-  .map(({ name, ...rest }) => (name.includes('/') ? { name: name.split(' / ')[0], ...rest } : { name, ...rest }));
+  .filter(
+    ({ name, language_code: languageCode }) =>
+      languageCode === Astro.currentLocale && name !== "other",
+  )
+  .map(({ name, ...rest }) =>
+    name.includes("/")
+      ? { name: name.split(" / ")[0], ...rest }
+      : { name, ...rest },
+  );
 
 const segmentAngle = 360 / groups.length;
 
-const createArcPath = (centerX, centerY, innerR, outerR, startAngle, endAngle) => {
+const createArcPath = (
+  centerX,
+  centerY,
+  innerR,
+  outerR,
+  startAngle,
+  endAngle,
+) => {
   const startAngleRad = (startAngle * Math.PI) / 180;
   const endAngleRad = (endAngle * Math.PI) / 180;
 
@@ -35,13 +50,13 @@ const createArcPath = (centerX, centerY, innerR, outerR, startAngle, endAngle) =
   const x4 = centerX + innerR * Math.cos(startAngleRad);
   const y4 = centerY + innerR * Math.sin(startAngleRad);
 
-  const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
+  const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
 
   return [
-    'M',
+    "M",
     x1,
     y1,
-    'A',
+    "A",
     outerR,
     outerR,
     0,
@@ -49,10 +64,10 @@ const createArcPath = (centerX, centerY, innerR, outerR, startAngle, endAngle) =
     1,
     x2,
     y2,
-    'L',
+    "L",
     x3,
     y3,
-    'A',
+    "A",
     innerR,
     innerR,
     0,
@@ -60,8 +75,8 @@ const createArcPath = (centerX, centerY, innerR, outerR, startAngle, endAngle) =
     0,
     x4,
     y4,
-    'Z'
-  ].join(' ');
+    "Z",
+  ].join(" ");
 };
 
 const segments = groups.map((note, index) => {
@@ -75,7 +90,14 @@ const segments = groups.map((note, index) => {
     angle: segmentAngle,
     startAngle,
     endAngle,
-    path: createArcPath(size / 2, size / 2, innerRadius, outerRadius, startAngle, endAngle)
+    path: createArcPath(
+      size / 2,
+      size / 2,
+      innerRadius,
+      outerRadius,
+      startAngle,
+      endAngle,
+    ),
   };
 });
 ---

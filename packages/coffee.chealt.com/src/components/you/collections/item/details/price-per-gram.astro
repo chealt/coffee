@@ -8,7 +8,8 @@ const { pricePerGram } = Astro.props;
 
 const { currency } = Astro.locals;
 
-const t = allLocaleTranslations[Astro.currentLocale];
+const t =
+  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
 
 const pricePerGramInCurrency = getConvertedPrice({
   price: pricePerGram,

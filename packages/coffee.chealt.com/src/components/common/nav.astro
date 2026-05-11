@@ -1,61 +1,69 @@
 ---
-import { getRelativeLocaleUrl } from 'astro:i18n';
-import CoffeeImageUpload from './coffee-image-upload.astro';
-import Icon from '../icon/icon.astro';
-import allLocaleTranslations from './nav.json' with { type: 'json' };
+import { getRelativeLocaleUrl } from "astro:i18n";
+import CoffeeImageUpload from "./coffee-image-upload.astro";
+import Icon from "../icon/icon.astro";
+import allLocaleTranslations from "./nav.json" with { type: "json" };
 
-import './nav.css';
+import "./nav.css";
 
-const t = allLocaleTranslations[Astro.currentLocale];
+const t =
+  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
 
 const isActivePage = (pageName) => {
   const { pathname } = Astro.url;
-  const firstPathParam = pathname.replace(`${Astro.currentLocale}`, '').slice(1);
+  const firstPathParam = pathname
+    .replace(`${Astro.currentLocale}`, "")
+    .slice(1);
 
-  return pageName === ''
-    ? firstPathParam === '' || firstPathParam === '/' || !pathname.includes('/you')
+  return pageName === ""
+    ? firstPathParam === "" ||
+        firstPathParam === "/" ||
+        !pathname.includes("/you")
     : firstPathParam.includes(pageName);
 };
 
 const items = [
   {
-    name: 'home',
-    href: getRelativeLocaleUrl(Astro.currentLocale, '/'),
+    name: "home",
+    href: getRelativeLocaleUrl(Astro.currentLocale, "/"),
     text: t.explore,
-    isActive: isActivePage('')
+    isActive: isActivePage(""),
   },
   {
-    name: 'capture',
-    href: getRelativeLocaleUrl(Astro.currentLocale, '/you/collections'),
-    text: t.capture
+    name: "capture",
+    href: getRelativeLocaleUrl(Astro.currentLocale, "/you/collections"),
+    text: t.capture,
   },
   {
-    name: 'you',
-    href: getRelativeLocaleUrl(Astro.currentLocale, '/you/collections'),
+    name: "you",
+    href: getRelativeLocaleUrl(Astro.currentLocale, "/you/collections"),
     text: t.you,
-    isActive: isActivePage('you')
-  }
+    isActive: isActivePage("you"),
+  },
 ];
 
 const shouldSync = Boolean(Astro.locals.loggedInUser);
 ---
 
-<nav style={'view-transition-name: main-nav'}>
+<nav style={"view-transition-name: main-nav"}>
   {
     items.map(({ name, href, text, isActive }) =>
-      name === 'capture' ? (
-        <CoffeeImageUpload data-should-sync={shouldSync} data-unnamed-title={t.unnamedTitle}>
+      name === "capture" ? (
+        <CoffeeImageUpload
+          data-should-sync={shouldSync}
+          data-unnamed-title={t.unnamedTitle}
+        >
           <a href={href} class="triggerButton">
             <Icon class="icon" type={name} />
             <span class="title">{text}</span>
           </a>
         </CoffeeImageUpload>
       ) : (
-        <a href={href} class={isActive ? 'active' : ''}>
+        <a href={href} class={isActive ? "active" : ""}>
           <Icon class="icon" type={name} />
           <span class="title">{text}</span>
         </a>
-      )
+      ),
     )
   }
 </nav>

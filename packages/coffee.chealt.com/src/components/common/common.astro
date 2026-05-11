@@ -9,7 +9,8 @@ import "./common.css";
 
 import allLocaleTranslations from "./common.json" with { type: "json" };
 
-const t = allLocaleTranslations[Astro.currentLocale];
+const t =
+  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
 
 const { shouldAuthenticate, redirectUrl, title, hideNav = false } = Astro.props;
 const isProd = import.meta.env.PROD;

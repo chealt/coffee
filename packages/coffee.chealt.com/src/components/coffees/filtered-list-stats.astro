@@ -1,32 +1,36 @@
 ---
-import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getRelativeLocaleUrl } from "astro:i18n";
 
-import allCoffees from '@data/coffees.json' with { type: 'json' };
-import coffeeTasteNotes from '@data/coffeeTasteNotes.json' with { type: 'json' };
-import coffeeVarieties from '@data/coffeeVarieties.json' with { type: 'json' };
-import brewingMethods from '@data/brewingMethods.json' with { type: 'json' };
-import brewingMethodGroups from '@data/brewingMethodGroups.json' with { type: 'json' };
-import countries from '@data/countries.json' with { type: 'json' };
-import originCountries from '@data/originCountries.json' with { type: 'json' };
-import processingMethods from '@data/processingMethods.json' with { type: 'json' };
-import roasters from '@data/roasters.json' with { type: 'json' };
-import tasteNotes from '@data/tasteNotes.json' with { type: 'json' };
-import tasteNoteGroups from '@data/tasteNoteGroups.json' with { type: 'json' };
-import varieties from '@data/varieties.json' with { type: 'json' };
+import allCoffees from "@data/coffees.json" with { type: "json" };
+import coffeeTasteNotes from "@data/coffeeTasteNotes.json" with { type: "json" };
+import coffeeVarieties from "@data/coffeeVarieties.json" with { type: "json" };
+import brewingMethods from "@data/brewingMethods.json" with { type: "json" };
+import brewingMethodGroups from "@data/brewingMethodGroups.json" with { type: "json" };
+import countries from "@data/countries.json" with { type: "json" };
+import originCountries from "@data/originCountries.json" with { type: "json" };
+import processingMethods from "@data/processingMethods.json" with { type: "json" };
+import roasters from "@data/roasters.json" with { type: "json" };
+import tasteNotes from "@data/tasteNotes.json" with { type: "json" };
+import tasteNoteGroups from "@data/tasteNoteGroups.json" with { type: "json" };
+import varieties from "@data/varieties.json" with { type: "json" };
 
-import Button from '../form/button/button.astro';
-import Icon from '../icon/icon.astro';
-import Common from '../common/common.astro';
-import Coffees from '../coffees/list.astro';
-import { convertToUSD, getDetails } from '../coffees/utils.js';
-import { getTasteNoteGroup, getTasteNoteGroupByNoteId } from '../taste-notes/utils.js';
-import { getSafeUrl } from '../utils/url';
+import Button from "../form/button/button.astro";
+import Icon from "../icon/icon.astro";
+import Common from "../common/common.astro";
+import Coffees from "../coffees/list.astro";
+import { convertToUSD, getDetails } from "../coffees/utils.js";
+import {
+  getTasteNoteGroup,
+  getTasteNoteGroupByNoteId,
+} from "../taste-notes/utils.js";
+import { getSafeUrl } from "../utils/url";
 
-import '../stats/stats.css';
+import "../stats/stats.css";
 
-import allLocaleTranslations from '../common/common.json' with { type: 'json' };
+import allLocaleTranslations from "../common/common.json" with { type: "json" };
 
-const t = allLocaleTranslations[Astro.currentLocale];
+const t =
+  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
 
 const { currency, loggedInUser, shouldAuthenticate } = Astro.locals;
 const {
@@ -38,103 +42,134 @@ const {
   roasterId,
   tasteNoteGroupId,
   tasteNoteId,
-  varietyId
+  varietyId,
 } = Astro.props;
 
 const brewingMethod =
   brewingMethodId &&
   brewingMethods.find(
     ({ brewing_method_id, language_code }) =>
-      brewing_method_id === brewingMethodId && language_code === Astro.currentLocale
+      brewing_method_id === brewingMethodId &&
+      language_code === Astro.currentLocale,
   );
 const brewingMethodIdsInGroup =
   brewingMethodGroupId &&
   brewingMethods
     .filter(
-      ({ brewing_method_group_id }) => !brewing_method_group_id || brewing_method_group_id === brewingMethodGroupId
+      ({ brewing_method_group_id }) =>
+        !brewing_method_group_id ||
+        brewing_method_group_id === brewingMethodGroupId,
     )
     .map(({ brewing_method_id }) => brewing_method_id);
-const brewingMethodGroup = brewingMethodGroupId && brewingMethodGroups.find(({ id }) => id === brewingMethodGroupId);
+const brewingMethodGroup =
+  brewingMethodGroupId &&
+  brewingMethodGroups.find(({ id }) => id === brewingMethodGroupId);
 const country =
   countryId &&
-  countries.find(({ country_id, language_code }) => country_id === countryId && language_code === Astro.currentLocale);
+  countries.find(
+    ({ country_id, language_code }) =>
+      country_id === countryId && language_code === Astro.currentLocale,
+  );
 const originCountry =
   originCountryId &&
   originCountries.find(
     ({ origin_country_id, language_code }) =>
-      origin_country_id === originCountryId && language_code === Astro.currentLocale
+      origin_country_id === originCountryId &&
+      language_code === Astro.currentLocale,
   );
 const processingMethod =
   processingMethodId &&
   processingMethods.find(
     ({ processing_method_id, language_code }) =>
-      processing_method_id === processingMethodId && language_code === Astro.currentLocale
+      processing_method_id === processingMethodId &&
+      language_code === Astro.currentLocale,
   );
 const roaster = roasterId && roasters.find(({ id }) => id === roasterId);
 const tasteNote =
   tasteNoteId &&
   tasteNotes.find(
-    ({ taste_note_id, language_code }) => taste_note_id === tasteNoteId && language_code === Astro.currentLocale
+    ({ taste_note_id, language_code }) =>
+      taste_note_id === tasteNoteId && language_code === Astro.currentLocale,
   );
 const tasteNoteGroup =
   tasteNoteGroupId &&
   tasteNoteGroups.find(
     ({ taste_note_group_id, language_code }) =>
-      taste_note_group_id === tasteNoteGroupId && language_code === Astro.currentLocale
+      taste_note_group_id === tasteNoteGroupId &&
+      language_code === Astro.currentLocale,
   );
 const variety = varietyId && varieties.find(({ id }) => id === varietyId);
 
 const coffees = allCoffees
-  .filter(({ brewing_method_id }) => (brewingMethodId ? brewing_method_id === brewingMethodId : true))
   .filter(({ brewing_method_id }) =>
-    brewingMethodGroupId ? brewingMethodIdsInGroup.includes(brewing_method_id) : true
+    brewingMethodId ? brewing_method_id === brewingMethodId : true,
   )
-  .filter(({ origin_country_id }) => (originCountryId ? origin_country_id === originCountryId : true))
-  .filter(({ roaster_id }) => (countryId ? roasters.find((r) => r.id === roaster_id).country_id === countryId : true))
-  .filter(({ processing_method_id }) => (processingMethodId ? processing_method_id === processingMethodId : true))
+  .filter(({ brewing_method_id }) =>
+    brewingMethodGroupId
+      ? brewingMethodIdsInGroup.includes(brewing_method_id)
+      : true,
+  )
+  .filter(({ origin_country_id }) =>
+    originCountryId ? origin_country_id === originCountryId : true,
+  )
+  .filter(({ roaster_id }) =>
+    countryId
+      ? roasters.find((r) => r.id === roaster_id).country_id === countryId
+      : true,
+  )
+  .filter(({ processing_method_id }) =>
+    processingMethodId ? processing_method_id === processingMethodId : true,
+  )
   .filter(({ roaster_id }) => (roasterId ? roaster_id === roasterId : true))
   .filter(({ id: coffeeId }) =>
     varietyId
       ? coffeeVarieties
           .filter(({ coffee_id }) => coffee_id === coffeeId)
           .some(({ variety_id }) => variety_id === varietyId)
-      : true
+      : true,
   )
   .filter(({ id: coffeeId }) =>
     tasteNoteId
       ? coffeeTasteNotes
           .filter(({ coffee_id }) => coffee_id === coffeeId)
           .some(({ taste_note_id }) => taste_note_id === tasteNoteId)
-      : true
+      : true,
   )
   .filter(({ id: coffeeId }) =>
     tasteNoteGroupId
       ? coffeeTasteNotes
           .filter(({ coffee_id }) => coffee_id === coffeeId)
           .some(
-            ({ taste_note_id }) => getTasteNoteGroupByNoteId(taste_note_id).taste_note_group_id === tasteNoteGroupId
+            ({ taste_note_id }) =>
+              getTasteNoteGroupByNoteId(taste_note_id).taste_note_group_id ===
+              tasteNoteGroupId,
           )
-      : true
+      : true,
   )
   .map(getDetails({ locale: Astro.currentLocale }))
   .map(({ pricePerGram, ...coffee }) => ({
     ...coffee,
-    pricePerGram: convertToUSD({ price: pricePerGram, currency })
+    pricePerGram: convertToUSD({ price: pricePerGram, currency }),
   }))
   .sort((a, b) => a.pricePerGram - b.pricePerGram);
 const maxPricePerGram = coffees[coffees.length - 1].pricePerGram;
-const roastersWithCoffee = Array.from(new Set(allCoffees.map(({ roaster_id }) => roaster_id)))
-  .map((roasterWithCoffeeId) => roasters.find(({ id }) => id === roasterWithCoffeeId))
+const roastersWithCoffee = Array.from(
+  new Set(allCoffees.map(({ roaster_id }) => roaster_id)),
+)
+  .map((roasterWithCoffeeId) =>
+    roasters.find(({ id }) => id === roasterWithCoffeeId),
+  )
   .map((roasterDetails) => ({
     ...roasterDetails,
-    coffees: coffees.filter((c) => c.roaster.id === roasterDetails.id)
+    coffees: coffees.filter((c) => c.roaster.id === roasterDetails.id),
   }))
   .filter(({ coffees: roasterCoffees }) => roasterCoffees.length)
   .map((roasterDetails) => ({
     ...roasterDetails,
     tasteNoteGroups: roasterDetails.coffees.reduce((stats, currentValue) => {
       currentValue.tasteNotes.forEach(({ taste_note_id }) => {
-        const { taste_note_group_id } = getTasteNoteGroupByNoteId(taste_note_id);
+        const { taste_note_group_id } =
+          getTasteNoteGroupByNoteId(taste_note_id);
 
         if (!stats[taste_note_group_id]) {
           stats[taste_note_group_id] = 1;
@@ -144,14 +179,21 @@ const roastersWithCoffee = Array.from(new Set(allCoffees.map(({ roaster_id }) =>
       });
 
       return stats;
-    }, {})
+    }, {}),
   }));
 const tasteNoteGroupsLocale = tasteNoteGroups
-  .filter(({ name, language_code: languageCode }) => languageCode === Astro.currentLocale && name !== 'other')
+  .filter(
+    ({ name, language_code: languageCode }) =>
+      languageCode === Astro.currentLocale && name !== "other",
+  )
   .map(({ name, taste_note_group_id, ...rest }) =>
-    name.includes('/')
-      ? { tasteNoteGroupId: taste_note_group_id, name: name.split(' / ')[0], ...rest }
-      : { tasteNoteGroupId: taste_note_group_id, name, ...rest }
+    name.includes("/")
+      ? {
+          tasteNoteGroupId: taste_note_group_id,
+          name: name.split(" / ")[0],
+          ...rest,
+        }
+      : { tasteNoteGroupId: taste_note_group_id, name, ...rest },
   )
   .map(({ tasteNoteGroupId: taste_note_group_id, ...rest }) => ({
     ...rest,
@@ -161,28 +203,48 @@ const tasteNoteGroupsLocale = tasteNoteGroups
       .map(({ id, name, tasteNoteGroups: roasterTasteNoteGroups }) => ({
         id,
         name,
-        count: roasterTasteNoteGroups[taste_note_group_id]
+        count: roasterTasteNoteGroups[taste_note_group_id],
       }))
-      .sort((a, b) => b.count - a.count)
+      .sort((a, b) => b.count - a.count),
   }))
   .filter((group) => group.roasters.length);
 const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce(
   (max, currentValue) => Math.max(max, currentValue.roasters[0].count),
-  0
+  0,
 );
 ---
 
 <Common shouldAuthenticate={shouldAuthenticate}>
   <h1 class="title">
     <div>
-      {brewingMethodId && <span class="filter-title">{brewingMethod?.name}</span>}
-      {brewingMethodGroupId && <span class="filter-title">{brewingMethodGroup?.name}</span>}
+      {
+        brewingMethodId && (
+          <span class="filter-title">{brewingMethod?.name}</span>
+        )
+      }
+      {
+        brewingMethodGroupId && (
+          <span class="filter-title">{brewingMethodGroup?.name}</span>
+        )
+      }
       {countryId && <span class="filter-title">{country?.name}</span>}
-      {originCountryId && <span class="filter-title">{originCountry?.name}</span>}
-      {processingMethodId && <span class="filter-title">{processingMethod?.name}</span>}
+      {
+        originCountryId && (
+          <span class="filter-title">{originCountry?.name}</span>
+        )
+      }
+      {
+        processingMethodId && (
+          <span class="filter-title">{processingMethod?.name}</span>
+        )
+      }
       {roasterId && <span class="filter-title">{roaster?.name}</span>}
       {tasteNoteId && <span class="filter-title">{tasteNote?.name}</span>}
-      {tasteNoteGroupId && <span class="filter-title">{tasteNoteGroup?.name}</span>}
+      {
+        tasteNoteGroupId && (
+          <span class="filter-title">{tasteNoteGroup?.name}</span>
+        )
+      }
       {varietyId && <span class="filter-title">{variety?.name}</span>}
     </div>
     {
@@ -199,7 +261,7 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce(
             roaster: roaster?.name,
             tasteNote: tasteNote?.name,
             tasteNoteGroup: tasteNoteGroup?.name,
-            variety: variety?.name
+            variety: variety?.name,
           })}
         >
           <Icon type="back" />
@@ -216,20 +278,28 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce(
           <div class="chart-inner">
             <div class="dots">
               {
-                roastersWithCoffee.map(({ id: roasterId, name: roasterName, coffees }) =>
-                  coffees.map(
-                    ({ pricePerGram, originCountry: { name: originCountryName }, webshopItemLink }, coffeeIndex) => (
-                      <a
-                        class="part dot"
-                        style={`bottom: ${pricePerGram / (maxPricePerGram / 100)}%; left: ${coffeeIndex / (coffees.length / 100)}%`}
-                        data-label={roasterId}
-                        aria-label={`${roasterName} ${originCountryName}`}
-                        href={webshopItemLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      />
-                    )
-                  )
+                roastersWithCoffee.map(
+                  ({ id: roasterId, name: roasterName, coffees }) =>
+                    coffees.map(
+                      (
+                        {
+                          pricePerGram,
+                          originCountry: { name: originCountryName },
+                          webshopItemLink,
+                        },
+                        coffeeIndex,
+                      ) => (
+                        <a
+                          class="part dot"
+                          style={`bottom: ${pricePerGram / (maxPricePerGram / 100)}%; left: ${coffeeIndex / (coffees.length / 100)}%`}
+                          data-label={roasterId}
+                          aria-label={`${roasterName} ${originCountryName}`}
+                          href={webshopItemLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        />
+                      ),
+                    ),
                 )
               }
             </div>
@@ -257,30 +327,33 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce(
           <div class="chart-inner">
             <ul class="bars">
               {
-                tasteNoteGroupsLocale.map(({ name, color, tasteNoteGroupId, roasters }) => (
-                  <li class="bar-container">
-                    {roasters.map(({ id: roasterId, name, count }) => (
-                      <div
-                        class="part bar"
-                        style={`height: ${count / (maxTasteNoteGroupCount / 100)}%`}
-                        data-label={roasterId}
-                      />
-                    ))}
-                    <div class="bar-label" style={`color: ${color}`}>
-                      {name}
-                    </div>
-                  </li>
-                ))
+                tasteNoteGroupsLocale.map(
+                  ({ name, color, tasteNoteGroupId, roasters }) => (
+                    <li class="bar-container">
+                      {roasters.map(({ id: roasterId, name, count }) => (
+                        <div
+                          class="part bar"
+                          style={`height: ${count / (maxTasteNoteGroupCount / 100)}%`}
+                          data-label={roasterId}
+                        />
+                      ))}
+                      <div class="bar-label" style={`color: ${color}`}>
+                        {name}
+                      </div>
+                    </li>
+                  ),
+                )
               }
             </ul>
             <div class="labels">
               {
-                tasteNoteGroupsLocale.map(({ name, color, tasteNoteGroupId, roasters }) =>
-                  roasters.map(({ id: roasterId, name, count }) => (
-                    <div class="label x" data-part={roasterId}>
-                      {name}
-                    </div>
-                  ))
+                tasteNoteGroupsLocale.map(
+                  ({ name, color, tasteNoteGroupId, roasters }) =>
+                    roasters.map(({ id: roasterId, name, count }) => (
+                      <div class="label x" data-part={roasterId}>
+                        {name}
+                      </div>
+                    )),
                 )
               }
             </div>

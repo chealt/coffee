@@ -1,0 +1,20 @@
+---
+const { namespace, key } = Astro.props;
+const { isTranslating } = Astro.locals;
+console.log(Astro.currentLocale);
+---
+
+{
+  (isTranslating && (
+    <chealt-translation
+      data-namespace={namespace}
+      data-key={key}
+      data-locale={Astro.currentLocale}
+      contenteditable="true"
+    >
+      <slot />
+    </chealt-translation>
+  )) || <slot />
+}
+
+<script src="./chealt-translation.js"></script>

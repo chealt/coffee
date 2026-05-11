@@ -7,6 +7,7 @@ import { getUsername } from './server/authentication/cookies.js';
 import { getSessionUser } from './server/authentication/session.js';
 import { cookieNameLocale, cookieNameCurrency, defaultCurrency } from './server/config.js';
 import { getValue, insert } from './server/database/formData.js';
+import { getCanTranslate } from './server/i18n.js';
 import { getAuthenticationOptions } from './server/login.js';
 import { createRegistrationOptions } from './server/registration.js';
 import logger from './server/utils/logger.js';
@@ -99,21 +100,6 @@ const authenticate = (context) => {
   context.locals.loggedInUser = loggedInUser;
 };
 
-const translators = ['attilabartha', 'martyna'];
-const getCanTranslate = (context) => {
-  let canTranslate = false;
-
-  try {
-    const { username } = getSessionUser(context);
-
-    canTranslate = translators.includes(username);
-  } catch {
-    // DO NOTHING
-  }
-
-  return canTranslate;
-};
-
 const pages = [
   'brewing-methods',
   'login',
@@ -173,7 +159,7 @@ export const onRequest = async (context, next) => {
       savedLocaleDB = settings?.language;
 
       context.locals.canTranslate = getCanTranslate(context);
-      context.locals.isTranslating = settings?.isTranslating;
+      context.locals.isTranslating = settings?.isTranslating === 'on';
     } catch {
       // DO NOTHING
     }
