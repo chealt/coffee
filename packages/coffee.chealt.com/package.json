@@ -11,6 +11,7 @@
     "add:logos": "node --env-file=.env data/addLogos.js",
     "build": "astro build",
     "dev": "AWS_PROFILE=centralbeans.com astro dev",
+    "export:translations": "node --env-file=.env data/i18n.js",
     "export:data": "node --env-file=.env data/export.js",
     "export:data:ci": "node data/export.js",
     "import": "node --env-file=.env data/importData.js",

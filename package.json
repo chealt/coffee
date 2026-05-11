@@ -8,6 +8,7 @@
   "scripts": {
     "build": "yarn workspace @centralbeans/website build",
     "dev": "yarn workspace @centralbeans/website dev",
+    "export:translations": "yarn workspace @centralbeans/website export:translations",
     "export:data": "yarn workspace @centralbeans/website export:data",
     "export:data:ci": "yarn workspace @centralbeans/website export:data:ci",
     "format": "oxfmt",
