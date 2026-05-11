@@ -6292,7 +6292,10 @@ const parsers = {
       }
 
       const key = text.slice(0, colonIndex).trim().toLowerCase();
-      const value = text.slice(colonIndex + 1).trim().toLowerCase();
+      const value = text
+        .slice(colonIndex + 1)
+        .trim()
+        .toLowerCase();
 
       if (key && value && !(key in specs)) {
         specs[key] = value;
@@ -6344,9 +6347,7 @@ const parsers = {
       new Set(
         varieties
           .filter(
-            ({ name, alias }) =>
-              name.toLowerCase() === varietyText ||
-              (alias && alias.toLowerCase() === varietyText)
+            ({ name, alias }) => name.toLowerCase() === varietyText || (alias && alias.toLowerCase() === varietyText)
           )
           .map(({ id }) => id)
       )
