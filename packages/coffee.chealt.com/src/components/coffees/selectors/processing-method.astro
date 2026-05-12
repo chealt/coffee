@@ -1,10 +1,11 @@
 ---
-import processingMethods from '../../../../data/processingMethods.json' with { type: 'json' };
+import processingMethods from "@data/processingMethods.json" with { type: "json" };
+import supportedLanguages from "@data/supportedLanguages.json" with { type: "json" };
 
-import Button from '../../form/button/button.astro';
-import Dialog from '../../dialog/dialog.astro';
+import Button from "../../form/button/button.astro";
+import Dialog from "../../dialog/dialog.astro";
 
-import { getSafeUrl } from '../../utils/url.js';
+import { getSafeUrl } from "../../utils/url.js";
 
 const {
   brewingMethod,
@@ -16,13 +17,29 @@ const {
   roaster,
   tasteNote,
   tasteNoteGroup,
-  variety
+  variety,
 } = Astro.props;
+
+let processingMethodsLocale = processingMethods.filter(
+  ({ language_code }) => language_code === Astro.currentLocale,
+);
+
+if (!processingMethodsLocale.length) {
+  const defaultLocale =
+    supportedLanguages.find(({ isDefault }) => isDefault)?.locale || "en";
+
+  processingMethodsLocale = processingMethods.filter(
+    ({ language_code }) => language_code === defaultLocale,
+  );
+}
 ---
 
 {
   processingMethodId && (
-    <Button class="filter-dialog-title ghost inline" data-dialog-id="processingMethod">
+    <Button
+      class="filter-dialog-title ghost inline"
+      data-dialog-id="processingMethod"
+    >
       {processingMethod.name}
     </Button>
   )
@@ -30,29 +47,28 @@ const {
 <Dialog class="drawer" id="processingMethod">
   <ul class="selector-list">
     {
-      processingMethods
-        .filter(({ language_code }) => language_code === Astro.currentLocale)
-        .map(({ processing_method_id, name }) => (
-          <li>
-            <Button
-              href={getSafeUrl({
-                locale: Astro.currentLocale,
-                brewingMethod: brewingMethod?.name,
-                brewingMethodGroup: brewingMethodGroup?.name,
-                country: country?.name,
-                originCountry: originCountry?.name,
-                processingMethod: processingMethodId === processing_method_id ? undefined : name,
-                roaster: roaster?.name,
-                tasteNote: tasteNote?.name,
-                tasteNoteGroup: tasteNoteGroup?.name,
-                variety: variety?.name
-              })}
-              class={processingMethodId === processing_method_id ? 'primary' : ''}
-            >
-              {name}
-            </Button>
-          </li>
-        ))
+      processingMethodsLocale.map(({ processing_method_id, name }) => (
+        <li>
+          <Button
+            href={getSafeUrl({
+              locale: Astro.currentLocale,
+              brewingMethod: brewingMethod?.name,
+              brewingMethodGroup: brewingMethodGroup?.name,
+              country: country?.name,
+              originCountry: originCountry?.name,
+              processingMethod:
+                processingMethodId === processing_method_id ? undefined : name,
+              roaster: roaster?.name,
+              tasteNote: tasteNote?.name,
+              tasteNoteGroup: tasteNoteGroup?.name,
+              variety: variety?.name,
+            })}
+            class={processingMethodId === processing_method_id ? "primary" : ""}
+          >
+            {name}
+          </Button>
+        </li>
+      ))
     }
   </ul>
 </Dialog>

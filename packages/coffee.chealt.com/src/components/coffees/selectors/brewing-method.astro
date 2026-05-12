@@ -1,10 +1,11 @@
 ---
-import brewingMethods from '../../../../data/brewingMethods.json' with { type: 'json' };
+import brewingMethods from "@data/brewingMethods.json" with { type: "json" };
+import supportedLanguages from "@data/supportedLanguages.json" with { type: "json" };
 
-import Button from '../../form/button/button.astro';
-import Dialog from '../../dialog/dialog.astro';
+import Button from "../../form/button/button.astro";
+import Dialog from "../../dialog/dialog.astro";
 
-import { getSafeUrl } from '../../utils/url.js';
+import { getSafeUrl } from "../../utils/url.js";
 
 const {
   brewingMethod,
@@ -16,13 +17,29 @@ const {
   roaster,
   tasteNote,
   tasteNoteGroup,
-  variety
+  variety,
 } = Astro.props;
+
+let brewingMethodsLocale = brewingMethods.filter(
+  ({ language_code }) => language_code === Astro.currentLocale,
+);
+
+if (!brewingMethodsLocale.length) {
+  const defaultLocale =
+    supportedLanguages.find(({ isDefault }) => isDefault)?.locale || "en";
+
+  brewingMethodsLocale = brewingMethods.filter(
+    ({ language_code }) => language_code === defaultLocale,
+  );
+}
 ---
 
 {
   brewingMethodId && (
-    <Button class="filter-dialog-title ghost inline" data-dialog-id="brewingMethod">
+    <Button
+      class="filter-dialog-title ghost inline"
+      data-dialog-id="brewingMethod"
+    >
       {brewingMethod.name}
     </Button>
   )
@@ -30,29 +47,28 @@ const {
 <Dialog class="drawer" id="brewingMethod">
   <ul class="selector-list">
     {
-      brewingMethods
-        .filter(({ language_code }) => language_code === Astro.currentLocale)
-        .map(({ brewing_method_id, name }) => (
-          <li>
-            <Button
-              href={getSafeUrl({
-                locale: Astro.currentLocale,
-                brewingMethod: brewingMethodId === brewing_method_id ? undefined : name,
-                brewingMethodGroup: brewingMethodGroup?.name,
-                country: country?.name,
-                originCountry: originCountry?.name,
-                processingMethod: processingMethod?.name,
-                roaster: roaster?.name,
-                tasteNote: tasteNote?.name,
-                tasteNoteGroup: tasteNoteGroup?.name,
-                variety: variety?.name
-              })}
-              class={brewingMethodId === brewing_method_id ? 'primary' : ''}
-            >
-              {name}
-            </Button>
-          </li>
-        ))
+      brewingMethodsLocale.map(({ brewing_method_id, name }) => (
+        <li>
+          <Button
+            href={getSafeUrl({
+              locale: Astro.currentLocale,
+              brewingMethod:
+                brewingMethodId === brewing_method_id ? undefined : name,
+              brewingMethodGroup: brewingMethodGroup?.name,
+              country: country?.name,
+              originCountry: originCountry?.name,
+              processingMethod: processingMethod?.name,
+              roaster: roaster?.name,
+              tasteNote: tasteNote?.name,
+              tasteNoteGroup: tasteNoteGroup?.name,
+              variety: variety?.name,
+            })}
+            class={brewingMethodId === brewing_method_id ? "primary" : ""}
+          >
+            {name}
+          </Button>
+        </li>
+      ))
     }
   </ul>
 </Dialog>

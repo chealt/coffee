@@ -1,6 +1,8 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
-import tasteNoteGroups from "../../../../data/tasteNoteGroups.json" with { type: "json" };
+
+import tasteNoteGroups from "@data/tasteNoteGroups.json" with { type: "json" };
+import supportedLanguages from "@data/supportedLanguages.json" with { type: "json" };
 
 import Button from "../../form/button/button.astro";
 
@@ -16,16 +18,26 @@ const size = 180;
 const innerRadius = 20;
 const outerRadius = 90;
 
-const groups = tasteNoteGroups
-  .filter(
+let tasteNoteGroupsLocale = tasteNoteGroups.filter(
+  ({ name, language_code: languageCode }) =>
+    languageCode === Astro.currentLocale && name !== "other",
+);
+
+if (!tasteNoteGroupsLocale.length) {
+  const defaultLocale =
+    supportedLanguages.find(({ isDefault }) => isDefault)?.locale || "en";
+
+  tasteNoteGroupsLocale = tasteNoteGroups.filter(
     ({ name, language_code: languageCode }) =>
-      languageCode === Astro.currentLocale && name !== "other",
-  )
-  .map(({ name, ...rest }) =>
-    name.includes("/")
-      ? { name: name.split(" / ")[0], ...rest }
-      : { name, ...rest },
+      languageCode === defaultLocale && name !== "other",
   );
+}
+
+const groups = tasteNoteGroupsLocale.map(({ name, ...rest }) =>
+  name.includes("/")
+    ? { name: name.split(" / ")[0], ...rest }
+    : { name, ...rest },
+);
 
 const segmentAngle = 360 / groups.length;
 

@@ -11,6 +11,7 @@ import roasters from "@data/roasters.json" with { type: "json" };
 import tasteNotes from "@data/tasteNotes.json" with { type: "json" };
 import tasteNoteGroups from "@data/tasteNoteGroups.json" with { type: "json" };
 import varieties from "@data/varieties.json" with { type: "json" };
+import supportedLanguages from "@data/supportedLanguages.json" with { type: "json" };
 
 import BrewingMethodGroupSelector from "./selectors/brewing-method-group.astro";
 import BrewingMethodSelector from "./selectors/brewing-method.astro";
@@ -25,7 +26,6 @@ import { convertToUSD } from "./utils.js";
 import Button from "../form/button/button.astro";
 import Coffees from "./list.astro";
 import Common from "../common/common.astro";
-import Dialog from "../dialog/dialog.astro";
 import Icon from "../icon/icon.astro";
 import { capitalize } from "../../utils/string.js";
 import { getSafeUrlWithStats } from "../utils/url.js";
@@ -42,6 +42,8 @@ const tc =
   allLocaleTranslationsCommon[Astro.currentLocale] ||
   allLocaleTranslationsCommon["en"];
 
+const defaultLocale =
+  supportedLanguages.find(({ isDefault }) => isDefault)?.locale || "en";
 const { loggedInUser } = Astro.locals;
 const {
   brewingMethodId,
@@ -69,45 +71,74 @@ const brewingMethodIdsInGroup =
     .map(({ brewing_method_id }) => brewing_method_id);
 const brewingMethod =
   brewingMethodId &&
-  brewingMethods.find(
+  (brewingMethods.find(
     ({ brewing_method_id, language_code }) =>
       brewing_method_id === brewingMethodId &&
       language_code === Astro.currentLocale,
-  );
+  ) ||
+    brewingMethods.find(
+      ({ brewing_method_id, language_code }) =>
+        brewing_method_id === brewingMethodId &&
+        language_code === defaultLocale,
+    ));
 const country =
   countryId &&
-  countries.find(
+  (countries.find(
     ({ country_id, language_code }) =>
       country_id === countryId && language_code === Astro.currentLocale,
-  );
+  ) ||
+    countries.find(
+      ({ country_id, language_code }) =>
+        country_id === countryId && language_code === defaultLocale,
+    ));
+
 const originCountry =
   originCountryId &&
-  originCountries.find(
+  (originCountries.find(
     ({ origin_country_id, language_code }) =>
       origin_country_id === originCountryId &&
       language_code === Astro.currentLocale,
-  );
+  ) ||
+    originCountries.find(
+      ({ origin_country_id, language_code }) =>
+        origin_country_id === originCountryId &&
+        language_code === defaultLocale,
+    ));
 const processingMethod =
   processingMethodId &&
-  processingMethods.find(
+  (processingMethods.find(
     ({ processing_method_id, language_code }) =>
       processing_method_id === processingMethodId &&
       language_code === Astro.currentLocale,
-  );
+  ) ||
+    processingMethods.find(
+      ({ processing_method_id, language_code }) =>
+        processing_method_id === processingMethodId &&
+        language_code === defaultLocale,
+    ));
 const roaster = roasterId && roasters.find(({ id }) => id === roasterId);
 const tasteNote =
   tasteNoteId &&
-  tasteNotes.find(
+  (tasteNotes.find(
     ({ taste_note_id, language_code }) =>
       taste_note_id === tasteNoteId && language_code === Astro.currentLocale,
-  );
+  ) ||
+    tasteNotes.find(
+      ({ taste_note_id, language_code }) =>
+        taste_note_id === tasteNoteId && language_code === defaultLocale,
+    ));
 const tasteNoteGroup =
   tasteNoteGroupId &&
-  tasteNoteGroups.find(
+  (tasteNoteGroups.find(
     ({ taste_note_group_id, language_code }) =>
       taste_note_group_id === tasteNoteGroupId &&
       language_code === Astro.currentLocale,
-  );
+  ) ||
+    tasteNoteGroups.find(
+      ({ taste_note_group_id, language_code }) =>
+        taste_note_group_id === tasteNoteGroupId &&
+        language_code === defaultLocale,
+    ));
 const variety = varietyId && varieties.find(({ id }) => id === varietyId);
 
 const coffees = [];

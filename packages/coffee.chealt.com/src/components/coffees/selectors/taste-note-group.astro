@@ -1,10 +1,11 @@
 ---
-import tasteNoteGroups from '@data/tasteNoteGroups.json' with { type: 'json' };
+import tasteNoteGroups from "@data/tasteNoteGroups.json" with { type: "json" };
+import supportedLanguages from "@data/supportedLanguages.json" with { type: "json" };
 
-import Button from '../../form/button/button.astro';
-import Dialog from '../../dialog/dialog.astro';
+import Button from "../../form/button/button.astro";
+import Dialog from "../../dialog/dialog.astro";
 
-import { getSafeUrl } from '../../utils/url.js';
+import { getSafeUrl } from "../../utils/url.js";
 
 const {
   brewingMethod,
@@ -16,13 +17,29 @@ const {
   tasteNote,
   tasteNoteGroup,
   tasteNoteGroupId,
-  variety
+  variety,
 } = Astro.props;
+
+let tasteNoteGroupsLocale = tasteNoteGroups.filter(
+  ({ language_code }) => language_code === Astro.currentLocale,
+);
+
+if (!tasteNoteGroupsLocale.length) {
+  const defaultLocale =
+    supportedLanguages.find(({ isDefault }) => isDefault)?.locale || "en";
+
+  tasteNoteGroupsLocale = tasteNoteGroups.filter(
+    ({ language_code }) => language_code === defaultLocale,
+  );
+}
 ---
 
 {
   tasteNoteGroupId && (
-    <Button class="filter-dialog-title ghost inline" data-dialog-id="tasteNoteGroup">
+    <Button
+      class="filter-dialog-title ghost inline"
+      data-dialog-id="tasteNoteGroup"
+    >
       {tasteNoteGroup.name}
     </Button>
   )
@@ -30,29 +47,28 @@ const {
 <Dialog class="drawer" id="tasteNoteGroup">
   <ul class="selector-list">
     {
-      tasteNoteGroups
-        .filter(({ language_code }) => language_code === Astro.currentLocale)
-        .map(({ taste_note_group_id, name }) => (
-          <li>
-            <Button
-              href={getSafeUrl({
-                locale: Astro.currentLocale,
-                brewingMethod: brewingMethod?.name,
-                brewingMethodGroup: brewingMethodGroup?.name,
-                country: country?.name,
-                originCountry: originCountry?.name,
-                processingMethod: processingMethod?.name,
-                roaster: roaster?.name,
-                tasteNote: tasteNote?.name,
-                tasteNoteGroup: taste_note_group_id === tasteNoteGroupId ? undefined : name,
-                variety: variety?.name
-              })}
-              class={tasteNoteGroupId === taste_note_group_id ? 'primary' : ''}
-            >
-              {name}
-            </Button>
-          </li>
-        ))
+      tasteNoteGroupsLocale.map(({ taste_note_group_id, name }) => (
+        <li>
+          <Button
+            href={getSafeUrl({
+              locale: Astro.currentLocale,
+              brewingMethod: brewingMethod?.name,
+              brewingMethodGroup: brewingMethodGroup?.name,
+              country: country?.name,
+              originCountry: originCountry?.name,
+              processingMethod: processingMethod?.name,
+              roaster: roaster?.name,
+              tasteNote: tasteNote?.name,
+              tasteNoteGroup:
+                taste_note_group_id === tasteNoteGroupId ? undefined : name,
+              variety: variety?.name,
+            })}
+            class={tasteNoteGroupId === taste_note_group_id ? "primary" : ""}
+          >
+            {name}
+          </Button>
+        </li>
+      ))
     }
   </ul>
 </Dialog>
