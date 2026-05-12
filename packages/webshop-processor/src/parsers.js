@@ -36,7 +36,7 @@ const parsers = {
     return Array.from(new Set(Array.from(productLinks).map((productLink) => productLink.href)));
   },
   // El Cafetero
-  7: async ({ html }) => {
+  7: ({ html }) => {
     const document = getDocument(html);
 
     return Array.from(
@@ -48,7 +48,7 @@ const parsers = {
     );
   },
   // La Cabra
-  10: async ({ html, url }) => {
+  10: ({ html, url }) => {
     const document = getDocument(html);
 
     const { origin } = new URL(url);
@@ -115,7 +115,7 @@ const parsers = {
     );
   },
   // Typika
-  14: async ({ html, url }) => {
+  14: ({ html, url }) => {
     const document = getDocument(html);
 
     const { origin } = new URL(url);
@@ -191,7 +191,7 @@ const parsers = {
       .map((href) => `${origin}${href}`);
   },
   // Heresy
-  65: async ({ html }) => {
+  65: ({ html }) => {
     const document = getDocument(html);
 
     return Array.from(
@@ -203,7 +203,7 @@ const parsers = {
     );
   },
   // Klaro
-  70: async ({ html }) => {
+  70: ({ html }) => {
     const document = getDocument(html);
 
     return Array.from(
@@ -254,7 +254,7 @@ const parsers = {
     );
   },
   // Meron
-  252: async ({ html }) => {
+  252: ({ html }) => {
     const document = getDocument(html);
 
     return Array.from(
@@ -297,7 +297,7 @@ const parsers = {
     );
   },
   // Father's (Czech)
-  277: async ({ html }) => {
+  277: ({ html }) => {
     const document = getDocument(html);
 
     const filterCoffeeElements = document.querySelectorAll('.product_cat-filter.instock');
@@ -322,7 +322,7 @@ const parsers = {
       .filter((href) => !href.includes('-set'));
   },
   // PALE
-  278: async ({ html }) => {
+  278: ({ html }) => {
     const document = getDocument(html);
 
     return Array.from(document.querySelectorAll('.wc-block-components-product-image a')).map((element) => element.href);
@@ -364,7 +364,7 @@ const parsers = {
     );
   },
   // Bani Beans
-  285: async ({ html, url }) => {
+  285: ({ html, url }) => {
     const document = getDocument(html);
     const { origin } = new URL(url);
 
@@ -373,7 +373,7 @@ const parsers = {
       .map(({ href }) => `${origin}${href}`);
   },
   // Stow
-  286: async ({ html }) => {
+  286: ({ html }) => {
     const document = getDocument(html);
 
     return Array.from(document.querySelectorAll('section:not([id="cascara"]) .produkt a'))
@@ -381,7 +381,7 @@ const parsers = {
       .map(({ href }) => href);
   },
   // kava family
-  287: async ({ html, url }) => {
+  287: ({ html, url }) => {
     const document = getDocument(html);
 
     return Array.from(document.querySelectorAll('.product-item a'))
@@ -417,7 +417,7 @@ const parsers = {
     return productLinks;
   },
   // Roast Grind Brew
-  290: async ({ html, url }) => {
+  290: ({ html, url }) => {
     const document = getDocument(html);
 
     const { origin } = new URL(url);
@@ -425,7 +425,7 @@ const parsers = {
     return Array.from(document.querySelectorAll('a.contents:has(img)')).map(({ href }) => `${origin}${href.trim()}`);
   },
   // Teso
-  291: async ({ html }) => {
+  291: ({ html }) => {
     const document = getDocument(html);
 
     return Array.from(document.querySelectorAll('.product-tile a'))
@@ -445,7 +445,7 @@ const parsers = {
     );
   },
   // Craft Beans
-  297: async ({ html }) => {
+  297: ({ html }) => {
     const document = getDocument(html);
 
     const allLinks = Array.from(document.querySelectorAll('a')).map((a) => a.href);
@@ -469,7 +469,7 @@ const parsers = {
     );
   },
   // Manhattan
-  305: async ({ html }) => {
+  305: ({ html }) => {
     const document = getDocument(html);
 
     return Array.from(

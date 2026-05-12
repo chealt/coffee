@@ -97,7 +97,7 @@ const getVarieties = async (texts) => {
   return varieties.filter(({ name }) => texts.includes(name.toLowerCase()));
 };
 
-const saveDetails = async ({ filename, details }) => {
+const saveDetails = ({ filename, details }) => {
   logger.info(`Saving item details for ${filename}`);
 
   return client.execute({

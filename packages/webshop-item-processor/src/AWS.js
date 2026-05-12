@@ -9,7 +9,7 @@ const translationClient = new TranslateClient({
   region: 'eu-central-1'
 });
 
-const callRecordWebshopItemDetails = async ({ url, details }) =>
+const callRecordWebshopItemDetails = ({ url, details }) =>
   lambdaClient.send(
     new InvokeCommand({
       FunctionName: 'recordWebshopItemDetails',

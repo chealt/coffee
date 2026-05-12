@@ -3,7 +3,7 @@ import logger from '../../../server/utils/logger.js';
 
 const recommendationsData = import.meta.glob('../../../../data/recommendations/*.json', { eager: true });
 
-const GET = async (context) => {
+const GET = (context) => {
   let loggedInUser;
 
   try {

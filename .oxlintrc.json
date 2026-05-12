@@ -85,6 +85,7 @@
     "prefer-spread": "error",
     "prefer-template": "error",
     "radix": "error",
+    "require-await": "error",
     "symbol-description": "error",
     "unicode-bom": "error",
     "import/default": "error",

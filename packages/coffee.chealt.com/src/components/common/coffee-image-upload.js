@@ -81,7 +81,7 @@ class CoffeeImageUpload extends HTMLElement {
   }
 
   addClickListener() {
-    this.triggerButton.addEventListener('click', async (event) => {
+    this.triggerButton.addEventListener('click', (event) => {
       this.fileInput.click();
 
       event.preventDefault();

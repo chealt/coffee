@@ -573,7 +573,7 @@ const parsers = {
     };
   },
   // La Cabra
-  10: async ({ html, url, roasterId }) => {
+  10: ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
 
     const window = getWindow(html);
@@ -739,7 +739,7 @@ const parsers = {
     };
   },
   // Coffee Collective
-  11: async ({ html, url, roasterId }) => {
+  11: ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
@@ -1187,7 +1187,7 @@ const parsers = {
     };
   },
   // BeMyBean
-  39: async ({ html, url, roasterId }) => {
+  39: ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
@@ -1364,7 +1364,7 @@ const parsers = {
     };
   },
   // april
-  47: async ({ html, url, roasterId }) => {
+  47: ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
@@ -1754,7 +1754,7 @@ const parsers = {
     };
   },
   // Klaro
-  70: async ({ html, url, roasterId }) => {
+  70: ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
@@ -2173,7 +2173,7 @@ const parsers = {
     };
   },
   // Meron
-  252: async ({ html, url, roasterId }) => {
+  252: ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
@@ -2730,7 +2730,7 @@ const parsers = {
     };
   },
   // Father's (Czech)
-  277: async ({ html, url, roasterId }) => {
+  277: ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
@@ -2880,7 +2880,7 @@ const parsers = {
     };
   },
   // PALE
-  278: async ({ html, url, roasterId }) => {
+  278: ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
@@ -3225,7 +3225,7 @@ const parsers = {
     };
   },
   // Bani Beans
-  285: async ({ html, url, roasterId }) => {
+  285: ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
@@ -3337,7 +3337,7 @@ const parsers = {
     };
   },
   // Stow
-  286: async ({ html, url, roasterId }) => {
+  286: ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
@@ -3483,7 +3483,7 @@ const parsers = {
     };
   },
   // kava family
-  287: async ({ html, url, roasterId }) => {
+  287: ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
@@ -3629,7 +3629,7 @@ const parsers = {
     };
   },
   // nordbeans
-  288: async ({ html, url, roasterId }) => {
+  288: ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
@@ -3790,7 +3790,7 @@ const parsers = {
     };
   },
   // roast grind brew
-  290: async ({ html, url, roasterId }) => {
+  290: ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
@@ -3880,7 +3880,7 @@ const parsers = {
     };
   },
   // Teso
-  291: async ({ html, url, roasterId }) => {
+  291: ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);
@@ -4198,7 +4198,7 @@ const parsers = {
     };
   },
   // Craft Beans
-  297: async ({ html, url, roasterId }) => {
+  297: ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
 
     const document = getDocument(html);

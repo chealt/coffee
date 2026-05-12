@@ -28,7 +28,7 @@ const getSecret = async ({ name }) => {
   return JSON.parse(response.SecretString);
 };
 
-const putObject = async ({ bucketName, key, data }) =>
+const putObject = ({ bucketName, key, data }) =>
   client.send(
     new PutObjectCommand({
       Bucket: bucketName,
@@ -39,7 +39,7 @@ const putObject = async ({ bucketName, key, data }) =>
     })
   );
 
-const getObject = async ({ bucketName, key }) =>
+const getObject = ({ bucketName, key }) =>
   client.send(
     new GetObjectCommand({
       Bucket: bucketName,

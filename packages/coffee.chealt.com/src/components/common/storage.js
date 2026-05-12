@@ -9,7 +9,7 @@ const collectionItemsAddKey = 'chealt-collection-item-add';
 const collectionItemImagesAddKey = 'chealt-collection-item-images-add';
 
 // eslint-disable-next-line complexity
-const save = async ({ collectionID, collectionName, isBuiltIn, itemID, filename, shouldSync, uploaded }) => {
+const save = ({ collectionID, collectionName, isBuiltIn, itemID, filename, shouldSync, uploaded }) => {
   const collectionsRaw = localStorage.getItem(collectionsKey);
   const collections = JSON.parse(collectionsRaw) || [];
   const collection = collections.find(({ id }) => id === collectionID);

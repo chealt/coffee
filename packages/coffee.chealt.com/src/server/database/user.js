@@ -60,7 +60,7 @@ const recordAuthenticationOptions = ({ user, options }) => {
   });
 };
 
-const storeRegistration = async ({
+const storeRegistration = ({
   user,
   verification: {
     registrationInfo: { credential, credentialDeviceType, credentialBackedUp }
@@ -107,7 +107,7 @@ const getPasskey = async ({ username, credentialId }) => {
   return rows[0];
 };
 
-const updatePasskeyCounter = async ({ username, credentialID, newCounter }) => {
+const updatePasskeyCounter = ({ username, credentialID, newCounter }) => {
   const client = getClient(username);
 
   return client.execute({

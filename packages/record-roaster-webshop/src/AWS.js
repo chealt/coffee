@@ -16,7 +16,7 @@ const client = new S3Client({
   region: 'eu-central-1'
 });
 
-const putObject = async ({ bucketName, key, data }) =>
+const putObject = ({ bucketName, key, data }) =>
   client.send(
     new PutObjectCommand({
       Bucket: bucketName,

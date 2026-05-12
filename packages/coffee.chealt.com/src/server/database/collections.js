@@ -155,7 +155,7 @@ const getCollections = async (user) => {
   }));
 };
 
-const getExtractedDetails = async (collectionItemImages) =>
+const getExtractedDetails = (collectionItemImages) =>
   Promise.all(collectionItemImages.map(({ filename }) => queryImageDetails(filename))).then((results) =>
     results
       .filter((result) => Boolean(result))

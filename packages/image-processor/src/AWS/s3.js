@@ -15,7 +15,7 @@ const getObject = async ({ bucketName, key }) => {
   return response.Body.transformToByteArray();
 };
 
-const putObject = async ({ bucketName, key, data, contentType, cacheControl }) =>
+const putObject = ({ bucketName, key, data, contentType, cacheControl }) =>
   client.send(
     new PutObjectCommand({
       Bucket: bucketName,
