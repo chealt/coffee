@@ -9,8 +9,8 @@ const turso = createClient({
 });
 
 const save = async () => {
-  const {rows} = await turso.execute('SELECT * FROM i18n');
-  
+  const { rows } = await turso.execute('SELECT * FROM i18n');
+
   for (const { namespace, key, locale, value } of rows) {
     const path = `./src/components/${namespace.replaceAll('.', '/')}.json`;
     const existingContent = await readFile(path);
@@ -24,6 +24,6 @@ const save = async () => {
 
     await writeFile(path, JSON.stringify(newContent, '', 2), { flag: 'w+' });
   }
-}
+};
 
 await save();

@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
-  "ignorePatterns": [".yarn", "packages/coffee.chealt.com/data"],
+  "ignorePatterns": [".yarn", "packages/coffee.chealt.com/data/**/*.json"],
   "semi": true,
   "singleQuote": true,
   "trailingComma": "none",
