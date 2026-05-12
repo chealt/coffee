@@ -1,22 +1,22 @@
 ---
-import Button from '../../form/button/button.astro';
-import Common from '../../common/common.astro';
-import Form from '../../form/form.astro';
-import Label from '../../form/label/label.astro';
-import Icon from '../../icon/icon.astro';
-import Input from '../../form/input/input.astro';
-import Radio from '../../form/radio/radio.astro';
-import RadioList from '../../form/radio/radio-list.astro';
-import Range from '../../form/range/range.astro';
-import Textarea from '../../form/input/textarea.astro';
+import Button from "../../form/button/button.astro";
+import Common from "../../common/common.astro";
+import Form from "../../form/form.astro";
+import Label from "../../form/label/label.astro";
+import Icon from "../../icon/icon.astro";
+import Input from "../../form/input/input.astro";
+import Radio from "../../form/radio/radio.astro";
+import RadioList from "../../form/radio/radio-list.astro";
+import Range from "../../form/range/range.astro";
+import Textarea from "../../form/input/textarea.astro";
 
-import './cupping.css';
+import "./cupping.css";
 
-import allLocaleTranslations from './locales.json' with { type: 'json' };
+import allLocaleTranslations from "./locales.json" with { type: "json" };
 
 const { locale } = Astro.params;
 
-const t = allLocaleTranslations[locale];
+const t = allLocaleTranslations[locale] || allLocaleTranslations["en"];
 ---
 
 <Common title={t.title} hideNav>
@@ -145,7 +145,11 @@ const t = allLocaleTranslations[locale];
               <span class="times-sign">x</span>
               <Label>
                 <span>{t.intensity}</span>
-                <Input name="defects-intensity" data-multiplier="number-of-cups" type="number" />
+                <Input
+                  name="defects-intensity"
+                  data-multiplier="number-of-cups"
+                  type="number"
+                />
               </Label>
             </div>
           </fieldset>
