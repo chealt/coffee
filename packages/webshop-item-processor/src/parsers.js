@@ -1,5 +1,5 @@
 /* eslint-disable complexity */
-import { JSDOM } from 'jsdom';
+import { JSDOM, VirtualConsole } from 'jsdom';
 
 import { translate } from './AWS.js';
 import logger from './Sentry/logger.js';
@@ -6369,6 +6369,178 @@ const parsers = {
       processingMethodId,
       roasterId,
       tasteNoteIds: [],
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
+  },
+  // Onyx
+  318: ({ html, url, roasterId }) => {
+    logger.info(`Parsing webshop item page ${url}`);
+
+    // Onyx ships inline CSS that JSDOM can't parse; suppress its noisy warnings.
+    const virtualConsole = new VirtualConsole();
+    const {
+      window: { document }
+    } = new JSDOM(html, { virtualConsole });
+
+    const productElement = document.querySelector('.selling-plan-fieldset[data-product]');
+
+    if (!productElement) {
+      return { isOutOfStock: true };
+    }
+
+    const product = JSON.parse(productElement.getAttribute('data-product'));
+
+    const parseVariantWeight = (title) => {
+      if (/\bx\b/iu.test(title)) {
+        return undefined;
+      }
+
+      const match = title.match(/(\d+(?:\.\d+)?)\s*(kg|g)/iu);
+
+      if (!match) {
+        return undefined;
+      }
+
+      const num = Number(match[1]);
+
+      return match[2].toLowerCase() === 'kg' ? Math.round(num * 1000) : num;
+    };
+
+    const availableVariants = product.variants
+      .filter((variant) => variant.available)
+      .map((variant) => ({ ...variant, parsedWeight: parseVariantWeight(variant.title) }))
+      .filter(({ parsedWeight }) => parsedWeight)
+      .sort((a, b) => a.parsedWeight - b.parsedWeight);
+
+    if (!availableVariants.length) {
+      return { isOutOfStock: true };
+    }
+
+    const smallestVariant = availableVariants[0];
+    const price = Number((smallestVariant.price / 100).toFixed(2));
+    const weight = smallestVariant.parsedWeight;
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    if (!weight || isNaN(weight)) {
+      logger.error(`No weight found for ${url}`);
+
+      throw new Error(errors.weightMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+    const currency = 'EUR';
+
+    const featuredImage = product.featured_image;
+    const image = featuredImage?.startsWith('//') ? `https:${featuredImage}` : featuredImage;
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    const getStatText = (statId) =>
+      document
+        .querySelector(`.a-stat[data-stat-id="${statId}"] .stat-text p`)
+        ?.textContent.trim()
+        .split('\n')[0]
+        .trim()
+        .toLowerCase() || '';
+
+    const countryText = getStatText('origin').split(',')[0].trim();
+    const originCountryId =
+      originCountries.find(({ name }) => name === countryText)?.origin_country_id ||
+      originCountries.find(({ name }) => countryText.includes(name))?.origin_country_id ||
+      null;
+
+    if (!originCountryId) {
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const processingText = getStatText('ferment');
+    const sortedProcessingMethods = [...processingMethods].sort((a, b) => b.name.length - a.name.length);
+    const processingMethodId =
+      sortedProcessingMethods.find(({ name }) => name === processingText)?.processing_method_id ||
+      sortedProcessingMethods.find(({ name }) => processingText.includes(name))?.processing_method_id ||
+      null;
+
+    if (!processingMethodId) {
+      logger.info(`Missing processing method: ${processingText}`);
+    }
+
+    const varietyText = getStatText('variety');
+    // Onyx labels blends as "Mixed" — that's not a real variety, so skip the lookup.
+    const varietyStrings =
+      varietyText === 'mixed'
+        ? []
+        : varietyText
+            .split(/[,/&+]/u)
+            .map((s) => s.trim())
+            .filter(Boolean);
+    const varietyIds = Array.from(
+      new Set(
+        varieties
+          .filter(({ name, alias }) =>
+            varietyStrings.some(
+              (s) =>
+                name.toLowerCase() === s ||
+                (alias && alias.toLowerCase() === s) ||
+                s.includes(name.toLowerCase()) ||
+                (alias && s.includes(alias.toLowerCase()))
+            )
+          )
+          .map(({ id }) => id)
+      )
+    );
+
+    if (varietyStrings.length && !varietyIds.length) {
+      logger.info(`Missing varieties: ${varietyStrings}`);
+    }
+
+    const brewingMethodId = brewingMethods.find(({ name }) => name === 'omni')?.brewing_method_id || null;
+
+    const noteStrings = Array.from(document.querySelectorAll('.tasting-notes .note')).map((note) =>
+      note.textContent.trim().toLowerCase()
+    );
+    const tasteNoteIds = Array.from(
+      new Set(
+        noteStrings
+          .map(
+            (note) =>
+              tasteNotes.find(({ name }) => name === note)?.taste_note_id ||
+              tasteNotes.find(({ name }) => note.includes(name))?.taste_note_id
+          )
+          .filter(Boolean)
+      )
+    );
+
+    if (!tasteNoteIds.length) {
+      logger.info(`Missing taste notes: ${noteStrings}`);
+    }
+
+    const title = (product.title || '').toLowerCase();
+    const isDecaf = url.toLowerCase().includes('decaf') || title.includes('decaf');
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId: null,
+      originRegionId: null,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
       varietyIds,
       webshopItemLink: url,
       weight

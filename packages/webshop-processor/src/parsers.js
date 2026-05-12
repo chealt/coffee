@@ -623,6 +623,17 @@ const parsers = {
           !handle.includes('pack')
       )
       .map(({ handle }) => `${origin}/products/${handle}`);
+  },
+  // Onyx
+  318: async ({ url }) => {
+    const { origin, pathname } = new URL(url);
+
+    const response = await fetch(`${origin}${pathname}/products.json?limit=250`);
+    const { products } = await response.json();
+
+    return products
+      .filter(({ product_type }) => product_type === 'Coffee')
+      .map(({ handle }) => `${origin}/products/${handle}`);
   }
 };
 
