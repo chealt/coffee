@@ -179,7 +179,9 @@ const saveFormData =
           form.querySelector(`[data-success]`)?.classList.remove('hidden');
         }
 
-        if (result.redirectUrl) {
+        if (form.dataset?.redirectUrl) {
+          window.location.assign(form.dataset.redirectUrl);
+        } else if (result.redirectUrl) {
           window.location.assign(result.redirectUrl);
         }
       } catch (error) {

@@ -1,0 +1,44 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+import Button from "@components/form/button/button.astro";
+import Form from "@components/form/form.astro";
+import Select from "@components/form/select/select.astro";
+
+import supportedLanguages from "@data/supportedLanguages.json" with { type: "json" };
+
+import "./banner.css";
+
+const pathWithoutLocale = Astro.url.pathname.replace(
+  `${Astro.currentLocale}/`,
+  "",
+);
+// TODO: figure out a way not to override the whole settings data
+---
+
+<chealt-banner class="i18n-banner">
+  <div class="controls">
+    <Button data-move>move</Button>
+    <Form
+      name="settings"
+      data-storage="api"
+      data-save-endpoint="/api/storage/save-form-data"
+      data-save-on-input
+      data-exclude-from-local-storage
+      data-redirect-url={pathWithoutLocale}
+    >
+      <Select name="language">
+        {
+          supportedLanguages.map(({ locale, label }) => (
+            <option value={locale} selected={locale === Astro.currentLocale}>
+              {label}
+            </option>
+          ))
+        }
+      </Select>
+    </Form>
+  </div>
+  <div class="handler"></div>
+</chealt-banner>
+
+<script src="./banner.js"></script>

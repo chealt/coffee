@@ -1,0 +1,57 @@
+.i18n-banner {
+  --handler-height: 14px;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-index--s);
+  background-color: var(--color-background);
+  transform: translateY(calc(-100% + var(--handler-height)));
+  transition: transform 0.4s ease-in-out;
+  display: flex;
+  flex-direction: column;
+
+  chealt-form,
+  form {
+    width: 100%;
+  }
+
+  .handler {
+    width: 100%;
+    height: var(--handler-height);
+    cursor: pointer;
+    background-color: var(--color-primary);
+    order: 2;
+  }
+
+  .controls {
+    order: 1;
+  }
+
+  [data-move] {
+    cursor: move;
+  }
+
+  &.open {
+    transform: translateY(0 + var(--handler-height));
+  }
+
+  &.bottom {
+    top: auto;
+    bottom: 0;
+    transform: translateY(calc(100% - var(--handler-height)));
+
+    .handler {
+      order: 1;
+    }
+
+    .controls {
+      order: 2;
+    }
+
+    &.open {
+      transform: translateY(0);
+    }
+  }
+}

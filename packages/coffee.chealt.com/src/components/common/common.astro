@@ -3,6 +3,8 @@ import Analytics from "./analytics.astro";
 import IosPolyfills from "./ios-polyfills.astro";
 import Login from "../login/login.astro";
 import Nav from "./nav.astro";
+import TranslationBanner from "../i18n/banner.astro";
+
 import loaderImage from "./loader.svg";
 
 import "./common.css";
@@ -13,6 +15,8 @@ const t =
   allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
 
 const { shouldAuthenticate, redirectUrl, title, hideNav = false } = Astro.props;
+const { isTranslating } = Astro.locals;
+
 const isProd = import.meta.env.PROD;
 ---
 
@@ -31,6 +35,7 @@ const isProd = import.meta.env.PROD;
   </head>
   <body>
     <chealt-data>
+      {isTranslating && <TranslationBanner />}
       <coffee-recommendations
         data-recommendations-url="/api/recommendations/all.json"
       >
