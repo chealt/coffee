@@ -20,5 +20,15 @@
     "rateLimitExceeded": "Zbyt wiele prób wysłania nowego kodu rejestracji. Proszę spróbować później.",
     "sendRegistrationCode": "Wyślij nowy kod rejestracji",
     "title": "Profil"
+  },
+  "hu": {
+    "title": "Profil",
+    "language": "Nyelv",
+    "currency": "Pénznem",
+    "notifications": "Hírlevél",
+    "isTranslating": "Fordítás",
+    "newCoffee": "új kávék",
+    "sendRegistrationCode": "új regisztrációs kód küldése",
+    "rateLimitExceeded": "Túl sokszor próbáltál új regisztrációs kódot küldeni. Kérjük, próbáld újra később."
   }
 }

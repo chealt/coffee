@@ -16,6 +16,10 @@ class Translation extends HTMLElement {
       throw new Error('Missing locale, please add data attribute [data-locale]');
     }
 
+    this.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+    });
     this.addEventListener('input', this.update.bind(this));
   }
 

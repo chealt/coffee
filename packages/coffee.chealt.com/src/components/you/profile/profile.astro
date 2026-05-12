@@ -5,6 +5,7 @@ import exchangeRates from "@data/exchangeRates.json" with { type: "json" };
 import supportedLanguages from "@data/supportedLanguages.json" with { type: "json" };
 
 import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
 import { capitalize } from "../../../utils/string.js";
 import Button from "../../form/button/button.astro";
 import Checkbox from "../../form/checkbox/checkbox.astro";
@@ -15,10 +16,10 @@ import Label from "../../form/label/label.astro";
 import Logout from "../../logout/logout.astro";
 import Select from "../../form/select/select.astro";
 
-import allLocaleTranslations from "./locales.json" with { type: "json" };
-
-const t =
-  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
+const t = await getTranslator({
+  filePath: "you/profile",
+  locale: Astro.currentLocale,
+});
 
 const {
   shouldAuthenticate,
@@ -34,7 +35,7 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
   shouldAuthenticate={shouldAuthenticate}
   redirectUrl={getRelativeLocaleUrl(Astro.currentLocale, "/you/profile")}
 >
-  <h1><T namespace="you.profile.locales" key="title">{t.title}</T></h1>
+  <h1><T namespace="you.profile.locales" key="title">{t("title")}</T></h1>
   <section>
     <Form
       name="settings"
@@ -44,10 +45,16 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
       data-exclude-from-local-storage
     >
       <p data-error-code="RATE_LIMIT_EXCEEDED" class="error hidden">
-        {t.rateLimitExceeded}
+        <T namespace="you.profile.locales" key="rateLimitExceeded">
+          {t("rateLimitExceeded")}
+        </T>
       </p>
       <Label>
-        <div class="name">{t.language}</div>
+        <div class="name">
+          <T namespace="you.profile.locales" key="language">
+            {t("language")}
+          </T>
+        </div>
         <Select name="language">
           {
             supportedLanguages.map(({ locale, label }) => (
@@ -59,7 +66,11 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
         </Select>
       </Label>
       <Label>
-        <div class="name">{t.currency}</div>
+        <div class="name">
+          <T namespace="you.profile.locales" key="currency">
+            {t("currency")}
+          </T>
+        </div>
         <Select name="currency">
           {
             currencies.map((currency) => (
@@ -77,27 +88,39 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
             value="on"
             checked={settings?.isTranslating === "on"}
           >
-            {t.isTranslating}
+            <T namespace="you.profile.locales" key="isTranslating">
+              {t("isTranslating")}
+            </T>
           </Checkbox>
         )
       }
       <fieldset>
         <legend>
-          <div class="name">{t.notifications}</div>
+          <div class="name">
+            <T namespace="you.profile.locales" key="notifications">
+              {t("notifications")}
+            </T>
+          </div>
         </legend>
         <Checkbox
           name="newCoffeeNotification"
           value="on"
           checked={settings?.newCoffeeNotification === "on"}
         >
-          {t.newCoffee}
+          <T namespace="you.profile.locales" key="newCoffee">
+            {t("newCoffee")}
+          </T>
         </Checkbox>
       </fieldset>
       <coffee-api-button
         data-api-endpoint="/api/authentication/registration/send-new-code.json?profile"
       >
         <Button class="bordered column">
-          <span>{t.sendRegistrationCode}</span>
+          <span>
+            <T namespace="you.profile.locales" key="sendRegistrationCode">
+              {t("sendRegistrationCode")}
+            </T>
+          </span>
           <Icon type="email" />
         </Button>
       </coffee-api-button>
@@ -107,7 +130,11 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
     <Logout logoutUrl="/api/authentication/logout.json">
       <Button class="danger column" data-logout-trigger>
         <Icon type="power" />
-        <span>{t.logout}</span>
+        <span>
+          <T namespace="you.profile.locales" key="logout">
+            {t("logout")}
+          </T>
+        </span>
       </Button>
     </Logout>
   </section>
