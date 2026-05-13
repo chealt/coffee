@@ -1,19 +1,20 @@
-import brewingMethodGroups from '@data/brewingMethodGroups.json' with { type: 'json' };
-import brewingMethods from '@data/brewingMethods.json' with { type: 'json' };
-import coffeeImages from '@data/coffeeImages.json' with { type: 'json' };
-import coffeeTasteNotes from '@data/coffeeTasteNotes.json' with { type: 'json' };
-import coffeeVarieties from '@data/coffeeVarieties.json' with { type: 'json' };
-import countries from '@data/countries.json' with { type: 'json' };
-import exchangeRates from '@data/exchangeRates.json' with { type: 'json' };
-import originCountries from '@data/originCountries.json' with { type: 'json' };
-import originFarms from '@data/originFarms.json' with { type: 'json' };
-import originRegions from '@data/originRegions.json' with { type: 'json' };
-import processingMethods from '@data/processingMethods.json' with { type: 'json' };
-import roasters from '@data/roasters.json' with { type: 'json' };
-import roastingLevels from '@data/roastingLevels.json' with { type: 'json' };
-import tasteNotes from '@data/tasteNotes.json' with { type: 'json' };
-import varieties from '@data/varieties.json' with { type: 'json' };
-import supportedLanguages from '@data/supportedLanguages.json' with { type: 'json' };
+// the data folders cannot use @ because this files is used in CI as a node script
+import brewingMethodGroups from '../../../data/brewingMethodGroups.json' with { type: 'json' };
+import brewingMethods from '../../../data/brewingMethods.json' with { type: 'json' };
+import coffeeImages from '../../../data/coffeeImages.json' with { type: 'json' };
+import coffeeTasteNotes from '../../../data/coffeeTasteNotes.json' with { type: 'json' };
+import coffeeVarieties from '../../../data/coffeeVarieties.json' with { type: 'json' };
+import countries from '../../../data/countries.json' with { type: 'json' };
+import exchangeRates from '../../../data/exchangeRates.json' with { type: 'json' };
+import originCountries from '../../../data/originCountries.json' with { type: 'json' };
+import originFarms from '../../../data/originFarms.json' with { type: 'json' };
+import originRegions from '../../../data/originRegions.json' with { type: 'json' };
+import processingMethods from '../../../data/processingMethods.json' with { type: 'json' };
+import roasters from '../../../data/roasters.json' with { type: 'json' };
+import roastingLevels from '../../../data/roastingLevels.json' with { type: 'json' };
+import tasteNotes from '../../../data/tasteNotes.json' with { type: 'json' };
+import varieties from '../../../data/varieties.json' with { type: 'json' };
+import supportedLanguages from '../../../data/supportedLanguages.json' with { type: 'json' };
 
 import logger from '../../server/utils/logger.js';
 
