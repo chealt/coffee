@@ -6,7 +6,7 @@
   left: 0;
   right: 0;
   z-index: var(--z-index--s);
-  background-color: var(--color-background);
+  background: var(--color-background);
   transform: translateY(calc(-100% + var(--handler-height)));
   transition: transform 0.4s ease-in-out;
   display: flex;
@@ -21,7 +21,13 @@
     width: 100%;
     height: var(--handler-height);
     cursor: pointer;
-    background-color: var(--color-primary);
+    background: repeating-linear-gradient(
+      45deg,
+      var(--color-primary),
+      var(--color-primary) 10px,
+      var(--color-background) 10px,
+      var(--color-background) 20px
+    );
     order: 2;
   }
 
