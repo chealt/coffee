@@ -5,16 +5,18 @@ import allCoffees from "../../../data/coffees.json" with { type: "json" };
 import coffeeVarieties from "../../../data/coffeeVarieties.json" with { type: "json" };
 import varieties from "../../../data/varieties.json" with { type: "json" };
 
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
 import { convertToUSD, getDetails } from "../coffees/utils.js";
 import Button from "../form/button/button.astro";
 import Coffees from "../coffees/list.astro";
 import Common from "../common/common.astro";
 import Icon from "../icon/icon.astro";
 
-import allLocaleTranslations from "../common/locales.json" with { type: "json" };
-
-const t =
-  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
+const t = await getTranslator({
+  filePath: "common",
+  locale: Astro.currentLocale,
+});
 
 const { loggedInUser } = Astro.locals;
 const { id } = Astro.props;
@@ -58,7 +60,7 @@ const cheapestCoffees = coffees
           )}
         >
           <Icon type="chart" />
-          <span class="visually-hidden">{t.chart}</span>
+          <span class="visually-hidden"><T namespace="common.locales" key="chart">{t("chart")}</T></span>
         </Button>
       )
     }
@@ -66,7 +68,7 @@ const cheapestCoffees = coffees
   {
     (priciestCoffees.length && coffees.length > 9 && (
       <section>
-        <h2>{t.priciestCoffees}</h2>
+        <h2><T namespace="common.locales" key="priciestCoffees">{t("priciestCoffees")}</T></h2>
         <Coffees coffees={priciestCoffees} />
       </section>
     )) ||
@@ -75,7 +77,7 @@ const cheapestCoffees = coffees
   {
     (cheapestCoffees.length && coffees.length > 9 && (
       <section>
-        <h2>{t.cheapestCoffees}</h2>
+        <h2><T namespace="common.locales" key="cheapestCoffees">{t("cheapestCoffees")}</T></h2>
         <Coffees coffees={cheapestCoffees} />
       </section>
     )) ||
@@ -84,7 +86,7 @@ const cheapestCoffees = coffees
   {
     (coffees.length && (
       <section>
-        <h2>{t.allCoffees}</h2>
+        <h2><T namespace="common.locales" key="allCoffees">{t("allCoffees")}</T></h2>
         <Coffees coffees={coffees} />
       </section>
     )) ||

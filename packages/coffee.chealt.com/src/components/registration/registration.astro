@@ -7,43 +7,46 @@ import Form from "../form/form.astro";
 import Input from "../form/input/input.astro";
 import Label from "../form/label/label.astro";
 
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
+
 import "./registration.css";
 
-import allLocaleTranslations from "./locales.json" with { type: "json" };
-
-const t =
-  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
+const t = await getTranslator({
+  filePath: "registration",
+  locale: Astro.currentLocale,
+});
 
 const { username } = Astro.props;
 ---
 
 <Common>
-  <h1>{t.title}</h1>
+  <h1><T namespace="registration.locales" key="title">{t("title")}</T></h1>
   <chealt-auth
     data-registration-options={Astro.locals.registrationOptions}
     data-verify-endpoint="/api/authentication/registration/verify.json"
     data-redirect-url="/"
-    data-not-supported-message={t.notSupportedBrowser}
+    data-not-supported-message={t("notSupportedBrowser")}
   >
-    <div data-registration-success class="hidden">{t.registrationSuccess}</div>
+    <div data-registration-success class="hidden"><T namespace="registration.locales" key="registrationSuccess">{t("registrationSuccess")}</T></div>
     <div data-registration-error class="error hidden">
-      <div class="error-message">{t.registrationError}</div>
+      <div class="error-message"><T namespace="registration.locales" key="registrationError">{t("registrationError")}</T></div>
     </div>
     <div
       data-registration-error-authenticator-previously-registered
       class="error hidden"
     >
       <div class="error-message">
-        {t.registrationErrorAuthenticatorPreviouslyRegistered}
+        <T namespace="registration.locales" key="registrationErrorAuthenticatorPreviouslyRegistered">{t("registrationErrorAuthenticatorPreviouslyRegistered")}</T>
       </div>
       <Button href={getRelativeLocaleUrl(Astro.currentLocale, "/login")}
-        >{t.login}</Button
+        ><T namespace="registration.locales" key="login">{t("login")}</T></Button
       >
     </div>
     <Form method="post">
       <section>
         <Label>
-          {t.username}
+          {t("username")}
           <Input
             type="text"
             name="username"
@@ -55,7 +58,7 @@ const { username } = Astro.props;
         </Label>
       </section>
       <section>
-        <Button type="submit" class="primary">{t.register}</Button>
+        <Button type="submit" class="primary"><T namespace="registration.locales" key="register">{t("register")}</T></Button>
       </section>
     </Form>
   </chealt-auth>

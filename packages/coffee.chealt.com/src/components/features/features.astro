@@ -1,19 +1,22 @@
 ---
-import allLocaleTranslations from "./locales.json" with { type: "json" };
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
 
-const t =
-  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
+const t = await getTranslator({
+  filePath: "features",
+  locale: Astro.currentLocale,
+});
 ---
 
-<h2>{t.title}</h2>
+<h2><T namespace="features.locales" key="title">{t("title")}</T></h2>
 <section class="card">
   <div class="columns">
     <div class="sixty">
       <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">
-        {t.settingsTitle}
+        <T namespace="features.locales" key="settingsTitle">{t("settingsTitle")}</T>
       </h2>
       <p>
-        <Fragment set:html={t.settingsDescription} />
+        <Fragment set:html={t("settingsDescription")} />
       </p>
     </div>
     <div class="forty">
@@ -28,10 +31,10 @@ const t =
     </div>
     <div class="sixty">
       <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">
-        {t.collectionsTitle}
+        <T namespace="features.locales" key="collectionsTitle">{t("collectionsTitle")}</T>
       </h2>
       <p>
-        <Fragment set:html={t.collectionsDescription} />
+        <Fragment set:html={t("collectionsDescription")} />
       </p>
     </div>
   </div>
@@ -40,10 +43,10 @@ const t =
   <div class="columns">
     <div class="sixty">
       <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">
-        {t.detailsTitle}
+        <T namespace="features.locales" key="detailsTitle">{t("detailsTitle")}</T>
       </h2>
       <p>
-        <Fragment set:html={t.detailsDescription} />
+        <Fragment set:html={t("detailsDescription")} />
       </p>
     </div>
     <div class="forty">
@@ -58,10 +61,10 @@ const t =
     </div>
     <div class="sixty">
       <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">
-        {t.recommendationsTitle}
+        <T namespace="features.locales" key="recommendationsTitle">{t("recommendationsTitle")}</T>
       </h2>
       <p>
-        <Fragment set:html={t.recommendationsDescription} />
+        <Fragment set:html={t("recommendationsDescription")} />
       </p>
     </div>
   </div>
@@ -70,10 +73,10 @@ const t =
   <div class="columns">
     <div class="sixty">
       <h2 style="margin: 0; font-size: 20px; margin-bottom: 10px;">
-        {t.newCoffeesTitle}
+        <T namespace="features.locales" key="newCoffeesTitle">{t("newCoffeesTitle")}</T>
       </h2>
       <p>
-        <Fragment set:html={t.newCoffeesDescription} />
+        <Fragment set:html={t("newCoffeesDescription")} />
       </p>
     </div>
     <div class="forty">

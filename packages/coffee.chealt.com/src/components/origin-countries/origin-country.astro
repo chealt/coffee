@@ -16,14 +16,17 @@ import Icon from "../icon/icon.astro";
 import { capitalize, encodeSafeURL } from "../../utils/string.js";
 import { getSafeUrl } from "../utils/url.js";
 
-import allLocaleTranslationsCommon from "../common/locales.json" with { type: "json" };
-import allLocaleTranslations from "./locales.json" with { type: "json" };
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
 
-const t =
-  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
-const tc =
-  allLocaleTranslationsCommon[Astro.currentLocale] ||
-  allLocaleTranslationsCommon["en"];
+const t = await getTranslator({
+  filePath: "origin-countries",
+  locale: Astro.currentLocale,
+});
+const tc = await getTranslator({
+  filePath: "common",
+  locale: Astro.currentLocale,
+});
 
 const { loggedInUser } = Astro.locals;
 const { id, brewingMethodId, countryId } = Astro.props;
@@ -95,7 +98,7 @@ if (!brewingMethod?.name && !country?.name) {
 }
 ---
 
-<Common title={`${t.title} ${capitalize(name)}`}>
+<Common title={`${t("title")} ${capitalize(name)}`}>
   <h1 class="title">
     <div>
       <span data-dialog-id="origin-country">{name}</span>
@@ -131,7 +134,7 @@ if (!brewingMethod?.name && !country?.name) {
       loggedInUser && (
         <Button class="ghost small" href={statsLink}>
           <Icon type="chart" />
-          <span class="visually-hidden">{tc.chart}</span>
+          <span class="visually-hidden"><T namespace="common.locales" key="chart">{tc("chart")}</T></span>
         </Button>
       )
     }
@@ -139,7 +142,7 @@ if (!brewingMethod?.name && !country?.name) {
   {
     (priciestCoffees.length && (
       <section>
-        <h2>{tc.priciestCoffees}</h2>
+        <h2><T namespace="common.locales" key="priciestCoffees">{tc("priciestCoffees")}</T></h2>
         <Coffees coffees={priciestCoffees} />
       </section>
     )) ||
@@ -148,7 +151,7 @@ if (!brewingMethod?.name && !country?.name) {
   {
     (cheapestCoffees.length && (
       <section>
-        <h2>{tc.cheapestCoffees}</h2>
+        <h2><T namespace="common.locales" key="cheapestCoffees">{tc("cheapestCoffees")}</T></h2>
         <Coffees coffees={cheapestCoffees} />
       </section>
     )) ||
@@ -157,7 +160,7 @@ if (!brewingMethod?.name && !country?.name) {
   {
     (coffees.length && (
       <section>
-        <h2>{tc.allCoffees}</h2>
+        <h2><T namespace="common.locales" key="allCoffees">{tc("allCoffees")}</T></h2>
         <Coffees coffees={coffees} />
       </section>
     )) ||

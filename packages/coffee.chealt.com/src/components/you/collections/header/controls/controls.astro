@@ -6,12 +6,15 @@ import CoffeeImageUpload from "../../../../common/coffee-image-upload.astro";
 import Dialog from "../../../../dialog/dialog.astro";
 import Icon from "../../../../icon/icon.astro";
 
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
+
 import "./controls.css";
 
-import allLocaleTranslations from "./locales.json" with { type: "json" };
-
-const t =
-  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
+const t = await getTranslator({
+  filePath: "you/collections/header/controls",
+  locale: Astro.currentLocale,
+});
 
 const { collectionId, isBuiltIn, isFirst, isLast } = Astro.props;
 ---
@@ -21,7 +24,7 @@ const { collectionId, isBuiltIn, isFirst, isLast } = Astro.props;
     <Button
       class="triggerButton ghost small"
       href={getRelativeLocaleUrl(Astro.currentLocale, "/you/collections")}
-      aria-label={t.add}
+      aria-label={t("add")}
     >
       <Icon type="add" />
     </Button>
@@ -39,7 +42,7 @@ const { collectionId, isBuiltIn, isFirst, isLast } = Astro.props;
           !isFirst && (
             <Button class="ghost column" data-move-up-trigger>
               <Icon type="arrow-up" />
-              {t.moveUp}
+              <T namespace="you.collections.header.controls.locales" key="moveUp">{t("moveUp")}</T>
             </Button>
           )
         }
@@ -49,7 +52,7 @@ const { collectionId, isBuiltIn, isFirst, isLast } = Astro.props;
           !isLast && (
             <Button class="ghost column" data-move-down-trigger>
               <Icon type="arrow-down" />
-              {t.moveDown}
+              <T namespace="you.collections.header.controls.locales" key="moveDown">{t("moveDown")}</T>
             </Button>
           )
         }
@@ -57,7 +60,7 @@ const { collectionId, isBuiltIn, isFirst, isLast } = Astro.props;
       <li>
         <Button class="ghost column" disabled={isBuiltIn} data-rename-trigger>
           <Icon type="edit" />
-          {t.rename}
+          <T namespace="you.collections.header.controls.locales" key="rename">{t("rename")}</T>
         </Button>
       </li>
       <li>
@@ -67,7 +70,7 @@ const { collectionId, isBuiltIn, isFirst, isLast } = Astro.props;
           for={collectionId}
         >
           <Icon type="delete" />
-          {t.delete}
+          <T namespace="you.collections.header.controls.locales" key="delete">{t("delete")}</T>
         </Button>
       </li>
     </ul>

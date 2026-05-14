@@ -14,6 +14,8 @@ import tasteNotes from "@data/tasteNotes.json" with { type: "json" };
 import tasteNoteGroups from "@data/tasteNoteGroups.json" with { type: "json" };
 import varieties from "@data/varieties.json" with { type: "json" };
 
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
 import Button from "../form/button/button.astro";
 import Icon from "../icon/icon.astro";
 import Common from "../common/common.astro";
@@ -27,10 +29,10 @@ import { getSafeUrl } from "../utils/url";
 
 import "../stats/stats.css";
 
-import allLocaleTranslations from "../common/locales.json" with { type: "json" };
-
-const t =
-  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
+const t = await getTranslator({
+  filePath: "common",
+  locale: Astro.currentLocale,
+});
 
 const { currency, loggedInUser, shouldAuthenticate } = Astro.locals;
 const {
@@ -265,13 +267,13 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce(
           })}
         >
           <Icon type="back" />
-          <span class="visually-hidden">{t.back}</span>
+          <span class="visually-hidden"><T namespace="common.locales" key="back">{t("back")}</T></span>
         </Button>
       )
     }
   </h1>
   <section>
-    <h2>{t.prices}</h2>
+    <h2><T namespace="common.locales" key="prices">{t("prices")}</T></h2>
     <div class="card">
       <coffee-stats>
         <div class="stats">
@@ -319,7 +321,7 @@ const maxTasteNoteGroupCount = tasteNoteGroupsLocale.reduce(
     </div>
   </section>
   <section>
-    <h2>{t.tasteNotes}</h2>
+    <h2><T namespace="common.locales" key="tasteNotes">{t("tasteNotes")}</T></h2>
     <div class="card">
       <coffee-stats>
         <div class="stats">

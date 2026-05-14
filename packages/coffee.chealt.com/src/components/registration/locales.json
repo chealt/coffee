@@ -8,15 +8,11 @@
     "registrationError": "Registration failed",
     "registrationErrorAuthenticatorPreviouslyRegistered": "Authenticator previously registered.",
     "login": "Click here to login",
-    "error": {
-      "title": "Registration error",
-      "message": {
-        "JsonWebTokenError": "Invalid registration code",
-        "TokenExpiredError": "Registration code expired",
-        "NotBeforeError": "Registration failed",
-        "default": "Registration failed"
-      }
-    },
+    "error.title": "Registration error",
+    "error.message.JsonWebTokenError": "Invalid registration code",
+    "error.message.TokenExpiredError": "Registration code expired",
+    "error.message.NotBeforeError": "Registration failed",
+    "error.message.default": "Registration failed",
     "notSupportedBrowser": "Your browser is not supported, if you opened this page from your email client, please open it from your default browser.",
     "emailAlreadyExists": "Email already exists",
     "rateLimitExceeded": "You tried to send a new registration code too many times. Please try again later.",
@@ -32,15 +28,11 @@
     "registrationError": "Rejestracja nie powiodła się",
     "registrationErrorAuthenticatorPreviouslyRegistered": "Uwierzytelnienie już zarejestrowane.",
     "login": "Kliknij tutaj, aby zalogować się",
-    "error": {
-      "title": "Błąd rejestracji",
-      "message": {
-        "JsonWebTokenError": "Nieprawidłowy kod rejestracji",
-        "TokenExpiredError": "Kod rejestracji wygasł",
-        "NotBeforeError": "Rejestracja nie powiodła się",
-        "default": "Rejestracja nie powiodła się"
-      }
-    },
+    "error.title": "Błąd rejestracji",
+    "error.message.JsonWebTokenError": "Nieprawidłowy kod rejestracji",
+    "error.message.TokenExpiredError": "Kod rejestracji wygasł",
+    "error.message.NotBeforeError": "Rejestracja nie powiodła się",
+    "error.message.default": "Rejestracja nie powiodła się",
     "notSupportedBrowser": "Twoja przeglądarka nie jest obsługiwana. Jeżeli otworzyłeś tę stronę za pomocą swojego klienta poczty e-mail, otwórz ją w domyślnej przeglądarce.",
     "emailAlreadyExists": "Adres email już istnieje",
     "rateLimitExceeded": "Zbyt wiele prób wysłania nowego kodu rejestracji. Proszę spróbować później.",

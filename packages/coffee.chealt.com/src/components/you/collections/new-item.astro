@@ -5,12 +5,15 @@ import Button from "../../form/button/button.astro";
 import CoffeeImageUpload from "../../common/coffee-image-upload.astro";
 import Icon from "../../icon/icon.astro";
 
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
+
 import "./new-item.css";
 
-import allLocaleTranslations from "./locales.json" with { type: "json" };
-
-const t =
-  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
+const t = await getTranslator({
+  filePath: "you/collections",
+  locale: Astro.currentLocale,
+});
 
 const { collectionId } = Astro.props;
 ---
@@ -22,7 +25,7 @@ const { collectionId } = Astro.props;
       href={getRelativeLocaleUrl(Astro.currentLocale, "/you/collections")}
     >
       <Icon type="add" />
-      {t.add}
+      <T namespace="you.collections.locales" key="add">{t("add")}</T>
     </Button>
   </CoffeeImageUpload>
 </li>

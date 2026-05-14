@@ -1,13 +1,16 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
 
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
+
 import "./taste-note-groups.css";
 import { encodeSafeURL } from "../../../utils/string.js";
-import allLocaleCommonTranslations from "../../common/locales.json" with { type: "json" };
 
-const tc =
-  allLocaleCommonTranslations[Astro.currentLocale] ||
-  allLocaleCommonTranslations["en"];
+const tc = await getTranslator({
+  filePath: "common",
+  locale: Astro.currentLocale,
+});
 
 const { groups } = Astro.props;
 ---
@@ -34,7 +37,7 @@ const { groups } = Astro.props;
               class="tag primary left hidden"
               data-recommendation-key={`tasteNoteGroups-${id}`}
             >
-              {tc.recommended}
+              <T namespace="common.locales" key="recommended">{tc("recommended")}</T>
             </span>
           </a>
         </li>

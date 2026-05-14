@@ -12,14 +12,17 @@ import Roasters from "./roasters/roasters.astro";
 import TasteNoteGroups from "./taste-note-groups/taste-note-groups.astro";
 import Wheel from "../taste-notes/taste-note-groups/wheel.astro";
 
-import allLocaleTranslations from "./locales.json" with { type: "json" };
-import allLocaleCommonTranslations from "../common/locales.json" with { type: "json" };
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
 
-const t =
-  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
-const tc =
-  allLocaleCommonTranslations[Astro.currentLocale] ||
-  allLocaleCommonTranslations["en"];
+const t = await getTranslator({
+  filePath: "home",
+  locale: Astro.currentLocale,
+});
+const tc = await getTranslator({
+  filePath: "common",
+  locale: Astro.currentLocale,
+});
 
 const groups = tasteNoteGroups.filter(
   ({ language_code }) => language_code === Astro.currentLocale,
@@ -40,12 +43,12 @@ const recommended = recommendationsData[recommendedKey] || {};
 
 <Common>
   <Header>
-    <h1>{t.title}<sup>beta</sup></h1>
+    <h1>{t("title")}<sup>beta</sup></h1>
   </Header>
   {
     recommended.coffees && (
       <section>
-        <h2>{tc.recommended}</h2>
+        <h2><T namespace="common.locales" key="recommended">{tc("recommended")}</T></h2>
         <Coffees coffees={recommended.coffees} isRecommendedList />
       </section>
     )
@@ -53,7 +56,7 @@ const recommended = recommendationsData[recommendedKey] || {};
   {
     (priciestCoffees.length && (
       <section>
-        <h2>{t.priciestCoffees}</h2>
+        <h2><T namespace="home.locales" key="priciestCoffees">{t("priciestCoffees")}</T></h2>
         <Coffees coffees={priciestCoffees} />
       </section>
     )) ||
@@ -62,35 +65,35 @@ const recommended = recommendationsData[recommendedKey] || {};
   {
     (cheapestCoffees.length && (
       <section>
-        <h2>{t.cheapestCoffees}</h2>
+        <h2><T namespace="home.locales" key="cheapestCoffees">{t("cheapestCoffees")}</T></h2>
         <Coffees coffees={cheapestCoffees} />
       </section>
     )) ||
       null
   }
   <section>
-    <h2>{t.roasters}</h2>
+    <h2><T namespace="home.locales" key="roasters">{t("roasters")}</T></h2>
     <Roasters />
   </section>
   <section>
-    <h2>{t.originCountries}</h2>
+    <h2><T namespace="home.locales" key="originCountries">{t("originCountries")}</T></h2>
     <OriginCountries />
   </section>
   <section>
-    <h2>{t.countries}</h2>
+    <h2><T namespace="home.locales" key="countries">{t("countries")}</T></h2>
     <Countries />
   </section>
   {
     (groups.length && (
       <section>
-        <h2>{t.tasteNoteGroups}</h2>
+        <h2><T namespace="home.locales" key="tasteNoteGroups">{t("tasteNoteGroups")}</T></h2>
         <TasteNoteGroups groups={groups} />
       </section>
     )) ||
       null
   }
   <section class="limit-width">
-    <h2>{t.tasteNotesWheel}</h2>
+    <h2><T namespace="home.locales" key="tasteNotesWheel">{t("tasteNotesWheel")}</T></h2>
     <Wheel />
   </section>
 </Common>

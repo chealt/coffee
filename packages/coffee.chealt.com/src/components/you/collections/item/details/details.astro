@@ -16,10 +16,13 @@ import TasteNotes from "./taste-notes.astro";
 import Varieties from "./varieties.astro";
 import Weight from "./weight.astro";
 
-import allLocaleTranslations from "./locales.json" with { type: "json" };
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
 
-const t =
-  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
+const t = await getTranslator({
+  filePath: "you/collections/item/details",
+  locale: Astro.currentLocale,
+});
 
 const {
   collectionItem: { id, details, extractedDetails },
@@ -27,7 +30,7 @@ const {
 ---
 
 <section>
-  <h1>{t.details}</h1>
+  <h1><T namespace="you.collections.item.details.locales" key="details">{t("details")}</T></h1>
   <Form
     name={`${id}.details`}
     data-storage="api"

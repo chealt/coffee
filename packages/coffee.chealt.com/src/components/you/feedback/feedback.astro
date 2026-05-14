@@ -7,10 +7,13 @@ import Label from "../../form/label/label.astro";
 import Form from "../../form/form.astro";
 import Textarea from "../../form/input/textarea.astro";
 
-import allLocaleTranslations from "./locales.json" with { type: "json" };
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
 
-const t =
-  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
+const t = await getTranslator({
+  filePath: "you/feedback",
+  locale: Astro.currentLocale,
+});
 
 const { shouldAuthenticate, feedback } = Astro.locals;
 ---
@@ -19,7 +22,7 @@ const { shouldAuthenticate, feedback } = Astro.locals;
   shouldAuthenticate={shouldAuthenticate}
   redirectUrl={getRelativeLocaleUrl(Astro.currentLocale, "/you/feedback")}
 >
-  <h1>{t.title}</h1>
+  <h1><T namespace="you.feedback.locales" key="title">{t("title")}</T></h1>
   <section>
     <Form
       name="feedback"
@@ -28,14 +31,14 @@ const { shouldAuthenticate, feedback } = Astro.locals;
       data-exclude-from-local-storage
     >
       <Label>
-        <div class="name">{t.liked}</div>
+        <div class="name"><T namespace="you.feedback.locales" key="liked">{t("liked")}</T></div>
         <Textarea name="liked" value={feedback?.liked} />
       </Label>
       <Label>
-        <div class="name">{t.disliked}</div>
+        <div class="name"><T namespace="you.feedback.locales" key="disliked">{t("disliked")}</T></div>
         <Textarea name="disliked" value={feedback?.disliked} />
       </Label>
-      <Button class="primary" type="submit">{t.submit}</Button>
+      <Button class="primary" type="submit"><T namespace="you.feedback.locales" key="submit">{t("submit")}</T></Button>
     </Form>
   </section>
 </Common>

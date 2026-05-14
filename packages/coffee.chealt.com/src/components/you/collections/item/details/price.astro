@@ -5,10 +5,13 @@ import Input from "../../../../form/input/input.astro";
 import Label from "../../../../form/label/label.astro";
 import Select from "../../../../form/select/select.astro";
 
-import allLocaleTranslations from "./locales.json" with { type: "json" };
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
 
-const t =
-  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
+const t = await getTranslator({
+  filePath: "you/collections/item/details",
+  locale: Astro.currentLocale,
+});
 
 const { price, selectedCurrency } = Astro.props;
 const { currency: profileCurrency } = Astro.locals;
@@ -18,7 +21,7 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
 
 <Label>
   <div class="name">
-    {t.price}
+    <T namespace="you.collections.item.details.locales" key="price">{t("price")}</T>
   </div>
   <div class="inputs">
     <Input name="price" type="number" value={price} />

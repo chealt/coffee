@@ -1,12 +1,15 @@
 ---
 import Checkbox from "../../../../form/checkbox/checkbox.astro";
 import Select from "../../../../form/select/select.astro";
-import allLocaleTranslations from "./locales.json" with { type: "json" };
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
 
-const t =
-  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
+const t = await getTranslator({
+  filePath: "you/collections/item/details",
+  locale: Astro.currentLocale,
+});
 
 const { checked } = Astro.props;
 ---
 
-<Checkbox name="isDecaf" checked={checked === "on"}>{t.decaf}</Checkbox>
+<Checkbox name="isDecaf" checked={checked === "on"}><T namespace="you.collections.item.details.locales" key="decaf">{t("decaf")}</T></Checkbox>

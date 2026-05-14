@@ -11,11 +11,14 @@ import Common from "../../common/common.astro";
 import Coffees from "../../coffees/list.astro";
 import Icon from "../../icon/icon.astro";
 
-import allLocaleTranslations from "../../common/locales.json" with { type: "json" };
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
 import { encodeSafeURL } from "../../../utils/string.js";
 
-const t =
-  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
+const t = await getTranslator({
+  filePath: "common",
+  locale: Astro.currentLocale,
+});
 
 const { loggedInUser } = Astro.locals;
 const { id } = Astro.props;
@@ -54,7 +57,7 @@ const coffeesWithTasteNoteGroup = coffees
           )}
         >
           <Icon type="chart" />
-          <span class="visually-hidden">{t.chart}</span>
+          <span class="visually-hidden"><T namespace="common.locales" key="chart">{t("chart")}</T></span>
         </Button>
       )
     }
@@ -63,7 +66,7 @@ const coffeesWithTasteNoteGroup = coffees
     {
       (coffeesWithTasteNoteGroup.length && (
         <Coffees coffees={coffeesWithTasteNoteGroup} />
-      )) || <p class="empty">{t.noCoffees}</p>
+      )) || <p class="empty"><T namespace="common.locales" key="noCoffees">{t("noCoffees")}</T></p>
     }
   </section>
 </Common>

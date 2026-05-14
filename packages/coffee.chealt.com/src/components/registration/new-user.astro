@@ -8,14 +8,17 @@ import Form from "../form/form.astro";
 import Input from "../form/input/input.astro";
 import Label from "../form/label/label.astro";
 
-import allLocaleTranslations from "./locales.json" with { type: "json" };
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
 
-const t =
-  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
+const t = await getTranslator({
+  filePath: "registration",
+  locale: Astro.currentLocale,
+});
 ---
 
-<Common title={t.title}>
-  <h1>{t.title}</h1>
+<Common title={t("title")}>
+  <h1><T namespace="registration.locales" key="title">{t("title")}</T></h1>
   <section>
     <Form
       name="new-user.json"
@@ -23,27 +26,27 @@ const t =
       data-save-endpoint="/api/authentication/registration"
     >
       <Label>
-        {t.email}
+        {t("email")}
         <Input name="email" type="email" required />
       </Label>
-      <Button class="primary" type="submit">{t.register}</Button>
+      <Button class="primary" type="submit"><T namespace="registration.locales" key="register">{t("register")}</T></Button>
       <p data-error-code="EMAIL_ALREADY_EXISTS" class="error hidden">
-        {t.emailAlreadyExists}
+        <T namespace="registration.locales" key="emailAlreadyExists">{t("emailAlreadyExists")}</T>
       </p>
       <p data-error-code="RATE_LIMIT_EXCEEDED" class="error hidden">
-        {t.rateLimitExceeded}
+        <T namespace="registration.locales" key="rateLimitExceeded">{t("rateLimitExceeded")}</T>
       </p>
       <p data-error-code="FAILED_TO_REGISTER" class="error hidden">
-        {t.failedToRegister}
+        <T namespace="registration.locales" key="failedToRegister">{t("failedToRegister")}</T>
       </p>
-      <p data-success class="success hidden">{t.success}</p>
+      <p data-success class="success hidden"><T namespace="registration.locales" key="success">{t("success")}</T></p>
     </Form>
   </section>
   <section>
     <Button
       class="bordered"
       href={getRelativeLocaleUrl(Astro.currentLocale, `/you/collections`)}
-      >{t.login}</Button
+      ><T namespace="registration.locales" key="login">{t("login")}</T></Button
     >
   </section>
   <section>

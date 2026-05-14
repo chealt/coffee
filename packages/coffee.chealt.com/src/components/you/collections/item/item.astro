@@ -9,12 +9,15 @@ import Icon from "../../../icon/icon.astro";
 import Images from "./images/images.astro";
 import Review from "./review/review.astro";
 
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
+
 import "./item.css";
 
-import allLocaleTranslations from "./locales.json" with { type: "json" };
-
-const t =
-  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
+const t = await getTranslator({
+  filePath: "you/collections/item",
+  locale: Astro.currentLocale,
+});
 
 const { collectionId, itemId } = Astro.props;
 
@@ -34,20 +37,20 @@ const { collectionItem, shouldAuthenticate } = Astro.locals;
     class="small bordered"
   >
     <Icon type="back" class="icon-only" />
-    <span class="visually-hidden">{t.back}</span>
+    <span class="visually-hidden"><T namespace="you.collections.item.locales" key="back">{t("back")}</T></span>
   </Button>
   <div
     id={collectionItem?.id}
     class="item-details"
     data-type="chealt-collection-item"
-    data-delete-confirm-message={t.deleteItemConfirmMessage}
+    data-delete-confirm-message={t("deleteItemConfirmMessage")}
   >
     <Images collectionId={collectionId} />
     <Controls collectionId={collectionId} />
     <Details />
     <Review />
     <section>
-      <h1>{t.dangerZone}</h1>
+      <h1><T namespace="you.collections.item.locales" key="dangerZone">{t("dangerZone")}</T></h1>
       <Button
         class="column danger"
         data-delete-trigger
@@ -59,7 +62,7 @@ const { collectionItem, shouldAuthenticate } = Astro.locals;
         data-dont-remove-element
       >
         <Icon type="delete" />
-        {t.delete}
+        <T namespace="you.collections.item.locales" key="delete">{t("delete")}</T>
       </Button>
     </section>
   </div>

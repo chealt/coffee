@@ -2,14 +2,16 @@
 import Button from "../button/button.astro";
 import Dialog from "../../dialog/dialog.astro";
 import Icon from "../../icon/icon.astro";
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
 import Input from "../input/input.astro";
 
 import "./select.css";
 
-import allLocaleTranslations from "../../common/locales.json" with { type: "json" };
-
-const t =
-  allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];
+const t = await getTranslator({
+  filePath: "common",
+  locale: Astro.currentLocale,
+});
 
 const {
   id,
@@ -36,11 +38,11 @@ const {
         role="combobox"
       >
         {(searchable && (
-          <div class="input-value">{selectedLabel || t.unknown}</div>
+          <div class="input-value">{selectedLabel || t("unknown")}</div>
         )) || (
           <Fragment>
             <Icon type="edit" />
-            {t.select}
+            <T namespace="common.locales" key="select">{t("select")}</T>
           </Fragment>
         )}
       </Button>
@@ -48,7 +50,7 @@ const {
         <chealt-filter
           data-filter-selector={`${multiple ? `li:has([name='${name}[]'])` : `li[name='${name}[]']`}`}
         >
-          <Input name={`${name}-filter`} placeholder={t.search} data-exclude />
+          <Input name={`${name}-filter`} placeholder={t("search")} data-exclude />
         </chealt-filter>
         <ul role="listbox">
           <slot />
@@ -57,7 +59,7 @@ const {
     </coffee-select>
   )) || (
     <select {...props} name={name || undefined}>
-      {showEmpty && <option value="">{t.unknown}</option>}
+      {showEmpty && <option value=""><T namespace="common.locales" key="unknown">{t("unknown")}</T></option>}
       <slot />
     </select>
   )
