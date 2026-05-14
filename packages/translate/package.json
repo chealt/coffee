@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
+    "countries": "node --env-file=.env src/countries.js",
     "origin-countries": "node --env-file=.env src/origin-countries.js"
   },
   "dependencies": {
