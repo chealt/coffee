@@ -510,3 +510,16 @@ Resources:
         Arn: !Ref RecordLambdaArn
         RoleArn: !GetAtt SchedulerExecutionRole.Arn
         Input: '{"roasterId": 318}'
+
+  MigaSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: MigaSchedule
+      FlexibleTimeWindow:
+        Mode: 'FLEXIBLE'
+        MaximumWindowInMinutes: !Ref FlexibilityWindow
+      ScheduleExpression: 'cron(0 6 ? * MON *)'
+      Target:
+        Arn: !Ref RecordLambdaArn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        Input: '{"roasterId": 13}'

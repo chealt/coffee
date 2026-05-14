@@ -114,6 +114,17 @@ const parsers = {
       )
     );
   },
+  // Miga
+  13: async ({ url }) => {
+    const { origin, pathname } = new URL(url);
+
+    const response = await fetch(`${origin}${pathname}products.json?limit=250`);
+    const { products } = await response.json();
+
+    return products
+      .filter(({ tags, handle }) => tags.includes('Kawy') && !handle.includes('zestaw') && handle !== 'test-roast')
+      .map(({ handle }) => `${origin}/products/${handle}`);
+  },
   // Typika
   14: ({ html, url }) => {
     const document = getDocument(html);

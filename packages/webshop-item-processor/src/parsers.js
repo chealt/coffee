@@ -1067,6 +1067,286 @@ const parsers = {
       weight
     };
   },
+  // Miga
+  13: ({ html, url, roasterId }) => {
+    logger.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const ldScripts = Array.from(document.querySelectorAll('script[type="application/ld+json"]'));
+    const productLd = ldScripts
+      .map((script) => {
+        try {
+          return JSON.parse(script.textContent);
+        } catch {
+          return null;
+        }
+      })
+      .find((data) => data?.['@type'] === 'Product');
+
+    if (!productLd) {
+      logger.error(`No product data found for ${url}`);
+
+      throw new Error(errors.detailsMissing);
+    }
+
+    const variantsMatch = html.match(/var variants = (\[[\s\S]*?\]);/u);
+
+    if (!variantsMatch) {
+      logger.error(`No variants found for ${url}`);
+
+      throw new Error(errors.detailsMissing);
+    }
+
+    const variants = JSON.parse(variantsMatch[1]);
+
+    const parseWeight = (text) => {
+      const match = (text || '').toLowerCase().match(/(\d+(?:[.,]\d+)?)\s*(kg|gr?)\b/u);
+
+      if (!match) {
+        return null;
+      }
+
+      const num = Number(match[1].replace(',', '.'));
+
+      return match[2].startsWith('k') ? num * 1000 : num;
+    };
+
+    const availableVariants = variants
+      .filter(({ available }) => available)
+      .map((variant) => ({
+        weight: parseWeight(variant.option1) || variant.weight,
+        price: variant.price / 100
+      }))
+      .filter(({ weight, price }) => weight && price)
+      .sort((a, b) => a.weight - b.weight);
+
+    if (!availableVariants.length) {
+      return { isOutOfStock: true };
+    }
+
+    const { weight, price: rawPrice } = availableVariants[0];
+    const price = Number(rawPrice.toFixed(2));
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const offers = Array.isArray(productLd.offers) ? productLd.offers : [productLd.offers].filter(Boolean);
+    const currency = offers[0]?.priceCurrency;
+
+    if (!currency) {
+      logger.error(`No currency found for ${url}`);
+
+      throw new Error(errors.currencyMissing);
+    }
+
+    const image = Array.isArray(productLd.image) ? productLd.image[0] : productLd.image;
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    const title = (productLd.name || '').toLowerCase();
+
+    const specs = {};
+    const specContainers = Array.from(
+      document.querySelectorAll('.accordion__content, .product__description')
+    );
+
+    const isLabelTag = (node) => node && (node.tagName === 'STRONG' || node.tagName === 'B');
+
+    specContainers.forEach((container) => {
+      Array.from(container.querySelectorAll('strong, b')).forEach((label) => {
+        const key = label.textContent.trim().toLowerCase().replace(/:$/u, '').trim();
+        let value = '';
+        let node = label.nextSibling;
+
+        while (node && !isLabelTag(node)) {
+          if (node.tagName === 'BR') {
+            break;
+          }
+          value += node.textContent || '';
+          node = node.nextSibling;
+        }
+
+        value = value.trim().toLowerCase().replace(/:$/u, '').trim();
+
+        if (key && value && !(key in specs)) {
+          specs[key] = value;
+        }
+      });
+    });
+
+    const composition = specs.skład;
+    const countryText = specs.kraj || specs['kraj pochodzenia'] || '';
+    const isMultiCountry =
+      composition || /,|%/u.test(countryText) || /\b\d+\s*%/u.test(countryText);
+
+    if (isMultiCountry) {
+      return { isBlend: true };
+    }
+
+    const sortedCountries = [...originCountries].sort((a, b) => b.name.length - a.name.length);
+    const findCountry = (text) =>
+      sortedCountries.find(({ name }) => text === name)?.origin_country_id ||
+      sortedCountries.find(({ name }) => text.includes(name))?.origin_country_id ||
+      null;
+    const originCountryId = findCountry(countryText) || findCountry(title);
+
+    if (!originCountryId) {
+      logger.info(`No origin country found for ${url}, skipping`);
+
+      return {};
+    }
+
+    const regionText = specs.region || '';
+    const sortedRegions = originRegions
+      .filter(({ origin_country_id: countryId }) => countryId === originCountryId) // eslint-disable-line camelcase
+      .sort((a, b) => b.name.length - a.name.length);
+    const originRegionId =
+      sortedRegions.find(({ name }) => regionText.includes(name.toLowerCase()))?.origin_region_id || null;
+
+    const farmText = specs.farma || specs.kooperatywa || specs.producent || '';
+    const sortedFarms = [...originFarms].sort((a, b) => (b.name?.length || 0) - (a.name?.length || 0));
+    const originFarmId =
+      sortedFarms.find(({ name }) => name && farmText.includes(name.toLowerCase()))?.id ||
+      sortedFarms.find(({ name }) => name && title.includes(name.toLowerCase()))?.id ||
+      null;
+
+    const processingText = (specs.obróbka || specs.obrobka || '').replace(/\([^)]*\)/gu, '').trim();
+    const sortedProcessingMethods = [...processingMethods].sort((a, b) => b.name.length - a.name.length);
+    const processingMethodId =
+      sortedProcessingMethods.find(({ name }) => name === processingText)?.processing_method_id ||
+      sortedProcessingMethods.find(({ name }) => processingText.includes(name))?.processing_method_id ||
+      null;
+
+    if (!processingMethodId && processingText) {
+      logger.info(`Missing processing method: ${processingText}`);
+    }
+
+    const descriptionText = (document.querySelector('.product__description')?.textContent || '')
+      .toLowerCase()
+      .replace(/\s+/gu, ' ');
+
+    const originCountryNames = new Set(
+      originCountries
+        .filter(({ origin_country_id: id }) => id === originCountryId) // eslint-disable-line camelcase
+        .map(({ name }) => name.toLowerCase())
+    );
+    const varietyText = specs.odmiana || '';
+    const varietyStrings = varietyText
+      .split(/[,/&]| i /u)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const varietyIds = Array.from(
+      new Set(
+        varieties
+          .filter(({ name, alias }) => {
+            const lcName = name.toLowerCase();
+            const lcAlias = alias?.toLowerCase();
+
+            if (originCountryNames.has(lcName) || (lcAlias && originCountryNames.has(lcAlias))) {
+              return false;
+            }
+
+            const matchesSpec = varietyStrings.some(
+              (s) => lcName === s || lcAlias === s || s.includes(lcName) || (lcAlias && s.includes(lcAlias))
+            );
+
+            if (matchesSpec) {
+              return true;
+            }
+
+            return (
+              new RegExp(`\\b${lcName}\\b`, 'u').test(`${title} ${descriptionText}`) ||
+              (lcAlias && new RegExp(`\\b${lcAlias}\\b`, 'u').test(`${title} ${descriptionText}`))
+            );
+          })
+          .map(({ id }) => id)
+      )
+    );
+
+    const roastProfile = (specs['profil palenia'] || '').replace(/\([^)]*\)/gu, '').trim();
+    const hasFilter = roastProfile.includes('filter');
+    const hasEspresso = roastProfile.includes('espresso');
+    let brewingMethodName = 'omni';
+
+    if (hasFilter && !hasEspresso) {
+      brewingMethodName = 'filter';
+    } else if (hasEspresso && !hasFilter) {
+      brewingMethodName = 'espresso';
+    }
+
+    const brewingMethodId =
+      brewingMethods.find(({ name }) => name === brewingMethodName)?.brewing_method_id || null;
+
+    const isDecaf = /decaf|no.?caf/iu.test(title) || /decaf|no.?caf/iu.test(url);
+
+    const tasteNotesText = specs['profil smakowy'] || '';
+    const tasteNoteStringsFromSpec = tasteNotesText
+      .split(/[,&]| i | oraz /u)
+      .map((s) => s.trim().replace(/\.$/u, ''))
+      .filter(Boolean);
+    const sortedTasteNotes = [...tasteNotes].sort((a, b) => b.name.length - a.name.length);
+    const matchesNote = (text, name) => {
+      const escaped = name.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+      // Match the canonical name OR the same stem with a different trailing Polish vowel/declension ending.
+      // Common Polish nouns/adjectives swap final 'a'/'y'/'e' or drop it (e.g. "żurawina" → "żurawiny").
+      const flexibleEnding = /[aey]$/u.test(name)
+        ? `${escaped.slice(0, -1)}(?:${name.slice(-1)}|[aieouyąęó]|ów|ami|ach)?`
+        : `${escaped}(?:[aieouyąęó]|ów|em|ami|ach)?`;
+
+      return new RegExp(`\\b${flexibleEnding}\\b`, 'u').test(text);
+    };
+    const tasteNoteIds = Array.from(
+      new Set(
+        sortedTasteNotes
+          .filter(({ name }) => {
+            const lcName = name.toLowerCase();
+
+            if (tasteNoteStringsFromSpec.some((s) => s === lcName || s.includes(lcName))) {
+              return true;
+            }
+
+            return matchesNote(descriptionText, lcName);
+          })
+          .reduce((acc, note) => {
+            // Prefer the most specific note (longest name) when one is a substring of another
+            if (!acc.some((existing) => existing.name.includes(note.name))) {
+              acc.push(note);
+            }
+
+            return acc;
+          }, [])
+          .map(({ taste_note_id: id }) => id)
+      )
+    );
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
+  },
   // Typika
   14: ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
