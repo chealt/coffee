@@ -21,6 +21,7 @@ const pathWithoutLocale = Astro.url.pathname.replace(
     <Button data-move>move</Button>
     <Form
       name="settings"
+      data-merge
       data-storage="api"
       data-save-endpoint="/api/storage/save-form-data"
       data-save-on-input

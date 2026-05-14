@@ -1,6 +1,6 @@
 import { getSessionUser } from '../../../../server/authentication/session.js';
 import { cookieNameCurrency, cookieNameLocale } from '../../../../server/config.js';
-import { insert } from '../../../../server/database/formData.js';
+import { getValue, insert } from '../../../../server/database/formData.js';
 import logger from '../../../../server/utils/logger.js';
 
 const POST = async (context) => {
@@ -16,8 +16,9 @@ const POST = async (context) => {
     return new Response(JSON.stringify({ error: 'Missing key!' }), { status: 400 });
   }
 
+  const searchParams = new URL(context.request.url).searchParams || {};
   const formData = await context.request.formData();
-  const data = {};
+  const data = searchParams.get('merge') ? await getValue({ user, key: context.params.key }) : {};
 
   formData.forEach((value, key) => {
     if (key.endsWith('[]')) {

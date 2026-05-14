@@ -152,7 +152,13 @@ const saveFormData =
         form.querySelectorAll(`[data-error-code]`)?.forEach((element) => element.classList.add('hidden'));
         form.querySelectorAll(`[data-success]`)?.forEach((element) => element.classList.add('hidden'));
 
-        const response = await fetch(`${saveEndpoint}/${form.name}`, {
+        let apiUrl = `${saveEndpoint}/${form.name}`;
+
+        if (form.dataset.merge) {
+          apiUrl += '?merge=true';
+        }
+
+        const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
