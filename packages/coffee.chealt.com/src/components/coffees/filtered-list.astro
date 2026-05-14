@@ -386,18 +386,13 @@ const statsLink = getSafeUrlWithStats({
             <Button
               href={`https://instagram.com/${roaster.instagram}`}
               target="_blank"
-              rel="noopener noreferrer"
             >
               <Icon type="instagram" />
               <span class="visually-hidden">{tc.instagram}</span>
             </Button>
           )}
           {roaster.website && (
-            <Button
-              href={roaster.website}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <Button href={roaster.website} target="_blank">
               <Icon type="home" />
               <span class="visually-hidden">{tc.website}</span>
             </Button>

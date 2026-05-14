@@ -50,11 +50,7 @@ const details =
   (noCoffeeFound && (
     <p style="color: var(--color-text--primary)">{t.noCoffeeFound}</p>
   )) || (
-    <a
-      href={details?.webshopItemLink}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
+    <a href={details?.webshopItemLink} target="_blank">
       <div class="image large">
         <img
           src={`https://centralbeans.com/images/600/${details?.images[0]}`}

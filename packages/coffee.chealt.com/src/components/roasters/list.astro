@@ -61,12 +61,7 @@ const { roasters } = Astro.props;
               </a>
               <div class="name">
                 {website && (
-                  <Button
-                    class="tight"
-                    href={website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <Button class="tight" href={website} target="_blank">
                     <Icon class="icon-only" type="home" />
                     <span class="visually-hidden">{tc.website}</span>
                   </Button>
@@ -77,7 +72,6 @@ const { roasters } = Astro.props;
                     class="tight"
                     href={`https://instagram.com/${instagram}`}
                     target="_blank"
-                    rel="noopener noreferrer"
                   >
                     <Icon class="icon-only" type="instagram" />
                     <span class="visually-hidden">{tc.instagram}</span>
