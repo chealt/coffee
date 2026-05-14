@@ -6,15 +6,15 @@ import supportedLanguages from "@data/supportedLanguages.json" with { type: "jso
 
 import T from "@components/i18n/t.astro";
 import { getTranslator } from "@components/i18n/t.js";
+import Button from "@components/form/button/button.astro";
+import Checkbox from "@components/form/checkbox/checkbox.astro";
+import Common from "@components/common/common.astro";
+import Form from "@components/form/form.astro";
+import Icon from "@components/icon/icon.astro";
+import Label from "@components/form/label/label.astro";
+import Logout from "@components/logout/logout.astro";
+import Select from "@components/form/select/select.astro";
 import { capitalize } from "../../../utils/string.js";
-import Button from "../../form/button/button.astro";
-import Checkbox from "../../form/checkbox/checkbox.astro";
-import Common from "../../common/common.astro";
-import Form from "../../form/form.astro";
-import Icon from "../../icon/icon.astro";
-import Label from "../../form/label/label.astro";
-import Logout from "../../logout/logout.astro";
-import Select from "../../form/select/select.astro";
 
 const t = await getTranslator({
   filePath: "you/profile",
