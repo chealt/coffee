@@ -27,7 +27,7 @@ import { getSafeUrl } from "../utils/url";
 
 import "../stats/stats.css";
 
-import allLocaleTranslations from "../common/common.json" with { type: "json" };
+import allLocaleTranslations from "../common/locales.json" with { type: "json" };
 
 const t =
   allLocaleTranslations[Astro.currentLocale] || allLocaleTranslations["en"];

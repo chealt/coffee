@@ -3,7 +3,7 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 
 import "./taste-note-groups.css";
 import { encodeSafeURL } from "../../../utils/string.js";
-import allLocaleCommonTranslations from "../../common/common.json" with { type: "json" };
+import allLocaleCommonTranslations from "../../common/locales.json" with { type: "json" };
 
 const tc =
   allLocaleCommonTranslations[Astro.currentLocale] ||
