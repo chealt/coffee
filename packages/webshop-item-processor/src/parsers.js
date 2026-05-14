@@ -1156,9 +1156,7 @@ const parsers = {
     const title = (productLd.name || '').toLowerCase();
 
     const specs = {};
-    const specContainers = Array.from(
-      document.querySelectorAll('.accordion__content, .product__description')
-    );
+    const specContainers = Array.from(document.querySelectorAll('.accordion__content, .product__description'));
 
     const isLabelTag = (node) => node && (node.tagName === 'STRONG' || node.tagName === 'B');
 
@@ -1186,8 +1184,7 @@ const parsers = {
 
     const composition = specs.skład;
     const countryText = specs.kraj || specs['kraj pochodzenia'] || '';
-    const isMultiCountry =
-      composition || /,|%/u.test(countryText) || /\b\d+\s*%/u.test(countryText);
+    const isMultiCountry = composition || /,|%/u.test(countryText) || /\b\d+\s*%/u.test(countryText);
 
     if (isMultiCountry) {
       return { isBlend: true };
@@ -1284,8 +1281,7 @@ const parsers = {
       brewingMethodName = 'espresso';
     }
 
-    const brewingMethodId =
-      brewingMethods.find(({ name }) => name === brewingMethodName)?.brewing_method_id || null;
+    const brewingMethodId = brewingMethods.find(({ name }) => name === brewingMethodName)?.brewing_method_id || null;
 
     const isDecaf = /decaf|no.?caf/iu.test(title) || /decaf|no.?caf/iu.test(url);
 
