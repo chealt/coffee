@@ -42,5 +42,8 @@
     "unknown": "nieznany",
     "website": "Strona internetowa",
     "instagram": "Instagram"
+  },
+  "hu": {
+    "recommended": "csak neked"
   }
 }

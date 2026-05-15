@@ -29,6 +29,7 @@
     "isTranslating": "Fordítás",
     "newCoffee": "új kávék",
     "sendRegistrationCode": "új regisztrációs kód küldése",
-    "rateLimitExceeded": "Túl sokszor próbáltál új regisztrációs kódot küldeni. Kérjük, próbáld újra később."
+    "rateLimitExceeded": "Túl sokszor próbáltál új regisztrációs kódot küldeni. Kérjük, próbáld újra később.",
+    "logout": "kijelentkezés"
   }
 }

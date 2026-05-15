@@ -18,5 +18,13 @@
     "tasteNoteGroups": "Smak",
     "tasteNotesWheel": "Wybierz losowo",
     "title": "Central Beans"
+  },
+  "hu": {
+    "priciestCoffees": "Puccos",
+    "cheapestCoffees": "Olcsó",
+    "roasters": "Pörkölök",
+    "originCountries": "Származás",
+    "countries": "Országok",
+    "tasteNotesWheel": "szerencsés napom van"
   }
 }

@@ -48,5 +48,12 @@
     "variety": "Odmiana",
     "webshopLinkName": "Link do sklepu",
     "weight": "Waga"
+  },
+  "hu": {
+    "weight": "Tömeg",
+    "price": "Ár",
+    "roaster": "Pörkölö",
+    "originCountry": "Ország",
+    "tasteNotes": "Ízjegyek"
   }
 }
