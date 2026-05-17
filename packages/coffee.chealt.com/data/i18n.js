@@ -1,4 +1,5 @@
 /* oxlint-disable no-console */
+import os from 'os';
 import { createClient } from '@libsql/client';
 
 import { readFile, writeFile } from 'node:fs/promises';
@@ -22,7 +23,7 @@ const save = async () => {
 
     newContent[locale][key] = value;
 
-    await writeFile(path, JSON.stringify(newContent, '', 2), { flag: 'w+' });
+    await writeFile(path, JSON.stringify(`${newContent}${os.EOL}`, '', 2), { flag: 'w+' });
   }
 };
 
