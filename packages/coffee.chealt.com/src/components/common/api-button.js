@@ -2,7 +2,6 @@ import logger from '../errors/utils.js';
 
 class APIButton extends HTMLElement {
   connectedCallback() {
-    this.usernameField = this.closest('form')?.querySelector('input[name="username"]');
     this.trigger = this.querySelector('button');
     this.apiEndpoint = this.dataset.apiEndpoint;
 
@@ -21,6 +20,13 @@ class APIButton extends HTMLElement {
     event.preventDefault();
 
     const form = this.closest('form');
+    const valuesToSend = this.dataset.inputsToSend?.split(',').reduce(
+      (values, inputName) => ({
+        ...values,
+        [inputName]: form.querySelector(`[name="${inputName}"]`).value
+      }),
+      {}
+    );
 
     form?.querySelectorAll('[data-error-code]').forEach((element) => element.classList.add('hidden'));
     this.trigger.disabled = true;
@@ -28,8 +34,8 @@ class APIButton extends HTMLElement {
 
     try {
       const response = await fetch(this.apiEndpoint, {
-        method: 'POST',
-        body: this.usernameField ? JSON.stringify({ username: this.usernameField.value }) : undefined
+        method: valuesToSend ? 'POST' : 'GET',
+        body: valuesToSend ? JSON.stringify(valuesToSend) : undefined
       });
       const responseJSON = await response.json();
 
@@ -44,6 +50,10 @@ class APIButton extends HTMLElement {
 
     this.trigger.classList.remove('in-progress');
     this.trigger.disabled = false;
+
+    if (this.dataset?.shouldRefresh) {
+      window.location.reload();
+    }
   }
 }
 

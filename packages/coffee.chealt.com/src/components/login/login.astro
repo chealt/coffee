@@ -7,6 +7,7 @@ import Icon from "../icon/icon.astro";
 import Input from "../form/input/input.astro";
 import Label from "../form/label/label.astro";
 
+import APIButton from "@components/common/api-button.astro";
 import T from "@components/i18n/t.astro";
 import { getTranslator } from "@components/i18n/t.js";
 
@@ -43,33 +44,47 @@ const { username, redirectUrl } = Astro.props;
           />
         </Label>
         <p data-error-code="API_CALL_FAILED" class="error hidden">
-          <T namespace="login.locales" key="apiCallFailed">{t("apiCallFailed")}</T>
+          <T namespace="login.locales" key="apiCallFailed"
+            >{t("apiCallFailed")}</T
+          >
         </p>
         <p data-error-code="USER_NOT_FOUND" class="error hidden">
-          <T namespace="login.locales" key="userNotFound">{t("userNotFound")}</T>
+          <T namespace="login.locales" key="userNotFound">{t("userNotFound")}</T
+          >
         </p>
         <p
           data-error-code="CANNOT_GET_AUTHENTICATION_OPTIONS"
           class="error hidden"
         >
-          <T namespace="login.locales" key="cannotGetAuthenticationOptions">{t("cannotGetAuthenticationOptions")}</T>
+          <T namespace="login.locales" key="cannotGetAuthenticationOptions"
+            >{t("cannotGetAuthenticationOptions")}</T
+          >
         </p>
         <p data-error-code="RATE_LIMIT_EXCEEDED" class="error hidden">
-          <T namespace="login.locales" key="rateLimitExceeded">{t("rateLimitExceeded")}</T>
+          <T namespace="login.locales" key="rateLimitExceeded"
+            >{t("rateLimitExceeded")}</T
+          >
         </p>
       </section>
       <section>
-        <coffee-api-button
-          data-api-endpoint="/api/authentication/registration/send-new-code.json"
+        <APIButton
+          inputsToSend="username"
+          apiEndpoint="/api/authentication/registration/send-new-code.json"
         >
           <Button class="bordered column">
-            <span><T namespace="login.locales" key="sendRegistrationCode">{t("sendRegistrationCode")}</T></span>
+            <span
+              ><T namespace="login.locales" key="sendRegistrationCode"
+                >{t("sendRegistrationCode")}</T
+              ></span
+            >
             <Icon type="email" />
           </Button>
-        </coffee-api-button>
+        </APIButton>
       </section>
       <section>
-        <Button class="primary" type="submit"><T namespace="login.locales" key="login">{t("login")}</T></Button>
+        <Button class="primary" type="submit"
+          ><T namespace="login.locales" key="login">{t("login")}</T></Button
+        >
       </section>
     </Form>
   </chealt-auth-login>
@@ -84,4 +99,3 @@ const { username, redirectUrl } = Astro.props;
 </div>
 
 <script src="../chealt-auth-login.js"></script>
-<script src="../common/api-button.js"></script>

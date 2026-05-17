@@ -4,6 +4,7 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import exchangeRates from "@data/exchangeRates.json" with { type: "json" };
 import supportedLanguages from "@data/supportedLanguages.json" with { type: "json" };
 
+import APIButton from "@components/common/api-button.astro";
 import T from "@components/i18n/t.astro";
 import { getTranslator } from "@components/i18n/t.js";
 import Button from "@components/form/button/button.astro";
@@ -112,8 +113,8 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
           </T>
         </Checkbox>
       </fieldset>
-      <coffee-api-button
-        data-api-endpoint="/api/authentication/registration/send-new-code.json?profile"
+      <APIButton
+        apiEndpoint="/api/authentication/registration/send-new-code.json?profile"
       >
         <Button class="bordered column">
           <span>
@@ -123,7 +124,7 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
           </span>
           <Icon type="email" />
         </Button>
-      </coffee-api-button>
+      </APIButton>
     </Form>
   </section>
   <section>
@@ -139,5 +140,3 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
     </Logout>
   </section>
 </Common>
-
-<script src="../../common/api-button.js"></script>

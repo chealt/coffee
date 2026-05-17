@@ -1,0 +1,13 @@
+---
+const { inputsToSend, apiEndpoint, shouldRefresh } = Astro.props;
+---
+
+<coffee-api-button
+  data-inputs-to-send={inputsToSend}
+  data-api-endpoint={apiEndpoint}
+  data-should-refresh={shouldRefresh}
+>
+  <slot />
+</coffee-api-button>
+
+<script src="./api-button.js"></script>

@@ -1,4 +1,5 @@
 ---
+import APIButton from "@components/common/api-button.astro";
 import Button from "@components/form/button/button.astro";
 import Form from "@components/form/form.astro";
 import Select from "@components/form/select/select.astro";
@@ -35,6 +36,9 @@ const pathWithoutLocale = Astro.url.pathname.replace(
         }
       </Select>
     </Form>
+    <APIButton apiEndpoint="/api/i18n/stop.json" shouldRefresh>
+      <Button>stop</Button>
+    </APIButton>
   </div>
   <div class="handler"></div>
 </chealt-banner>

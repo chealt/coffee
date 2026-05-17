@@ -3,46 +3,68 @@ import { getSessionUser } from '../../../../server/authentication/session.js';
 import { getUserByUsernameOrEmail, getUser } from '../../../../server/database/user.js';
 import logger from '../../../../server/utils/logger.js';
 
-const POST = async (context) => {
-  const isProfile = context.request.url.includes('?profile');
+const errorCodes = {
+  userNotFound: 'USER_NOT_FOUND',
+  rateLimit: 'RATE_LIMIT_EXCEEDED'
+};
 
+const sendCode = ({ username, email }) => invoke({ name: 'sendRegistrationCode', payload: { username, email } });
+
+const checkRateLimit = async ({ context, email }) => {
+  const { success } = await context.locals.runtime.env.REGISTRATION_CODE_RATE_LIMITER.limit({
+    key: `send-new-registration-code-${email}`
+  });
+
+  if (!success) {
+    return new Response(JSON.stringify({ errorCode: errorCodes.rateLimit }), { status: 429 });
+  }
+};
+
+const GET = async (context) => {
   try {
-    let email;
-    let username;
+    const user = getSessionUser(context);
 
-    if (isProfile) {
-      const user = getSessionUser(context);
-
-      username = user.username;
-      email = (await getUser(username)).email;
-    } else {
-      const requestJSON = await context.request.json();
-
-      const user = await getUserByUsernameOrEmail(requestJSON.username);
-      email = user.email;
-      username = user.username;
-    }
+    const username = user.username;
+    const email = (await getUser(username)).email;
 
     if (!username || !email) {
-      return new Response(JSON.stringify({ errorCode: 'USER_NOT_FOUND' }), { status: 401 });
+      return new Response(JSON.stringify({ errorCode: errorCodes.userNotFound }), { status: 401 });
     }
 
-    const { success } = await context.locals.runtime.env.REGISTRATION_CODE_RATE_LIMITER.limit({
-      key: `send-new-registration-code-${email}`
-    });
+    await checkRateLimit({ context, email });
 
-    if (!success) {
-      return new Response(JSON.stringify({ errorCode: 'RATE_LIMIT_EXCEEDED' }), { status: 429 });
-    }
-
-    await invoke({ name: 'sendRegistrationCode', payload: { username, email } });
+    await sendCode({ username, email });
   } catch (error) {
     logger.error(error);
 
-    return new Response(JSON.stringify({ errorCode: 'USER_NOT_FOUND' }), { status: 401 });
+    return new Response(JSON.stringify({ errorCode: errorCodes.userNotFound }), { status: 401 });
   }
 
   return new Response(JSON.stringify({ success: true }), { status: 200 });
 };
 
-export { POST };
+const POST = async (context) => {
+  try {
+    const requestJSON = await context.request.json();
+
+    const user = await getUserByUsernameOrEmail(requestJSON.username);
+    const email = user.email;
+    const username = user.username;
+
+    if (!username || !email) {
+      return new Response(JSON.stringify({ errorCode: errorCodes.userNotFound }), { status: 401 });
+    }
+
+    await checkRateLimit({ context, email });
+
+    await sendCode({ username, email });
+  } catch (error) {
+    logger.error(error);
+
+    return new Response(JSON.stringify({ errorCode: errorCodes.userNotFound }), { status: 401 });
+  }
+
+  return new Response(JSON.stringify({ success: true }), { status: 200 });
+};
+
+export { GET, POST };
