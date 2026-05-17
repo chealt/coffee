@@ -4,6 +4,7 @@ import IosPolyfills from "./ios-polyfills.astro";
 import Login from "../login/login.astro";
 import Nav from "./nav/nav.astro";
 import TranslationBanner from "../i18n/banner.astro";
+import I18NContainer from "../i18n/container.astro";
 
 import loaderImage from "./loader.svg";
 
@@ -36,6 +37,7 @@ const isProd = import.meta.env.PROD;
     {Astro.locals.isIOS && <IosPolyfills />}
   </head>
   <body>
+    {isTranslating && <I18NContainer locale={Astro.currentLocale} />}
     <chealt-data>
       {isTranslating && <TranslationBanner />}
       <coffee-recommendations

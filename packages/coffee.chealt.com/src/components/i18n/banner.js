@@ -13,6 +13,6 @@ class Banner extends HTMLElement {
   }
 }
 
-if (!customElements.get('chealt-banner')) {
-  customElements.define('chealt-banner', Banner);
+if (!customElements.get('chealt-i18n-banner')) {
+  customElements.define('chealt-i18n-banner', Banner);
 }

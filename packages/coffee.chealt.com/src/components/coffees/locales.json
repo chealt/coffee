@@ -54,6 +54,7 @@
     "price": "Ár",
     "roaster": "Pörkölö",
     "originCountry": "Ország",
-    "tasteNotes": "Ízjegyek"
+    "tasteNotes": "Ízjegyek",
+    "varieties": "Fajta"
   }
 }

@@ -23,7 +23,7 @@ const save = async () => {
 
     newContent[locale][key] = value;
 
-    await writeFile(path, JSON.stringify(`${newContent}${os.EOL}`, '', 2), { flag: 'w+' });
+    await writeFile(path, `${JSON.stringify(newContent, '', 2)}${os.EOL}`, { flag: 'w+' });
   }
 };
 

@@ -13,5 +13,9 @@
     "you": "ty",
     "settings": "ustawienia",
     "unnamedTitle": "Niezidentyfikowana kolekcja"
+  },
+  "hu": {
+    "explore": "Felfedezés",
+    "you": "Te"
   }
 }

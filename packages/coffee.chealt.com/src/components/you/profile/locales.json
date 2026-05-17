@@ -26,7 +26,7 @@
     "language": "Nyelv",
     "currency": "Pénznem",
     "notifications": "Hírlevél",
-    "isTranslating": "Fordítás",
+    "isTranslating": "Fordítás indítása",
     "newCoffee": "új kávék",
     "sendRegistrationCode": "új regisztrációs kód küldése",
     "rateLimitExceeded": "Túl sokszor próbáltál új regisztrációs kódot küldeni. Kérjük, próbáld újra később.",

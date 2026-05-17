@@ -1,5 +1,16 @@
 import { getClient } from './client.js';
 
+const getAll = async (locale) => {
+  const client = getClient();
+
+  const { rows } = await client.execute({
+    sql: 'SELECT namespace, key, value FROM i18n WHERE locale = :locale',
+    args: { locale }
+  });
+
+  return rows;
+};
+
 const save = async ({ namespace, key, value, locale }) => {
   const client = getClient();
 
@@ -9,4 +20,4 @@ const save = async ({ namespace, key, value, locale }) => {
   });
 };
 
-export { save };
+export { getAll, save };

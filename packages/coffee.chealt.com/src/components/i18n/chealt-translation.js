@@ -24,17 +24,30 @@ class Translation extends HTMLElement {
   }
 
   update(event) {
-    if (this.callbackID) {
+    const text = event.target.textContent;
+
+    fetch('/api/i18n/translate.json', {
+      method: 'POST',
+      body: JSON.stringify({ namespace: this.namespace, key: this.key, value: text, locale: this.locale })
+    });
+
+    if (this.textUpdateCallbackID) {
       cancelIdleCallback(this.callbackID);
     }
 
-    const text = event.target.textContent;
+    this.textUpdateCallbackID = requestIdleCallback(() => {
+      document
+        .querySelectorAll(`chealt-translation[data-namespace="${this.namespace}"][data-key="${this.key}"]`)
+        .forEach((element) => {
+          if (!element.classList.contains('not-published')) {
+            element.classList.remove('not-translated');
+            element.classList.add('not-published');
+          }
 
-    this.callbackID = requestIdleCallback(async () => {
-      await fetch('/api/i18n/translate.json', {
-        method: 'POST',
-        body: JSON.stringify({ namespace: this.namespace, key: this.key, value: text, locale: this.locale })
-      });
+          if (element !== event.target) {
+            element.textContent = text;
+          }
+        });
     });
   }
 }
