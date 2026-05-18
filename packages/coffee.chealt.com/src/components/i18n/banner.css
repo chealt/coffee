@@ -23,12 +23,20 @@ chealt-i18n-banner {
     cursor: pointer;
     background: repeating-linear-gradient(
       45deg,
-      var(--color-primary),
-      var(--color-primary) 10px,
-      var(--color-background) 10px,
-      var(--color-background) 20px
+      var(--color-primary) 25%,
+      var(--color-background) 25%,
+      var(--color-background) 50%,
+      var(--color-primary) 50%,
+      var(--color-primary) 75%,
+      var(--color-background) 75%,
+      var(--color-background) 100%
     );
+    background-size: 40px 40px;
     order: 2;
+  }
+
+  &.in-progress .handler {
+    animation: slide 8s linear infinite;
   }
 
   .controls {
@@ -59,5 +67,14 @@ chealt-i18n-banner {
     &.open {
       transform: translateY(0);
     }
+  }
+}
+
+@keyframes slide {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -100% 0;
   }
 }

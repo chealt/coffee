@@ -1,4 +1,8 @@
+import logger from '@components/errors/utils';
+
 class i18nContainer extends HTMLElement {
+  static inProgressClass = 'in-progress';
+
   async connectedCallback() {
     this.locale = this.dataset.locale;
     this.translations = {};
@@ -7,8 +11,19 @@ class i18nContainer extends HTMLElement {
       throw new Error('You must provide a locale using the [data-locale] attribute');
     }
 
-    await this.loadTranslations();
-    this.setTranslationStatus();
+    const banner = this.closest('body').querySelector('chealt-i18n-banner');
+
+    banner.classList.add(i18nContainer.inProgressClass);
+
+    try {
+      await this.loadTranslations();
+
+      this.setTranslationStatus();
+    } catch (error) {
+      logger.error(error);
+    } finally {
+      banner.classList.remove(i18nContainer.inProgressClass);
+    }
   }
 
   async loadTranslations() {
