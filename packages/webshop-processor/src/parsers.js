@@ -259,7 +259,7 @@ const parsers = {
     return Array.from(
       new Set(
         Array.from(document.querySelectorAll('a.woocommerce-loop-product__link'))
-          .filter(({ href }) => !href.includes('drip-bags') && !href.includes('/archive/'))
+          .filter(({ href }) => !href.includes('drip-bags') && !href.includes('/archive/') && !href.includes('bundle'))
           .map(({ href }) => href)
       )
     );
