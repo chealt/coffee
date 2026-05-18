@@ -290,7 +290,11 @@ const parsers = {
     ];
 
     return Array.from(
-      new Set(Array.from(document.querySelectorAll(productSelectors.join(','))).map(({ href }) => href))
+      new Set(
+        Array.from(document.querySelectorAll(productSelectors.join(',')))
+          .map(({ href }) => href)
+          .filter((href) => !href.includes('zestaw'))
+      )
     );
   },
   // Pikola
