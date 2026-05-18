@@ -3,10 +3,12 @@ class CoffeeDialog extends HTMLElement {
     this.dialog = this.querySelector('dialog');
     this.closeButton = this.querySelector('[data-close-button]');
     this.triggerButton = this.dialog.id ? document.querySelectorAll(`[data-dialog-id=${this.dialog.id}]`) : undefined;
+    this.triggerKey = this.dataset.triggerKey;
 
     this.addBackdropClickListener();
     this.openOnClick();
     this.closeOnClick();
+    this.openOnTriggerKey();
 
     if (this.dataset.reloadOnChange) {
       this.inputs = this.querySelectorAll('input[type="checkbox"]').forEach((input) => {
@@ -46,6 +48,14 @@ class CoffeeDialog extends HTMLElement {
 
         this.dialog.showModal();
       });
+    });
+  }
+
+  openOnTriggerKey() {
+    document.body.addEventListener('keyup', (event) => {
+      if (event.key === this.triggerKey) {
+        this.dialog.showModal();
+      }
     });
   }
 

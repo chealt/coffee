@@ -11,16 +11,23 @@ const t = await getTranslator({
   locale: Astro.currentLocale,
 });
 
-const { reloadOnChange, showClose, ...props } = Astro.props;
+const { reloadOnChange, showClose, triggerKey, ...props } = Astro.props;
 ---
 
-<coffee-dialog data-reload-on-change={reloadOnChange || undefined}>
+<coffee-dialog
+  data-reload-on-change={reloadOnChange || undefined}
+  data-trigger-key={triggerKey}
+>
   <dialog {...props}>
     {
       showClose && (
         <Button data-close-button class="small bordered round">
           <Icon type="close" class="icon-only" />
-          <span class="visually-hidden"><T namespace="dialog.locales" key="close">{t("close")}</T></span>
+          <span class="visually-hidden">
+            <T namespace="dialog.locales" key="close">
+              {t("close")}
+            </T>
+          </span>
         </Button>
       )
     }
