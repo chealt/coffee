@@ -5484,12 +5484,11 @@ const parsers = {
     const countryText = specs['country of origin'] || '';
     const countryFirstSegment = countryText.split(/[,/]/u)[0].trim();
     const titleFirstSegment = title.split(/[,/]/u)[0].trim();
-    const sortedCountries = [...originCountries].sort((a, b) => b.name.length - a.name.length);
     const originCountryId =
-      sortedCountries.find(({ name }) => name.toLowerCase() === countryFirstSegment)?.origin_country_id ||
-      sortedCountries.find(({ name }) => name.toLowerCase() === titleFirstSegment)?.origin_country_id ||
-      sortedCountries.find(({ name }) => countryText.includes(name.toLowerCase()))?.origin_country_id ||
-      sortedCountries.find(({ name }) => title.includes(name.toLowerCase()))?.origin_country_id ||
+      originCountries.find(({ name }) => name.toLowerCase() === countryFirstSegment)?.origin_country_id ||
+      originCountries.find(({ name }) => name.toLowerCase() === titleFirstSegment)?.origin_country_id ||
+      originCountries.find(({ name }) => countryText.includes(name.toLowerCase()))?.origin_country_id ||
+      originCountries.find(({ name }) => title.includes(name.toLowerCase()))?.origin_country_id ||
       null;
 
     if (!originCountryId) {
