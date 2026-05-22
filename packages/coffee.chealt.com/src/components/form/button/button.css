@@ -13,7 +13,8 @@ a.button {
   box-sizing: border-box;
   text-align: center;
 
-  &.bordered {
+  &.bordered,
+  &.floating {
     border-width: 2px;
     border-color: var(--color-border);
   }
@@ -50,6 +51,24 @@ a.button {
 
   &.tight {
     padding: var(--gap--s);
+  }
+
+  &.floating {
+    position: fixed;
+    width: auto;
+    z-index: var(--z-index--s);
+    border-radius: 50%;
+    box-shadow: 2px 2px 4px var(--color-shadow);
+    aspect-ratio: 1 / 1;
+    min-height: 0;
+
+    &.bottom {
+      bottom: var(--bottom-gap);
+    }
+
+    &.right {
+      right: var(--gap--l);
+    }
   }
 }
 

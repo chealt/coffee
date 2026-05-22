@@ -44,6 +44,8 @@
   --limited-width: 1024px;
   --limited-width--s: 600px;
   --icon-size: 32px;
+
+  --bottom-gap: 100px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -82,7 +84,7 @@ body {
 }
 
 body {
-  padding-bottom: 100px;
+  padding-bottom: var(--bottom-gap);
   /* leave space for bottom controls */
 }
 

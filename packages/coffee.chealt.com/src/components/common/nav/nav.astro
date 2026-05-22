@@ -1,10 +1,9 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
-import CoffeeImageUpload from "../coffee-image-upload.astro";
-import Icon from "../../icon/icon.astro";
 
 import T from "@components/i18n/t.astro";
 import { getTranslator } from "@components/i18n/t.js";
+import Icon from "@components/icon/icon.astro";
 
 import "./nav.css";
 
@@ -34,48 +33,25 @@ const items = [
     isActive: isActivePage(""),
   },
   {
-    name: "capture",
-    href: getRelativeLocaleUrl(Astro.currentLocale, "/you/collections"),
-    textKey: "capture",
-  },
-  {
     name: "you",
     href: getRelativeLocaleUrl(Astro.currentLocale, "/you/collections"),
     textKey: "you",
     isActive: isActivePage("you"),
   },
 ];
-
-const shouldSync = Boolean(Astro.locals.loggedInUser);
 ---
 
 <nav style={"view-transition-name: main-nav"}>
   {
-    items.map(({ name, href, textKey, isActive }) =>
-      name === "capture" ? (
-        <CoffeeImageUpload
-          data-should-sync={shouldSync}
-          data-unnamed-title={t("unnamedTitle")}
-        >
-          <a href={href} class="triggerButton">
-            <Icon class="icon" type={name} />
-            <span class="title">
-              <T namespace="common.nav.locales" key={textKey}>
-                {t(textKey)}
-              </T>
-            </span>
-          </a>
-        </CoffeeImageUpload>
-      ) : (
-        <a href={href} class={isActive ? "active" : ""}>
-          <Icon class="icon" type={name} />
-          <span class="title">
-            <T namespace="common.nav.locales" key={textKey}>
-              {t(textKey)}
-            </T>
-          </span>
-        </a>
-      ),
-    )
+    items.map(({ name, href, textKey, isActive }) => (
+      <a href={href} class={isActive ? "active" : ""}>
+        <Icon class="icon" type={name} />
+        <span class="title">
+          <T namespace="common.nav.locales" key={textKey}>
+            {t(textKey)}
+          </T>
+        </span>
+      </a>
+    ))
   }
 </nav>

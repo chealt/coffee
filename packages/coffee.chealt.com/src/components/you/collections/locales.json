@@ -1,5 +1,6 @@
 {
   "en": {
+    "capture": "capture",
     "clearSelection": "Clear selection",
     "editCollection": "Edit collection",
     "title": "Collections",
@@ -22,9 +23,11 @@
     "review": "Review",
     "deleteCollection.buttonLabel": "Delete collection",
     "deleteCollection.confirm": "Are you sure you want to delete this collection?",
-    "logout": "logout"
+    "logout": "logout",
+    "unnamedTitle": "Untitled Collection"
   },
   "pl": {
+    "capture": "zdjecie",
     "clearSelection": "Wyczyść zaznaczenie",
     "editCollection": "Edytuj kolekcję",
     "title": "Kolekcje",
@@ -47,6 +50,7 @@
     "review": "Opinia",
     "deleteCollection.buttonLabel": "Usuń kolekcję",
     "deleteCollection.confirm": "Czy na pewno chcesz usunąć tę kolekcję?",
-    "logout": "wyloguj"
+    "logout": "wyloguj",
+    "unnamedTitle": "Niezidentyfikowana kolekcja"
   }
 }

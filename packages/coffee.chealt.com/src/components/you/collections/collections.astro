@@ -3,6 +3,7 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 
 import Button from "../../form/button/button.astro";
 import Checkbox from "../../form/checkbox/checkbox.astro";
+import CoffeeImageUpload from "@components/common/coffee-image-upload.astro";
 import Common from "../../common/common.astro";
 import Dialog from "../../dialog/dialog.astro";
 import Icon from "../../icon/icon.astro";
@@ -123,6 +124,16 @@ const { collections, shouldAuthenticate, username } = Astro.locals;
     </Dialog>
   </coffee-collection>
   <NewCollection />
+  <CoffeeImageUpload data-unnamed-title={t("unnamedTitle")}>
+    <Button class="triggerButton bottom right floating primary">
+      <Icon class="icon" type="capture" />
+      <span class="visually-hidden">
+        <T namespace="common.nav.locales" key="capture">
+          {t("capture")}
+        </T>
+      </span>
+    </Button>
+  </CoffeeImageUpload>
 </Common>
 
 <script src="./coffee-collection.js"></script>

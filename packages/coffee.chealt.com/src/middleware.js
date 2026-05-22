@@ -117,9 +117,6 @@ const pages = [
  */
 // eslint-disable-next-line complexity
 export const onRequest = async (context, next) => {
-  setGetSignedUrl(context);
-  setImageUploadUrls(context);
-
   if (context.isPrerendered) {
     return next();
   }
@@ -198,6 +195,9 @@ export const onRequest = async (context, next) => {
       const loggedInUser = getSessionUser(context);
 
       context.locals.username = loggedInUser?.username;
+
+      setGetSignedUrl(context);
+      setImageUploadUrls(context);
 
       if (!collectionId) {
         await setCollections(context);

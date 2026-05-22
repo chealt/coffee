@@ -2,17 +2,13 @@
   "en": {
     "home": "home",
     "explore": "explore",
-    "capture": "capture",
-    "you": "you",
-    "unnamedTitle": "Untitled Collection"
+    "you": "you"
   },
   "pl": {
     "home": "strona główna",
     "explore": "eksploruj",
-    "capture": "zdjecie",
     "you": "ty",
-    "settings": "ustawienia",
-    "unnamedTitle": "Niezidentyfikowana kolekcja"
+    "settings": "ustawienia"
   },
   "hu": {
     "explore": "Felfedezés",
