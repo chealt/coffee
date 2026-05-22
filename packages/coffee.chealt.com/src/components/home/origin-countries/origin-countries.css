@@ -1,5 +1,7 @@
 .list.origin-countries {
   .image {
+    position: relative;
+
     img {
       width: auto;
       height: 100%;

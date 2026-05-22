@@ -446,6 +446,7 @@ sup {
   width: 100%;
   text-align: center;
   background-color: var(--color-background--alternative);
+  color: var(--color-text);
   padding: var(--gap--s) 40px;
   text-transform: uppercase;
   font-weight: bold;

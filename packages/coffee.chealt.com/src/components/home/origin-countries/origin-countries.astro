@@ -25,7 +25,7 @@ const countries = originCountries.filter(
 <div class="list-container">
   <ul class="list origin-countries">
     {
-      countries.map(({ origin_country_id: id, name }, index) => (
+      countries.map(({ origin_country_id: id, name, coffee_count }) => (
         <li class="item">
           <a
             href={getRelativeLocaleUrl(
@@ -39,13 +39,16 @@ const countries = originCountries.filter(
                 alt={`${t("originCountry")} ${name}`}
                 loading="lazy"
               />
+              <span class="bottom right banner">{coffee_count}</span>
             </div>
             <div class="name">{name}</div>
             <span
               class="tag primary left hidden"
               data-recommendation-key={`originCountries-${id}`}
             >
-              <T namespace="common.locales" key="recommended">{tc("recommended")}</T>
+              <T namespace="common.locales" key="recommended">
+                {tc("recommended")}
+              </T>
             </span>
           </a>
         </li>
