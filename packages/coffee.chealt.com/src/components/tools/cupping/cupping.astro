@@ -5,8 +5,6 @@ import Form from "../../form/form.astro";
 import Label from "../../form/label/label.astro";
 import Icon from "../../icon/icon.astro";
 import Input from "../../form/input/input.astro";
-import Radio from "../../form/radio/radio.astro";
-import RadioList from "../../form/radio/radio-list.astro";
 import Range from "../../form/range/range.astro";
 import Textarea from "../../form/input/textarea.astro";
 
@@ -24,7 +22,9 @@ const t = await getTranslator({
 ---
 
 <Common title={t("title")} hideNav>
-  <h1 class="hidden"><T namespace="tools.cupping.locales" key="title">{t("title")}</T></h1>
+  <h1 class="hidden">
+    <T namespace="tools.cupping.locales" key="title">{t("title")}</T>
+  </h1>
   <div class="controls">
     <Button class="column" data-share="cupping" data-share-text={t("share")}>
       <Icon type="share" />
@@ -46,27 +46,47 @@ const t = await getTranslator({
     >
       <div class="range-group">
         <Range name="roast-level" min="1" max="5" excludeFromSum>
-          <span slot="title"><T namespace="tools.cupping.locales" key="roastLevel">{t("roastLevel")}</T></span>
-          <span slot="min"><T namespace="tools.cupping.locales" key="light">{t("light")}</T></span>
-          <span slot="max"><T namespace="tools.cupping.locales" key="dark">{t("dark")}</T></span>
+          <span slot="title"
+            ><T namespace="tools.cupping.locales" key="roastLevel"
+              >{t("roastLevel")}</T
+            ></span
+          >
+          <span slot="min"
+            ><T namespace="tools.cupping.locales" key="light">{t("light")}</T
+            ></span
+          >
+          <span slot="max"
+            ><T namespace="tools.cupping.locales" key="dark">{t("dark")}</T
+            ></span
+          >
         </Range>
       </div>
       <div class="range-group">
         <div class="range-group-item">
           <Range name="aroma" min="6" max="10">
-            <span slot="title"><T namespace="tools.cupping.locales" key="fragranceAroma">{t("fragranceAroma")}</T></span>
+            <span slot="title"
+              ><T namespace="tools.cupping.locales" key="fragranceAroma"
+                >{t("fragranceAroma")}</T
+              ></span
+            >
             <span slot="min">{6}</span>
             <span slot="max">{10}</span>
           </Range>
         </div>
         <div class="range-group-item">
           <Range name="dry" min="1" max="5" excludeFromSum>
-            <span slot="title"><T namespace="tools.cupping.locales" key="dry">{t("dry")}</T></span>
+            <span slot="title"
+              ><T namespace="tools.cupping.locales" key="dry">{t("dry")}</T
+              ></span
+            >
             <span slot="min">{1}</span>
             <span slot="max">{5}</span>
           </Range>
           <Range name="break" min="1" max="5" excludeFromSum>
-            <span slot="title"><T namespace="tools.cupping.locales" key="break">{t("break")}</T></span>
+            <span slot="title"
+              ><T namespace="tools.cupping.locales" key="break">{t("break")}</T
+              ></span
+            >
             <span slot="min">{1}</span>
             <span slot="max">{5}</span>
           </Range>
@@ -74,81 +94,158 @@ const t = await getTranslator({
       </div>
       <div class="range-group">
         <Range name="flavour" min="6" max="10">
-          <span slot="title"><T namespace="tools.cupping.locales" key="flavour">{t("flavour")}</T></span>
+          <span slot="title"
+            ><T namespace="tools.cupping.locales" key="flavour"
+              >{t("flavour")}</T
+            ></span
+          >
           <span slot="min">{6}</span>
           <span slot="max">{10}</span>
         </Range>
         <Range name="aftertaste" min="6" max="10">
-          <span slot="title"><T namespace="tools.cupping.locales" key="aftertaste">{t("aftertaste")}</T></span>
+          <span slot="title"
+            ><T namespace="tools.cupping.locales" key="aftertaste"
+              >{t("aftertaste")}</T
+            ></span
+          >
           <span slot="min">{6}</span>
           <span slot="max">{10}</span>
         </Range>
       </div>
       <div class="range-group">
         <Range name="acidity" min="6" max="10">
-          <span slot="title"><T namespace="tools.cupping.locales" key="acidity">{t("acidity")}</T></span>
-          <span slot="min"><T namespace="tools.cupping.locales" key="bitter">{t("bitter")}</T></span>
-          <span slot="max"><T namespace="tools.cupping.locales" key="acidic">{t("acidic")}</T></span>
+          <span slot="title"
+            ><T namespace="tools.cupping.locales" key="acidity"
+              >{t("acidity")}</T
+            ></span
+          >
+          <span slot="min"
+            ><T namespace="tools.cupping.locales" key="bitter">{t("bitter")}</T
+            ></span
+          >
+          <span slot="max"
+            ><T namespace="tools.cupping.locales" key="acidic">{t("acidic")}</T
+            ></span
+          >
         </Range>
         <Range name="intensity" min="1" max="5" excludeFromSum>
-          <span slot="title"><T namespace="tools.cupping.locales" key="intensity">{t("intensity")}</T></span>
-          <span slot="min"><T namespace="tools.cupping.locales" key="low">{t("low")}</T></span>
-          <span slot="max"><T namespace="tools.cupping.locales" key="high">{t("high")}</T></span>
+          <span slot="title"
+            ><T namespace="tools.cupping.locales" key="intensity"
+              >{t("intensity")}</T
+            ></span
+          >
+          <span slot="min"
+            ><T namespace="tools.cupping.locales" key="low">{t("low")}</T></span
+          >
+          <span slot="max"
+            ><T namespace="tools.cupping.locales" key="high">{t("high")}</T
+            ></span
+          >
         </Range>
       </div>
       <div class="range-group">
         <Range name="body" min="6" max="10">
-          <span slot="title"><T namespace="tools.cupping.locales" key="body">{t("body")}</T></span>
+          <span slot="title"
+            ><T namespace="tools.cupping.locales" key="body">{t("body")}</T
+            ></span
+          >
           <span slot="min">{6}</span>
           <span slot="max">{10}</span>
         </Range>
         <Range name="level" min="1" max="5" excludeFromSum>
-          <span slot="title"><T namespace="tools.cupping.locales" key="level">{t("level")}</T></span>
-          <span slot="min"><T namespace="tools.cupping.locales" key="thin">{t("thin")}</T></span>
-          <span slot="max"><T namespace="tools.cupping.locales" key="heavy">{t("heavy")}</T></span>
+          <span slot="title"
+            ><T namespace="tools.cupping.locales" key="level">{t("level")}</T
+            ></span
+          >
+          <span slot="min"
+            ><T namespace="tools.cupping.locales" key="thin">{t("thin")}</T
+            ></span
+          >
+          <span slot="max"
+            ><T namespace="tools.cupping.locales" key="heavy">{t("heavy")}</T
+            ></span
+          >
         </Range>
       </div>
       <div class="range-group">
         <Range name="uniformity" min="6" max="10">
-          <span slot="title"><T namespace="tools.cupping.locales" key="uniformity">{t("uniformity")}</T></span>
+          <span slot="title"
+            ><T namespace="tools.cupping.locales" key="uniformity"
+              >{t("uniformity")}</T
+            ></span
+          >
           <span slot="min">{6}</span>
           <span slot="max">{10}</span>
         </Range>
         <Range name="balance" min="6" max="10">
-          <span slot="title"><T namespace="tools.cupping.locales" key="balance">{t("balance")}</T></span>
+          <span slot="title"
+            ><T namespace="tools.cupping.locales" key="balance"
+              >{t("balance")}</T
+            ></span
+          >
           <span slot="min">{6}</span>
           <span slot="max">{10}</span>
         </Range>
       </div>
       <div class="range-group">
         <Range name="clean-cup" min="6" max="10">
-          <span slot="title"><T namespace="tools.cupping.locales" key="cleanCup">{t("cleanCup")}</T></span>
+          <span slot="title"
+            ><T namespace="tools.cupping.locales" key="cleanCup"
+              >{t("cleanCup")}</T
+            ></span
+          >
           <span slot="min">{6}</span>
           <span slot="max">{10}</span>
         </Range>
         <Range name="sweetness" min="6" max="10">
-          <span slot="title"><T namespace="tools.cupping.locales" key="sweetness">{t("sweetness")}</T></span>
-          <span slot="min"><T namespace="tools.cupping.locales" key="sour">{t("sour")}</T></span>
-          <span slot="max"><T namespace="tools.cupping.locales" key="sweet">{t("sweet")}</T></span>
+          <span slot="title"
+            ><T namespace="tools.cupping.locales" key="sweetness"
+              >{t("sweetness")}</T
+            ></span
+          >
+          <span slot="min"
+            ><T namespace="tools.cupping.locales" key="sour">{t("sour")}</T
+            ></span
+          >
+          <span slot="max"
+            ><T namespace="tools.cupping.locales" key="sweet">{t("sweet")}</T
+            ></span
+          >
         </Range>
       </div>
       <div class="range-group">
         <Range name="overall" min="6" max="10">
-          <span slot="title"><T namespace="tools.cupping.locales" key="overall">{t("overall")}</T></span>
+          <span slot="title"
+            ><T namespace="tools.cupping.locales" key="overall"
+              >{t("overall")}</T
+            ></span
+          >
           <span slot="min">{6}</span>
           <span slot="max">{10}</span>
         </Range>
         <section>
           <fieldset class="range-group-item-container">
-            <legend><T namespace="tools.cupping.locales" key="defects">{t("defects")}</T></legend>
+            <legend
+              ><T namespace="tools.cupping.locales" key="defects"
+                >{t("defects")}</T
+              ></legend
+            >
             <div class="range-group-item-container">
               <Label>
-                <span><T namespace="tools.cupping.locales" key="numberOfCups">{t("numberOfCups")}</T></span>
+                <span
+                  ><T namespace="tools.cupping.locales" key="numberOfCups"
+                    >{t("numberOfCups")}</T
+                  ></span
+                >
                 <Input name="number-of-cups" data-negative type="number" />
               </Label>
               <span class="times-sign">x</span>
               <Label>
-                <span><T namespace="tools.cupping.locales" key="intensity">{t("intensity")}</T></span>
+                <span
+                  ><T namespace="tools.cupping.locales" key="intensity"
+                    >{t("intensity")}</T
+                  ></span
+                >
                 <Input
                   name="defects-intensity"
                   data-multiplier="number-of-cups"
@@ -160,11 +257,18 @@ const t = await getTranslator({
         </section>
       </div>
       <Label>
-        <span><T namespace="tools.cupping.locales" key="notes">{t("notes")}</T></span>
+        <span
+          ><T namespace="tools.cupping.locales" key="notes">{t("notes")}</T
+          ></span
+        >
         <Textarea name="notes" />
       </Label>
       <div class="final-score-container primary">
-        <span><T namespace="tools.cupping.locales" key="finalScore">{t("finalScore")}</T></span>
+        <span
+          ><T namespace="tools.cupping.locales" key="finalScore"
+            >{t("finalScore")}</T
+          ></span
+        >
         <span class="final-score" data-sum="cupping"></span>
       </div>
     </Form>

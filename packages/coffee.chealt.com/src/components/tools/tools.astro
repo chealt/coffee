@@ -1,0 +1,24 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+import Common from "@components/common/common.astro";
+
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
+
+const t = await getTranslator({
+  filePath: "tools",
+  locale: Astro.currentLocale,
+});
+---
+
+<Common title={t("title")}>
+  <h1>
+    <T namespace="tools.tools.locales" key="title">{t("title")}</T>
+    <div class="card">
+      <a href={getRelativeLocaleUrl(Astro.currentLocale, `/tools/cupping`)}
+        >{t("cupping")}</a
+      >
+    </div>
+  </h1>
+</Common>
