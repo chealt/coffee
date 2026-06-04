@@ -1,5 +1,7 @@
 .list.countries {
   .image {
+    position: relative;
+
     img {
       width: auto;
       height: 100%;
