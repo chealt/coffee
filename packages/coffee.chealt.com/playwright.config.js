@@ -1,5 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
 
+// Helper to remove 'screen' to avoid conflict with @playwright-testing-library/test's screen fixture
+const getDevice = (name) => {
+  const { screen, ...device } = devices[name]; // eslint-disable-line no-unused-vars
+
+  return device;
+};
+
 export default defineConfig({
   testDir: './src',
   testMatch: /.*\.ui-spec\.js/u,
@@ -15,15 +22,15 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] }
+      use: getDevice('Desktop Chrome')
     },
     {
       name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] }
+      use: getDevice('Pixel 5')
     },
     {
       name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] }
+      use: getDevice('iPhone 12')
     }
   ],
   webServer: {
