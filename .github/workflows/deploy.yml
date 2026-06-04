@@ -818,6 +818,32 @@ jobs:
             --notes "Automated release" \
             --draft=false \
             --prerelease=false
+  webshop-item-processor-infra:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            yarn.lock
+            .github/workflows/deploy.yml
+            packages/webshop-item-processor/infra/**
+      - uses: aws-actions/configure-aws-credentials@v6
+        if: steps.changed-files.outputs.any_changed == 'true'
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - name: deploy
+        if: steps.changed-files.outputs.any_changed == 'true'
+        uses: aws-actions/aws-cloudformation-github-deploy@v2
+        with:
+          name: webshop-item-processor-alarm
+          template: packages/webshop-item-processor/infra/alarm.yml
+          capabilities: CAPABILITY_IAM
+          fail-on-empty-changeset: false
   webshop-processor:
     runs-on: ubuntu-latest
     steps:
