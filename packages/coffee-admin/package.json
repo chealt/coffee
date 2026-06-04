@@ -8,8 +8,8 @@
     "taste-notes:translate": "node --env-file=.env src/taste-notes/translate.js"
   },
   "dependencies": {
-    "@aws-sdk/client-translate": "^3.1045.0",
+    "@aws-sdk/client-translate": "^3.1061.0",
     "@libsql/client": "^0.17.3",
-    "@playwright/test": "^1.59.1"
+    "@playwright/test": "^1.60.0"
   }
 }
