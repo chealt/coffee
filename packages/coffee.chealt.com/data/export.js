@@ -69,9 +69,7 @@ const saveCountries = async () => {
 };
 
 const saveCountriesWithCoffees = async () => {
-  const results = await turso.execute(
-    'SELECT ca.* FROM countries_all ca JOIN roasters r ON r.country_id = ca.country_id JOIN coffees c ON c.roaster_id = r.id WHERE NOT c.is_removed GROUP BY 1, 2, 3 ORDER BY name COLLATE nocase ASC'
-  );
+  const results = await turso.execute('SELECT * FROM countries_all_with_coffees');
 
   return writeFile('./data/countriesWithCoffees.json', JSON.stringify(results.rows), { flag: 'w+' });
 };
