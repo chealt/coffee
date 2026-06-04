@@ -1,21 +1,26 @@
-Type: AWS::CloudWatch::Alarm
-Properties:
-  AlarmName: webshopItemProcessorErrors
-  Tags: []
-  ActionsEnabled: true
-  OKActions: []
-  AlarmActions:
-    - arn:aws:sns:eu-central-1:781346609033:webshopItemProcessorErrors
-  InsufficientDataActions: []
-  MetricName: Errors
-  Namespace: AWS/Lambda
-  Statistic: Sum
-  Dimensions:
-    - Name: FunctionName
-      Value: webshopItemProcessor
-  Period: 300
-  EvaluationPeriods: 1
-  DatapointsToAlarm: 1
-  Threshold: 0
-  ComparisonOperator: GreaterThanThreshold
-  TreatMissingData: missing
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudWatch Alarm for Webshop Item Processor errors
+
+Resources:
+  WebshopItemProcessorErrorAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: webshopItemProcessorErrors
+      Tags: []
+      ActionsEnabled: true
+      OKActions: []
+      AlarmActions:
+        - arn:aws:sns:eu-central-1:781346609033:webshopItemProcessorErrors
+      InsufficientDataActions: []
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Statistic: Sum
+      Dimensions:
+        - Name: FunctionName
+          Value: webshopItemProcessor
+      Period: 300
+      EvaluationPeriods: 1
+      DatapointsToAlarm: 1
+      Threshold: 0
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: missing
