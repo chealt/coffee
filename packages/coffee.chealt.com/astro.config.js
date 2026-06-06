@@ -9,7 +9,10 @@ const locales = supportedLanguages.map(({ locale }) => locale);
 
 export default defineConfig({
   output: 'server',
-  prefetch: true,
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'viewport'
+  },
   i18n: {
     locales,
     defaultLocale: supportedLanguages.find(({ isDefault }) => isDefault)?.locale || 'en',
