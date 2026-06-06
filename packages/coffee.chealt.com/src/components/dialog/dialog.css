@@ -35,7 +35,7 @@ dialog,
     opacity: 0;
     translate: 0 40px;
     transition-property: display opacity;
-    transition-duration: 0.4s;
+    transition-duration: 0.2s;
     transition-timing-function: ease-in-out;
     transition-behavior: allow-discrete;
   }
@@ -77,7 +77,7 @@ body:has(dialog[open]:not(.inline)) {
   max-height: 80vh;
   translate: 0 100%;
   transition-property: display opacity;
-  transition-duration: 0.4s;
+  transition-duration: 0.2s;
   transition-timing-function: ease-in-out;
   transition-behavior: allow-discrete;
 
