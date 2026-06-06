@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  CodeCommit repository for the centralbeans monorepo.
+
+Resources:
+  CodeCommitRepository:
+    Type: AWS::CodeCommit::Repository
+    Properties:
+      RepositoryName: centralbeans
+      RepositoryDescription: Centralbeans monorepo.
+      Tags:
+        - Key: Project
+          Value: centralbeans
+        - Key: ManagedBy
+          Value: cloudformation
+        - Key: Stack
+          Value: centralbeans-codecommit
+
+Outputs:
+  RepositoryName:
+    Description: CodeCommit repository name
+    Value: !GetAtt CodeCommitRepository.Name
+    Export:
+      Name: !Sub '${AWS::StackName}-RepositoryName'
+
+  RepositoryCloneUrlSsh:
+    Description: SSH clone URL
+    Value: !GetAtt CodeCommitRepository.CloneUrlSsh
+    Export:
+      Name: !Sub '${AWS::StackName}-CloneUrlSsh'
+
+  RepositoryArn:
+    Description: CodeCommit repository ARN
+    Value: !GetAtt CodeCommitRepository.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-RepositoryArn'
