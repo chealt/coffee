@@ -1,5 +1,5 @@
 import { scanPage } from '../../test-utils/a11y.js';
-import { config, test, expect } from '../../utils/playwright.js';
+import { config, test, expect } from '../../test-utils/index.js';
 
 test('should render the home page with the correct headings', async ({ page }) => {
   await page.goto(config.url);
