@@ -1926,7 +1926,7 @@ const parsers = {
       return previousValue;
     }, {});
 
-    const originCountry = details['kraj pochodzenia ziarna'];
+    const originCountry = details['kraj pochodzenia ziarna'] || details['kraj pochodzenia'];
     const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
 
     if (!originCountryId) {
