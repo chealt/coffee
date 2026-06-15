@@ -4094,9 +4094,15 @@ const parsers = {
     const currency = currencyCodes[currencySymbol];
 
     const weightMatch = details.match(/(\d+(?:[.,]\d+)?)\s*(kg|g)\b/i);
-    const weight = weightMatch
-      ? Math.round(parseFloat(weightMatch[1].replace(',', '.')) * (weightMatch[2].toLowerCase() === 'kg' ? 1000 : 1))
-      : undefined;
+    const weight =
+      (weightMatch &&
+        Math.round(
+          parseFloat(weightMatch[1].replace(',', '.')) * (weightMatch[2].toLowerCase() === 'kg' ? 1000 : 1)
+        )) ||
+      Math.round(
+        parseFloat(document.querySelector('.variant-option__button-label input:checked')?.value.replace('g', ''))
+      ) ||
+      undefined;
 
     if (!weight || isNaN(weight)) {
       logger.error(`No weight found for ${url}`);
