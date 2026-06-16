@@ -389,6 +389,16 @@ const statsLink = getSafeUrlWithStats({
           </div>
         </section>
         <section class="links">
+          {roaster.website && (
+            <Button href={roaster.website} target="_blank">
+              <Icon type="home" />
+              <span class="visually-hidden">
+                <T namespace="common.locales" key="website">
+                  {tc("website")}
+                </T>
+              </span>
+            </Button>
+          )}
           {roaster.instagram && (
             <Button
               href={`https://instagram.com/${roaster.instagram}`}
@@ -398,16 +408,6 @@ const statsLink = getSafeUrlWithStats({
               <span class="visually-hidden">
                 <T namespace="common.locales" key="instagram">
                   {tc("instagram")}
-                </T>
-              </span>
-            </Button>
-          )}
-          {roaster.website && (
-            <Button href={roaster.website} target="_blank">
-              <Icon type="home" />
-              <span class="visually-hidden">
-                <T namespace="common.locales" key="website">
-                  {tc("website")}
                 </T>
               </span>
             </Button>
