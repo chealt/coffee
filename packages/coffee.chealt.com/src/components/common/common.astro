@@ -37,26 +37,55 @@ const isProd = import.meta.env.PROD;
     <link rel="apple-touch-icon" href="/favicons/favicon-192x192.svg" />
     <title>{title ? `${title} | ${t("title")}` : t("title")}</title>
     {Astro.locals.isIOS && <IosPolyfills />}
+    <script is:inline>
+      window.addEventListener("pagereveal", () => {
+        if (window.navigation.activation?.navigationType === "traverse") {
+          const viewTransitionName =
+            sessionStorage.getItem("viewTransitionName");
+
+          if (viewTransitionName) {
+            /** @type {HTMLElement} */
+            const element = document.querySelector(
+              `[data-view-transition-name="${viewTransitionName}"]`,
+            );
+
+            if (element) {
+              element.style.viewTransitionName = viewTransitionName;
+              sessionStorage.removeItem("viewTransitionName");
+            }
+          }
+        }
+      });
+    </script>
   </head>
   <body>
-    {isAdmin && <Admin />}
-    {isTranslating && <I18NContainer locale={Astro.currentLocale} />}
-    <chealt-data>
-      {isTranslating && <TranslationBanner />}
-      <coffee-recommendations
-        data-recommendations-url="/api/recommendations/all.json"
-      >
-        <main class={Astro.props.class}>
-          {shouldAuthenticate ? <Login redirectUrl={redirectUrl} /> : <slot />}
-        </main>
-      </coffee-recommendations>
-      {!hideNav && <Nav />}
-    </chealt-data>
-    <img src={loaderImage.src} class="visually-hidden" aria-hidden="true" />
-    {isProd && <Analytics />}
+    <chealt-view-transitions>
+      {isAdmin && <Admin />}
+      {isTranslating && <I18NContainer locale={Astro.currentLocale} />}
+      <chealt-data>
+        {isTranslating && <TranslationBanner />}
+        <coffee-recommendations
+          data-recommendations-url="/api/recommendations/all.json"
+        >
+          <main class={Astro.props.class}>
+            {
+              shouldAuthenticate ? (
+                <Login redirectUrl={redirectUrl} />
+              ) : (
+                <slot />
+              )
+            }
+          </main>
+        </coffee-recommendations>
+        {!hideNav && <Nav />}
+      </chealt-data>
+      <img src={loaderImage.src} class="visually-hidden" aria-hidden="true" />
+      {isProd && <Analytics />}
+    </chealt-view-transitions>
   </body>
 </html>
 
 <script src="./service-worker-init.js"></script>
 <script src="../chealt-data.js"></script>
 <script src="./recommendations.js"></script>
+<script src="../chealt-view-transitions.js"></script>

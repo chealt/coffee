@@ -46,7 +46,7 @@ const { roasters } = Astro.props;
               >
                 <div
                   class="image card"
-                  style={`view-transition-name: roaster-${id}`}
+                  data-view-transition-name={`roaster-${id}`}
                 >
                   <img
                     src={`/roasters/${logo}`}

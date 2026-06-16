@@ -46,6 +46,12 @@
   --icon-size: 32px;
 
   --bottom-gap: 100px;
+
+  --animation-duration--very-fast: 0.2s;
+  --animation-duration--fast: 0.5s;
+  --animation-duration: 1s;
+  --animation-duration--slow: 2s;
+  --animation-duration--very-slow: 5s;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -211,7 +217,7 @@ button.in-progress {
     display: block;
     opacity: 1;
     transition-property: display opacity;
-    transition-duration: 0.4s;
+    transition-duration: var(--animation-duration--fast);
     transition-timing-function: ease-in-out;
     transition-behavior: allow-discrete;
     transition-delay: 200ms;
@@ -505,5 +511,19 @@ sup {
 @media (prefers-reduced-motion: no-preference) {
   @view-transition {
     navigation: auto;
+  }
+
+  ::view-transition-group(*) {
+    animation-duration: var(--animation-duration--very-fast);
+    animation-timing-function: ease-in-out;
+  }
+
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
+  }
+
+  ::view-transition-old(*) {
+    display: none;
   }
 }
