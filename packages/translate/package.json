@@ -7,7 +7,7 @@
     "origin-countries": "node --env-file=.env src/origin-countries.js"
   },
   "dependencies": {
-    "@aws-sdk/client-translate": "^3.1061.0",
-    "@libsql/client": "^0.17.3"
+    "@aws-sdk/client-translate": "^3.1069.0",
+    "@libsql/client": "^0.17.4"
   }
 }

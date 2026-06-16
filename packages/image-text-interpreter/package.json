@@ -6,8 +6,8 @@
     "deploy": "aws lambda update-function-code --function-name imageTextInterpreter --zip-file fileb://package.zip --publish"
   },
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.1061.0",
-    "@libsql/client": "^0.17.3",
-    "@sentry/aws-serverless": "^10.56.0"
+    "@aws-sdk/client-secrets-manager": "^3.1069.0",
+    "@libsql/client": "^0.17.4",
+    "@sentry/aws-serverless": "^10.58.0"
   }
 }
