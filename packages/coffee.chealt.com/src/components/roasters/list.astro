@@ -58,7 +58,9 @@ const { roasters } = Astro.props;
                   class="tag primary left hidden"
                   data-recommendation-key={`roasters-${id}`}
                 >
-                  <T namespace="common.locales" key="recommended">{tc("recommended")}</T>
+                  <T namespace="common.locales" key="recommended">
+                    {tc("recommended")}
+                  </T>
                 </span>
                 <span class="bottom right banner">{coffee_count}</span>
               </a>
@@ -66,7 +68,11 @@ const { roasters } = Astro.props;
                 {website && (
                   <Button class="tight" href={website} target="_blank">
                     <Icon class="icon-only" type="home" />
-                    <span class="visually-hidden"><T namespace="common.locales" key="website">{tc("website")}</T></span>
+                    <span class="visually-hidden">
+                      <T namespace="common.locales" key="website">
+                        {tc("website")}
+                      </T>
+                    </span>
                   </Button>
                 )}
                 <span class="text">{name}</span>
@@ -77,7 +83,11 @@ const { roasters } = Astro.props;
                     target="_blank"
                   >
                     <Icon class="icon-only" type="instagram" />
-                    <span class="visually-hidden"><T namespace="common.locales" key="instagram">{tc("instagram")}</T></span>
+                    <span class="visually-hidden">
+                      <T namespace="common.locales" key="instagram">
+                        {tc("instagram")}
+                      </T>
+                    </span>
                   </Button>
                 )}
               </div>
