@@ -367,7 +367,11 @@ const statsLink = getSafeUrlWithStats({
       (loggedInUser && (
         <Button class="ghost small" href={statsLink} disabled={!coffees.length}>
           <Icon type="chart" />
-          <span class="visually-hidden"><T namespace="common.locales" key="chart">{tc("chart")}</T></span>
+          <span class="visually-hidden">
+            <T namespace="common.locales" key="chart">
+              {tc("chart")}
+            </T>
+          </span>
         </Button>
       )) ||
         null
@@ -391,13 +395,21 @@ const statsLink = getSafeUrlWithStats({
               target="_blank"
             >
               <Icon type="instagram" />
-              <span class="visually-hidden"><T namespace="common.locales" key="instagram">{tc("instagram")}</T></span>
+              <span class="visually-hidden">
+                <T namespace="common.locales" key="instagram">
+                  {tc("instagram")}
+                </T>
+              </span>
             </Button>
           )}
           {roaster.website && (
             <Button href={roaster.website} target="_blank">
               <Icon type="home" />
-              <span class="visually-hidden"><T namespace="common.locales" key="website">{tc("website")}</T></span>
+              <span class="visually-hidden">
+                <T namespace="common.locales" key="website">
+                  {tc("website")}
+                </T>
+              </span>
             </Button>
           )}
         </section>
@@ -408,7 +420,11 @@ const statsLink = getSafeUrlWithStats({
   {
     (priciestCoffees.length >= 10 && (
       <section>
-        <h2><T namespace="common.locales" key="priciestCoffees">{tc("priciestCoffees")}</T></h2>
+        <h2>
+          <T namespace="common.locales" key="priciestCoffees">
+            {tc("priciestCoffees")}
+          </T>
+        </h2>
         <Coffees coffees={priciestCoffees} />
       </section>
     )) ||
@@ -417,7 +433,11 @@ const statsLink = getSafeUrlWithStats({
   {
     (cheapestCoffees.length >= 10 && (
       <section>
-        <h2><T namespace="common.locales" key="cheapestCoffees">{tc("cheapestCoffees")}</T></h2>
+        <h2>
+          <T namespace="common.locales" key="cheapestCoffees">
+            {tc("cheapestCoffees")}
+          </T>
+        </h2>
         <Coffees coffees={cheapestCoffees} />
       </section>
     )) ||
@@ -426,9 +446,19 @@ const statsLink = getSafeUrlWithStats({
   {
     (coffees.length && (
       <section>
-        <h2><T namespace="common.locales" key="allCoffees">{tc("allCoffees")}</T></h2>
+        <h2>
+          <T namespace="common.locales" key="allCoffees">
+            {tc("allCoffees")}
+          </T>
+        </h2>
         <Coffees coffees={coffees} />
       </section>
-    )) || <section><T namespace="common.locales" key="noCoffees">{tc("noCoffees")}</T></section>
+    )) || (
+      <section>
+        <T namespace="common.locales" key="noCoffees">
+          {tc("noCoffees")}
+        </T>
+      </section>
+    )
   }
 </Common>
