@@ -2,6 +2,7 @@
   .roaster {
     .image img {
       height: 100%;
+      border-radius: var(--border-radius);
       object-fit: contain;
     }
 
