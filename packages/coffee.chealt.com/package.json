@@ -39,6 +39,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.11.3",
     "axe-html-reporter": "^2.2.11",
+    "navigation-api-types": "^0.6.1",
     "rollup-plugin-visualizer": "^7.0.1",
     "vite": "8.0.16",
     "wrangler": "^4.98.0"

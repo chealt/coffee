@@ -1,10 +1,17 @@
 {
   "compilerOptions": {
+    "checkJs": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "maxNodeModuleJsDepth": 2,
+    "target": "ES2022",
     "paths": {
       "@components/*": ["./src/components/*"],
       "@data/*": ["./data/*"],
       "@pages/*": ["./src/pages/*"],
       "@utils/*": ["./src/utils/*"]
     }
-  }
+  },
+  "include": ["src/**/*", ".astro/types.d.ts"]
 }

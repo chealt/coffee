@@ -1177,6 +1177,7 @@ __metadata:
     astro: "npm:6.4.4"
     axe-html-reporter: "npm:^2.2.11"
     jsonwebtoken: "npm:^9.0.3"
+    navigation-api-types: "npm:^0.6.1"
     rollup-plugin-visualizer: "npm:^7.0.1"
     vite: "npm:8.0.16"
     wrangler: "npm:^4.98.0"
@@ -7570,6 +7571,13 @@ __metadata:
   bin:
     nanoid: bin/nanoid.cjs
   checksum: 10c0/ba142b7b39e11e80c16dd74b0365d407880c87c1cf7e1480956981ae940ee36060fa5b6f092cd1e315184dd19244c657bd017d03327bd3c62247d691c5e8edfb
+  languageName: node
+  linkType: hard
+
+"navigation-api-types@npm:^0.6.1":
+  version: 0.6.1
+  resolution: "navigation-api-types@npm:0.6.1"
+  checksum: 10c0/562899bf2af7edfd26e6d685704ccf7a33bd1ee41838b0f67a3e2a39e115d6634dd4eaa35c38b1706e0ab56c79e59754833835696964a432de805201ff1bdf11
   languageName: node
   linkType: hard
 
