@@ -37,7 +37,7 @@ class CoffeeImageUpload extends HTMLElement {
         Array.from(this.fileInput.files).map(async (fileData) => {
           const arrayBuffer = await fileData.arrayBuffer();
           filename = await getContentHash({ arrayBuffer });
-          itemId = itemId || crypto.randomUUID();
+          itemId = this.dataset.itemId || crypto.randomUUID();
 
           // upload and cache the image in a service worker
           navigator.serviceWorker.controller.postMessage(
