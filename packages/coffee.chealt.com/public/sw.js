@@ -28,7 +28,23 @@ const uploadFile = async ({ filename, fileData, getSignedUrl }) => {
   return uploadResponse;
 };
 
+const setItem = async (key, value) => {
+  const response = await fetch('/api/storage/set-item.json', {
+    method: 'POST',
+    body: JSON.stringify({ key, value })
+  });
+
+  if (!response.ok) {
+    throw new Error(`Could not set item: "${await response.text()}"`);
+  }
+
+  return response.json();
+};
+
 const CACHE_NAME = 'collection-images-cache-v1';
+
+const addImageToCollection = 'chealt-add-image-to-collection';
+const addImageToCollectionItem = 'chealt-add-image-to-collection-item';
 
 self.addEventListener('install', (event) => {
   console.info('SW: Install event');
@@ -88,6 +104,26 @@ self.addEventListener('message', (event) => {
           return uploadFile({ filename, fileData, getSignedUrl });
         })
         .catch((err) => console.error('SW: Caching failed:', err))
+    );
+  } else if (event.data && event.data.action === 'cache-collection-item') {
+    const { collectionId, itemId, filename } = event.data;
+
+    console.info(`SW: Received collection item ${filename}.`);
+
+    event.waitUntil(
+      setItem(collectionId ? addImageToCollection : addImageToCollectionItem, {
+        id: collectionId,
+        itemId,
+        filename
+      })
+        .then(() => {
+          console.info(
+            collectionId
+              ? `SW: Added item to collection: "${collectionId}", item id "${itemId}" and filename "${filename}".`
+              : `SW: Added collection item with id "${itemId}" and filename "${filename}".`
+          );
+        })
+        .catch((err) => console.error('SW: Adding collection item failed:', err))
     );
   }
 });

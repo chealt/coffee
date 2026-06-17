@@ -21,7 +21,7 @@ const t = await getTranslator({
 
 const { collectionId, itemId } = Astro.props;
 
-const { collectionItem, shouldAuthenticate } = Astro.locals;
+const { shouldAuthenticate } = Astro.locals;
 ---
 
 <Common
@@ -37,20 +37,27 @@ const { collectionItem, shouldAuthenticate } = Astro.locals;
     class="small bordered"
   >
     <Icon type="back" class="icon-only" />
-    <span class="visually-hidden"><T namespace="you.collections.item.locales" key="back">{t("back")}</T></span>
+    <span class="visually-hidden"
+      ><T namespace="you.collections.item.locales" key="back">{t("back")}</T
+      ></span
+    >
   </Button>
   <div
-    id={collectionItem?.id}
+    id={itemId}
     class="item-details"
     data-type="chealt-collection-item"
     data-delete-confirm-message={t("deleteItemConfirmMessage")}
   >
     <Images collectionId={collectionId} />
-    <Controls collectionId={collectionId} />
+    <Controls collectionId={collectionId} itemId={itemId} />
     <Details />
     <Review />
     <section>
-      <h1><T namespace="you.collections.item.locales" key="dangerZone">{t("dangerZone")}</T></h1>
+      <h1>
+        <T namespace="you.collections.item.locales" key="dangerZone"
+          >{t("dangerZone")}</T
+        >
+      </h1>
       <Button
         class="column danger"
         data-delete-trigger
@@ -62,7 +69,9 @@ const { collectionItem, shouldAuthenticate } = Astro.locals;
         data-dont-remove-element
       >
         <Icon type="delete" />
-        <T namespace="you.collections.item.locales" key="delete">{t("delete")}</T>
+        <T namespace="you.collections.item.locales" key="delete"
+          >{t("delete")}</T
+        >
       </Button>
     </section>
   </div>

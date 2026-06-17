@@ -16,14 +16,14 @@ const t = await getTranslator({
   locale: Astro.currentLocale,
 });
 
-const { collectionId } = Astro.props;
+const { collectionId, itemId } = Astro.props;
 
 const { collectionItem, collections } = Astro.locals;
 ---
 
 <coffee-controls
   class="controls"
-  data-item-id={collectionItem.id}
+  data-item-id={itemId}
   data-collections-url={getRelativeLocaleUrl(
     Astro.currentLocale,
     "/you/collections",
@@ -34,41 +34,49 @@ const { collectionItem, collections } = Astro.locals;
       type="favorite"
       class=`${collectionItem.isFavorite ? 'active' : ''}`
     />
-    <span><T namespace="you.collections.item.controls.locales" key="favorite">{t("favorite")}</T></span>
+    <span
+      ><T namespace="you.collections.item.controls.locales" key="favorite"
+        >{t("favorite")}</T
+      ></span
+    >
   </Button>
-  <CoffeeImageUpload
-    data-collection-id={collectionId}
-    data-item-id={collectionItem.id}
-  >
+  <CoffeeImageUpload data-collection-id={collectionId} data-item-id={itemId}>
     <Button
       class="add triggerButton"
       href={getRelativeLocaleUrl(Astro.currentLocale, "/you/collections")}
     >
       <Icon type="add" />
-      <span><T namespace="you.collections.item.controls.locales" key="add">{t("add")}</T></span>
+      <span
+        ><T namespace="you.collections.item.controls.locales" key="add"
+          >{t("add")}</T
+        ></span
+      >
     </Button>
   </CoffeeImageUpload>
   <Button
     class="more"
-    data-dialog-id={`collection-item-menu-${collectionId}-${collectionItem.id}`}
+    data-dialog-id={`collection-item-menu-${collectionId}-${itemId}`}
   >
     <Icon type="menu" />
-    <span><T namespace="you.collections.item.controls.locales" key="more">{t("more")}</T></span>
+    <span
+      ><T namespace="you.collections.item.controls.locales" key="more"
+        >{t("more")}</T
+      ></span
+    >
   </Button>
-  <Dialog
-    class="drawer"
-    id={`collection-item-menu-${collectionId}-${collectionItem.id}`}
-  >
+  <Dialog class="drawer" id={`collection-item-menu-${collectionId}-${itemId}`}>
     <ul>
       <li>
         <Button class="column" for="edit-collections">
           <Icon type="edit" />
-          <T namespace="you.collections.item.controls.locales" key="collections">{t("collections")}</T>
+          <T namespace="you.collections.item.controls.locales" key="collections"
+            >{t("collections")}</T
+          >
         </Button>
         <Button
           class="column danger"
           data-delete-trigger
-          for={collectionItem.id}
+          for={itemId}
           data-redirect-url={getRelativeLocaleUrl(
             Astro.currentLocale,
             "/you/collections",
@@ -77,13 +85,15 @@ const { collectionItem, collections } = Astro.locals;
           data-dont-close-dialog
         >
           <Icon type="delete" />
-          <T namespace="you.collections.item.controls.locales" key="delete">{t("delete")}</T>
+          <T namespace="you.collections.item.controls.locales" key="delete"
+            >{t("delete")}</T
+          >
         </Button>
       </li>
     </ul>
   </Dialog>
   <Dialog class="drawer" id="edit-collections">
-    <ul data-item-id={collectionItem.id}>
+    <ul data-item-id={itemId}>
       {
         collections.map(({ id, name }) => (
           <li>

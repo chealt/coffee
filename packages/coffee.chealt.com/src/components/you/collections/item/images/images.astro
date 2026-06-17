@@ -14,7 +14,6 @@ const t = await getTranslator({
 });
 
 const { collectionItem } = Astro.locals;
-const { collectionId } = Astro.props;
 ---
 
 <ul>
@@ -38,7 +37,12 @@ const { collectionId } = Astro.props;
                       <Icon type="info" />
                     </Button>
                     <span popover="hint" id="status" class="tooltip">
-                      <T namespace="you.collections.item.images.locales" key="processing">{t("processing")}</T>
+                      <T
+                        namespace="you.collections.item.images.locales"
+                        key="processing"
+                      >
+                        {t("processing")}
+                      </T>
                     </span>
                   </Fragment>
                 )}

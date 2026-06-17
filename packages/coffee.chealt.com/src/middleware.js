@@ -203,7 +203,27 @@ export const onRequest = async (context, next) => {
         await setCollections(context);
       } else if (collectionId && itemId) {
         await setCollections(context); // to enable the 'add to collection' feature
-        await setCollectionItem(context, itemId);
+
+        if (context.url.searchParams.get('uploading')) {
+          const filename = context.url.searchParams.get('filename');
+
+          // while uploading images and storing collection item in the DB, we return empty item details
+          context.locals.collectionItem = {
+            id: itemId,
+            images: [
+              {
+                filename,
+                src: getImageUrl({ filename }),
+                srcSmall: getImageUrl({ filename, size: 'small' }),
+                srcMedium: getImageUrl({ filename, size: 'medium' }),
+                status: 'processing'
+              }
+            ],
+            inCollections: [collectionId]
+          };
+        } else {
+          await setCollectionItem(context, itemId);
+        }
       }
 
       if (params[0] === 'unsubscribe' && loggedInUser) {
@@ -239,6 +259,7 @@ export const onRequest = async (context, next) => {
       try {
         const decoded = jwt.verify(registrationCode, sessionSecret);
 
+        // @ts-ignore (TS2339)
         if (decoded.username !== username) {
           return redirect('/registration/error?name=JsonWebTokenError');
         }

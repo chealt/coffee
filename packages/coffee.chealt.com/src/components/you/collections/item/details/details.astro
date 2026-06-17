@@ -30,7 +30,10 @@ const {
 ---
 
 <section>
-  <h1><T namespace="you.collections.item.details.locales" key="details">{t("details")}</T></h1>
+  <h1>
+    <T namespace="you.collections.item.details.locales" key="details"
+      >{t("details")}</T>
+  </h1>
   <Form
     name={`${id}.details`}
     data-storage="api"
@@ -61,7 +64,7 @@ const {
     />
     <Price price={details?.price} selectedCurrency={details?.currency} />
     <Weight value={details?.weight} />
-    <PricePerGram pricePerGram={details.pricePerGram} />
+    <PricePerGram pricePerGram={details?.pricePerGram} />
     <Decaf checked={details?.isDecaf} />
   </Form>
 </section>

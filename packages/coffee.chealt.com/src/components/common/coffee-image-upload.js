@@ -3,12 +3,11 @@ import { setItem } from '../../utils/storage.js';
 import logger from '../errors/utils.js';
 
 const addCollection = 'chealt-add-collection';
-const addImageToCollection = 'chealt-add-image-to-collection';
-const addImageToCollectionItem = 'chealt-add-image-to-collection-item';
 
 class CoffeeImageUpload extends HTMLElement {
   connectedCallback() {
     this.triggerButton = this.querySelector('.triggerButton');
+    /** @type {HTMLInputElement} */
     this.fileInput = this.querySelector('input[type=file]');
     this.getSignedUrl = this.dataset.getSignedUrl;
     this.imageUploadUrls = this.dataset.imageUploadUrls.split(';');
@@ -23,6 +22,7 @@ class CoffeeImageUpload extends HTMLElement {
 
       const collectionId = this.dataset.collectionId || crypto.randomUUID();
       let itemId = this.dataset.itemId;
+      let filename;
 
       // create collection if it doesn't exist
       if (!this.dataset.collectionId && !this.dataset.itemId) {
@@ -36,7 +36,8 @@ class CoffeeImageUpload extends HTMLElement {
       await Promise.all(
         Array.from(this.fileInput.files).map(async (fileData) => {
           const arrayBuffer = await fileData.arrayBuffer();
-          const filename = await getContentHash({ arrayBuffer });
+          filename = await getContentHash({ arrayBuffer });
+          itemId = itemId || crypto.randomUUID();
 
           // upload and cache the image in a service worker
           navigator.serviceWorker.controller.postMessage(
@@ -51,24 +52,19 @@ class CoffeeImageUpload extends HTMLElement {
             [arrayBuffer]
           );
 
-          if (this.dataset.itemId) {
-            await setItem(addImageToCollectionItem, {
-              itemId: this.dataset.itemId,
-              filename
-            });
-          } else {
-            itemId = crypto.randomUUID();
-
-            await setItem(addImageToCollection, {
-              id: collectionId,
-              itemId,
-              filename
-            });
-          }
+          // save item to DB in the background
+          navigator.serviceWorker.controller.postMessage({
+            action: 'cache-collection-item',
+            collectionId: this.dataset.itemId ? undefined : collectionId,
+            itemId,
+            filename
+          });
         })
       )
         .then(() => {
-          window.location.assign(`${this.triggerButton.getAttribute('href')}${collectionId}/items/${itemId}`);
+          window.location.assign(
+            `${this.triggerButton.getAttribute('href')}${collectionId}/items/${itemId}?uploading=true&filename=${filename}`
+          );
         })
         .catch((error) => {
           if (error.name === 'AbortError') {
