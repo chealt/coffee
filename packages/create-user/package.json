@@ -6,8 +6,8 @@
     "deploy": "aws lambda update-function-code --function-name createUser --zip-file fileb://package.zip --publish"
   },
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.1069.0",
-    "@aws-sdk/client-sesv2": "^3.1069.0",
+    "@aws-sdk/client-secrets-manager": "^3.1070.0",
+    "@aws-sdk/client-sesv2": "^3.1070.0",
     "@centralbeans/email": "workspace:^",
     "@libsql/client": "^0.17.4",
     "@sentry/aws-serverless": "^10.58.0",
