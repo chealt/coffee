@@ -16,7 +16,7 @@
     "export:data:ci": "node data/export.js",
     "import": "node --env-file=.env data/importData.js",
     "import:logos": "node data/importLogos.js",
-    "preview": "astro build && astro preview",
+    "preview": "astro build && wrangler pages dev ./dist",
     "recommendations": "node --env-file=.env data/recommendations/generate.js",
     "recommendations:ci": "node data/recommendations/generate.js"
   },
