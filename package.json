@@ -20,7 +20,7 @@
     "oxfmt": "^0.55.0",
     "oxlint": "^1.70.0",
     "supports-color": "^10.2.2",
-    "wrangler": "^4.101.0"
+    "wrangler": "^4.103.0"
   },
   "resolutions": {
     "@asamuzakjp/css-color": "4.1.1"
