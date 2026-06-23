@@ -3,13 +3,15 @@ import { getAll } from '../../../server/database/i18n.js';
 import { getCanTranslate } from '../../../server/i18n.js';
 
 const POST = async (context) => {
-  const loggedInUser = getSessionUser(context);
+  const loggedInUser = await getSessionUser(context);
 
   if (!loggedInUser) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }
 
-  if (!getCanTranslate(context)) {
+  const canTranslate = await getCanTranslate(context);
+
+  if (!canTranslate) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }
 

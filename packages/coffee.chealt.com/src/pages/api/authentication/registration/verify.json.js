@@ -39,7 +39,7 @@ const POST = async ({ request }) => {
         ],
         [
           'Set-Cookie',
-          `${cookieNameSession}=${getSessionJWT({ user })}; Path=/; HttpOnly; SameSite=Strict; Secure; Max-Age=${60 * 60 * 24};`
+          `${cookieNameSession}=${await getSessionJWT({ user })}; Path=/; HttpOnly; SameSite=Strict; Secure; Max-Age=${60 * 60 * 24};`
         ]
       ]
     });

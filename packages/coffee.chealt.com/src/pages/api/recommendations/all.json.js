@@ -3,11 +3,11 @@ import logger from '../../../server/utils/logger.js';
 
 const recommendationsData = import.meta.glob('../../../../data/recommendations/*.json', { eager: true });
 
-const GET = (context) => {
+const GET = async (context) => {
   let loggedInUser;
 
   try {
-    loggedInUser = getSessionUser(context);
+    loggedInUser = await getSessionUser(context);
   } catch {
     logger.info('Not logged in, using anonymous recommendations');
   }

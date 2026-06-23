@@ -2,7 +2,7 @@ import { getSessionUser } from '../authentication/session.js';
 import { getCollectionItem, getCollections } from '../database/collections.js';
 
 const setCollections = async (context) => {
-  const loggedInUser = getSessionUser(context);
+  const loggedInUser = await getSessionUser(context);
 
   if (loggedInUser) {
     const collections = await getCollections({ name: loggedInUser.username });
@@ -14,7 +14,7 @@ const setCollections = async (context) => {
 };
 
 const setCollectionItem = async (context, itemId) => {
-  const loggedInUser = getSessionUser(context);
+  const loggedInUser = await getSessionUser(context);
 
   if (loggedInUser) {
     const collectionItem = await getCollectionItem({ name: loggedInUser.username }, itemId);

@@ -3,13 +3,15 @@ import { getCanTranslate } from '../../../server/i18n.js';
 import { getValue, insert } from '../../../server/database/formData.js';
 
 const GET = async (context) => {
-  const loggedInUser = getSessionUser(context);
+  const loggedInUser = await getSessionUser(context);
 
   if (!loggedInUser) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }
 
-  if (!getCanTranslate(context)) {
+  const canTranslate = await getCanTranslate(context);
+
+  if (!canTranslate) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }
 

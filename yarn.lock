@@ -1327,7 +1327,7 @@ __metadata:
     "@tursodatabase/api": "npm:^2.0.4"
     astro: "npm:7.0.2"
     axe-html-reporter: "npm:^2.2.11"
-    jsonwebtoken: "npm:^9.0.3"
+    jose: "npm:^6.2.3"
     navigation-api-types: "npm:^0.6.1"
     rollup-plugin-visualizer: "npm:^7.0.1"
     vite: "npm:8.1.0"
@@ -6286,6 +6286,13 @@ __metadata:
   dependencies:
     "@isaacs/cliui": "npm:^8.0.2"
   checksum: 10c0/84ec4f8e21d6514db24737d9caf65361511f75e5e424980eebca4199f400874f45e562ac20fa8aeb1dd20ca2f3f81f0788b6e9c3e64d216a5794fd6f30e0e042
+  languageName: node
+  linkType: hard
+
+"jose@npm:^6.2.3":
+  version: 6.2.3
+  resolution: "jose@npm:6.2.3"
+  checksum: 10c0/aa91bccba22cc84d86308f833749bcb0b00441e35c24e0ac79abeac5f76dc62d47bdef9c1da6a0c609f5da6478595f52b252085888b89dbdb163861e40ea4188
   languageName: node
   linkType: hard
 

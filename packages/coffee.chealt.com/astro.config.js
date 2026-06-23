@@ -42,6 +42,9 @@ export default defineConfig({
     },
     ssr: {
       external: [
+        '@aws-sdk/client-s3',
+        '@aws-sdk/client-lambda',
+        '@aws-sdk/s3-request-presigner',
         'async_hooks',
         'buffer',
         'child_process',
@@ -81,9 +84,6 @@ export default defineConfig({
         crypto: 'node:crypto',
         stream: 'node:stream'
       }
-    },
-    optimizeDeps: {
-      exclude: ['jsonwebtoken']
     }
   },
   integrations: [

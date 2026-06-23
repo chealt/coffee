@@ -4,7 +4,7 @@ import logger from '../../../server/utils/logger.js';
 
 const POST = async (context) => {
   // check if user is logged in
-  getSessionUser(context);
+  await getSessionUser(context);
 
   const { filename, contentType } = await context.request.json();
 

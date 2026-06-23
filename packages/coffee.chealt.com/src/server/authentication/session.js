@@ -1,21 +1,31 @@
-import jwt from 'jsonwebtoken';
+import { SignJWT, jwtVerify } from 'jose';
 
 import { sessionSecret } from './config.js';
 import { getSessionID } from './cookies.js';
 
+const secretKey = new TextEncoder().encode(sessionSecret);
+
 const getSessionJWT = ({ user }) =>
-  jwt.sign({ userID: user.id, username: user.name }, sessionSecret, { expiresIn: '7d' });
+  new SignJWT({ userID: user.id, username: user.name })
+    .setProtectedHeader({ alg: 'HS256' }) // Explicitly state the hashing algorithm
+    .setIssuedAt()
+    .setExpirationTime('7d')
+    .sign(secretKey);
 
-const verifySessionID = (sessionID) => jwt.verify(sessionID, sessionSecret);
+const verifySessionID = async (sessionID) => {
+  const { payload } = await jwtVerify(sessionID, secretKey);
 
-const getSessionUser = (context) => {
+  return payload;
+};
+
+const getSessionUser = async (context) => {
   const sessionID = getSessionID(context);
 
   if (!sessionID) {
     throw new Error('Session ID not found');
   }
 
-  const { userID, username } = verifySessionID(sessionID);
+  const { userID, username } = await verifySessionID(sessionID);
 
   return { userID, username };
 };

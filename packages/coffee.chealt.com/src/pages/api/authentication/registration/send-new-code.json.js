@@ -22,7 +22,7 @@ const checkRateLimit = async ({ context, email }) => {
 
 const GET = async (context) => {
   try {
-    const user = getSessionUser(context);
+    const user = await getSessionUser(context);
 
     const username = user.username;
     const email = (await getUser(username)).email;

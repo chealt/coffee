@@ -3,7 +3,7 @@ import { deleteCollection, deleteCollectionItem } from '../../../server/database
 import logger from '../../../server/utils/logger.js';
 
 const DELETE = async (context) => {
-  const loggedInUser = getSessionUser(context);
+  const loggedInUser = await getSessionUser(context);
 
   if (!loggedInUser) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });

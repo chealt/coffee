@@ -1,11 +1,11 @@
 import { getSessionUser } from '../server/authentication/session.js';
 
 const translators = ['attilabartha', 'martyna'];
-const getCanTranslate = (context) => {
+const getCanTranslate = async (context) => {
   let canTranslate = false;
 
   try {
-    const { username } = getSessionUser(context);
+    const { username } = await getSessionUser(context);
 
     canTranslate = translators.includes(username);
   } catch {

@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import { jwtVerify } from 'jose';
 
 import supportedLanguages from '../data/supportedLanguages.json' with { type: 'json' };
 import { getImageUrl } from './server/AWS/storage.js';
@@ -12,6 +12,8 @@ import { getAuthenticationOptions } from './server/login.js';
 import { createRegistrationOptions } from './server/registration.js';
 import logger from './server/utils/logger.js';
 import { setCollections, setCollectionItem } from './server/you/collections.js';
+
+const secretKey = new TextEncoder().encode(sessionSecret);
 
 const locales = supportedLanguages.map(({ locale }) => locale);
 const defaultLocale = supportedLanguages.find(({ isDefault }) => isDefault).locale;
@@ -46,7 +48,7 @@ const setCurrency = async (context) => {
   let currencyDB;
 
   try {
-    const settings = await getValue({ user: { name: getSessionUser(context)?.username }, key: 'settings' });
+    const settings = await getValue({ user: { name: await getSessionUser(context)?.username }, key: 'settings' });
 
     currencyDB = settings?.currency;
   } catch {
@@ -60,7 +62,7 @@ const setCurrency = async (context) => {
 
 const setSettings = async (context) => {
   try {
-    const settings = await getValue({ user: { name: getSessionUser(context)?.username }, key: 'settings' });
+    const settings = await getValue({ user: { name: await getSessionUser(context)?.username }, key: 'settings' });
 
     context.locals.settings = settings;
   } catch {
@@ -94,8 +96,8 @@ const redirect = (url) =>
     }
   });
 
-const authenticate = (context) => {
-  const loggedInUser = getSessionUser(context);
+const authenticate = async (context) => {
+  const loggedInUser = await getSessionUser(context);
 
   context.locals.loggedInUser = loggedInUser;
 };
@@ -149,17 +151,18 @@ export const onRequest = async (context, next) => {
 
     try {
       // set the user if we have it
-      authenticate(context);
+      await authenticate(context);
     } catch {
       // DO NOTHING
     }
 
     try {
-      const settings = await getValue({ user: { name: getSessionUser(context)?.username }, key: 'settings' });
+      const user = await getSessionUser(context);
+      const settings = await getValue({ user: { name: user?.username }, key: 'settings' });
 
       savedLocaleDB = settings?.language;
 
-      context.locals.canTranslate = getCanTranslate(context);
+      context.locals.canTranslate = await getCanTranslate(context);
       context.locals.isTranslating = settings?.isTranslating === 'on';
     } catch {
       // DO NOTHING
@@ -186,7 +189,7 @@ export const onRequest = async (context, next) => {
 
   if (page === 'api' && params[0] !== 'authentication' && params[0] !== 'recommendations') {
     try {
-      authenticate(context);
+      await authenticate(context);
     } catch (error) {
       logger.error(error);
 
@@ -196,7 +199,7 @@ export const onRequest = async (context, next) => {
 
   if (page === 'you') {
     try {
-      const loggedInUser = getSessionUser(context);
+      const loggedInUser = await getSessionUser(context);
 
       context.locals.username = loggedInUser?.username;
 
@@ -261,10 +264,9 @@ export const onRequest = async (context, next) => {
 
     if (registrationCode) {
       try {
-        const decoded = jwt.verify(registrationCode, sessionSecret);
+        const { payload } = await jwtVerify(registrationCode, secretKey);
 
-        // @ts-ignore (TS2339)
-        if (decoded.username !== username) {
+        if (payload.username !== username) {
           return redirect('/registration/error?name=JsonWebTokenError');
         }
       } catch (error) {
