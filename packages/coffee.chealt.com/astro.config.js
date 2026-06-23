@@ -74,6 +74,16 @@ export default defineConfig({
         'util',
         'worker_threads'
       ]
+    },
+    resolve: {
+      alias: {
+        buffer: 'node:buffer',
+        crypto: 'node:crypto',
+        stream: 'node:stream'
+      }
+    },
+    optimizeDeps: {
+      exclude: ['jsonwebtoken']
     }
   },
   integrations: [
