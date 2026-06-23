@@ -37,8 +37,9 @@ export default defineConfig({
     ],
     assetsInclude: ['**/*.txt', '**/*.{jpeg,jpg,png,gif,svg,webp}'],
     build: {
-      sourcemap: true,
-      assetsInlineLimit: 0
+      assetsInlineLimit: 0,
+      cssMinify: 'esbuild',
+      sourcemap: true
     },
     ssr: {
       external: [
