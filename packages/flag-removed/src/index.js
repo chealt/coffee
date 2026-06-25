@@ -9,6 +9,7 @@ const isOutOfStock = ({ html, roasterId, webshopItemLink }) => {
   if (
     roasterId !== 6 &&
     roasterId !== 7 &&
+    roasterId !== 12 &&
     roasterId !== 39 &&
     roasterId !== 65 &&
     roasterId !== 252 &&
@@ -20,6 +21,10 @@ const isOutOfStock = ({ html, roasterId, webshopItemLink }) => {
 
   if (roasterId === 7) {
     return html.includes('Obecnie brak na stanie');
+  }
+
+  if (roasterId === 12) {
+    return html.includes('Product is archived');
   }
 
   if (roasterId === 65) {
