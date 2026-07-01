@@ -1390,12 +1390,20 @@ const parsers = {
 
     const pricePerGram = Number((price / weight).toFixed(2));
 
-    const details = Array.from(document.querySelectorAll('.product-information__additional__line')).map((element) =>
-      element.textContent.trim().toLowerCase()
-    );
+    const details = Array.from(document.querySelectorAll('.product-information__additional__line')).map((element) => {
+      const clone = element.cloneNode(true);
 
-    const originCountry = originCountries.find(({ name }) =>
-      details.some((detail) => detail.includes(name) || url.includes(name))
+      clone.querySelectorAll('br').forEach((br) => {
+        br.replaceWith(document.createTextNode(' '));
+      });
+
+      const cleanText = clone.textContent;
+
+      return cleanText.trim().toLowerCase();
+    });
+
+    const originCountry = originCountries.find(
+      ({ name }) => url.includes(name) || details.some((detail) => detail.includes(name))
     );
     const originCountryId = originCountry?.origin_country_id || null;
 
@@ -1423,9 +1431,11 @@ const parsers = {
       ? tasteNotesString.split('flavor profile:')[1]
       : undefined;
     const tasteNoteStrings = tasteNoteElement?.split(', ').map((note) => note.trim());
-    const tasteNoteIds = tasteNotes
-      .filter(({ name, alias }) => tasteNoteStrings.some((note) => name === note || alias === note))
-      .map(({ taste_note_id: id }) => id);
+    const tasteNoteIds = tasteNoteStrings?.length
+      ? tasteNotes
+          .filter(({ name, alias }) => tasteNoteStrings.some((note) => name === note || alias === note))
+          .map(({ taste_note_id: id }) => id)
+      : [];
 
     const varietyIds = details.reduce((newVarietyIds, detail) => {
       varieties.forEach(({ id, name, alias }) => {
