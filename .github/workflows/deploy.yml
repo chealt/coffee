@@ -698,7 +698,8 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          command: deploy --config packages/coffee.chealt.com/wrangler.toml
+          workingDirectory: packages/coffee.chealt.com
+          command: deploy dist/_worker.js/index.js --config wrangler.toml --assets dist
       - name: Release centralbeans.com
         if: steps.changed-files.outputs.any_changed == 'true' && steps.deploy.conclusion == 'success'
         env:
