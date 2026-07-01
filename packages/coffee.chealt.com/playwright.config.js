@@ -35,6 +35,7 @@ export default defineConfig({
   ],
   webServer: {
     command: 'yarn dev',
-    port: 4321
+    port: 4321,
+    reuseExistingServer: true
   }
 });
