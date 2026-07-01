@@ -122,7 +122,10 @@ const parsers = {
     const { products } = await response.json();
 
     return products
-      .filter(({ tags, handle }) => tags.includes('Kawy') && !handle.includes('zestaw') && handle !== 'test-roast')
+      .filter(
+        ({ tags, handle }) =>
+          tags.includes('Kawy') && !handle.includes('zestaw') && !handle.includes('drip-bag') && handle !== 'test-roast'
+      )
       .map(({ handle }) => `${origin}/products/${handle}`);
   },
   // Typika
