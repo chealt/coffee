@@ -207,7 +207,7 @@ const parsers = {
 
     return Array.from(
       new Set(
-        Array.from(document.querySelectorAll('.product_cat-coffee a.woocommerce-loop-product__link'))
+        Array.from(document.querySelectorAll('.product_cat-kawa a.woocommerce-loop-product__link'))
           .map(({ href }) => href)
           .filter((url) => !url.includes('blend'))
       )

@@ -1903,7 +1903,11 @@ const parsers = {
       throw new Error(`Unknown currency: ${url}`);
     }
 
-    const weightElementValue = document.querySelector('#waga option[selected]').textContent.replaceAll(' g', '');
+    const weightElement =
+      document.querySelector('#waga option[selected]') ||
+      document.querySelector('#waga option.attached.enabled') ||
+      Array.from(document.querySelectorAll('#waga option')).find((element) => element.value?.includes(' g'));
+    const weightElementValue = weightElement.textContent.replaceAll(' g', '');
     const weight = parseFloat(weightElementValue);
 
     if (!weight || isNaN(weight)) {
@@ -1959,16 +1963,14 @@ const parsers = {
       logger.debug(`Missing processing method: ${processingMethod}`);
     }
 
-    const brewingMethod = document
-      .querySelector('.ct-breadcrumbs .item-1 [itemprop="name"]')
-      .textContent.trim()
-      .toLowerCase();
+    const brewingMethod =
+      document.querySelector('.ct-breadcrumbs .item-1 [itemprop="name"]')?.textContent.trim().toLowerCase() || 'omni';
     const brewingMethodId = brewingMethods.find(({ name }) => brewingMethod === name)?.brewing_method_id || null;
 
-    const description = document
-      .querySelector('.woocommerce-product-details__short-description')
-      .textContent.trim()
-      .toLowerCase();
+    const descriptionElement =
+      document.querySelector('.woocommerce-product-details__short-description') ||
+      document.querySelector('.woocommerce-Tabs-panel--description');
+    const description = descriptionElement.textContent.trim().toLowerCase().replaceAll('\n', ' ');
     const translatedDescription = await translate({ text: description, from: 'pl', to: 'en' });
     const cleanTranslation = translatedDescription.replaceAll('-', ' ');
 
