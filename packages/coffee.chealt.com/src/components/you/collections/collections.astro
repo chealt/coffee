@@ -69,13 +69,13 @@ const { collections, shouldAuthenticate, username } = Astro.locals;
                         <picture>
                           <source
                             srcset={cover.srcSmall}
-                            media="(max-width: 599px)"
+                            media="(max-width: 1023px)"
                           />
                           <source
                             srcset={cover.srcMedium}
-                            media="(max-width: 1023px)"
+                            media="(max-width: 1800px)"
                           />
-                          <img src={cover.src} />
+                          <img src={cover.src} loading="lazy" />
                         </picture>
                       </a>
                     </li>
