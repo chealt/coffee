@@ -665,6 +665,7 @@ jobs:
             .github/workflows/deploy.yml
             packages/coffee.chealt.com/*.js
             packages/coffee.chealt.com/*.json
+            packages/coffee.chealt.com/wrangler.toml
             packages/coffee.chealt.com/data/**
             packages/coffee.chealt.com/public/**
             packages/coffee.chealt.com/src/**
