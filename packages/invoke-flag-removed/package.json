@@ -6,9 +6,9 @@
     "deploy": "aws lambda update-function-code --function-name invokeFlagRemoved --zip-file fileb://package.zip --publish"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.1075.0",
-    "@aws-sdk/client-secrets-manager": "^3.1075.0",
+    "@aws-sdk/client-lambda": "^3.1077.0",
+    "@aws-sdk/client-secrets-manager": "^3.1077.0",
     "@libsql/client": "^0.17.4",
-    "@sentry/aws-serverless": "^10.60.0"
+    "@sentry/aws-serverless": "^10.62.0"
   }
 }

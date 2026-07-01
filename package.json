@@ -17,10 +17,10 @@
     "recommendations:ci": "yarn workspace @centralbeans/website recommendations:ci"
   },
   "devDependencies": {
-    "oxfmt": "^0.56.0",
-    "oxlint": "^1.71.0",
+    "oxfmt": "^0.57.0",
+    "oxlint": "^1.72.0",
     "supports-color": "^10.2.2",
-    "wrangler": "^4.104.0"
+    "wrangler": "^4.106.0"
   },
   "resolutions": {
     "@asamuzakjp/css-color": "4.1.1"

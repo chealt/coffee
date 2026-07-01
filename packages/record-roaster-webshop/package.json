@@ -7,8 +7,8 @@
     "test": "mkdir -p data && cp ../coffee.chealt.com/data/roasters.json data/roasters.json && node ./test.js"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.1075.0",
-    "@aws-sdk/client-s3": "^3.1075.0",
-    "@sentry/aws-serverless": "^10.60.0"
+    "@aws-sdk/client-lambda": "^3.1077.0",
+    "@aws-sdk/client-s3": "^3.1077.0",
+    "@sentry/aws-serverless": "^10.62.0"
   }
 }
