@@ -14,6 +14,7 @@
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "lint": "oxlint",
+    "recommendations": "yarn workspace @centralbeans/website recommendations",
     "recommendations:ci": "yarn workspace @centralbeans/website recommendations:ci"
   },
   "devDependencies": {

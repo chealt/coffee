@@ -21,7 +21,7 @@
     "recommendations:ci": "node data/recommendations/generate.js"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "12.6.13",
+    "@astrojs/cloudflare": "14.0.2",
     "@aws-sdk/client-lambda": "^3.1077.0",
     "@aws-sdk/client-s3": "^3.1077.0",
     "@aws-sdk/s3-request-presigner": "^3.1077.0",
