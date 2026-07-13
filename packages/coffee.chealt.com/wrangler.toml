@@ -1,4 +1,5 @@
 name = "coffee"
+main = "./dist/_worker.js/index.js"
 upload_source_maps = true
 compatibility_date = "2025-04-08"
 compatibility_flags = ["nodejs_compat"]
