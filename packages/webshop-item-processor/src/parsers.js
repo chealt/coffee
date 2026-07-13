@@ -2629,9 +2629,7 @@ const parsers = {
     const currency = currencyCodes[currencySymbol];
 
     if (!currency) {
-      logger.error(`Unknown currency: ${currencySymbol}`);
-
-      throw new Error(errors.currencyMissing);
+      return { missingCurrency: true };
     }
 
     const image = smallest.image?.url;

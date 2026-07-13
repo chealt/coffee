@@ -5,6 +5,7 @@ import { inflateSync } from 'node:zlib';
 
 const responses = {
   success: { success: true },
+  missingCurrency: { success: true, missingCurrency: true },
   missingDetails: { success: true, missingDetails: true },
   outOfStock: { success: true, outOfStock: true }
 };
@@ -44,6 +45,12 @@ const handler = async (event) => {
     return responses.success;
   }
 
+  if (details.missingCurrency) {
+    logger.info(`Skipping missing currency item ${url}`);
+
+    return responses.missingDetails;
+  }
+
   if (details.isBlend) {
     logger.info(`Skipping blend ${url}`);
 
@@ -74,12 +81,6 @@ const handler = async (event) => {
     );
 
     return responses.missingDetails;
-  }
-
-  if (details.isOutOfStock) {
-    logger.info(`Skipping out of stock item ${url}`);
-
-    return responses.outOfStock;
   }
 
   if (event.isTest) {
