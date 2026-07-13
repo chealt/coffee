@@ -256,16 +256,18 @@ const parsers = {
 
     const document = getDocument(html);
 
-    const title = document.querySelector('h1.product-title').textContent.toLowerCase().trim();
-
-    const options = document.querySelectorAll('#pa_opakowanie option');
-    const isOutOfStock = options.length === 1 && options[0].textContent.toLowerCase().includes('choose an option');
+    const outOfStockPage = html.includes('Odkryj ze mną nowe smaki');
+    const options = !outOfStockPage && document.querySelectorAll('#pa_opakowanie option');
+    const isOutOfStock =
+      outOfStockPage || (options.length === 1 && options[0].textContent.toLowerCase().includes('choose an option'));
 
     if (isOutOfStock) {
       logger.info(`Out of stock for ${url}`);
 
       return { isOutOfStock: true };
     }
+
+    const title = document.querySelector('h1.product-title').textContent.toLowerCase().trim();
 
     const price = Number(
       document.querySelector('.price .woocommerce-Price-amount').textContent.replaceAll(' zł', '').replaceAll(',', '.')

@@ -27,11 +27,10 @@ const parsers = {
       '.product_cat-akcesoria',
       '.product_cat-accessories',
       '.product_cat-warsztaty-kawowe',
-      '.product_cat-workshops'
+      '.product_cat-workshops',
+      '.outofstock'
     ];
-    const productLinks = document.querySelectorAll(
-      `.product:not(${hiddenProductSelectors.join(',')}) .--eael-wrapper-link-tag`
-    );
+    const productLinks = document.querySelectorAll(`.product:not(${hiddenProductSelectors.join(',')}) a:has(img)`);
 
     return Array.from(new Set(Array.from(productLinks).map((productLink) => productLink.href)));
   },
