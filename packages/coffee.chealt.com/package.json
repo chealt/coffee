@@ -22,9 +22,9 @@
   },
   "dependencies": {
     "@astrojs/cloudflare": "12.6.13",
-    "@aws-sdk/client-lambda": "^3.1085.0",
-    "@aws-sdk/client-s3": "^3.1085.0",
-    "@aws-sdk/s3-request-presigner": "^3.1085.0",
+    "@aws-sdk/client-lambda": "^3.1086.0",
+    "@aws-sdk/client-s3": "^3.1086.0",
+    "@aws-sdk/s3-request-presigner": "^3.1086.0",
     "@libsql/client": "^0.17.4",
     "@playwright-testing-library/test": "^4.5.0",
     "@playwright/test": "^1.61.1",
@@ -33,7 +33,7 @@
     "@simplewebauthn/browser": "^13.3.0",
     "@simplewebauthn/server": "^13.3.2",
     "@tursodatabase/api": "^2.0.5",
-    "astro": "7.0.8",
+    "astro": "7.0.9",
     "jose": "^6.2.3"
   },
   "devDependencies": {

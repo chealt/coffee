@@ -280,12 +280,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-dynamodb@npm:^3.1085.0":
-  version: 3.1085.0
-  resolution: "@aws-sdk/client-dynamodb@npm:3.1085.0"
+"@aws-sdk/client-dynamodb@npm:^3.1086.0":
+  version: 3.1086.0
+  resolution: "@aws-sdk/client-dynamodb@npm:3.1086.0"
   dependencies:
     "@aws-sdk/core": "npm:^3.975.1"
-    "@aws-sdk/credential-provider-node": "npm:^3.972.66"
+    "@aws-sdk/credential-provider-node": "npm:^3.972.67"
     "@aws-sdk/dynamodb-codec": "npm:^3.973.31"
     "@aws-sdk/middleware-endpoint-discovery": "npm:^3.972.23"
     "@aws-sdk/types": "npm:^3.974.0"
@@ -294,33 +294,33 @@ __metadata:
     "@smithy/node-http-handler": "npm:^4.9.4"
     "@smithy/types": "npm:^4.16.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/daf6f7baa83895f267290aa0402bd149051c22ff846f5e1424decb2c4bacd48b9b82737e78d60a62641a1dd052cdac861f92c97187d696968106449d8cc16666
+  checksum: 10c0/58f4f41c6b573bb8dee21ca820922d322d7d48e6d276e5e2239791728429f4e557d8c5f8c6266ae6480d6814f6e93c45ba098a8a091e3fbcd327ab09560b142a
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-lambda@npm:^3.1085.0":
-  version: 3.1085.0
-  resolution: "@aws-sdk/client-lambda@npm:3.1085.0"
+"@aws-sdk/client-lambda@npm:^3.1086.0":
+  version: 3.1086.0
+  resolution: "@aws-sdk/client-lambda@npm:3.1086.0"
   dependencies:
     "@aws-sdk/core": "npm:^3.975.1"
-    "@aws-sdk/credential-provider-node": "npm:^3.972.66"
+    "@aws-sdk/credential-provider-node": "npm:^3.972.67"
     "@aws-sdk/types": "npm:^3.974.0"
     "@smithy/core": "npm:^3.29.2"
     "@smithy/fetch-http-handler": "npm:^5.6.4"
     "@smithy/node-http-handler": "npm:^4.9.4"
     "@smithy/types": "npm:^4.16.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/b88c97642ac9869ff0d91ed39f4c303407c143031eb9342c201d234d260ef4880643fdebe148a90a018ac0c4306149fb3752db7ca2ebd5d624a3cb7a6377187b
+  checksum: 10c0/b21bce5930670a86f20cd46824987c574869d690b2b5dd8d9d277ae217c1ada3c06e59e21fdb6c6acc20654fdb17149e533aaa98ad15bd3a61d1b1ba555f28f7
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-s3@npm:^3.1085.0":
-  version: 3.1085.0
-  resolution: "@aws-sdk/client-s3@npm:3.1085.0"
+"@aws-sdk/client-s3@npm:^3.1086.0":
+  version: 3.1086.0
+  resolution: "@aws-sdk/client-s3@npm:3.1086.0"
   dependencies:
     "@aws-sdk/checksums": "npm:^3.1000.16"
     "@aws-sdk/core": "npm:^3.975.1"
-    "@aws-sdk/credential-provider-node": "npm:^3.972.66"
+    "@aws-sdk/credential-provider-node": "npm:^3.972.67"
     "@aws-sdk/middleware-sdk-s3": "npm:^3.972.62"
     "@aws-sdk/signature-v4-multi-region": "npm:^3.996.39"
     "@aws-sdk/types": "npm:^3.974.0"
@@ -329,32 +329,32 @@ __metadata:
     "@smithy/node-http-handler": "npm:^4.9.4"
     "@smithy/types": "npm:^4.16.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/4646de6cd67db5958d90ee9a692bb0d391c25b516ba44e7269a59e31e8b96e2381880f6e67040fc93eb67b4c79161219ef5dd89ff42931a97f805191ee5e2d2c
+  checksum: 10c0/1b8d5641119a200690370769ed2fcda252593dfd6c85e9891e07284eb38cb2b87276f27dd650e77048ef3480c088739ea06db24ba3292da518427ae791bba0d3
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-secrets-manager@npm:^3.1085.0":
-  version: 3.1085.0
-  resolution: "@aws-sdk/client-secrets-manager@npm:3.1085.0"
+"@aws-sdk/client-secrets-manager@npm:^3.1086.0":
+  version: 3.1086.0
+  resolution: "@aws-sdk/client-secrets-manager@npm:3.1086.0"
   dependencies:
     "@aws-sdk/core": "npm:^3.975.1"
-    "@aws-sdk/credential-provider-node": "npm:^3.972.66"
+    "@aws-sdk/credential-provider-node": "npm:^3.972.67"
     "@aws-sdk/types": "npm:^3.974.0"
     "@smithy/core": "npm:^3.29.2"
     "@smithy/fetch-http-handler": "npm:^5.6.4"
     "@smithy/node-http-handler": "npm:^4.9.4"
     "@smithy/types": "npm:^4.16.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/3eb20fd511b4c67927d08b7ad28d6000a59f2cda85ce93b8049b6d9e1a9b6ab624dc6d0b9ef38f4fd1108a137a16c9e4d3ab36aadef687d0ef7b7b63847d2f19
+  checksum: 10c0/18fa3460c9b99f843cbf884a82aac12268db8bfdfe2788bad831159f09d7c0feb798f3a3179248b3e2cf0e467582b247106a5fd2af2d8fe490829048c5139195
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-sesv2@npm:^3.1085.0":
-  version: 3.1085.0
-  resolution: "@aws-sdk/client-sesv2@npm:3.1085.0"
+"@aws-sdk/client-sesv2@npm:^3.1086.0":
+  version: 3.1086.0
+  resolution: "@aws-sdk/client-sesv2@npm:3.1086.0"
   dependencies:
     "@aws-sdk/core": "npm:^3.975.1"
-    "@aws-sdk/credential-provider-node": "npm:^3.972.66"
+    "@aws-sdk/credential-provider-node": "npm:^3.972.67"
     "@aws-sdk/signature-v4-multi-region": "npm:^3.996.39"
     "@aws-sdk/types": "npm:^3.974.0"
     "@smithy/core": "npm:^3.29.2"
@@ -362,39 +362,39 @@ __metadata:
     "@smithy/node-http-handler": "npm:^4.9.4"
     "@smithy/types": "npm:^4.16.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/e8d9e603d4e74aea89ddb553362fea04751d56e6f0240817d81e2d3c0759f7114e6c87e8541b63834b2ac87ce340bcf00c9937305984cdfa4e2e8368a67dacaa
+  checksum: 10c0/504062fc7e5c5fb66ddfb576125c201520926a0c160ebf9586c3bef784a7fd0957a230f884559b9ebb251db3b7ae006227426a74328a2bddb22116ca1b4bf710
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-textract@npm:^3.1085.0":
-  version: 3.1085.0
-  resolution: "@aws-sdk/client-textract@npm:3.1085.0"
+"@aws-sdk/client-textract@npm:^3.1086.0":
+  version: 3.1086.0
+  resolution: "@aws-sdk/client-textract@npm:3.1086.0"
   dependencies:
     "@aws-sdk/core": "npm:^3.975.1"
-    "@aws-sdk/credential-provider-node": "npm:^3.972.66"
+    "@aws-sdk/credential-provider-node": "npm:^3.972.67"
     "@aws-sdk/types": "npm:^3.974.0"
     "@smithy/core": "npm:^3.29.2"
     "@smithy/fetch-http-handler": "npm:^5.6.4"
     "@smithy/node-http-handler": "npm:^4.9.4"
     "@smithy/types": "npm:^4.16.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/533b54e2cdd1bf01900cd297187b85fc3f78bba4f0657f876e1dfbe6d90f701623d27b81d7e535c4d13264c08ad28c7a3ff188d75369bf5fcf725b7b27a1d5e6
+  checksum: 10c0/0e02e185715414027760698b713fb0276717fd069bec11f1c278a6139cb6d9de71532f83e61a30149fde5c77466afae7318025872dc32c75f2ccaf510f851187
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-translate@npm:^3.1085.0":
-  version: 3.1085.0
-  resolution: "@aws-sdk/client-translate@npm:3.1085.0"
+"@aws-sdk/client-translate@npm:^3.1086.0":
+  version: 3.1086.0
+  resolution: "@aws-sdk/client-translate@npm:3.1086.0"
   dependencies:
     "@aws-sdk/core": "npm:^3.975.1"
-    "@aws-sdk/credential-provider-node": "npm:^3.972.66"
+    "@aws-sdk/credential-provider-node": "npm:^3.972.67"
     "@aws-sdk/types": "npm:^3.974.0"
     "@smithy/core": "npm:^3.29.2"
     "@smithy/fetch-http-handler": "npm:^5.6.4"
     "@smithy/node-http-handler": "npm:^4.9.4"
     "@smithy/types": "npm:^4.16.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/ab5becd0dc0dbb60c64c99eb0b3fcb82c619de6d7686f91067eb65b97d17ad7ecdca0f9c445c8ac8f99a38cc095d65226f275a9dc558112647f197dc290c2a19
+  checksum: 10c0/8d6e5549f0c190774e0222cc265cd611e3d2ead575423aad10f77e6c25baea2ba18306df74a64a982225c8b41928a1ffa5901592e531d1825e8bf4b602f0a861
   languageName: node
   linkType: hard
 
@@ -477,9 +477,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/credential-provider-node@npm:^3.972.66":
-  version: 3.972.66
-  resolution: "@aws-sdk/credential-provider-node@npm:3.972.66"
+"@aws-sdk/credential-provider-node@npm:^3.972.67":
+  version: 3.972.67
+  resolution: "@aws-sdk/credential-provider-node@npm:3.972.67"
   dependencies:
     "@aws-sdk/credential-provider-env": "npm:^3.972.57"
     "@aws-sdk/credential-provider-http": "npm:^3.972.59"
@@ -492,7 +492,7 @@ __metadata:
     "@smithy/credential-provider-imds": "npm:^4.4.7"
     "@smithy/types": "npm:^4.16.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/8d407f2a3f1ee549e60980a2064f104ec97bf4d137d9c22c9142a44639052d69b9a56d90d26c2d639ebb20909d9111534e3b0e888ccaa6fc6176e69e7cdb5b07
+  checksum: 10c0/bd0c7e6a56ef269d694782a539808579b1489aa2ef829f144ac5d71de056898cadc9c33c0433906dda7e37f8241707a4ed63c727bf5a4d11c53aee23bac6b689
   languageName: node
   linkType: hard
 
@@ -603,9 +603,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/s3-request-presigner@npm:^3.1085.0":
-  version: 3.1085.0
-  resolution: "@aws-sdk/s3-request-presigner@npm:3.1085.0"
+"@aws-sdk/s3-request-presigner@npm:^3.1086.0":
+  version: 3.1086.0
+  resolution: "@aws-sdk/s3-request-presigner@npm:3.1086.0"
   dependencies:
     "@aws-sdk/core": "npm:^3.975.1"
     "@aws-sdk/signature-v4-multi-region": "npm:^3.996.39"
@@ -613,7 +613,7 @@ __metadata:
     "@smithy/core": "npm:^3.29.2"
     "@smithy/types": "npm:^4.16.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/132ebfebe64d7699ec6b72f079ddac3c84e38a5bbff56eda53337c628d415d02662349e8dfb3f7cd9948bc1abc5709e5398e8e12fadd05124ef4c91e3574cc3a
+  checksum: 10c0/fa7151e25fb1f4e80b08b8da2f0ddb8460a9d4453715d2a7eba43a82ba901d7f2d1b95beef6ddcc3d2519f854ee5ff4c617a298ed5f06f9ef8458185f28b48c1
   languageName: node
   linkType: hard
 
@@ -980,7 +980,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/coffee-admin@workspace:packages/coffee-admin"
   dependencies:
-    "@aws-sdk/client-translate": "npm:^3.1085.0"
+    "@aws-sdk/client-translate": "npm:^3.1086.0"
     "@libsql/client": "npm:^0.17.4"
     "@playwright/test": "npm:^1.61.1"
   languageName: unknown
@@ -990,8 +990,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/create-user@workspace:packages/create-user"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.1085.0"
-    "@aws-sdk/client-sesv2": "npm:^3.1085.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1086.0"
+    "@aws-sdk/client-sesv2": "npm:^3.1086.0"
     "@centralbeans/email": "workspace:^"
     "@libsql/client": "npm:^0.17.4"
     "@sentry/aws-serverless": "npm:^10.65.0"
@@ -1004,7 +1004,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/delete-user@workspace:packages/delete-user"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.1085.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1086.0"
     "@libsql/client": "npm:^0.17.4"
     "@sentry/aws-serverless": "npm:^10.65.0"
     "@tursodatabase/api": "npm:^2.0.5"
@@ -1021,7 +1021,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/flag-removed@workspace:packages/flag-removed"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.1085.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1086.0"
     "@libsql/client": "npm:^0.17.4"
     "@sentry/aws-serverless": "npm:^10.65.0"
     jsdom: "npm:27.0.0"
@@ -1033,10 +1033,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/image-processor@workspace:packages/image-processor"
   dependencies:
-    "@aws-sdk/client-lambda": "npm:^3.1085.0"
-    "@aws-sdk/client-s3": "npm:^3.1085.0"
-    "@aws-sdk/client-secrets-manager": "npm:^3.1085.0"
-    "@aws-sdk/client-textract": "npm:^3.1085.0"
+    "@aws-sdk/client-lambda": "npm:^3.1086.0"
+    "@aws-sdk/client-s3": "npm:^3.1086.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1086.0"
+    "@aws-sdk/client-textract": "npm:^3.1086.0"
     "@libsql/client": "npm:^0.17.4"
     "@sentry/aws-serverless": "npm:^10.65.0"
     sharp: "npm:^0.35.3"
@@ -1047,7 +1047,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/image-text-interpreter@workspace:packages/image-text-interpreter"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.1085.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1086.0"
     "@libsql/client": "npm:^0.17.4"
     "@sentry/aws-serverless": "npm:^10.65.0"
   languageName: unknown
@@ -1057,7 +1057,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/import-currencies@workspace:packages/import-currencies"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.1085.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1086.0"
     "@libsql/client": "npm:^0.17.4"
     "@sentry/aws-serverless": "npm:^10.65.0"
   languageName: unknown
@@ -1067,8 +1067,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/invoke-flag-removed@workspace:packages/invoke-flag-removed"
   dependencies:
-    "@aws-sdk/client-lambda": "npm:^3.1085.0"
-    "@aws-sdk/client-secrets-manager": "npm:^3.1085.0"
+    "@aws-sdk/client-lambda": "npm:^3.1086.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1086.0"
     "@libsql/client": "npm:^0.17.4"
     "@sentry/aws-serverless": "npm:^10.65.0"
   languageName: unknown
@@ -1078,8 +1078,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/notifications@workspace:packages/notifications"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.1085.0"
-    "@aws-sdk/client-sesv2": "npm:^3.1085.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1086.0"
+    "@aws-sdk/client-sesv2": "npm:^3.1086.0"
     "@centralbeans/email": "workspace:^"
     "@libsql/client": "npm:^0.17.4"
     "@sentry/aws-serverless": "npm:^10.65.0"
@@ -1091,8 +1091,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/record-roaster-webshop@workspace:packages/record-roaster-webshop"
   dependencies:
-    "@aws-sdk/client-lambda": "npm:^3.1085.0"
-    "@aws-sdk/client-s3": "npm:^3.1085.0"
+    "@aws-sdk/client-lambda": "npm:^3.1086.0"
+    "@aws-sdk/client-s3": "npm:^3.1086.0"
     "@sentry/aws-serverless": "npm:^10.65.0"
   languageName: unknown
   linkType: soft
@@ -1101,9 +1101,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/record-webshop-item-details@workspace:packages/record-webshop-item-details"
   dependencies:
-    "@aws-sdk/client-dynamodb": "npm:^3.1085.0"
-    "@aws-sdk/client-s3": "npm:^3.1085.0"
-    "@aws-sdk/client-secrets-manager": "npm:^3.1085.0"
+    "@aws-sdk/client-dynamodb": "npm:^3.1086.0"
+    "@aws-sdk/client-s3": "npm:^3.1086.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1086.0"
     "@libsql/client": "npm:^0.17.4"
     "@sentry/aws-serverless": "npm:^10.65.0"
     sharp: "npm:^0.35.3"
@@ -1114,7 +1114,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/record-webshop-item@workspace:packages/record-webshop-item"
   dependencies:
-    "@aws-sdk/client-lambda": "npm:^3.1085.0"
+    "@aws-sdk/client-lambda": "npm:^3.1086.0"
     "@sentry/aws-serverless": "npm:^10.65.0"
   languageName: unknown
   linkType: soft
@@ -1123,7 +1123,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/register-new-user@workspace:packages/register-new-user"
   dependencies:
-    "@aws-sdk/client-sesv2": "npm:^3.1085.0"
+    "@aws-sdk/client-sesv2": "npm:^3.1086.0"
     "@centralbeans/email": "workspace:^"
     "@sentry/aws-serverless": "npm:^10.65.0"
   languageName: unknown
@@ -1133,7 +1133,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/screenshot-lambda@workspace:packages/screenshot-lambda"
   dependencies:
-    "@aws-sdk/client-s3": "npm:^3.1085.0"
+    "@aws-sdk/client-s3": "npm:^3.1086.0"
     "@sentry/aws-serverless": "npm:^10.65.0"
     aws-lambda-ric: "npm:^4.0.2"
     playwright: "npm:1.61.1"
@@ -1144,8 +1144,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/send-registration-code@workspace:packages/send-registration-code"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.1085.0"
-    "@aws-sdk/client-sesv2": "npm:^3.1085.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1086.0"
+    "@aws-sdk/client-sesv2": "npm:^3.1086.0"
     "@centralbeans/email": "workspace:^"
     "@libsql/client": "npm:^0.17.4"
     "@sentry/aws-serverless": "npm:^10.65.0"
@@ -1158,7 +1158,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/translate@workspace:packages/translate"
   dependencies:
-    "@aws-sdk/client-translate": "npm:^3.1085.0"
+    "@aws-sdk/client-translate": "npm:^3.1086.0"
     "@libsql/client": "npm:^0.17.4"
   languageName: unknown
   linkType: soft
@@ -1167,8 +1167,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/webshop-item-processor@workspace:packages/webshop-item-processor"
   dependencies:
-    "@aws-sdk/client-lambda": "npm:^3.1085.0"
-    "@aws-sdk/client-translate": "npm:^3.1085.0"
+    "@aws-sdk/client-lambda": "npm:^3.1086.0"
+    "@aws-sdk/client-translate": "npm:^3.1086.0"
     "@sentry/aws-serverless": "npm:^10.65.0"
     jsdom: "npm:27.0.0"
   languageName: unknown
@@ -1178,7 +1178,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/webshop-processor@workspace:packages/webshop-processor"
   dependencies:
-    "@aws-sdk/client-lambda": "npm:^3.1085.0"
+    "@aws-sdk/client-lambda": "npm:^3.1086.0"
     "@sentry/aws-serverless": "npm:^10.65.0"
     jsdom: "npm:27.0.0"
   languageName: unknown
@@ -1189,9 +1189,9 @@ __metadata:
   resolution: "@centralbeans/website@workspace:packages/coffee.chealt.com"
   dependencies:
     "@astrojs/cloudflare": "npm:12.6.13"
-    "@aws-sdk/client-lambda": "npm:^3.1085.0"
-    "@aws-sdk/client-s3": "npm:^3.1085.0"
-    "@aws-sdk/s3-request-presigner": "npm:^3.1085.0"
+    "@aws-sdk/client-lambda": "npm:^3.1086.0"
+    "@aws-sdk/client-s3": "npm:^3.1086.0"
+    "@aws-sdk/s3-request-presigner": "npm:^3.1086.0"
     "@axe-core/playwright": "npm:^4.12.1"
     "@libsql/client": "npm:^0.17.4"
     "@playwright-testing-library/test": "npm:^4.5.0"
@@ -1201,7 +1201,7 @@ __metadata:
     "@simplewebauthn/browser": "npm:^13.3.0"
     "@simplewebauthn/server": "npm:^13.3.2"
     "@tursodatabase/api": "npm:^2.0.5"
-    astro: "npm:7.0.8"
+    astro: "npm:7.0.9"
     axe-html-reporter: "npm:^2.2.11"
     jose: "npm:^6.2.3"
     navigation-api-types: "npm:^0.6.1"
@@ -4863,9 +4863,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"astro@npm:7.0.8":
-  version: 7.0.8
-  resolution: "astro@npm:7.0.8"
+"astro@npm:7.0.9":
+  version: 7.0.9
+  resolution: "astro@npm:7.0.9"
   dependencies:
     "@astrojs/compiler-rs": "npm:^0.3.1"
     "@astrojs/internal-helpers": "npm:0.10.1"
@@ -4931,7 +4931,7 @@ __metadata:
       optional: true
   bin:
     astro: ./bin/astro.mjs
-  checksum: 10c0/2324fcf0cb51a2bf3027bab8fc06a67f8ed1f813df8242468762368be5af92aea8c9309e39820af850f875cd80a00cd8b6f1f9f42474b4ad50242bac79f1c495
+  checksum: 10c0/5dfd9749fc37c8503d2aed63fff27c924c6934dd79189fbe81320196c89a4d28dcb6040b213ac836a90a559c898a2cb66e8cb5a42d3d634fdaf4e25ec37fceff
   languageName: node
   linkType: hard
 
