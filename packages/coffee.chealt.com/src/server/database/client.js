@@ -1,5 +1,6 @@
 import { createClient } from '@libsql/client';
 
+/** @type {Record<string, import('@libsql/client').Client>} */
 const clients = {};
 
 const getClient = (username) => {

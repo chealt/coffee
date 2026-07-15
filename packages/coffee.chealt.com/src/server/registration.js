@@ -12,7 +12,8 @@ const createRegistrationOptions = async (username) => {
     rpID: relyingPartyID,
     userName: user.name,
     attestationType: 'none',
-    excludeCredentials: passkeys.map((passkey) => ({
+    // there is a limit to the number of passkeys (64) so we are safe
+    excludeCredentials: [passkeys.slice(0, 50)].map((passkey) => ({
       id: passkey.credential_id,
       transports: passkey.transports.split(',')
     })),

@@ -26,7 +26,10 @@ const getUserByUsernameOrEmail = async (usernameOrEmail) => {
 const getPasskeys = async (user) => {
   const client = getClient(user.name);
 
-  const { rows } = await client.execute({ sql: 'SELECT * FROM passkeys WHERE user_id = (:id)', args: { id: user.id } });
+  const { rows } = await client.execute({
+    sql: 'SELECT * FROM passkeys WHERE user_id = (:id) ORDER BY id DESC',
+    args: { id: user.id }
+  });
 
   return rows;
 };
