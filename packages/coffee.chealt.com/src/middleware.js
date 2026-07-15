@@ -287,7 +287,11 @@ export const onRequest = async (context, next) => {
       try {
         const registrationOptions = await createRegistrationOptions(username);
 
-        context.locals.registrationOptions = JSON.stringify(registrationOptions);
+        if (registrationOptions) {
+          context.locals.registrationOptions = JSON.stringify(registrationOptions);
+        } else {
+          logger.error(`Could not create registration options for username: ${username}`);
+        }
       } catch (error) {
         logger.error(error);
       }
