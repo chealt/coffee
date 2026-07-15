@@ -38,6 +38,7 @@ jobs:
       - name: Run Playwright tests
         env:
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          TURSO_DATABASE_URL_TEST: ${{ secrets.TURSO_DATABASE_URL_TEST }}
         run: yarn workspace @centralbeans/website playwright test --project chromium
       - uses: actions/upload-artifact@v7
         name: Upload Playwright report
