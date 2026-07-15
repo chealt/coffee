@@ -28,10 +28,16 @@ const test = baseTest.extend({
 const { expect } = test;
 
 const config = {
+  sessionSecret: process.env.SESSION_SECRET,
   url: process.env.baseUrl || 'http://localhost:4321',
   user: {
-    email: process.env.userEmail || 'test@centralbeans.com'
+    email: process.env.userEmail || 'test@centralbeans.com',
+    username: process.env.username || 'test'
   }
 };
+
+if (!config.sessionSecret) {
+  throw new Error('Session secret is missing.');
+}
 
 export { test, expect, config };
