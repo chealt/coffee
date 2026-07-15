@@ -739,10 +739,10 @@ jobs:
             ${{ runner.os }}-playwright-chromium-
       - name: Install Playwright Browsers
         if: steps.cache.outputs.cache-hit != 'true'
-        env:
-          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
         run: yarn workspace @centralbeans/website playwright install --with-deps chromium
       - name: Run Playwright tests
+        env:
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
         run: baseUrl=https://centralbeans.com yarn workspace @centralbeans/website playwright test --project chromium
       - uses: actions/upload-artifact@v7
         name: Upload Playwright report
