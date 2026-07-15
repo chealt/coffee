@@ -18,7 +18,8 @@
     "import:logos": "node data/importLogos.js",
     "preview": "astro build && wrangler pages dev ./dist",
     "recommendations": "node --env-file=.env data/recommendations/generate.js",
-    "recommendations:ci": "node data/recommendations/generate.js"
+    "recommendations:ci": "node data/recommendations/generate.js",
+    "test": "playwright test"
   },
   "dependencies": {
     "@astrojs/cloudflare": "12.6.13",

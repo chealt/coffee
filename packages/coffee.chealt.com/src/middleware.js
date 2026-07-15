@@ -96,6 +96,11 @@ const redirect = (url) =>
     }
   });
 
+// Speculative loads must not rotate the recorded WebAuthn challenge,
+// otherwise they invalidate the options embedded in the page the user is on
+const isPrefetch = (request) =>
+  (request.headers.get('sec-purpose') || request.headers.get('purpose') || '').includes('prefetch');
+
 const authenticate = async (context) => {
   const loggedInUser = await getSessionUser(context);
 
@@ -252,7 +257,7 @@ export const onRequest = async (context, next) => {
 
       const username = getUsername(context);
 
-      if (username) {
+      if (username && !isPrefetch(context.request)) {
         context.locals.authenticationOptions = JSON.stringify(await getAuthenticationOptions(username));
       }
     }
