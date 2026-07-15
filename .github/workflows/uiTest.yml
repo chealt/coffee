@@ -40,7 +40,9 @@ jobs:
           ORIGIN: ${{ secrets.ORIGIN }}
           RELYING_PARTY_ID: ${{ secrets.RELYING_PARTY_ID }}
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
           TURSO_AUTH_TOKEN_TEST: ${{ secrets.TURSO_AUTH_TOKEN_TEST }}
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
           TURSO_DATABASE_URL_TEST: ${{ secrets.TURSO_DATABASE_URL_TEST }}
         run: yarn workspace @centralbeans/website playwright test --project chromium
       - uses: actions/upload-artifact@v7
