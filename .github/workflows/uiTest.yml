@@ -37,7 +37,6 @@ jobs:
         run: yarn workspace @centralbeans/website playwright install --with-deps chromium
       - name: Run Playwright tests
         env:
-          identityHeaderValue: ${{ secrets.identityHeaderValue }}
           ORIGIN: ${{ secrets.ORIGIN }}
           RELYING_PARTY_ID: ${{ secrets.RELYING_PARTY_ID }}
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
@@ -45,7 +44,7 @@ jobs:
           TURSO_AUTH_TOKEN_TEST: ${{ secrets.TURSO_AUTH_TOKEN_TEST }}
           TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
           TURSO_DATABASE_URL_TEST: ${{ secrets.TURSO_DATABASE_URL_TEST }}
-        run: yarn workspace @centralbeans/website playwright test --project chromium
+        run: yarn workspace @centralbeans/website playwright test
       - uses: actions/upload-artifact@v7
         name: Upload Playwright report
         if: always()
