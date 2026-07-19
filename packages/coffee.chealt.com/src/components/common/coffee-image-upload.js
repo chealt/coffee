@@ -85,6 +85,47 @@ class CoffeeImageUpload extends HTMLElement {
   }
 }
 
+const retryCachedImageUpload = ({ filename }) => {
+  const uploadElement = document.querySelector('coffee-image-upload');
+
+  if (!uploadElement) {
+    logger.error('Cannot retry cached image upload, there is no coffee-image-upload element on the page');
+
+    return;
+  }
+
+  if (!navigator.serviceWorker.controller) {
+    return;
+  }
+
+  const { getSignedUrl, imageUploadUrls } = uploadElement.dataset;
+
+  if (!getSignedUrl || !imageUploadUrls) {
+    logger.error(
+      `Cannot retry cached image upload, missing upload element data: getSignedUrl "${getSignedUrl}", imageUploadUrls "${imageUploadUrls}"`
+    );
+
+    return;
+  }
+
+  logger.info(`Retrying upload for cached image "${filename}"`);
+
+  navigator.serviceWorker.controller.postMessage({
+    action: 'retry-cached-image-upload',
+    filename,
+    getSignedUrl,
+    imageUploadUrls: imageUploadUrls.split(';')
+  });
+};
+
 if (!customElements.get('coffee-image-upload')) {
   customElements.define('coffee-image-upload', CoffeeImageUpload);
+
+  // the service worker asks the page to resend the upload details
+  // when a cached image turns out to be missing upstream
+  navigator.serviceWorker?.addEventListener('message', (event) => {
+    if (event.data?.action === 'cached-image-upload-missing') {
+      retryCachedImageUpload(event.data);
+    }
+  });
 }
