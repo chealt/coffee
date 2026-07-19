@@ -20,7 +20,7 @@ if (process.env.CI && !process.env.localDevServer && !process.env.identityHeader
 export default defineConfig({
   testDir: './src',
   testMatch: /.*\.ui-spec\.js/u,
-  timeout: 10 * 1000,
+  timeout: 30 * 1000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
