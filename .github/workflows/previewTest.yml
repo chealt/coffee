@@ -91,6 +91,8 @@ jobs:
         run: yarn workspace @centralbeans/website playwright install --with-deps chromium
       - name: Run Playwright tests
         env:
+          CI: true
+          identityHeaderValue: ${{ secrets.IDENTITY_HEADER_VALUE }}
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
         run: baseUrl=https://${{ env.PREVIEW_HOST }} yarn workspace @centralbeans/website playwright test --project chromium
       - uses: actions/upload-artifact@v7
