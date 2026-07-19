@@ -743,7 +743,7 @@ jobs:
       - name: Run Playwright tests
         env:
           baseUrl: https://centralbeans.com
-          identityHeaderValue: ${{ secrets.identityHeaderValue }}
+          identityHeaderValue: ${{ secrets.IDENTITY_HEADER_VALUE }}
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
         run: yarn workspace @centralbeans/website playwright test
       - uses: actions/upload-artifact@v7
