@@ -1,0 +1,149 @@
+name: Preview
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+permissions:
+  contents: read
+  statuses: write
+  pull-requests: write
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+env:
+  PREVIEW_URL: https://pr-${{ github.event.pull_request.number }}.preview.centralbeans.com
+jobs:
+  deploy-preview:
+    if: github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: build
+        run: |
+          yarn install --immutable
+          NODE_ENV=production yarn workspace @centralbeans/website build
+      - name: Create preview wrangler config
+        working-directory: packages/coffee.chealt.com
+        run: sed "s/__PR_NUMBER__/${{ github.event.pull_request.number }}/g" wrangler.preview.template.toml > wrangler.preview.toml
+      - name: Create worker secrets file
+        working-directory: packages/coffee.chealt.com
+        env:
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          TURSO_AUTH_TOKEN_TEST: ${{ secrets.TURSO_AUTH_TOKEN_TEST }}
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          TURSO_DATABASE_URL_TEST: ${{ secrets.TURSO_DATABASE_URL_TEST }}
+        run: |
+          jq -n '{
+            SESSION_SECRET: env.SESSION_SECRET,
+            TURSO_AUTH_TOKEN: env.TURSO_AUTH_TOKEN,
+            TURSO_AUTH_TOKEN_TEST: env.TURSO_AUTH_TOKEN_TEST,
+            TURSO_DATABASE_URL: env.TURSO_DATABASE_URL,
+            TURSO_DATABASE_URL_TEST: env.TURSO_DATABASE_URL_TEST
+          }' > secrets.json
+      - name: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          workingDirectory: packages/coffee.chealt.com
+          command: |
+            deploy -c wrangler.preview.toml
+            secret bulk secrets.json -c wrangler.preview.toml
+      - name: Remove worker secrets file
+        if: always()
+        working-directory: packages/coffee.chealt.com
+        run: rm -f secrets.json
+      - name: Comment preview URL
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          body="🚀 Preview deployed: ${{ env.PREVIEW_URL }}"
+          gh pr comment ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --edit-last --body "$body" || \
+            gh pr comment ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --body "$body"
+  website-test:
+    runs-on: ubuntu-latest
+    needs: deploy-preview
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Get Playwright version
+        id: playwright_version
+        working-directory: packages/coffee.chealt.com
+        shell: bash
+        run: |
+          version=$(yarn info @playwright/test --json | jq -r '.children.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v5
+        name: Get Playwright from cache
+        id: cache
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-chromium-${{ steps.playwright_version.outputs.version }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-chromium-
+      - name: Install Playwright Browsers
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: yarn workspace @centralbeans/website playwright install --with-deps chromium
+      - name: Run Playwright tests
+        env:
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+        run: baseUrl=${{ env.PREVIEW_URL }} yarn workspace @centralbeans/website playwright test --project chromium
+      - uses: actions/upload-artifact@v7
+        name: Upload Playwright report
+        if: always()
+        with:
+          name: playwright-report
+          path: packages/coffee.chealt.com/playwright-report/
+          retention-days: 30
+      - uses: actions/upload-artifact@v7
+        name: Upload A11y report
+        if: always()
+        with:
+          name: a11y-report
+          path: packages/coffee.chealt.com/a11y-report/
+          retention-days: 30
+      - uses: aws-actions/configure-aws-credentials@v6
+        if: always()
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - name: Upload files to AWS
+        id: report-upload
+        if: always()
+        run: |
+          aws s3 sync packages/coffee.chealt.com/playwright-report/ s3://centralbeans-playwright-reports/test-reports/preview/pr-${{ github.event.pull_request.number }}
+          aws s3 sync packages/coffee.chealt.com/a11y-report/ s3://centralbeans-playwright-reports/a11y-reports/preview/pr-${{ github.event.pull_request.number }}
+      - name: Report test report upload status
+        if: always()
+        run: |
+          curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+              https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.event.pull_request.head.sha }} \
+              -d '{"context":"UI Tests - preview / report","state":"${{ steps.report-upload.outcome }}","target_url":"https://playwright-reports.centralbeans.com/test-reports/preview/pr-${{ github.event.pull_request.number }}/index.html"}'
+  cleanup:
+    if: github.event.action == 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Delete preview worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: packages/coffee.chealt.com
+          command: delete --name coffee-pr-${{ github.event.pull_request.number }}
