@@ -13,7 +13,7 @@ const getDevice = (name) => {
   return device;
 };
 
-if (process.env.CI && !process.env.identityHeaderValue) {
+if (process.env.CI && !process.env.localDevServer && !process.env.identityHeaderValue) {
   throw new Error('identityHeaderValue must be set in CI builds');
 }
 
