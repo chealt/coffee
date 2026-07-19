@@ -37,6 +37,7 @@ jobs:
         run: yarn workspace @centralbeans/website playwright install --with-deps chromium
       - name: Run Playwright tests
         env:
+          CI: true
           ORIGIN: ${{ secrets.ORIGIN }}
           RELYING_PARTY_ID: ${{ secrets.RELYING_PARTY_ID }}
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}

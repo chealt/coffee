@@ -743,6 +743,7 @@ jobs:
       - name: Run Playwright tests
         env:
           baseUrl: https://centralbeans.com
+          CI: true
           identityHeaderValue: ${{ secrets.IDENTITY_HEADER_VALUE }}
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
         run: yarn workspace @centralbeans/website playwright test
