@@ -37,6 +37,7 @@ jobs:
         run: yarn workspace @centralbeans/website playwright install --with-deps chromium
       - name: Run Playwright tests
         env:
+          identityHeaderValue: ${{ secrets.identityHeaderValue }}
           ORIGIN: ${{ secrets.ORIGIN }}
           RELYING_PARTY_ID: ${{ secrets.RELYING_PARTY_ID }}
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
@@ -70,7 +71,7 @@ jobs:
         if: always()
         run: |
           aws s3 sync packages/coffee.chealt.com/playwright-report/ s3://centralbeans-playwright-reports/test-reports/${{ github.sha }}
-          aws s3 sync packages/coffee.chealt.com/a11y-report/ s3://centralbeans-playwright-reports/a11y-reports/${{ github.sha }}
+          [ -d "packages/coffee.chealt.com/a11y-report/" ] && aws s3 sync packages/coffee.chealt.com/a11y-report/ s3://centralbeans-playwright-reports/a11y-reports/${{ github.sha }}
       - name: Report test report upload status
         if: always()
         run: |
