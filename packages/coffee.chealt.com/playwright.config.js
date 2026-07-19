@@ -13,6 +13,10 @@ const getDevice = (name) => {
   return device;
 };
 
+if (process.env.CI && !process.env.identityHeaderValue) {
+  throw new Error('identityHeaderValue must be set in CI builds');
+}
+
 export default defineConfig({
   testDir: './src',
   testMatch: /.*\.ui-spec\.js/u,
