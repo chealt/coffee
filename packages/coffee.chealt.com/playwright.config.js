@@ -20,7 +20,7 @@ if (process.env.CI && !process.env.localDevServer && !process.env.identityHeader
 export default defineConfig({
   testDir: './src',
   testMatch: /.*\.ui-spec\.js/u,
-  timeout: 10 * 1000,
+  timeout: 30 * 1000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -48,9 +48,15 @@ export default defineConfig({
       use: getDevice('Desktop Chrome')
     }
   ],
-  webServer: {
-    command: 'yarn dev',
-    port: 4321,
-    reuseExistingServer: true
-  }
+  // When baseUrl is set the tests run against a deployed site (prod or a PR
+  // preview), so the local dev server is not needed.
+  ...(process.env.baseUrl
+    ? {}
+    : {
+        webServer: {
+          command: 'yarn dev',
+          port: 4321,
+          reuseExistingServer: true
+        }
+      })
 });
