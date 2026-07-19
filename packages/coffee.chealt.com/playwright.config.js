@@ -17,10 +17,6 @@ if (process.env.CI && !process.env.localDevServer && !process.env.identityHeader
   throw new Error('identityHeaderValue must be set in CI builds');
 }
 
-console.log(process.env.CI);
-console.log(process.env.localDevServer);
-console.log(process.env.identityHeaderValue);
-
 export default defineConfig({
   testDir: './src',
   testMatch: /.*\.ui-spec\.js/u,

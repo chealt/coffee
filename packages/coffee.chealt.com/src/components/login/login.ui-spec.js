@@ -4,12 +4,17 @@ import { addVirtualAuthenticator, signRegistrationCode } from '@test-utils/webau
 
 const registerNewPasskey = async (/** @type {import('@playwright/test').Page} */ page) => {
   const registrationCode = await signRegistrationCode(config.user.username);
+  const requestPromise = page.waitForRequest('**/api/authentication/registration**');
 
   await page.goto(`${config.url}/registration/${config.user.username}?code=${registrationCode}`);
 
   await expect(page.getByRole('heading', { name: /registration/iu, level: 1 })).toBeVisible();
 
   await page.getByRole('button', { name: 'Register', exact: true }).click();
+
+  const request = await requestPromise;
+  const value = (await request.allHeaders())['x-e2e-identity'];
+  console.log(`x-e2e-identity on ${request.url()}: present=${value !== undefined} length=${value?.length ?? 0}`);
 
   await page.waitForURL(`${config.url}/`);
 };
