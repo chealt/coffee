@@ -32,6 +32,11 @@ export default defineConfig({
     // Playwright 1.61 drops a top-level `reducedMotion` test option,
     // so it has to go through `contextOptions`.
     contextOptions: {
+      extraHTTPHeaders: [
+        {
+          'x-e2e-identity': process.env.identityHeaderValue || ''
+        }
+      ],
       reducedMotion: 'reduce'
     }
   },
