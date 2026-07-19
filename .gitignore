@@ -34,7 +34,6 @@ playwright/.auth/
 
 # Cloudflare Workers
 .wrangler/
-wrangler.preview.toml
 *.log
 .dev.vars
 
