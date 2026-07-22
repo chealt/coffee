@@ -62,9 +62,13 @@ class CoffeeImageUpload extends HTMLElement {
         })
       )
         .then(() => {
-          window.location.assign(
-            `${this.triggerButton.getAttribute('href')}${collectionId}/items/${itemId}?uploading=true&filename=${filename}`
-          );
+          if (!this.dataset.itemId) {
+            window.location.assign(
+              `${this.triggerButton.getAttribute('href')}${collectionId}/items/${itemId}?uploading=true&filename=${filename}`
+            );
+          } else {
+            window.location.assign(`${this.triggerButton.getAttribute('href')}${collectionId}/items/${itemId}`);
+          }
         })
         .catch((error) => {
           if (error.name === 'AbortError') {
