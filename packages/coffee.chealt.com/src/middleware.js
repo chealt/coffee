@@ -238,7 +238,9 @@ export const onRequest = async (context, next) => {
         }
       }
 
-      if (params[0] === 'unsubscribe' && loggedInUser) {
+      if (params[0] === 'profile') {
+        context.locals.settings = await getValue({ user: { name: loggedInUser?.username }, key: 'settings' });
+      } else if (params[0] === 'unsubscribe' && loggedInUser) {
         if (context.params.notificationType) {
           await unsubscribe({
             user: { name: loggedInUser.username },

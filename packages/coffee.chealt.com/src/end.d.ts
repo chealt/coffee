@@ -69,6 +69,12 @@ declare namespace App {
     isTranslating: boolean;
     isIOS: boolean;
     registrationOptions: string;
+    settings: {
+      currency: string;
+      isTranslating?: 'on' | 'off';
+      language: string;
+      newCoffeeNotification?: 'on' | 'off';
+    };
     shouldAuthenticate: boolean;
     username: string;
   }
