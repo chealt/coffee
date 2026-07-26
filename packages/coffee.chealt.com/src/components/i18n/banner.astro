@@ -37,7 +37,7 @@ const pathWithoutLocale = Astro.url.pathname.replace(
       </Select>
     </Form>
     <APIButton apiEndpoint="/api/i18n/stop.json" shouldRefresh>
-      <Button>stop</Button>
+      <Button data-stop-translating>stop</Button>
     </APIButton>
   </div>
   <div class="handler"></div>

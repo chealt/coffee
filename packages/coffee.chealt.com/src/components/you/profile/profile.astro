@@ -84,15 +84,18 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
       </Label>
       {
         canTranslate && (
-          <Checkbox
-            name="isTranslating"
-            value="on"
-            checked={settings?.isTranslating === "on"}
-          >
-            <T namespace="you.profile.locales" key="isTranslating">
-              {t("isTranslating")}
-            </T>
-          </Checkbox>
+          <chealt-i18n-toggle>
+            <Checkbox
+              name="isTranslating"
+              value="on"
+              checked={settings?.isTranslating === "on"}
+              data-translating-toggle
+            >
+              <T namespace="you.profile.locales" key="isTranslating">
+                {t("isTranslating")}
+              </T>
+            </Checkbox>
+          </chealt-i18n-toggle>
         )
       }
       <fieldset>
@@ -140,3 +143,5 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
     </Logout>
   </section>
 </Common>
+
+<script src="../../i18n/translating-toggle.js"></script>

@@ -46,6 +46,8 @@ const cacheName = 'collection-images-cache-v1';
 const addImageToCollection = 'chealt-add-image-to-collection';
 const addImageToCollectionItem = 'chealt-add-image-to-collection-item';
 
+let isTranslating = false;
+
 self.addEventListener('install', (event) => {
   console.info('SW: Install event');
 
@@ -187,6 +189,10 @@ self.addEventListener('message', (event) => {
   }
 
   switch (event.data.action) {
+    case 'toggle-translating':
+      isTranslating = Boolean(event.data.isTranslating);
+
+      break;
     case 'cache-image':
       uploadAndCacheImage(event);
 
@@ -267,6 +273,12 @@ const verifyCachedImageUpload = async ({ clientId, imageUrl }) => {
 
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
+
+  if (isTranslating && event.request.mode === 'navigate') {
+    event.respondWith(fetch(event.request, { cache: 'reload' }));
+
+    return;
+  }
 
   if (event.request.method === 'GET' && url.host === 'collection-images.centralbeans.com') {
     event.respondWith(
