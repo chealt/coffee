@@ -1892,7 +1892,7 @@ const parsers = {
 
     const title = document.querySelector('.product_title').textContent.trim().toLowerCase();
 
-    if (title.includes(' + ')) {
+    if (title.includes(' + ') || title.includes(' blend')) {
       return { isBlend: true };
     }
 
