@@ -12,4 +12,8 @@ const t = await getTranslator({
 const { checked } = Astro.props;
 ---
 
-<Checkbox name="isDecaf" checked={checked === "on"}><T namespace="you.collections.item.details.locales" key="decaf">{t("decaf")}</T></Checkbox>
+<Checkbox name="isDecaf" checked={checked === "on"}
+  ><T namespace="you.collections.item.details.locales" key="decaf"
+    >{t("decaf")}</T
+  ></Checkbox
+>

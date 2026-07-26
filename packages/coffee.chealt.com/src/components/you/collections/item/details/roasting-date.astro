@@ -15,7 +15,9 @@ const { value } = Astro.props;
 
 <Label>
   <div class="name">
-    <T namespace="you.collections.item.details.locales" key="roastingDate">{t("roastingDate")}</T>
+    <T namespace="you.collections.item.details.locales" key="roastingDate"
+      >{t("roastingDate")}</T
+    >
   </div>
   <Input name="roastingDate" type="date" value={value} />
 </Label>

@@ -18,7 +18,9 @@ const { selected } = Astro.props;
 
 <Label>
   <div class="name">
-    <T namespace="you.collections.item.details.locales" key="originCountry">{t("originCountry")}</T>
+    <T namespace="you.collections.item.details.locales" key="originCountry"
+      >{t("originCountry")}</T
+    >
   </div>
   <Select name="originCountry" showEmpty>
     {

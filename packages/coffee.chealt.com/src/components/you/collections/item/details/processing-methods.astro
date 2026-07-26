@@ -18,7 +18,9 @@ const { selected } = Astro.props;
 
 <Label>
   <div class="name">
-    <T namespace="you.collections.item.details.locales" key="processingMethod">{t("processingMethod")}</T>
+    <T namespace="you.collections.item.details.locales" key="processingMethod"
+      >{t("processingMethod")}</T
+    >
   </div>
   <Select name="processingMethod" showEmpty>
     {

@@ -1,6 +1,6 @@
 ---
-import Input from "../../../../form/input/input.astro";
 import Label from "../../../../form/label/label.astro";
+import Input from "../../../../form/input/input.astro";
 
 import T from "@components/i18n/t.astro";
 import { getTranslator } from "@components/i18n/t.js";
@@ -15,11 +15,9 @@ const { value } = Astro.props;
 
 <Label>
   <div class="name">
-    <T namespace="you.collections.item.details.locales" key="weight"
-      >{t("weight")}</T
+    <T namespace="you.collections.item.details.locales" key="frozenDate"
+      >{t("frozenDate")}</T
     >
   </div>
-  <div class="inputs">
-    <Input name="weight" type="number" value={value} />
-  </div>
+  <Input name="frozenDate" type="date" value={value} />
 </Label>

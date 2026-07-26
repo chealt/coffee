@@ -21,7 +21,9 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
 
 <Label>
   <div class="name">
-    <T namespace="you.collections.item.details.locales" key="price">{t("price")}</T>
+    <T namespace="you.collections.item.details.locales" key="price"
+      >{t("price")}</T
+    >
   </div>
   <div class="inputs">
     <Input name="price" type="number" value={price} />

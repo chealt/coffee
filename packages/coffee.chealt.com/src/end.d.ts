@@ -17,6 +17,7 @@ interface Collection {
 interface CollectionItemDetails {
   brewingMethod: string;
   currency: string;
+  frozenDate: string;
   isDecaf: boolean;
   originCountry: string;
   originRegion: string;

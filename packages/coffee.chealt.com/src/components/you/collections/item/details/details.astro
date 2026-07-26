@@ -1,9 +1,9 @@
 ---
-import Button from "../../../../form/button/button.astro";
 import Form from "../../../../form/form.astro";
 
 import BrewingMethods from "./brewing-methods.astro";
 import Decaf from "./decaf.astro";
+import FrozenDate from "./frozen-date.astro";
 import OriginCountries from "./origin-countries.astro";
 import OriginRegions from "./origin-regions.astro";
 import Price from "./price.astro";
@@ -32,7 +32,8 @@ const {
 <section>
   <h1>
     <T namespace="you.collections.item.details.locales" key="details"
-      >{t("details")}</T>
+      >{t("details")}</T
+    >
   </h1>
   <Form
     name={`${id}.details`}
@@ -66,5 +67,6 @@ const {
     <Weight value={details?.weight} />
     <PricePerGram pricePerGram={details?.pricePerGram} />
     <Decaf checked={details?.isDecaf} />
+    <FrozenDate value={details?.frozenDate} />
   </Form>
 </section>
