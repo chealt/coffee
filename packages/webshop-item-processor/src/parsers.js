@@ -966,7 +966,10 @@ const parsers = {
       return { isBlend: true };
     }
 
-    const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
+    const originCountryId =
+      originCountries.find(({ name }) => name === originCountry)?.origin_country_id ||
+      originCountries.find(({ name }) => productName.toLowerCase().includes(name))?.origin_country_id ||
+      null;
 
     if (!originCountryId) {
       throw new Error(errors.originCountryMissing);
