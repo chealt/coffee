@@ -1,26 +1,28 @@
 import { JSDOM } from 'jsdom';
 import { fetch, Agent } from 'undici';
+import roasters from '../data/roasters.json' with { type: 'json' };
 
 import logger from './Sentry/logger.js';
 import client from './Turso.js';
 
+const roasterIDsWithFlaggingLogic = roasters
+  .filter(({ has_flag_removed_logic }) => Boolean(has_flag_removed_logic))
+  .map(({ id }) => id);
+
 // eslint-disable-next-line complexity
 const isOutOfStock = ({ html, roasterId, webshopItemLink }) => {
-  if (
-    roasterId !== 6 &&
-    roasterId !== 7 &&
-    roasterId !== 12 &&
-    roasterId !== 39 &&
-    roasterId !== 65 &&
-    roasterId !== 252 &&
-    roasterId !== 277 &&
-    roasterId !== 288
-  ) {
+  if (!roasterIDsWithFlaggingLogic.includes(roasterId)) {
+    logger.info(`Skipping item ${webshopItemLink}`);
+
     return false;
   }
 
   if (roasterId === 7) {
     return html.includes('Obecnie brak na stanie');
+  }
+
+  if (roasterId === 10) {
+    return html.includes('Out of season');
   }
 
   if (roasterId === 12) {
