@@ -22,7 +22,7 @@ const isOutOfStock = ({ html, roasterId, webshopItemLink }) => {
   }
 
   if (roasterId === 10) {
-    return html.includes('Out of season');
+    return html.toLowerCase().includes('>out of season<');
   }
 
   if (roasterId === 12) {
