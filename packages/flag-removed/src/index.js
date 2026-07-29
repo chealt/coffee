@@ -111,7 +111,7 @@ export const handler = async ({ id, webshopItemLink, roasterId, isTest }) => {
     (roasterId === 82 && response.redirected && response.url === 'https://shop.spojkaroastery.com/') || // Spojka uses redirects for no longer available coffees
     isOutOfStock({ html: await response.text(), roasterId, webshopItemLink })
   ) {
-    logger.info(`Flagging coffee with id ${id} as removed...`);
+    logger.info(`Flagging coffee with id ${id} and url ${webshopItemLink} as removed...`);
 
     if (!isTest) {
       await client.execute({
