@@ -1203,6 +1203,7 @@ __metadata:
     "@tursodatabase/api": "npm:^2.0.5"
     astro: "npm:7.1.5"
     axe-html-reporter: "npm:^2.2.11"
+    cookie: "npm:^2.0.1"
     jose: "npm:^6.2.4"
     navigation-api-types: "npm:^0.6.1"
     rollup-plugin-visualizer: "npm:^7.0.1"
