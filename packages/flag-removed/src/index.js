@@ -94,6 +94,7 @@ export const handler = async ({ id, webshopItemLink, roasterId, isTest }) => {
 
   try {
     response = await fetch(webshopItemLink, {
+      redirect: 'manual',
       dispatcher: new Agent({
         connectTimeout: 10 * 1000 * 1000 // 10 seconds
       })
@@ -107,8 +108,8 @@ export const handler = async ({ id, webshopItemLink, roasterId, isTest }) => {
 
   if (
     response.status === 404 ||
-    response.status === 301 || // Sheep and Raven uses 301 for no longer available coffees
-    (roasterId === 82 && response.redirected && response.url === 'https://shop.spojkaroastery.com/') || // Spojka uses redirects for no longer available coffees
+    response.status === 302 ||
+    response.status === 301 ||
     isOutOfStock({ html: await response.text(), roasterId, webshopItemLink })
   ) {
     logger.info(`Flagging coffee with id ${id} and url ${webshopItemLink} as removed...`);
