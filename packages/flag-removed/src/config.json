@@ -3,6 +3,7 @@
   { "roasterId": 10, "soldOutTexts": [">out of season<"] },
   { "roasterId": 12, "soldOutTexts": ["product is archived"] },
   { "roasterId": 65, "soldOutTexts": ["out of stock"] },
+  { "roasterId": 70, "soldOutTexts": ["&gt;out of stock&lt;"] },
   { "roasterId": 252, "soldOutTexts": ["sold out"] },
   { "roasterId": 277, "soldOutTexts": ["this product is currently out of stock and unavailable."] },
   { "roasterId": 284, "soldOutTexts": [">ausverkauft<"] },
