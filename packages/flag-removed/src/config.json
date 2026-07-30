@@ -12,6 +12,7 @@
   { "roasterId": 291, "soldOutTexts": ["produkt niedostępny"] },
   { "roasterId": 295, "soldOutTexts": ["out of stock"] },
   { "roasterId": 304, "soldOutTexts": [" price--sold-out "] },
+  { "roasterId": 305, "soldOutTexts": ["out of stock"], "inStockTexts": ["in stock"] },
   { "roasterId": 310, "soldOutTexts": ["watch coffee availability"] },
   { "roasterId": 311, "soldOutTexts": ["currently unavailable"] },
   { "roasterId": 314, "soldOutTexts": ["tymczasowo niedostępny"] },

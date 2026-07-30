@@ -16,7 +16,10 @@ const isOutOfStock = ({ html, roasterId, webshopItemLink }) => {
 
   const lowerCaseHTML = html.toLowerCase();
 
-  return roasterConfig.soldOutTexts.some((text) => lowerCaseHTML.includes(text));
+  return (
+    roasterConfig.soldOutTexts.some((text) => lowerCaseHTML.includes(text)) &&
+    (!roasterConfig.inStockTexts || roasterConfig.inStockTexts.every((text) => !lowerCaseHTML.includes(text)))
+  );
 };
 
 // eslint-disable-next-line complexity
