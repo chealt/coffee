@@ -69,6 +69,10 @@ const isOutOfStock = ({ html, roasterId, webshopItemLink }) => {
     return html.toLowerCase().includes('currently unavailable');
   }
 
+  if (roasterId === 314) {
+    return html.includes('tymczasowo niedostępny');
+  }
+
   if (roasterId === 315) {
     return html.includes('Prodej produktu byl ukončen.');
   }
