@@ -470,7 +470,9 @@ const parsers = {
       new Set(allLinks.filter((l) => l.includes('sklep/kawy/') && l.split('/').length > 6))
     );
 
-    return coffeeLinks.filter((l) => !l.includes('/zestawy') && !l.includes('zestaw-') && !l.includes('mieszanki'));
+    return coffeeLinks.filter(
+      (l) => !l.includes('/zestawy') && !l.includes('zestaw-') && !l.includes('mieszanki') && !l.includes('drip')
+    );
   },
   // Datura
   304: ({ html, url }) => {
