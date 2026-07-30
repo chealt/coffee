@@ -42,6 +42,7 @@ const setItem = async (key, value) => {
 };
 
 const cacheName = 'collection-images-cache-v1';
+const pagesCacheName = 'collection-pages-cache-v1';
 
 const addImageToCollection = 'chealt-add-image-to-collection';
 const addImageToCollectionItem = 'chealt-add-image-to-collection-item';
@@ -59,6 +60,51 @@ self.addEventListener('activate', (event) => {
 
   event.waitUntil(self.clients.claim());
 });
+
+// bumped on every invalidation so a refresh started beforehand cannot write its response back
+let pagesCacheEpoch = 0;
+
+const invalidatePagesCache = async () => {
+  pagesCacheEpoch += 1;
+
+  const wasCached = await caches.delete(pagesCacheName);
+
+  if (wasCached) {
+    console.info('SW: Cleared the cached pages');
+  }
+};
+
+// a redirect or an error page must never become the cached version of a collection page
+const canCachePage = (response) => response.ok && response.type === 'basic' && !response.redirected;
+
+const fetchAndCachePage = async (request) => {
+  const epoch = pagesCacheEpoch;
+  const response = await fetch(request);
+
+  if (canCachePage(response) && epoch === pagesCacheEpoch) {
+    const cache = await caches.open(pagesCacheName);
+
+    // a caching failure must not break the response we hand back
+    await cache.put(request, response.clone()).catch((err) => console.error('SW: Caching page failed:', err));
+  }
+
+  return response;
+};
+
+const servePageFromCache = async (event) => {
+  const cachedResponse = await caches.match(event.request, { cacheName: pagesCacheName });
+
+  if (!cachedResponse) {
+    return fetchAndCachePage(event.request);
+  }
+
+  console.info('SW: Serving page from cache!', event.request.url);
+
+  // refresh in the background, the fresh version is served on the next navigation
+  event.waitUntil(fetchAndCachePage(event.request).catch((err) => console.error('SW: Page refresh failed:', err)));
+
+  return cachedResponse;
+};
 
 const uploadAndCacheImage = (event) => {
   const { filename, fileData, getSignedUrl, imageUploadUrls, buffer } = event.data;
@@ -126,6 +172,8 @@ const addItemToCollection = (event) => {
             : `SW: Added collection item with id "${itemId}" and filename "${filename}".`
         );
       })
+      // requests the service worker makes itself do not reach its own fetch handler
+      .then(invalidatePagesCache)
       .catch((err) => console.error('SW: Adding collection item failed:', err))
   );
 };
@@ -271,6 +319,20 @@ const verifyCachedImageUpload = async ({ clientId, imageUrl }) => {
   }
 };
 
+const isSameOrigin = (url) => url.origin === self.location.origin;
+
+// /:locale/you/collections and /:locale/you/collections/:collectionId/items/:itemId
+const collectionPagePattern = /^\/[^/]+\/you\/collections(?:\/[^/]+\/items\/[^/]+)?\/?$/;
+
+const isCollectionPage = (url) => isSameOrigin(url) && collectionPagePattern.test(url.pathname);
+
+const isAPIRequest = (url) => isSameOrigin(url) && url.pathname.startsWith('/api/');
+
+// reads happen on every page load (recommendations), so only writes invalidate,
+// plus anything authentication related, which changes who the cached pages belong to
+const changesCachedPages = ({ method }, url) =>
+  !['GET', 'HEAD'].includes(method) || url.pathname.startsWith('/api/authentication/');
+
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
@@ -280,9 +342,28 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  if (isAPIRequest(url) && changesCachedPages(event.request, url)) {
+    const responsePromise = fetch(event.request);
+
+    event.respondWith(responsePromise);
+    event.waitUntil(
+      responsePromise
+        .then((response) => (response.ok ? invalidatePagesCache() : undefined))
+        .catch((err) => console.error('SW: Invalidating the cached pages failed:', err))
+    );
+
+    return;
+  }
+
+  if (event.request.mode === 'navigate' && isCollectionPage(url)) {
+    event.respondWith(servePageFromCache(event));
+
+    return;
+  }
+
   if (event.request.method === 'GET' && url.host === 'collection-images.centralbeans.com') {
     event.respondWith(
-      caches.match(event.request).then((cachedResponse) => {
+      caches.match(event.request, { cacheName }).then((cachedResponse) => {
         if (cachedResponse) {
           const imageUrl = event.request.url;
           console.info('SW: Serving image from cache!', imageUrl);
