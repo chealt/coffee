@@ -45,6 +45,10 @@ const isOutOfStock = ({ html, roasterId, webshopItemLink }) => {
     return html.includes('This product is out of stock for the foreseeable future.');
   }
 
+  if (roasterId === 295) {
+    return html.includes('Out of stock');
+  }
+
   const {
     window: { document }
   } = new JSDOM(html);
