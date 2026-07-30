@@ -1,107 +1,22 @@
-import { JSDOM } from 'jsdom';
 import { fetch, Agent } from 'undici';
-import roasters from '../data/roasters.json' with { type: 'json' };
+import config from './config.json' with { type: 'json' };
 
 import logger from './Sentry/logger.js';
 import client from './Turso.js';
 
-const roasterIDsWithFlaggingLogic = roasters
-  .filter(({ has_flag_removed_logic }) => Boolean(has_flag_removed_logic))
-  .map(({ id }) => id);
-
 // eslint-disable-next-line complexity
 const isOutOfStock = ({ html, roasterId, webshopItemLink }) => {
-  if (!roasterIDsWithFlaggingLogic.includes(roasterId)) {
-    logger.info(`Skipping item ${webshopItemLink}`);
+  const roasterConfig = config.find((c) => c.roasterId === roasterId);
+
+  if (!roasterConfig) {
+    logger.info(`Skipping item ${webshopItemLink} because roaster has no sold out text config`);
 
     return false;
   }
 
-  if (roasterId === 7) {
-    return html.includes('Obecnie brak na stanie');
-  }
+  const lowerCaseHTML = html.toLowerCase();
 
-  if (roasterId === 10) {
-    return html.toLowerCase().includes('>out of season<');
-  }
-
-  if (roasterId === 12) {
-    return html.includes('Product is archived');
-  }
-
-  if (roasterId === 65) {
-    return html.includes('X-Files') || html.includes('Out of stock');
-  }
-
-  if (roasterId === 252) {
-    return html.includes('Sold out');
-  }
-
-  if (roasterId === 277) {
-    return html.includes('This product is currently out of stock and unavailable.');
-  }
-
-  if (roasterId === 284) {
-    return html.includes('>Ausverkauft<');
-  }
-
-  if (roasterId === 285) {
-    return html.includes(' price--sold-out ');
-  }
-
-  if (roasterId === 288) {
-    return html.includes('This product is out of stock for the foreseeable future.');
-  }
-
-  if (roasterId === 290) {
-    return html.includes('Wyprzedane');
-  }
-
-  if (roasterId === 291) {
-    return html.includes('Produkt niedostępny');
-  }
-
-  if (roasterId === 295) {
-    return html.includes('Out of stock');
-  }
-
-  if (roasterId === 304) {
-    return html.includes(' price--sold-out ');
-  }
-
-  if (roasterId === 311) {
-    return html.toLowerCase().includes('currently unavailable');
-  }
-
-  if (roasterId === 314) {
-    return html.includes('tymczasowo niedostępny');
-  }
-
-  if (roasterId === 315) {
-    return html.includes('Prodej produktu byl ukončen.');
-  }
-
-  const {
-    window: { document }
-  } = new JSDOM(html);
-
-  if (roasterId === 6) {
-    return !document.querySelector('.swatch_label')?.dataset?.value;
-  }
-
-  if (!document.querySelector('.variations_form')) {
-    return false;
-  }
-
-  const someInStock = JSON.parse(document.querySelector('.variations_form').dataset.product_variations)
-    .map((product) => product.is_in_stock)
-    .some(Boolean);
-
-  if (!someInStock) {
-    logger.info(`Item at ${webshopItemLink} is out of stock`);
-  }
-
-  return !someInStock;
+  return roasterConfig.soldOutTexts.some((text) => lowerCaseHTML.includes(text));
 };
 
 // eslint-disable-next-line complexity

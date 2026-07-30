@@ -2,9 +2,9 @@
   "name": "@centralbeans/flag-removed",
   "type": "module",
   "scripts": {
-    "build": "cp .yarnrc-lambda.yml .yarnrc.yml && mkdir -p data && cp ../coffee.chealt.com/data/roasters.json data/roasters.json && yarn workspaces focus --production && zip -rq package.zip . -x .yarnrc.yml .yarnrc-lambda.yml && rm .yarnrc.yml",
+    "build": "cp .yarnrc-lambda.yml .yarnrc.yml && yarn workspaces focus --production && zip -rq package.zip . -x .yarnrc.yml .yarnrc-lambda.yml && rm .yarnrc.yml",
     "deploy": "aws lambda update-function-code --function-name flagRemoved --zip-file fileb://package.zip --publish",
-    "test": "mkdir -p data && cp ../coffee.chealt.com/data/roasters.json data/roasters.json && node --env-file=.env test.js"
+    "test": "node --env-file=.env test.js"
   },
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.1097.0",

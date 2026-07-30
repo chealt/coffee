@@ -109,7 +109,6 @@ jobs:
           files: |
             yarn.lock
             .github/workflows/deploy.yml
-            packages/coffee.chealt.com/data/roasters.json
             packages/flag-removed/package.json
             packages/flag-removed/.yarnrc-lambda.yml
             packages/flag-removed/src/**

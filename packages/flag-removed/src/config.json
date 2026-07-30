@@ -1,0 +1,19 @@
+[
+  { "roasterId": 7, "soldOutTexts": ["obecnie brak na stanie"] },
+  { "roasterId": 10, "soldOutTexts": [">out of season<"] },
+  { "roasterId": 12, "soldOutTexts": ["product is archived"] },
+  { "roasterId": 65, "soldOutTexts": ["x-files", "out of stock"] },
+  { "roasterId": 252, "soldOutTexts": ["sold out"] },
+  { "roasterId": 277, "soldOutTexts": ["this product is currently out of stock and unavailable."] },
+  { "roasterId": 284, "soldOutTexts": [">ausverkauft<"] },
+  { "roasterId": 285, "soldOutTexts": [" price--sold-out "] },
+  { "roasterId": 288, "soldOutTexts": ["this product is out of stock for the foreseeable future."] },
+  { "roasterId": 290, "soldOutTexts": ["wyprzedane"] },
+  { "roasterId": 291, "soldOutTexts": ["produkt niedostępny"] },
+  { "roasterId": 295, "soldOutTexts": ["out of stock"] },
+  { "roasterId": 304, "soldOutTexts": [" price--sold-out "] },
+  { "roasterId": 310, "soldOutTexts": ["watch coffee availability"] },
+  { "roasterId": 311, "soldOutTexts": ["currently unavailable"] },
+  { "roasterId": 314, "soldOutTexts": ["tymczasowo niedostępny"] },
+  { "roasterId": 315, "soldOutTexts": ["prodej produktu byl ukončen."] }
+]
