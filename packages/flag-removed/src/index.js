@@ -132,8 +132,8 @@ export const handler = async ({ id, webshopItemLink, roasterId, isTest }) => {
 
     if (!isTest) {
       await client.execute({
-        sql: 'UPDATE coffees SET is_removed = true WHERE id = :id',
-        args: { id }
+        sql: 'UPDATE coffees SET is_removed = true, removal_date = :removalDate WHERE id = :id',
+        args: { id, removalDate: new Date().toISOString() }
       });
     }
 
