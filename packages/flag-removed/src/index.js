@@ -57,6 +57,10 @@ const isOutOfStock = ({ html, roasterId, webshopItemLink }) => {
     return html.includes('Out of stock');
   }
 
+  if (roasterId === 315) {
+    return html.includes('Prodej produktu byl ukončen.');
+  }
+
   const {
     window: { document }
   } = new JSDOM(html);
