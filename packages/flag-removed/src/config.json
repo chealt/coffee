@@ -2,7 +2,7 @@
   { "roasterId": 7, "soldOutTexts": ["obecnie brak na stanie"] },
   { "roasterId": 10, "soldOutTexts": [">out of season<"] },
   { "roasterId": 12, "soldOutTexts": ["product is archived"] },
-  { "roasterId": 65, "soldOutTexts": ["x-files", "out of stock"] },
+  { "roasterId": 65, "soldOutTexts": ["out of stock"] },
   { "roasterId": 252, "soldOutTexts": ["sold out"] },
   { "roasterId": 277, "soldOutTexts": ["this product is currently out of stock and unavailable."] },
   { "roasterId": 284, "soldOutTexts": [">ausverkauft<"] },
