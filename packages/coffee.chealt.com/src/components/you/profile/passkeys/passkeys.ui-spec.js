@@ -1,7 +1,6 @@
 import { config, test, expect } from '@test-utils/index.js';
 import { addVirtualAuthenticator, signRegistrationCode } from '@test-utils/webauthn.js';
 
-// @auth tests share the test user's WebAuthn challenge, so they must not run in parallel
 test.describe('passkeys page', { tag: '@auth' }, () => {
   test('should render the login page when not logged in', async ({ page }) => {
     await page.goto(`${config.url}/you/profile/passkeys`);

@@ -17,7 +17,6 @@ const registerNewPasskey = async (/** @type {import('@playwright/test').Page} */
 const getSessionCookie = async (/** @type {import('@playwright/test').Page} */ page) =>
   (await page.context().cookies()).find((cookie) => cookie.name === cookieNameSession);
 
-// @auth tests share the test user's WebAuthn challenge, so they must not run in parallel
 test.describe('login', { tag: '@auth' }, () => {
   test('logs in an existing user with a passkey', async ({ page }) => {
     await addVirtualAuthenticator(page);
