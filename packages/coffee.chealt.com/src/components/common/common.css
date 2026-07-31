@@ -381,6 +381,12 @@ sup {
   }
 }
 
+/* verbatim values (IDs, codes, keys) that must not be restyled as prose */
+.monospace {
+  font-family: monospace;
+  text-transform: none;
+}
+
 .empty {
   font-size: 2rem;
   display: flex;

@@ -1,0 +1,29 @@
+{
+  "en": {
+    "back": "back",
+    "credentialId": "Credential ID",
+    "deviceType": "Device type",
+    "empty": "You have no passkeys yet.",
+    "title": "Passkeys",
+    "transports": "Transports",
+    "unknown": "unknown"
+  },
+  "pl": {
+    "back": "wstecz",
+    "credentialId": "Identyfikator klucza",
+    "deviceType": "Typ urządzenia",
+    "empty": "Nie masz jeszcze żadnych kluczy dostępu.",
+    "title": "Klucze dostępu",
+    "transports": "Transporty",
+    "unknown": "nieznany"
+  },
+  "hu": {
+    "back": "vissza",
+    "credentialId": "Azonosító",
+    "deviceType": "Eszköz típusa",
+    "empty": "Még nincs egyetlen belépési kulcsod sem.",
+    "title": "Belépési kulcsok",
+    "transports": "Átvitel",
+    "unknown": "ismeretlen"
+  }
+}

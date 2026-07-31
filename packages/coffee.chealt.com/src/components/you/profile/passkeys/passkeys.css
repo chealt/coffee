@@ -1,0 +1,9 @@
+.passkeys-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap--l);
+}
+
+.passkeys-list .credential-id {
+  overflow-wrap: anywhere;
+}

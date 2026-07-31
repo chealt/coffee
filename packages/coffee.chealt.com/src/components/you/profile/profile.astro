@@ -36,7 +36,18 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
   shouldAuthenticate={shouldAuthenticate}
   redirectUrl={getRelativeLocaleUrl(Astro.currentLocale, "/you/profile")}
 >
-  <h1><T namespace="you.profile.locales" key="title">{t("title")}</T></h1>
+  <h1>
+    <span><T namespace="you.profile.locales" key="title">{t("title")}</T></span>
+    <Button
+      href={getRelativeLocaleUrl(Astro.currentLocale, "/you/collections")}
+      class="ghost small"
+    >
+      <Icon type="back" />
+      <span class="visually-hidden">
+        <T namespace="you.profile.locales" key="back">{t("back")}</T>
+      </span>
+    </Button>
+  </h1>
   <section>
     <Form
       name="settings"
@@ -129,6 +140,19 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
         </Button>
       </APIButton>
     </Form>
+  </section>
+  <section>
+    <Button
+      class="bordered column"
+      href={getRelativeLocaleUrl(Astro.currentLocale, "/you/profile/passkeys")}
+    >
+      <span>
+        <T namespace="you.profile.locales" key="passkeys">
+          {t("passkeys")}
+        </T>
+      </span>
+      <Icon type="user" />
+    </Button>
   </section>
   <section>
     <Logout logoutUrl="/api/authentication/logout.json">

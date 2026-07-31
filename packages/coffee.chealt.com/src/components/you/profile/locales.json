@@ -8,7 +8,9 @@
     "notifications": "Notifications",
     "rateLimitExceeded": "You tried to send a new registration code too many times. Please try again later.",
     "sendRegistrationCode": "Send new registration code",
-    "title": "Profile"
+    "title": "Profile",
+    "passkeys": "Passkeys",
+    "back": "back"
   },
   "pl": {
     "currency": "Waluta",
@@ -19,7 +21,9 @@
     "notifications": "Powiadomienia",
     "rateLimitExceeded": "Zbyt wiele prób wysłania nowego kodu rejestracji. Proszę spróbować później.",
     "sendRegistrationCode": "Wyślij nowy kod rejestracji",
-    "title": "Profil"
+    "title": "Profil",
+    "passkeys": "Klucze dostępu",
+    "back": "wstecz"
   },
   "hu": {
     "title": "Profil",
@@ -30,6 +34,8 @@
     "newCoffee": "új kávék",
     "sendRegistrationCode": "új regisztrációs kód küldése",
     "rateLimitExceeded": "Túl sokszor próbáltál új regisztrációs kódot küldeni. Kérjük, próbáld újra később.",
-    "logout": "kijelentkezés"
+    "logout": "kijelentkezés",
+    "passkeys": "Belépési kulcsok",
+    "back": "vissza"
   }
 }
