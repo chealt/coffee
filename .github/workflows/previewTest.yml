@@ -89,23 +89,13 @@ jobs:
       - name: Install Playwright Browsers
         if: steps.cache.outputs.cache-hit != 'true'
         run: yarn workspace @centralbeans/website playwright install --with-deps chromium
-      - name: Run Playwright non-auth tests
+      - name: Run Playwright tests
         env:
           baseUrl: https://${{ env.PREVIEW_HOST }}
           CI: true
           identityHeaderValue: ${{ secrets.IDENTITY_HEADER_VALUE }}
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-        run: yarn workspace @centralbeans/website test:non-auth
-      - name: Run Playwright @auth tests
-        env:
-          baseUrl: https://${{ env.PREVIEW_HOST }}
-          CI: true
-          identityHeaderValue: ${{ secrets.IDENTITY_HEADER_VALUE }}
-          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-        run: yarn workspace @centralbeans/website test:auth
-      - name: Merge Playwright reports
-        if: always()
-        run: yarn workspace @centralbeans/website merge-test-reports
+        run: yarn workspace @centralbeans/website playwright test
       - uses: actions/upload-artifact@v7
         name: Upload Playwright report
         if: always()

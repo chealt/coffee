@@ -19,10 +19,7 @@
     "preview": "astro build && wrangler pages dev ./dist",
     "recommendations": "node --env-file=.env data/recommendations/generate.js",
     "recommendations:ci": "node data/recommendations/generate.js",
-    "test": "rm -rf blob-report && yarn test:non-auth && yarn test:auth && yarn merge-test-reports",
-    "test:auth": "PLAYWRIGHT_BLOB_OUTPUT_FILE=blob-report/auth.zip playwright test --grep @auth --workers=1 --reporter=blob",
-    "test:non-auth": "PLAYWRIGHT_BLOB_OUTPUT_FILE=blob-report/parallel.zip playwright test --grep-invert @auth --reporter=blob",
-    "merge-test-reports": "playwright merge-reports --reporter=html ./blob-report"
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@astrojs/cloudflare": "12.6.13",

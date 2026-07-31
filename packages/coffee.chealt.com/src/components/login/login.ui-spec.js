@@ -1,27 +1,13 @@
 import { cookieNameSession } from '../../server/authentication/config.js';
 import { config, test, expect } from '@test-utils/index.js';
-import { addVirtualAuthenticator, signRegistrationCode } from '@test-utils/webauthn.js';
-
-const registerNewPasskey = async (/** @type {import('@playwright/test').Page} */ page) => {
-  const registrationCode = await signRegistrationCode(config.user.username);
-
-  await page.goto(`${config.url}/registration/${config.user.username}?code=${registrationCode}`);
-
-  await expect(page.getByRole('heading', { name: /registration/iu, level: 1 })).toBeVisible();
-
-  await page.getByRole('button', { name: 'Register', exact: true }).click();
-
-  await page.waitForURL(`${config.url}/`);
-};
+import { registerPasskey } from '@test-utils/webauthn.js';
 
 const getSessionCookie = async (/** @type {import('@playwright/test').Page} */ page) =>
   (await page.context().cookies()).find((cookie) => cookie.name === cookieNameSession);
 
 test.describe('login', { tag: '@auth' }, () => {
   test('logs in an existing user with a passkey', async ({ page }) => {
-    await addVirtualAuthenticator(page);
-
-    await registerNewPasskey(page);
+    await registerPasskey(page);
 
     expect(await getSessionCookie(page)).toBeTruthy();
 

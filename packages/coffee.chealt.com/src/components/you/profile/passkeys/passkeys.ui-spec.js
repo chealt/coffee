@@ -1,19 +1,16 @@
+import { cookieNameSession } from '../../../../server/authentication/config.js';
 import { config, test, expect } from '@test-utils/index.js';
-import { addVirtualAuthenticator, signRegistrationCode } from '@test-utils/webauthn.js';
+import { registerPasskey } from '@test-utils/webauthn.js';
 
-const registerPasskey = async (/** @type {import('@playwright/test').Page} */ page) => {
-  await addVirtualAuthenticator(page);
+const passkeysUrl = `${config.url}/you/profile/passkeys`;
 
-  const registrationCode = await signRegistrationCode(config.user.username);
-
-  await page.goto(`${config.url}/registration/${config.user.username}?code=${registrationCode}`);
-  await page.getByRole('button', { name: 'Register', exact: true }).click();
-  await page.waitForURL(`${config.url}/`);
-};
+// The credential ID is the last value on a card, and identifies it across reloads
+const getCredentialId = (/** @type {import('@playwright/test').Page} */ page) =>
+  page.getByRole('listitem').first().getByRole('definition').last().textContent();
 
 test.describe('passkeys page', { tag: '@auth' }, () => {
   test('should render the login page when not logged in', async ({ page }) => {
-    await page.goto(`${config.url}/you/profile/passkeys`);
+    await page.goto(passkeysUrl);
 
     await expect(page.getByRole('heading', { name: /login/iu, level: 1 })).toBeVisible();
   });
@@ -28,28 +25,24 @@ test.describe('passkeys page', { tag: '@auth' }, () => {
     await expect(page.getByText('Credential ID')).not.toHaveCount(0);
   });
 
-  test('should delete all the passkeys', async ({ page }) => {
+  test('should record when a passkey was last used', async ({ page }) => {
     await registerPasskey(page);
 
-    page.on('dialog', (dialog) => dialog.accept());
+    await page.goto(passkeysUrl);
 
-    await page.goto(`${config.url}/you/profile/passkeys`);
+    const credentialId = await getCredentialId(page);
+    const passkey = page.getByRole('listitem').filter({ hasText: credentialId });
 
-    const deleteButtons = page.getByRole('button', { name: /delete/iu });
-    let remaining = await deleteButtons.count();
+    // registering stores the creation date but the passkey has not authenticated anyone yet
+    await expect(passkey.getByText(/never/iu)).toBeVisible();
 
-    expect(remaining).toBeGreaterThan(0);
+    await page.context().clearCookies({ name: cookieNameSession });
+    await page.goto(passkeysUrl);
+    await page.getByRole('textbox', { name: /username or email/iu }).fill(config.user.email);
+    await page.getByRole('button', { name: /login/iu }).click();
 
-    while (remaining > 0) {
-      await deleteButtons.first().click();
+    await expect(page.getByRole('heading', { name: /passkeys/iu, level: 1 })).toBeVisible();
 
-      remaining -= 1;
-
-      await expect(deleteButtons).toHaveCount(remaining);
-    }
-
-    await page.reload();
-
-    await expect(page.getByText(/no passkeys yet/iu)).toBeVisible();
+    await expect(passkey.getByText(/never/iu)).toHaveCount(0);
   });
 });

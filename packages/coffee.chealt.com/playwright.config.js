@@ -24,7 +24,8 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: undefined,
+  // The @auth tests share one user, so concurrent runs overwrite each other's WebAuthn challenge
+  workers: 1,
   reporter: [['html', { open: 'never' }], [process.env.CI ? 'github' : 'list']],
   use: {
     trace: 'on',
@@ -43,6 +44,12 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
+      use: getDevice('Desktop Chrome'),
+      teardown: 'cleanup'
+    },
+    {
+      name: 'cleanup',
+      testMatch: /.*\.teardown\.js/u,
       use: getDevice('Desktop Chrome')
     }
   ],

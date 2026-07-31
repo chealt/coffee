@@ -23,4 +23,15 @@ const addVirtualAuthenticator = async (page) => {
 const signRegistrationCode = (username) =>
   new SignJWT({ username }).setProtectedHeader({ alg: 'HS256' }).sign(new TextEncoder().encode(config.sessionSecret));
 
-export { addVirtualAuthenticator, signRegistrationCode };
+// Registering also signs the user in, so this is the way to get an authenticated page
+const registerPasskey = async (/** @type {import('@playwright/test').Page} */ page) => {
+  await addVirtualAuthenticator(page);
+
+  const registrationCode = await signRegistrationCode(config.user.username);
+
+  await page.goto(`${config.url}/registration/${config.user.username}?code=${registrationCode}`);
+  await page.getByRole('button', { name: 'Register', exact: true }).click();
+  await page.waitForURL(`${config.url}/`);
+};
+
+export { addVirtualAuthenticator, registerPasskey, signRegistrationCode };
