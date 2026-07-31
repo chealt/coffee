@@ -1,6 +1,12 @@
 /// <reference types="astro/client" />
 /// <reference types="navigation-api-types" />
 
+interface Passkey {
+  credentialId: string;
+  deviceType: string;
+  transports: string[];
+}
+
 interface CollectionItemImage {
   src: string;
   srcSmall: string;
@@ -69,6 +75,7 @@ declare namespace App {
     imageUploadUrls: { small: string; medium: string; original: string };
     isTranslating: boolean;
     isIOS: boolean;
+    passkeys: Passkey[];
     registrationOptions: string;
     settings: {
       currency: string;

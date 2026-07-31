@@ -2,6 +2,8 @@
   "en": {
     "back": "back",
     "credentialId": "Credential ID",
+    "delete": "delete",
+    "deleteConfirm": "Are you sure you want to delete this passkey?",
     "deviceType": "Device type",
     "empty": "You have no passkeys yet.",
     "title": "Passkeys",
@@ -11,6 +13,8 @@
   "pl": {
     "back": "wstecz",
     "credentialId": "Identyfikator klucza",
+    "delete": "usuń",
+    "deleteConfirm": "Czy na pewno chcesz usunąć ten klucz dostępu?",
     "deviceType": "Typ urządzenia",
     "empty": "Nie masz jeszcze żadnych kluczy dostępu.",
     "title": "Klucze dostępu",
@@ -20,6 +24,8 @@
   "hu": {
     "back": "vissza",
     "credentialId": "Azonosító",
+    "delete": "törlés",
+    "deleteConfirm": "Biztosan törlöd ezt a belépési kulcsot?",
     "deviceType": "Eszköz típusa",
     "empty": "Még nincs egyetlen belépési kulcsod sem.",
     "title": "Belépési kulcsok",

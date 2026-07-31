@@ -19,7 +19,10 @@ const { shouldAuthenticate, passkeys } = Astro.locals;
 
 <Common
   shouldAuthenticate={shouldAuthenticate}
-  redirectUrl={getRelativeLocaleUrl(Astro.currentLocale, "/you/profile/passkeys")}
+  redirectUrl={getRelativeLocaleUrl(
+    Astro.currentLocale,
+    "/you/profile/passkeys",
+  )}
 >
   <h1>
     <span>
@@ -38,9 +41,12 @@ const { shouldAuthenticate, passkeys } = Astro.locals;
   <section>
     {
       passkeys?.length ? (
-        <ul class="passkeys-list">
+        <ul
+          class="passkeys-list"
+          data-delete-confirm-message={t("deleteConfirm")}
+        >
           {passkeys.map(({ credentialId, deviceType, transports }) => (
-            <li class="card">
+            <li class="card" id={credentialId} data-type="passkey">
               <dl>
                 <dt>
                   <T namespace="you.profile.passkeys.locales" key="deviceType">
@@ -55,12 +61,27 @@ const { shouldAuthenticate, passkeys } = Astro.locals;
                 </dt>
                 <dd>{transports.join(", ") || t("unknown")}</dd>
                 <dt>
-                  <T namespace="you.profile.passkeys.locales" key="credentialId">
+                  <T
+                    namespace="you.profile.passkeys.locales"
+                    key="credentialId"
+                  >
                     {t("credentialId")}
                   </T>
                 </dt>
                 <dd class="credential-id monospace">{credentialId}</dd>
               </dl>
+              <Button
+                class="ghost small danger shrink"
+                data-delete-trigger
+                for={credentialId}
+              >
+                <Icon type="delete" />
+                <span class="visually-hidden">
+                  <T namespace="you.profile.passkeys.locales" key="delete">
+                    {t("delete")}
+                  </T>
+                </span>
+              </Button>
             </li>
           ))}
         </ul>

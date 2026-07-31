@@ -70,6 +70,10 @@ a.button {
       right: var(--gap--l);
     }
   }
+
+  &.shrink {
+    width: auto;
+  }
 }
 
 button[disabled],
@@ -124,6 +128,10 @@ a.ghost {
 button.danger,
 a.button.danger {
   background-color: var(--color-danger);
+
+  &.ghost svg {
+    fill: var(--color-danger);
+  }
 }
 
 button.warning,

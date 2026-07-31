@@ -379,6 +379,11 @@ sup {
     text-decoration: underline;
     font-weight: bold;
   }
+
+  /* the global fill is --color-text, which is the card background in dark mode */
+  svg {
+    fill: currentColor;
+  }
 }
 
 /* verbatim values (IDs, codes, keys) that must not be restyled as prose */
