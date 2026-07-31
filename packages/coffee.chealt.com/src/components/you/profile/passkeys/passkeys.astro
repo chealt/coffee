@@ -1,0 +1,97 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+import Button from "@components/form/button/button.astro";
+import Common from "@components/common/common.astro";
+import Icon from "@components/icon/icon.astro";
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
+
+import "./passkeys.css";
+
+const t = await getTranslator({
+  filePath: "you/profile/passkeys",
+  locale: Astro.currentLocale,
+});
+
+const { shouldAuthenticate, passkeys } = Astro.locals;
+---
+
+<Common
+  shouldAuthenticate={shouldAuthenticate}
+  redirectUrl={getRelativeLocaleUrl(
+    Astro.currentLocale,
+    "/you/profile/passkeys",
+  )}
+>
+  <h1>
+    <span>
+      <T namespace="you.profile.passkeys.locales" key="title">{t("title")}</T>
+    </span>
+    <Button
+      href={getRelativeLocaleUrl(Astro.currentLocale, "/you/profile")}
+      class="ghost small"
+    >
+      <Icon type="back" />
+      <span class="visually-hidden">
+        <T namespace="you.profile.passkeys.locales" key="back">{t("back")}</T>
+      </span>
+    </Button>
+  </h1>
+  <section>
+    {
+      passkeys?.length ? (
+        <ul
+          class="passkeys-list"
+          data-delete-confirm-message={t("deleteConfirm")}
+        >
+          {passkeys.map(({ credentialId, deviceType, transports }) => (
+            <li class="card" id={credentialId} data-type="passkey">
+              <dl>
+                <dt>
+                  <T namespace="you.profile.passkeys.locales" key="deviceType">
+                    {t("deviceType")}
+                  </T>
+                </dt>
+                <dd>{deviceType || t("unknown")}</dd>
+                <dt>
+                  <T namespace="you.profile.passkeys.locales" key="transports">
+                    {t("transports")}
+                  </T>
+                </dt>
+                <dd>{transports.join(", ") || t("unknown")}</dd>
+                <dt>
+                  <T
+                    namespace="you.profile.passkeys.locales"
+                    key="credentialId"
+                  >
+                    {t("credentialId")}
+                  </T>
+                </dt>
+                <dd class="credential-id monospace">{credentialId}</dd>
+              </dl>
+              <Button
+                class="ghost small danger shrink"
+                data-delete-trigger
+                for={credentialId}
+              >
+                <Icon type="delete" />
+                <span class="visually-hidden">
+                  <T namespace="you.profile.passkeys.locales" key="delete">
+                    {t("delete")}
+                  </T>
+                </span>
+              </Button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>
+          <T namespace="you.profile.passkeys.locales" key="empty">
+            {t("empty")}
+          </T>
+        </p>
+      )
+    }
+  </section>
+</Common>

@@ -1,0 +1,25 @@
+.passkeys-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap--l);
+}
+
+.passkeys-list > li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap);
+
+  dl {
+    flex-grow: 1;
+    min-width: 0;
+  }
+
+  .delete {
+    width: auto;
+    flex-shrink: 0;
+  }
+}
+
+.passkeys-list .credential-id {
+  overflow-wrap: anywhere;
+}

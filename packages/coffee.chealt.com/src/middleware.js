@@ -12,6 +12,7 @@ import { getAuthenticationOptions } from './server/login.js';
 import { createRegistrationOptions } from './server/registration.js';
 import logger from './server/utils/logger.js';
 import { setCollections, setCollectionItem } from './server/you/collections.js';
+import { setPasskeys } from './server/you/passkeys.js';
 
 const secretKey = new TextEncoder().encode(sessionSecret);
 
@@ -240,6 +241,10 @@ export const onRequest = async (context, next) => {
 
       if (params[0] === 'profile') {
         context.locals.settings = await getValue({ user: { name: loggedInUser?.username }, key: 'settings' });
+
+        if (params[1] === 'passkeys') {
+          await setPasskeys(context);
+        }
       } else if (params[0] === 'unsubscribe' && loggedInUser) {
         if (context.params.notificationType) {
           await unsubscribe({

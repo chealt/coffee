@@ -110,6 +110,15 @@ const getPasskey = async ({ username, credentialId }) => {
   return rows[0];
 };
 
+const deletePasskey = ({ user, credentialId }) => {
+  const client = getClient(user.name);
+
+  return client.execute({
+    sql: 'DELETE FROM passkeys WHERE user_id = (:user_id) AND credential_id = (:credential_id)',
+    args: { user_id: user.id, credential_id: credentialId }
+  });
+};
+
 const updatePasskeyCounter = ({ username, credentialID, newCounter }) => {
   const client = getClient(username);
 
@@ -129,5 +138,6 @@ export {
   recordAuthenticationOptions,
   getAuthenticationOptions,
   getPasskey,
+  deletePasskey,
   updatePasskeyCounter
 };

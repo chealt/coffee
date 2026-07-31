@@ -17,7 +17,7 @@ const registerNewPasskey = async (/** @type {import('@playwright/test').Page} */
 const getSessionCookie = async (/** @type {import('@playwright/test').Page} */ page) =>
   (await page.context().cookies()).find((cookie) => cookie.name === cookieNameSession);
 
-test.describe('login', () => {
+test.describe('login', { tag: '@auth' }, () => {
   test('logs in an existing user with a passkey', async ({ page }) => {
     await addVirtualAuthenticator(page);
 
