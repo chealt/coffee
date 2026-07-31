@@ -12,7 +12,9 @@ const setPasskeys = async (context) => {
     context.locals.passkeys = passkeys.map((passkey) => ({
       credentialId: passkey.credential_id,
       deviceType: passkey.device_type,
-      transports: passkey.transports ? passkey.transports.split(',') : []
+      transports: passkey.transports ? passkey.transports.split(',') : [],
+      createdAt: passkey.created_at,
+      lastUsedAt: passkey.last_used_at
     }));
   }
 };

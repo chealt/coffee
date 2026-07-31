@@ -15,6 +15,11 @@ const t = await getTranslator({
 });
 
 const { shouldAuthenticate, passkeys } = Astro.locals;
+
+const dateFormat = new Intl.DateTimeFormat(Astro.currentLocale, {
+  dateStyle: "medium",
+  timeStyle: "short",
+});
 ---
 
 <Common
@@ -45,7 +50,7 @@ const { shouldAuthenticate, passkeys } = Astro.locals;
           class="passkeys-list"
           data-delete-confirm-message={t("deleteConfirm")}
         >
-          {passkeys.map(({ credentialId, deviceType, transports }) => (
+          {passkeys.map(({ credentialId, deviceType, transports, createdAt, lastUsedAt }) => (
             <li class="card" id={credentialId} data-type="passkey">
               <dl>
                 <dt>
@@ -60,6 +65,22 @@ const { shouldAuthenticate, passkeys } = Astro.locals;
                   </T>
                 </dt>
                 <dd>{transports.join(", ") || t("unknown")}</dd>
+                <dt>
+                  <T namespace="you.profile.passkeys.locales" key="createdAt">
+                    {t("createdAt")}
+                  </T>
+                </dt>
+                <dd>
+                  {createdAt ? dateFormat.format(new Date(createdAt)) : t("unknown")}
+                </dd>
+                <dt>
+                  <T namespace="you.profile.passkeys.locales" key="lastUsedAt">
+                    {t("lastUsedAt")}
+                  </T>
+                </dt>
+                <dd>
+                  {lastUsedAt ? dateFormat.format(new Date(lastUsedAt)) : t("never")}
+                </dd>
                 <dt>
                   <T
                     namespace="you.profile.passkeys.locales"
