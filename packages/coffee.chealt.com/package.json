@@ -21,8 +21,8 @@
     "recommendations:ci": "node data/recommendations/generate.js",
     "test": "rm -rf blob-report && yarn test:parallel && yarn test:auth && yarn test:report",
     "test:auth": "PLAYWRIGHT_BLOB_OUTPUT_FILE=blob-report/auth.zip playwright test --grep @auth --workers=1 --reporter=blob",
-    "test:parallel": "PLAYWRIGHT_BLOB_OUTPUT_FILE=blob-report/parallel.zip playwright test --grep-invert @auth --reporter=blob",
-    "test:report": "playwright merge-reports --reporter=html ./blob-report"
+    "test:non-auth": "PLAYWRIGHT_BLOB_OUTPUT_FILE=blob-report/parallel.zip playwright test --grep-invert @auth --reporter=blob",
+    "merge-test-reports": "playwright merge-reports --reporter=html ./blob-report"
   },
   "dependencies": {
     "@astrojs/cloudflare": "12.6.13",

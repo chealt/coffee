@@ -33,8 +33,6 @@ export default defineConfig({
     // prefers-reduced-motion). Playwright's Chromium runs with the
     // RenderDocument feature disabled, which leaves those transitions
     // stuck and freezes rendering after JS-initiated navigations.
-    // Playwright 1.61 drops a top-level `reducedMotion` test option,
-    // so it has to go through `contextOptions`.
     contextOptions: {
       extraHTTPHeaders: {
         'x-e2e-identity': process.env.identityHeaderValue || ''
