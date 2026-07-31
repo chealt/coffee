@@ -1,33 +1,42 @@
 {
   "en": {
     "back": "back",
+    "createdAt": "Created",
     "credentialId": "Credential ID",
     "delete": "delete",
     "deleteConfirm": "Are you sure you want to delete this passkey?",
     "deviceType": "Device type",
     "empty": "You have no passkeys yet.",
+    "lastUsedAt": "Last used",
+    "never": "never",
     "title": "Passkeys",
     "transports": "Transports",
     "unknown": "unknown"
   },
   "pl": {
     "back": "wstecz",
+    "createdAt": "Utworzono",
     "credentialId": "Identyfikator klucza",
     "delete": "usuń",
     "deleteConfirm": "Czy na pewno chcesz usunąć ten klucz dostępu?",
     "deviceType": "Typ urządzenia",
     "empty": "Nie masz jeszcze żadnych kluczy dostępu.",
+    "lastUsedAt": "Ostatnio użyto",
+    "never": "nigdy",
     "title": "Klucze dostępu",
     "transports": "Transporty",
     "unknown": "nieznany"
   },
   "hu": {
     "back": "vissza",
+    "createdAt": "Létrehozva",
     "credentialId": "Azonosító",
     "delete": "törlés",
     "deleteConfirm": "Biztosan törlöd ezt a belépési kulcsot?",
     "deviceType": "Eszköz típusa",
     "empty": "Még nincs egyetlen belépési kulcsod sem.",
+    "lastUsedAt": "Utoljára használva",
+    "never": "soha",
     "title": "Belépési kulcsok",
     "transports": "Átvitel",
     "unknown": "ismeretlen"

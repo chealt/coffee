@@ -73,7 +73,7 @@ const storeRegistration = ({
   const client = getClient(user.name);
 
   return client.execute({
-    sql: 'INSERT INTO passkeys (user_id, web_authn_user_id, credential_id, public_key, counter, transports, device_type, backed_up) VALUES (:user_id, :web_authn_user_id, :credential_id, :public_key, :counter, :transports, :device_type, :backed_up)',
+    sql: 'INSERT INTO passkeys (user_id, web_authn_user_id, credential_id, public_key, counter, transports, device_type, backed_up, created_at) VALUES (:user_id, :web_authn_user_id, :credential_id, :public_key, :counter, :transports, :device_type, :backed_up, :created_at)',
     args: {
       user_id: user.id,
       web_authn_user_id: registrationOptions.user.id,
@@ -82,7 +82,8 @@ const storeRegistration = ({
       counter: credential.counter,
       transports: credential.transports.join(','),
       device_type: credentialDeviceType,
-      backed_up: credentialBackedUp
+      backed_up: credentialBackedUp,
+      created_at: new Date().toISOString()
     }
   });
 };
@@ -119,12 +120,13 @@ const deletePasskey = ({ user, credentialId }) => {
   });
 };
 
+// a passkey is only ever used to authenticate, so the counter bump doubles as the last use
 const updatePasskeyCounter = ({ username, credentialID, newCounter }) => {
   const client = getClient(username);
 
   return client.execute({
-    sql: 'UPDATE passkeys SET counter = (:new_counter) WHERE credential_id = (:credential_id)',
-    args: { credential_id: credentialID, new_counter: newCounter }
+    sql: 'UPDATE passkeys SET counter = (:new_counter), last_used_at = (:last_used_at) WHERE credential_id = (:credential_id)',
+    args: { credential_id: credentialID, new_counter: newCounter, last_used_at: new Date().toISOString() }
   });
 };
 

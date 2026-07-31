@@ -46,22 +46,7 @@ jobs:
           TURSO_AUTH_TOKEN_TEST: ${{ secrets.TURSO_AUTH_TOKEN_TEST }}
           TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
           TURSO_DATABASE_URL_TEST: ${{ secrets.TURSO_DATABASE_URL_TEST }}
-        run: yarn workspace @centralbeans/website test:non-auth
-      - name: Run Playwright @auth tests
-        env:
-          CI: true
-          localDevServer: true
-          ORIGIN: ${{ secrets.ORIGIN }}
-          RELYING_PARTY_ID: ${{ secrets.RELYING_PARTY_ID }}
-          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
-          TURSO_AUTH_TOKEN_TEST: ${{ secrets.TURSO_AUTH_TOKEN_TEST }}
-          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
-          TURSO_DATABASE_URL_TEST: ${{ secrets.TURSO_DATABASE_URL_TEST }}
-        run: yarn workspace @centralbeans/website test:auth
-      - name: Merge Playwright reports
-        if: always()
-        run: yarn workspace @centralbeans/website merge-test-reports
+        run: yarn workspace @centralbeans/website playwright test
       - uses: actions/upload-artifact@v7
         name: Upload Playwright report
         if: always()
