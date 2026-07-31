@@ -46,10 +46,8 @@ jobs:
           TURSO_AUTH_TOKEN_TEST: ${{ secrets.TURSO_AUTH_TOKEN_TEST }}
           TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
           TURSO_DATABASE_URL_TEST: ${{ secrets.TURSO_DATABASE_URL_TEST }}
-        run: yarn workspace @centralbeans/website test:parallel
-      # The @auth tests share the test user's WebAuthn challenge, so they run on their own worker
+        run: yarn workspace @centralbeans/website test:non-auth
       - name: Run Playwright @auth tests
-        if: '!cancelled()'
         env:
           CI: true
           localDevServer: true
@@ -63,7 +61,7 @@ jobs:
         run: yarn workspace @centralbeans/website test:auth
       - name: Merge Playwright reports
         if: always()
-        run: yarn workspace @centralbeans/website test:report
+        run: yarn workspace @centralbeans/website merge-test-reports
       - uses: actions/upload-artifact@v7
         name: Upload Playwright report
         if: always()
