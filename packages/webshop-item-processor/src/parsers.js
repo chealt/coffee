@@ -6841,6 +6841,192 @@ const parsers = {
       webshopItemLink: url,
       weight
     };
+  },
+  // Kaizen
+  325: ({ html, url, roasterId }) => {
+    logger.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const variationsAttribute = document.querySelector('.variations_form')?.getAttribute('data-product_variations');
+
+    if (!variationsAttribute) {
+      logger.error(`No variations found for ${url}`);
+
+      throw new Error(errors.detailsMissing);
+    }
+
+    const parseVariationWeight = ({ attributes, weight: variationWeight }) => {
+      const match = Object.values(attributes || {})
+        .join(' ')
+        .match(/(\d+(?:[.,]\d+)?)\s*(kg|g)\b/iu);
+
+      if (match) {
+        const amount = Number(match[1].replace(',', '.'));
+
+        return match[2].toLowerCase() === 'kg' ? Math.round(amount * 1000) : amount;
+      }
+
+      // WooCommerce stores the shipping weight in kilograms
+      return variationWeight ? Math.round(Number(variationWeight) * 1000) : undefined;
+    };
+
+    const availableVariations = JSON.parse(variationsAttribute)
+      // eslint-disable-next-line camelcase
+      .filter(({ is_in_stock, is_purchasable }) => is_in_stock && is_purchasable)
+      .map((variation) => ({ ...variation, parsedWeight: parseVariationWeight(variation) }))
+      .filter(({ parsedWeight }) => parsedWeight)
+      .sort((a, b) => a.parsedWeight - b.parsedWeight);
+
+    if (!availableVariations.length) {
+      return { isOutOfStock: true };
+    }
+
+    const smallestVariation = availableVariations[0];
+    const price = Number(Number(smallestVariation.display_price).toFixed(2));
+    const weight = smallestVariation.parsedWeight;
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const currencySymbol = getDocument(smallestVariation.price_html || '')
+      .querySelector('.woocommerce-Price-currencySymbol')
+      ?.textContent.trim();
+    const currency = currencyCodes[currencySymbol];
+
+    if (!currency) {
+      return { missingCurrency: true };
+    }
+
+    const image = smallestVariation.image?.url || document.querySelector('.wp-post-image')?.src;
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    // The specification table holds every origin detail, keyed by its Polish label
+    const specs = Array.from(document.querySelectorAll('.woocommerce-product-attributes tr')).reduce((all, row) => {
+      const label = row.children[0]?.textContent.trim().toLowerCase();
+      // Normalize curly apostrophes so values match data dictionaries (e.g. "rung’eto" → "rung'eto")
+      const value = row.children[1]?.textContent.trim().toLowerCase().replace(/[‘’]/gu, "'");
+
+      return label && value ? { ...all, [label]: value } : all;
+    }, {});
+
+    const escapeRegex = (text) => text.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+    const wordBoundary = (text, term) => new RegExp(`(?<!\\p{L})${escapeRegex(term)}(?!\\p{L})`, 'iu').test(text);
+
+    const countryText = specs.kraj || '';
+    const originCountryId =
+      originCountries.find(({ name }) => name === countryText)?.origin_country_id ||
+      originCountries.find(({ name }) => wordBoundary(countryText, name))?.origin_country_id ||
+      null;
+
+    if (!originCountryId) {
+      logger.error(`No origin country found for ${url}, got: ${countryText}`);
+
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const processingText = specs['obróbka'] || '';
+    const processingMethodId =
+      [...processingMethods]
+        .sort((a, b) => b.name.length - a.name.length)
+        .find(({ name }) => wordBoundary(processingText, name))?.processing_method_id || null;
+
+    if (!processingMethodId) {
+      logger.info(`Missing processing method: ${processingText}`);
+    }
+
+    const varietyText = specs['odmiana botaniczna'] || '';
+    const varietyIds = Array.from(
+      new Set(
+        varieties
+          .filter(({ name, alias }) => wordBoundary(varietyText, name) || (alias && wordBoundary(varietyText, alias)))
+          .map(({ id }) => id)
+      )
+    );
+
+    if (!varietyIds.length) {
+      logger.info(`Missing varieties: ${varietyText}`);
+    }
+
+    const regionText = specs.region || '';
+    const originRegionId =
+      originRegions
+        .filter(({ origin_country_id: countryId }) => countryId === originCountryId)
+        .sort((a, b) => b.name.length - a.name.length)
+        .find(({ name }) => wordBoundary(regionText, name))?.origin_region_id || null;
+
+    if (!originRegionId) {
+      logger.info(`Missing origin region: ${regionText}`);
+    }
+
+    const farmText = specs.plantacja || '';
+    const originFarmId =
+      originFarms.find(
+        ({ name, origin_country_id: countryId }) =>
+          countryId === originCountryId && farmText.includes(name.toLowerCase())
+      )?.id || null;
+
+    const description = document.querySelector('.woocommerce-product-details__short-description')?.textContent || '';
+    const tasteNotesText = (description.toLowerCase().match(/nuty smakowe:([\s\S]*?)(?:czas realizacji|$)/u)?.[1] || '')
+      // the shop uses the accusative form, the dictionary the adjective one
+      .replace(/pomarańcz[ay]\b/gu, 'pomarańczowy');
+
+    const matchedTasteNotes = [...tasteNotes]
+      .sort((a, b) => b.name.length - a.name.length)
+      .filter(({ name }) => wordBoundary(tasteNotesText, name));
+    // exclude taste notes that include each other like 'czekolada' and 'ciemna czekolada'
+    const tasteNoteIds = Array.from(
+      new Set(
+        matchedTasteNotes
+          .filter(({ name }) => !matchedTasteNotes.some(({ name: otherName }) => otherName !== name && otherName.includes(name)))
+          .map(({ taste_note_id: id }) => id)
+      )
+    );
+
+    if (!tasteNoteIds.length) {
+      logger.info(`Missing taste notes: ${tasteNotesText}`);
+    }
+
+    const isEspresso = url.includes('kawa-do-espresso') || url.includes('-espresso');
+    const isFilter = url.includes('kawa-pod-przelew') || url.includes('-filter');
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) =>
+          (isEspresso && isFilter && name === 'omni') ||
+          (isEspresso && !isFilter && name === 'espresso') ||
+          (!isEspresso && isFilter && name === 'filter')
+      )?.brewing_method_id || brewingMethods.find(({ name }) => name === 'omni')?.brewing_method_id;
+
+    const title = document.querySelector('h1')?.textContent.trim().toLowerCase() || '';
+    const isDecaf = url.toLowerCase().includes('decaf') || title.includes('decaf');
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
   }
 };
 

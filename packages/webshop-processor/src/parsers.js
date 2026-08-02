@@ -653,6 +653,23 @@ const parsers = {
     return products
       .filter(({ product_type }) => product_type === 'Coffee')
       .map(({ handle }) => `${origin}/products/${handle}`);
+  },
+  // Kaizen
+  325: ({ html }) => {
+    const document = getDocument(html);
+
+    const coffeeCategorySelectors = [
+      '.product.instock.product_cat-kawa-do-espresso',
+      '.product.instock.product_cat-kawa-pod-przelew'
+    ];
+
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll(`${coffeeCategorySelectors.join(',')}`))
+          .map((product) => product.querySelector('a.woocommerce-loop-product__link')?.href)
+          .filter((href) => href && !href.includes('zestaw') && !href.includes('blend'))
+      )
+    );
   }
 };
 
