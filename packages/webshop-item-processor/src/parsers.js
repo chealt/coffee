@@ -6915,7 +6915,10 @@ const parsers = {
     const specs = Array.from(document.querySelectorAll('.woocommerce-product-attributes tr')).reduce((all, row) => {
       const label = row.children[0]?.textContent.trim().toLowerCase();
       // Normalize curly apostrophes so values match data dictionaries (e.g. "rung’eto" → "rung'eto")
-      const value = row.children[1]?.textContent.trim().toLowerCase().replace(/[‘’]/gu, "'");
+      const value = row.children[1]?.textContent
+        .trim()
+        .toLowerCase()
+        .replace(/[‘’]/gu, "'");
 
       return label && value ? { ...all, [label]: value } : all;
     }, {});
@@ -6988,7 +6991,10 @@ const parsers = {
     const tasteNoteIds = Array.from(
       new Set(
         matchedTasteNotes
-          .filter(({ name }) => !matchedTasteNotes.some(({ name: otherName }) => otherName !== name && otherName.includes(name)))
+          .filter(
+            ({ name }) =>
+              !matchedTasteNotes.some(({ name: otherName }) => otherName !== name && otherName.includes(name))
+          )
           .map(({ taste_note_id: id }) => id)
       )
     );
