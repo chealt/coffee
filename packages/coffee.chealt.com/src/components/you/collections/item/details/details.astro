@@ -3,7 +3,7 @@ import Form from "../../../../form/form.astro";
 
 import BrewingMethods from "./brewing-methods.astro";
 import Decaf from "./decaf.astro";
-import FrozenDate from "./frozen-date.astro";
+import FreezingDates from "./freezing-dates.astro";
 import OriginCountries from "./origin-countries.astro";
 import OriginRegions from "./origin-regions.astro";
 import Price from "./price.astro";
@@ -67,6 +67,9 @@ const {
     <Weight value={details?.weight} />
     <PricePerGram pricePerGram={details?.pricePerGram} />
     <Decaf checked={details?.isDecaf} />
-    <FrozenDate value={details?.frozenDate} />
+    <FreezingDates
+      frozenDate={details?.frozenDate}
+      defrostDate={details?.defrostDate}
+    />
   </Form>
 </section>

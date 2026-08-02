@@ -1,0 +1,44 @@
+---
+import Input from "../../../../form/input/input.astro";
+import Label from "../../../../form/label/label.astro";
+import TimeDifference from "@components/chealt-time-difference.astro";
+
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
+
+const t = await getTranslator({
+  filePath: "you/collections/item/details",
+  locale: Astro.currentLocale,
+});
+
+const { frozenDate, defrostDate } = Astro.props;
+---
+
+<Label>
+  <div class="name">
+    <T namespace="you.collections.item.details.locales" key="frozenDate"
+      >{t("frozenDate")} - {t("defrostDate")}</T
+    >
+    <TimeDifference from="[name='frozenDate']" to="[name='defrostDate']">
+      :&nbsp;
+      <span data-difference></span>
+      <T namespace="you.collections.item.details.locales" key="timeFrozen">
+        &nbsp;{t("days")}</T
+      >
+    </TimeDifference>
+  </div>
+  <div class="inputs">
+    <Input
+      name="frozenDate"
+      type="date"
+      value={frozenDate}
+      max={new Date().toISOString().split("T")[0]}
+    />
+    <Input
+      name="defrostDate"
+      type="date"
+      value={defrostDate}
+      max={new Date().toISOString().split("T")[0]}
+    />
+  </div>
+</Label>

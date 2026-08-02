@@ -1,0 +1,9 @@
+---
+const { from, to } = Astro.props;
+---
+
+<chealt-time-difference class="hidden" data-from={from} data-to={to}>
+  <slot />
+</chealt-time-difference>
+
+<script src="./chealt-time-difference.js"></script>
