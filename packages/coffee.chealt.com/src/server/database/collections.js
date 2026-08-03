@@ -5,6 +5,7 @@ import coffees from '../../../data/coffees.json' with { type: 'json' };
 import { convertToUSD } from '../../components/coffees/utils.js';
 import logger from '../../components/errors/utils.js';
 import { getImageUrl } from '../AWS/storage.js';
+import { calculateDifference } from '@utils/time.js';
 
 const queryCollections = async (user) => {
   const client = getClient(user.name);
@@ -24,6 +25,19 @@ const queryCollectionItems = async (user) => {
   });
 
   return results.rows;
+};
+
+const queryCollectionItemsWithMainDetails = async (user) => {
+  const client = getClient(user.name);
+
+  const results = await client.execute({
+    sql: 'SELECT ci.id AS id, fd.value AS details FROM collection_items ci LEFT JOIN form_data fd ON fd.key = ci.id || ".details"'
+  });
+
+  return results.rows.map(({ id, details }) => ({
+    id,
+    details: details ? JSON.parse(details) : undefined
+  }));
 };
 
 const queryImageDetails = async (filename) => {
@@ -123,7 +137,7 @@ const getSimilarCoffeePrices = ({ originCountry, originRegion, originFarm, proce
 
 const getCollections = async (user) => {
   const collections = await queryCollections(user);
-  const collectionItems = await queryCollectionItems(user);
+  const collectionItems = await queryCollectionItemsWithMainDetails(user);
   const collectionItemLinks = await queryCollectionItemLinks(user);
   const collectionItemImages = await queryCollectionItemImages(user);
 
@@ -135,7 +149,7 @@ const getCollections = async (user) => {
       .filter((item) =>
         collectionItemLinks.some((link) => link.collection_item_id === item.id && link.collection_id === collectionId)
       )
-      ?.map(({ id: itemId }) => {
+      ?.map(({ id: itemId, details }) => {
         const images =
           collectionItemImages
             .filter((image) => image.collection_item_id === itemId)
@@ -145,10 +159,16 @@ const getCollections = async (user) => {
               srcSmall: getImageUrl({ filename, size: 'small' }),
               srcMedium: getImageUrl({ filename, size: 'medium' })
             })) || [];
+        const daysFrozen = details?.frozenDate
+          ? calculateDifference({ from: details.frozenDate, to: details.defrostDate })
+          : undefined;
 
         return {
           id: itemId,
           cover: images[0],
+          details: {
+            daysFrozen
+          },
           images
         };
       })

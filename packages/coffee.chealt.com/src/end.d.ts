@@ -17,12 +17,47 @@ interface CollectionItemImage {
 
 interface Collection {
   id: string;
+  isBuiltIn: Boolean;
+  items: CollectionItem[];
   name: string;
+}
+
+interface CollectionItem {
+  id: string;
+  cover: {
+    srcSmall: string;
+    srcMedium: string;
+    src: string;
+  };
+  details?: CollectionItemDetails;
+  extractedDetails?: CollectionItemDetails;
+  images: CollectionItemImage[];
+  inCollections: string[];
+  isFavorite?: boolean;
+  review?: {
+    acidity: number;
+    aftertaste: string;
+    aroma: string;
+    balance: string;
+    body: string;
+    break: string;
+    cleanCup: string;
+    dry: string;
+    flavour: string;
+    intensity: string;
+    level: string;
+    like: 'like' | 'dislike';
+    overall: string;
+    strength: number;
+    sweetness: number;
+    uniformity: string;
+  };
 }
 
 interface CollectionItemDetails {
   brewingMethod: string;
   currency: string;
+  daysFrozen: number;
   defrostDate: string;
   frozenDate: string;
   isDecaf: boolean;
@@ -43,32 +78,7 @@ declare namespace App {
   interface Locals {
     authenticationOptions: string;
     canTranslate: boolean;
-    collectionItem: {
-      id: string;
-      details?: CollectionItemDetails;
-      extractedDetails?: CollectionItemDetails;
-      images: CollectionItemImage[];
-      inCollections: string[];
-      isFavorite?: boolean;
-      review?: {
-        acidity: number;
-        aftertaste: string;
-        aroma: string;
-        balance: string;
-        body: string;
-        break: string;
-        cleanCup: string;
-        dry: string;
-        flavour: string;
-        intensity: string;
-        level: string;
-        like: 'like' | 'dislike';
-        overall: string;
-        strength: number;
-        sweetness: number;
-        uniformity: string;
-      };
-    };
+    collectionItem: CollectionItem;
     collections: Collection[];
     currency: string;
     feedback: string;

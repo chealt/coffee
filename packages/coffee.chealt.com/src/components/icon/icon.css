@@ -10,4 +10,11 @@
       fill: var(--color-primary);
     }
   }
+
+  &.small {
+    svg {
+      width: var(--icon-size--s);
+      height: var(--icon-size--s);
+    }
+  }
 }

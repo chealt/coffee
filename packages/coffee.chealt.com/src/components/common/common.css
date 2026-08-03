@@ -458,6 +458,15 @@ sup {
     left: -50%;
     right: auto;
   }
+
+  &.bottom {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    transform: rotate(0);
+    box-sizing: border-box;
+  }
 }
 
 .banner {

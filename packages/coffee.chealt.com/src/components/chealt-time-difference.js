@@ -1,19 +1,6 @@
+import { calculateDifference } from '@utils/time.js';
+
 class TimeDifference extends HTMLElement {
-  static millisecondsPerDay = 1000 * 60 * 60 * 24;
-  static calculateDifference({ from, to }) {
-    if (!from) {
-      return;
-    }
-
-    const fromDate = new Date(from);
-    const toDate = to ? new Date(to) : new Date();
-
-    const fromDateUTC = Date.UTC(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
-    const toDateUTC = Date.UTC(toDate.getFullYear(), toDate.getMonth(), toDate.getDate());
-
-    return Math.floor((toDateUTC - fromDateUTC) / TimeDifference.millisecondsPerDay);
-  }
-
   connectedCallback() {
     this.differenceElement = this.querySelector('[data-difference]');
 
@@ -52,7 +39,9 @@ class TimeDifference extends HTMLElement {
         this.to.min = this.from.value;
       }
 
-      const difference = TimeDifference.calculateDifference({ from: this.from.value, to: this.to.value });
+      const difference = this.from.value
+        ? calculateDifference({ from: this.from.value, to: this.to.value })
+        : undefined;
 
       if (difference) {
         this.differenceElement.innerHTML = difference;

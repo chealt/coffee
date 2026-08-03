@@ -57,7 +57,7 @@ const { collections, shouldAuthenticate, username } = Astro.locals;
               />
               <ul class="tiles items-list">
                 {items.length ? (
-                  items.map(({ id: itemId, cover }) => (
+                  items.map(({ id: itemId, cover, details }) => (
                     <li>
                       <a
                         href={`${getRelativeLocaleUrl(
@@ -77,6 +77,12 @@ const { collections, shouldAuthenticate, username } = Astro.locals;
                           />
                           <img src={cover.src} loading="lazy" />
                         </picture>
+                        {details?.daysFrozen && (
+                          <div class="tag bottom frozen">
+                            <Icon class="small" type="snowflake" />
+                            <span>{details.daysFrozen}</span>
+                          </div>
+                        )}
                       </a>
                     </li>
                   ))

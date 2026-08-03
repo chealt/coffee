@@ -78,3 +78,16 @@ header.title {
   width: 100%;
   height: auto;
 }
+
+.tag.frozen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap--s);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: azure;
+
+  svg {
+    fill: azure;
+  }
+}
