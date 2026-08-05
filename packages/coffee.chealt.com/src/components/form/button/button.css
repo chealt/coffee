@@ -129,7 +129,7 @@ button.danger,
 a.button.danger {
   background-color: var(--color-danger);
 
-  &.ghost svg {
+  &.ghost:not(:focus-visible) svg {
     fill: var(--color-danger);
   }
 }

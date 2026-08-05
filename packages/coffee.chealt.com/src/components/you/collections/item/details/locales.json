@@ -1,5 +1,7 @@
 {
   "en": {
+    "brewDate": "Brew date",
+    "brewed": "Brewed",
     "title": "Collections",
     "originCountry": "Origin country",
     "originRegion": "Origin region",
@@ -33,6 +35,8 @@
     "weight": "Weight (grams)"
   },
   "pl": {
+    "brewDate": "Data zaparzania",
+    "brewed": "Parzona",
     "title": "Kolekcje",
     "originCountry": "Kraj pochodzenia",
     "originRegion": "Region pochodzenia",

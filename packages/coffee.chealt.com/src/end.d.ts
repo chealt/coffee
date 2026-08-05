@@ -55,13 +55,15 @@ interface CollectionItem {
 }
 
 interface CollectionItemDetails {
+  brewDate: string;
   brewingMethod: string;
   currency: string;
   daysFrozen: number;
   daysSinceRoasting: number;
   defrostDate: string;
   frozenDate: string;
-  isDecaf: boolean;
+  isBrewed: string;
+  isDecaf: string;
   isStillFrozen: boolean;
   originCountry: string;
   originRegion: string;

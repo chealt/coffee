@@ -1,6 +1,8 @@
 ---
 import Form from "../../../../form/form.astro";
 
+import BrewDate from "./brew-date.astro";
+import Brewed from "./brewed.astro";
 import BrewingMethods from "./brewing-methods.astro";
 import Decaf from "./decaf.astro";
 import FreezingDates from "./freezing-dates.astro";
@@ -71,5 +73,7 @@ const {
       frozenDate={details?.frozenDate}
       defrostDate={details?.defrostDate}
     />
+    <BrewDate value={details?.brewDate} />
+    <Brewed checked={details?.brewDate ? "on" : details?.isBrewed} />
   </Form>
 </section>

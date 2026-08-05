@@ -135,13 +135,13 @@ const getSimilarCoffeePrices = ({ originCountry, originRegion, originFarm, proce
     )
     .map(({ currency, price_per_gram: pricePerGram }) => convertToUSD({ price: pricePerGram, currency }));
 
-const calculateDaysSinceRoasting = ({ roastingDate, frozenDate, defrostDate }) => {
+const calculateDaysSinceRoasting = ({ brewDate, roastingDate, frozenDate, defrostDate }) => {
   if (!roastingDate) {
     return;
   }
 
   if (!frozenDate) {
-    return calculateDifference({ from: roastingDate });
+    return calculateDifference({ from: roastingDate, to: brewDate });
   }
 
   if (!defrostDate) {
@@ -149,7 +149,7 @@ const calculateDaysSinceRoasting = ({ roastingDate, frozenDate, defrostDate }) =
   }
 
   return (
-    calculateDifference({ from: roastingDate, to: defrostDate }) -
+    calculateDifference({ from: roastingDate, to: brewDate }) -
     calculateDifference({ from: frozenDate, to: defrostDate })
   );
 };

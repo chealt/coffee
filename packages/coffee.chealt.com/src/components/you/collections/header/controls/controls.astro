@@ -42,7 +42,12 @@ const { collectionId, isBuiltIn, isFirst, isLast } = Astro.props;
           !isFirst && (
             <Button class="ghost column" data-move-up-trigger>
               <Icon type="arrow-up" />
-              <T namespace="you.collections.header.controls.locales" key="moveUp">{t("moveUp")}</T>
+              <T
+                namespace="you.collections.header.controls.locales"
+                key="moveUp"
+              >
+                {t("moveUp")}
+              </T>
             </Button>
           )
         }
@@ -52,7 +57,12 @@ const { collectionId, isBuiltIn, isFirst, isLast } = Astro.props;
           !isLast && (
             <Button class="ghost column" data-move-down-trigger>
               <Icon type="arrow-down" />
-              <T namespace="you.collections.header.controls.locales" key="moveDown">{t("moveDown")}</T>
+              <T
+                namespace="you.collections.header.controls.locales"
+                key="moveDown"
+              >
+                {t("moveDown")}
+              </T>
             </Button>
           )
         }
@@ -60,17 +70,17 @@ const { collectionId, isBuiltIn, isFirst, isLast } = Astro.props;
       <li>
         <Button class="ghost column" disabled={isBuiltIn} data-rename-trigger>
           <Icon type="edit" />
-          <T namespace="you.collections.header.controls.locales" key="rename">{t("rename")}</T>
+          <T namespace="you.collections.header.controls.locales" key="rename"
+            >{t("rename")}</T
+          >
         </Button>
       </li>
       <li>
-        <Button
-          class="ghost column danger"
-          data-delete-trigger
-          for={collectionId}
-        >
+        <Button class="column danger" data-delete-trigger for={collectionId}>
           <Icon type="delete" />
-          <T namespace="you.collections.header.controls.locales" key="delete">{t("delete")}</T>
+          <T namespace="you.collections.header.controls.locales" key="delete"
+            >{t("delete")}</T
+          >
         </Button>
       </li>
     </ul>
