@@ -1,5 +1,6 @@
 import { getSessionUser } from '../authentication/session.js';
 import { getCollectionItem, getCollections } from '../database/collections.js';
+import { getValue } from '../database/formData.js';
 
 const setCollections = async (context) => {
   const loggedInUser = await getSessionUser(context);
@@ -9,6 +10,9 @@ const setCollections = async (context) => {
 
     if (collections) {
       context.locals.collections = collections;
+
+      context.locals.collectionsControls =
+        (await getValue({ user: { name: loggedInUser.username }, key: 'collectionsControls' })) || {};
     }
   }
 };

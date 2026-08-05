@@ -6,6 +6,7 @@ import Checkbox from "../../form/checkbox/checkbox.astro";
 import CoffeeImageUpload from "@components/common/coffee-image-upload.astro";
 import Common from "../../common/common.astro";
 import Dialog from "../../dialog/dialog.astro";
+import Form from "../../form/form.astro";
 import Icon from "../../icon/icon.astro";
 import Header from "./header/header.astro";
 import NewCollection from "./new-collection.astro";
@@ -21,7 +22,8 @@ const t = await getTranslator({
   locale: Astro.currentLocale,
 });
 
-const { collections, shouldAuthenticate, username } = Astro.locals;
+const { collections, collectionsControls, shouldAuthenticate, username } =
+  Astro.locals;
 ---
 
 <Common
@@ -39,6 +41,19 @@ const { collections, shouldAuthenticate, username } = Astro.locals;
       <span class="visually-hidden">{username}</span>
     </Button>
   </header>
+  <div class="collections-controls">
+    <Form
+      name="collectionsControls"
+      data-storage="api"
+      data-save-endpoint="/api/storage/save-form-data"
+      data-save-on-input
+      data-exclude-from-local-storage
+    >
+      <Checkbox name="showAge" checked={collectionsControls?.showAge}>
+        <T namespace="you.collections.locales" key="showAge">{t("showAge")}</T>
+      </Checkbox>
+    </Form>
+  </div>
   <coffee-collection>
     <ul
       class="collections-list"

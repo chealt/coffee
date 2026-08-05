@@ -79,9 +79,28 @@ header.title {
   height: auto;
 }
 
+.collections-controls {
+  display: flex;
+  justify-content: flex-end;
+  background-color: var(--color-background--alternative);
+  opacity: 0.8;
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index--xs);
+}
+
 .collections-list .tag {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--gap--s);
+  transform: translateY(100%);
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .collections-page:has([name='showAge']:checked) & {
+    transform: translateY(0);
+  }
 }

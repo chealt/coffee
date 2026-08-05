@@ -84,6 +84,9 @@ declare namespace App {
     canTranslate: boolean;
     collectionItem: CollectionItem;
     collections: Collection[];
+    collectionsControls: {
+      showAge: string;
+    };
     currency: string;
     feedback: string;
     getSignedUrl: string;

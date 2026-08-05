@@ -24,6 +24,7 @@
     "deleteCollection.buttonLabel": "Delete collection",
     "deleteCollection.confirm": "Are you sure you want to delete this collection?",
     "logout": "logout",
+    "showAge": "Show age",
     "unnamedTitle": "Untitled Collection"
   },
   "pl": {
@@ -51,6 +52,7 @@
     "deleteCollection.buttonLabel": "Usuń kolekcję",
     "deleteCollection.confirm": "Czy na pewno chcesz usunąć tę kolekcję?",
     "logout": "wyloguj",
+    "showAge": "Show age",
     "unnamedTitle": "Niezidentyfikowana kolekcja"
   }
 }
