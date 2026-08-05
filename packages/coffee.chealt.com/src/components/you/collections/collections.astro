@@ -77,7 +77,7 @@ const { collections, shouldAuthenticate, username } = Astro.locals;
                           />
                           <img src={cover.src} loading="lazy" />
                         </picture>
-                        {details?.daysFrozen && (
+                        {details?.isStillFrozen && (
                           <div class="tag bottom frozen">
                             <Icon class="small" type="snowflake" />
                             <span>{details.daysFrozen}</span>

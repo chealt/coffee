@@ -61,6 +61,7 @@ interface CollectionItemDetails {
   defrostDate: string;
   frozenDate: string;
   isDecaf: boolean;
+  isStillFrozen: boolean;
   originCountry: string;
   originRegion: string;
   price: number;

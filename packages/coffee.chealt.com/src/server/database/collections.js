@@ -162,12 +162,14 @@ const getCollections = async (user) => {
         const daysFrozen = details?.frozenDate
           ? calculateDifference({ from: details.frozenDate, to: details.defrostDate })
           : undefined;
+        const isStillFrozen = Boolean(details?.frozenDate && !details?.defrostDate);
 
         return {
           id: itemId,
           cover: images[0],
           details: {
-            daysFrozen
+            daysFrozen,
+            isStillFrozen
           },
           images
         };
