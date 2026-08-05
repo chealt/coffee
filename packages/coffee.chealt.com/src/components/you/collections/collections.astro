@@ -31,29 +31,37 @@ const { collections, collectionsControls, shouldAuthenticate, username } =
   shouldAuthenticate={shouldAuthenticate}
   redirectUrl={getRelativeLocaleUrl(Astro.currentLocale, "/you/collections")}
 >
-  <header class="title">
-    <h1><T namespace="you.collections.locales" key="title">{t("title")}</T></h1>
-    <Button
-      class="round bordered small profile"
-      href={getRelativeLocaleUrl(Astro.currentLocale, "/you/profile")}
-    >
-      <Icon type="user" />
-      <span class="visually-hidden">{username}</span>
-    </Button>
-  </header>
-  <div class="collections-controls">
-    <Form
-      name="collectionsControls"
-      data-storage="api"
-      data-save-endpoint="/api/storage/save-form-data"
-      data-save-on-input
-      data-exclude-from-local-storage
-    >
-      <Checkbox name="showAge" checked={collectionsControls?.showAge}>
-        <T namespace="you.collections.locales" key="showAge">{t("showAge")}</T>
-      </Checkbox>
-    </Form>
-  </div>
+  <chealt-toggle>
+    <header class="title">
+      <h1>
+        <T namespace="you.collections.locales" key="title">{t("title")}</T>
+      </h1>
+      <Button class="small" data-trigger>
+        <Icon type="bottom-panel" />
+      </Button>
+      <Button
+        class="round bordered small profile"
+        href={getRelativeLocaleUrl(Astro.currentLocale, "/you/profile")}
+      >
+        <Icon type="user" />
+        <span class="visually-hidden">{username}</span>
+      </Button>
+    </header>
+    <div class="collections-controls" data-content>
+      <Form
+        name="collectionsControls"
+        data-storage="api"
+        data-save-endpoint="/api/storage/save-form-data"
+        data-save-on-input
+        data-exclude-from-local-storage
+      >
+        <Checkbox name="showAge" checked={collectionsControls?.showAge}>
+          <T namespace="you.collections.locales" key="showAge">{t("showAge")}</T
+          >
+        </Checkbox>
+      </Form>
+    </div>
+  </chealt-toggle>
   <coffee-collection>
     <ul
       class="collections-list"
@@ -164,3 +172,4 @@ const { collections, collectionsControls, shouldAuthenticate, username } =
 </Common>
 
 <script src="./coffee-collection.js"></script>
+<script src="../../toggle/toggle.js"></script>

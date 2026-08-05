@@ -40,6 +40,12 @@ body {
   will-change: transform;
 }
 
+.collections-page .title {
+  position: relative;
+  z-index: var(--z-index--s);
+  background-color: var(--color-background);
+}
+
 header.title {
   display: flex;
   align-items: center;
@@ -49,9 +55,13 @@ header.title {
     flex-grow: 1;
   }
 
-  .profile {
+  button,
+  .button {
     width: auto;
-    margin-right: var(--gap);
+
+    &:last-child {
+      margin-right: var(--gap);
+    }
   }
 }
 
@@ -87,6 +97,15 @@ header.title {
   position: sticky;
   top: 0;
   z-index: var(--z-index--xs);
+  transform: translateY(-100%);
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform 0.2s ease-in-out;
+  }
+
+  &.visible {
+    transform: translateY(0);
+  }
 }
 
 .collections-list .tag {
