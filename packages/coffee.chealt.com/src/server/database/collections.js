@@ -17,16 +17,6 @@ const queryCollections = async (user) => {
   return results.rows;
 };
 
-const queryCollectionItems = async (user) => {
-  const client = getClient(user.name);
-
-  const results = await client.execute({
-    sql: 'SELECT id FROM collection_items'
-  });
-
-  return results.rows;
-};
-
 const queryCollectionItemsWithMainDetails = async (user) => {
   const client = getClient(user.name);
 
