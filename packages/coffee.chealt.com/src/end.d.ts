@@ -58,6 +58,7 @@ interface CollectionItemDetails {
   brewingMethod: string;
   currency: string;
   daysFrozen: number;
+  daysSinceRoasting: number;
   defrostDate: string;
   frozenDate: string;
   isDecaf: boolean;

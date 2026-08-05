@@ -79,15 +79,9 @@ header.title {
   height: auto;
 }
 
-.tag.frozen {
+.collections-list .tag {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--gap--s);
-  background-color: var(--color-background--alternative);
-  color: azure;
-
-  svg {
-    fill: azure;
-  }
 }

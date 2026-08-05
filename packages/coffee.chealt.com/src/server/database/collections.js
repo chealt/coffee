@@ -135,6 +135,25 @@ const getSimilarCoffeePrices = ({ originCountry, originRegion, originFarm, proce
     )
     .map(({ currency, price_per_gram: pricePerGram }) => convertToUSD({ price: pricePerGram, currency }));
 
+const calculateDaysSinceRoasting = ({ roastingDate, frozenDate, defrostDate }) => {
+  if (!roastingDate) {
+    return;
+  }
+
+  if (!frozenDate) {
+    return calculateDifference({ from: roastingDate });
+  }
+
+  if (!defrostDate) {
+    return calculateDifference({ from: roastingDate, to: frozenDate });
+  }
+
+  return (
+    calculateDifference({ from: roastingDate, to: defrostDate }) -
+    calculateDifference({ from: frozenDate, to: defrostDate })
+  );
+};
+
 const getCollections = async (user) => {
   const collections = await queryCollections(user);
   const collectionItems = await queryCollectionItemsWithMainDetails(user);
@@ -163,12 +182,14 @@ const getCollections = async (user) => {
           ? calculateDifference({ from: details.frozenDate, to: details.defrostDate })
           : undefined;
         const isStillFrozen = Boolean(details?.frozenDate && !details?.defrostDate);
+        const daysSinceRoasting = calculateDaysSinceRoasting(details || {}); // removing the frozen time
 
         return {
           id: itemId,
           cover: images[0],
           details: {
             daysFrozen,
+            daysSinceRoasting,
             isStillFrozen
           },
           images
