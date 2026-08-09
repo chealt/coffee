@@ -34,7 +34,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           node-version-file: 'package.json'
@@ -76,7 +76,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           node-version-file: 'package.json'
@@ -118,7 +118,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           node-version-file: 'package.json'
@@ -160,7 +160,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           node-version-file: 'package.json'
@@ -202,7 +202,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           node-version-file: 'package.json'
@@ -244,7 +244,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           node-version-file: 'package.json'
@@ -286,7 +286,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           node-version-file: 'package.json'
@@ -329,7 +329,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           node-version-file: 'package.json'
@@ -372,7 +372,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           node-version-file: 'package.json'
@@ -440,7 +440,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           node-version-file: 'package.json'
@@ -482,7 +482,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           node-version-file: 'package.json'
@@ -524,7 +524,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           node-version-file: 'package.json'
@@ -630,7 +630,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           node-version-file: 'package.json'
@@ -675,7 +675,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           node-version-file: 'package.json'
@@ -715,7 +715,7 @@ jobs:
     needs: website
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version-file: 'package.json'
           cache: 'yarn'
@@ -805,7 +805,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           node-version-file: 'package.json'
@@ -863,7 +863,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           node-version-file: 'package.json'
