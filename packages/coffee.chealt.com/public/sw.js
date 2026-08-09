@@ -101,7 +101,11 @@ const servePageFromCache = async (event) => {
   console.info('SW: Serving page from cache!', event.request.url);
 
   // refresh in the background, the fresh version is served on the next navigation
-  event.waitUntil(fetchAndCachePage(event.request).catch((err) => console.error('SW: Page refresh failed:', err)));
+  const freshResponse = await fetchAndCachePage(event.request);
+
+  if (freshResponse.status === 401) {
+    return freshResponse;
+  }
 
   return cachedResponse;
 };

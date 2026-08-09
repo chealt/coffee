@@ -1,5 +1,7 @@
 ---
-import { capitalize } from "../../../../../utils/string.js";
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+import { capitalize, encodeSafeURL } from "../../../../../utils/string.js";
 import Label from "../../../../form/label/label.astro";
 import Select from "../../../../form/select/select.astro";
 
@@ -14,6 +16,12 @@ const t = await getTranslator({
 });
 
 const { selected } = Astro.props;
+
+const selectedOriginCountry = originCountries.find(
+  ({ origin_country_id, language_code }) =>
+    language_code === Astro.currentLocale &&
+    origin_country_id === Number(selected),
+);
 ---
 
 <Label>
@@ -22,7 +30,16 @@ const { selected } = Astro.props;
       >{t("originCountry")}</T
     >
   </div>
-  <Select name="originCountry" showEmpty>
+  <Select
+    name="originCountry"
+    showEmpty
+    link={selectedOriginCountry?.name
+      ? getRelativeLocaleUrl(
+          Astro.currentLocale,
+          `/origin-countries/${encodeSafeURL(selectedOriginCountry.name)}`,
+        )
+      : undefined}
+  >
     {
       originCountries
         .filter(({ language_code }) => language_code === Astro.currentLocale)

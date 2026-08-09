@@ -11,6 +11,24 @@ button.combobox {
   appearance: initial;
 }
 
+.tag-selector {
+  padding: var(--gap--m);
+}
+
+.select-container,
+coffee-select {
+  position: relative;
+
+  .link {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: auto;
+    height: 100%;
+    z-index: var(--z-index--xs);
+  }
+}
+
 button.combobox {
   text-transform: none;
   text-align: initial;

@@ -93,6 +93,20 @@ a.button.small {
   }
 }
 
+button.high,
+a.button.high {
+  padding-top: 0;
+  padding-bottom: 0;
+
+  .icon {
+    height: 100%;
+
+    svg {
+      height: 100%;
+    }
+  }
+}
+
 button:has(.icon):not(.column),
 a.button:has(.icon):not(.column) {
   display: flex;

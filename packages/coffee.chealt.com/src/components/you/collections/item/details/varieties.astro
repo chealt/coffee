@@ -32,29 +32,29 @@ const selectedVarieties =
       >{t("varieties")}</T
     >
   </div>
+  <Select id="varieties" name="varieties" multiple>
+    {
+      varieties.map(({ id, name, alias }) => (
+        <li>
+          <Checkbox
+            name="varieties[]"
+            value={id}
+            checked={selected?.map((id) => String(id)).includes(String(id))}
+          >
+            {name}
+            {alias && ` (${alias})`}
+          </Checkbox>
+        </li>
+      ))
+    }
+  </Select>
+  <div
+    data-update-keys="[name='varieties[]']"
+    data-api-endpoint={getRelativeLocaleUrl(Astro.currentLocale, "/varieties")}
+  >
+    {
+      (selected?.length > 0 && <Varieties varieties={selectedVarieties} />) ||
+        null
+    }
+  </div>
 </Label>
-<Select id="varieties" name="varieties" multiple>
-  {
-    varieties.map(({ id, name, alias }) => (
-      <li>
-        <Checkbox
-          name="varieties[]"
-          value={id}
-          checked={selected?.map((id) => String(id)).includes(String(id))}
-        >
-          {name}
-          {alias && ` (${alias})`}
-        </Checkbox>
-      </li>
-    ))
-  }
-</Select>
-<div
-  data-update-keys="[name='varieties[]']"
-  data-api-endpoint={getRelativeLocaleUrl(Astro.currentLocale, "/varieties")}
->
-  {
-    (selected?.length > 0 && <Varieties varieties={selectedVarieties} />) ||
-      null
-  }
-</div>

@@ -1,0 +1,15 @@
+---
+const { isYouPage } = Astro.locals;
+---
+
+{
+  isYouPage ? (
+    <slot />
+  ) : (
+    <coffee-recommendations data-recommendations-url="/api/recommendations/all.json">
+      <slot />
+    </coffee-recommendations>
+  )
+}
+
+<script src="./recommendations.js"></script>

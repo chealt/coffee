@@ -204,6 +204,8 @@ export const onRequest = async (context, next) => {
   }
 
   if (page === 'you') {
+    context.locals.isYouPage = true;
+
     try {
       const loggedInUser = await getSessionUser(context);
 
@@ -266,6 +268,14 @@ export const onRequest = async (context, next) => {
 
       if (username && !isPrefetch(context.request)) {
         context.locals.authenticationOptions = JSON.stringify(await getAuthenticationOptions(username));
+
+        const response = await next();
+
+        return new Response(response.body, {
+          status: 401,
+          statusText: 'Unauthorized',
+          headers: response.headers
+        });
       }
     }
   }

@@ -1,11 +1,12 @@
 ---
 import Admin from "../admin/admin.astro";
 import Analytics from "./analytics.astro";
+import I18NContainer from "../i18n/container.astro";
 import IosPolyfills from "./ios-polyfills.astro";
 import Login from "../login/login.astro";
 import Nav from "./nav/nav.astro";
+import Recommendations from "./recommendations.astro";
 import TranslationBanner from "../i18n/banner.astro";
-import I18NContainer from "../i18n/container.astro";
 
 import loaderImage from "./loader.svg";
 
@@ -64,9 +65,7 @@ const isProd = import.meta.env.PROD;
       {isTranslating && <I18NContainer locale={Astro.currentLocale} />}
       <chealt-data>
         {isTranslating && <TranslationBanner />}
-        <coffee-recommendations
-          data-recommendations-url="/api/recommendations/all.json"
-        >
+        <Recommendations>
           <main class={Astro.props.class}>
             {
               shouldAuthenticate ? (
@@ -76,7 +75,7 @@ const isProd = import.meta.env.PROD;
               )
             }
           </main>
-        </coffee-recommendations>
+        </Recommendations>
         {!hideNav && <Nav />}
       </chealt-data>
       <img src={loaderImage.src} class="visually-hidden" aria-hidden="true" />
@@ -87,5 +86,4 @@ const isProd = import.meta.env.PROD;
 
 <script src="./service-worker-init.js"></script>
 <script src="../chealt-data.js"></script>
-<script src="./recommendations.js"></script>
 <script src="../chealt-view-transitions.js"></script>

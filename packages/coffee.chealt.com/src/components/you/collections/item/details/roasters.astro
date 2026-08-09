@@ -1,4 +1,7 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+import { encodeSafeURL } from "../../../../../utils/string.js";
 import Label from "../../../../form/label/label.astro";
 import Select from "../../../../form/select/select.astro";
 
@@ -22,7 +25,8 @@ const selectedRoaster = roasters.find(
 <Label for="roaster">
   <div class="name">
     <T namespace="you.collections.item.details.locales" key="roaster"
-      >{t("roaster")}</T>
+      >{t("roaster")}</T
+    >
   </div>
 </Label>
 <Select
@@ -32,6 +36,12 @@ const selectedRoaster = roasters.find(
   searchable
   selectedValue={selectedRoaster?.id}
   selectedLabel={selectedRoaster?.name}
+  link={selectedRoaster?.name
+    ? getRelativeLocaleUrl(
+        Astro.currentLocale,
+        `/roasters/${encodeSafeURL(selectedRoaster.name)}`,
+      )
+    : undefined}
 >
   {
     roasters.map((roaster) => (

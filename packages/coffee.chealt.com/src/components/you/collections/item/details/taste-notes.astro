@@ -3,12 +3,9 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 
 import tasteNotes from "../../../../../../data/tasteNotes.json" with { type: "json" };
 
-import Button from "../../../../form/button/button.astro";
 import Checkbox from "../../../../form/checkbox/checkbox.astro";
-import Dialog from "../../../../dialog/dialog.astro";
-import Icon from "../../../../icon/icon.astro";
-import Input from "../../../../form/input/input.astro";
 import Label from "../../../../form/label/label.astro";
+import Select from "../../../../form/select/select.astro";
 import TasteNotes from "../../../../taste-notes/taste-notes.astro";
 
 import { getTasteNoteGroupByNoteId } from "../../../../taste-notes/utils.js";
@@ -53,32 +50,7 @@ const notSelectedTasteNotes = tasteNotes
       >{t("tasteNotes")}</T
     >
   </div>
-  <Button data-dialog-id="edit-taste-notes" class="column input">
-    <Icon type="edit" />
-    <T namespace="you.collections.item.details.locales" key="select"
-      >{t("select")}</T
-    >
-  </Button>
-  <div
-    data-update-keys="[name='tasteNoteIds[]']"
-    data-api-endpoint={getRelativeLocaleUrl(
-      Astro.currentLocale,
-      "/taste-notes",
-    )}
-  >
-    {
-      (selectedTasteNotes.length && (
-        <TasteNotes tasteNotes={selectedTasteNotes} />
-      )) ||
-        null
-    }
-  </div>
-</Label>
-<Dialog class="drawer fixed" id="edit-taste-notes">
-  <chealt-filter data-filter-selector="li:has(input[name='tasteNoteIds[]'])">
-    <Input name="taste-note-filter" placeholder={t("search")} data-exclude />
-  </chealt-filter>
-  <ul>
+  <Select id="tasteNoteIds" name="tasteNoteIds" multiple>
     {
       selectedTasteNotes.map(({ taste_note_id: id, name, group }) => (
         <li
@@ -109,7 +81,21 @@ const notSelectedTasteNotes = tasteNotes
         </li>
       ))
     }
-  </ul>
-</Dialog>
+  </Select>
+  <div
+    data-update-keys="[name='tasteNoteIds[]']"
+    data-api-endpoint={getRelativeLocaleUrl(
+      Astro.currentLocale,
+      "/taste-notes",
+    )}
+  >
+    {
+      (selectedTasteNotes.length && (
+        <TasteNotes tasteNotes={selectedTasteNotes} />
+      )) ||
+        null
+    }
+  </div>
+</Label>
 
 <script src="../../../../chealt-filter.js"></script>

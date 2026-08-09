@@ -15,6 +15,7 @@ const t = await getTranslator({
 
 const {
   id,
+  link,
   name,
   multiple,
   reloadOnChange,
@@ -34,7 +35,7 @@ const {
       <Button
         id={id}
         data-dialog-id={name}
-        class={`column input ${searchable ? "combobox" : ""}`}
+        class={`column input ${searchable ? "combobox" : "tag-selector"}`}
         role="combobox"
       >
         {(searchable && (
@@ -42,7 +43,9 @@ const {
         )) || (
           <Fragment>
             <Icon type="edit" />
-            <T namespace="common.locales" key="select">{t("select")}</T>
+            <T namespace="common.locales" key="select">
+              {t("select")}
+            </T>
           </Fragment>
         )}
       </Button>
@@ -50,18 +53,40 @@ const {
         <chealt-filter
           data-filter-selector={`${multiple ? `li:has([name='${name}[]'])` : `li[name='${name}[]']`}`}
         >
-          <Input name={`${name}-filter`} placeholder={t("search")} data-exclude />
+          <Input
+            name={`${name}-filter`}
+            placeholder={t("search")}
+            data-exclude
+          />
         </chealt-filter>
         <ul role="listbox">
           <slot />
         </ul>
       </Dialog>
+      {link && (
+        <Button class="link high ghost" href={link}>
+          <Icon type="link" />
+        </Button>
+      )}
     </coffee-select>
   )) || (
-    <select {...props} name={name || undefined}>
-      {showEmpty && <option value=""><T namespace="common.locales" key="unknown">{t("unknown")}</T></option>}
-      <slot />
-    </select>
+    <div class="select-container">
+      <select {...props} name={name || undefined}>
+        {showEmpty && (
+          <option value="">
+            <T namespace="common.locales" key="unknown">
+              {t("unknown")}
+            </T>
+          </option>
+        )}
+        <slot />
+      </select>
+      {link && (
+        <Button class="link high ghost" href={link}>
+          <Icon type="link" />
+        </Button>
+      )}
+    </div>
   )
 }
 
