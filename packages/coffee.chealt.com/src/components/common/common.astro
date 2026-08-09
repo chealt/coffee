@@ -2,7 +2,6 @@
 import Admin from "../admin/admin.astro";
 import Analytics from "./analytics.astro";
 import I18NContainer from "../i18n/container.astro";
-import IosPolyfills from "./ios-polyfills.astro";
 import Login from "../login/login.astro";
 import Nav from "./nav/nav.astro";
 import Recommendations from "./recommendations.astro";
@@ -37,7 +36,6 @@ const isProd = import.meta.env.PROD;
     <link rel="manifest" href="/manifest.json" />
     <link rel="apple-touch-icon" href="/favicons/favicon-192x192.svg" />
     <title>{title ? `${title} | ${t("title")}` : t("title")}</title>
-    {Astro.locals.isIOS && <IosPolyfills />}
     <script is:inline>
       window.addEventListener("pagereveal", () => {
         if (window.navigation.activation?.navigationType === "traverse") {

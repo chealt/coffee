@@ -56,15 +56,6 @@ input[type='radio'] {
   }
 }
 
-input[type='date'],
-select,
-button.combobox {
-  /* iOS hack because of lack of padding support */
-  text-indent: 16px;
-  line-height: 21px;
-  /* end of iOS hack */
-}
-
 input[disabled] {
   opacity: 0.5;
 }
