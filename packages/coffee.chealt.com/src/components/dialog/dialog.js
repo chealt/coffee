@@ -37,6 +37,9 @@ class CoffeeDialog extends HTMLElement {
 
       if (!isInDialog) {
         dialog.close();
+
+        // prevent trigger button click if dialog is inside a label like multiselect inputs
+        event.preventDefault();
       }
     });
   }
