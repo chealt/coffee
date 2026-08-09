@@ -37,13 +37,13 @@ const isProd = import.meta.env.PROD;
     <link rel="apple-touch-icon" href="/favicons/favicon-192x192.svg" />
     <title>{title ? `${title} | ${t("title")}` : t("title")}</title>
     <script is:inline>
-      window.addEventListener("pagereveal", () => {
+      window.addEventListener("pagereveal", (event) => {
         if (window.navigation.activation?.navigationType === "traverse") {
           const viewTransitionName =
             sessionStorage.getItem("viewTransitionName");
 
           if (viewTransitionName) {
-            /** @type {HTMLElement} */
+            /** @type {HTMLElement | null} */
             const element = document.querySelector(
               `[data-view-transition-name="${viewTransitionName}"]`,
             );
@@ -51,6 +51,31 @@ const isProd = import.meta.env.PROD;
             if (element) {
               element.style.viewTransitionName = viewTransitionName;
               sessionStorage.removeItem("viewTransitionName");
+            }
+          }
+        } else if (event.viewTransition && window.navigation.activation?.from) {
+          const previousUrl = window.navigation.activation.from.url;
+          const matches = previousUrl?.match(
+            /\/collections\/([0-9a-zA-Z-]*)\/items\/([0-9a-zA-Z-]*)\//,
+          );
+
+          if (previousUrl && matches) {
+            const collectionId = matches[1];
+            const itemId = matches[2];
+
+            /** @type {HTMLElement | null} */
+            const transitionTargetElement = document.querySelector(
+              `[data-selector="collection-id-${collectionId}"] #item-id-${itemId} picture`,
+            );
+
+            if (transitionTargetElement) {
+              transitionTargetElement.scrollIntoView({
+                behavior: "instant",
+                block: "center",
+              });
+
+              transitionTargetElement.style.viewTransitionName =
+                "collectionItemCoverImage";
             }
           }
         }

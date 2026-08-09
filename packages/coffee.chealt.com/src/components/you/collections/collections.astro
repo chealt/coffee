@@ -70,7 +70,11 @@ const { collections, collectionsControls, shouldAuthenticate, username } =
       {
         collections?.map(
           ({ id: collectionId, name, items, isBuiltIn }, index) => (
-            <li id={collectionId} data-type="collection">
+            <li
+              id={collectionId}
+              data-selector={`collection-id-${collectionId}`}
+              data-type="collection"
+            >
               <Header
                 collectionId={collectionId}
                 name={t(collectionId) || name}
