@@ -1,0 +1,33 @@
+---
+export const partial = true;
+
+import originRegions from "../../../data/originRegions.json" with { type: "json" };
+
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
+import { titleCase } from "../../utils/string.js";
+
+const { originCountry } = await Astro.request.json();
+
+const regions = originRegions.filter(
+  ({ origin_country_id, language_code }) =>
+    language_code === Astro.currentLocale &&
+    String(origin_country_id) === originCountry,
+);
+
+const t = await getTranslator({
+  filePath: "common",
+  locale: Astro.currentLocale,
+});
+---
+
+<option value="" selected>
+  <T namespace="common.locales" key="unknown">
+    {t("unknown")}
+  </T>
+</option>
+{
+  regions.map(({ origin_region_id, name }) => (
+    <option value={origin_region_id}>{titleCase(name)}</option>
+  ))
+}

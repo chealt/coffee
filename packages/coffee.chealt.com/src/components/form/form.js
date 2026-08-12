@@ -285,6 +285,23 @@ const attachResetHandlers = ({ form, resetButtons }) => {
   });
 };
 
+const inProgressElementUpdater = (element) => ({
+  enable: () => {
+    element.classList.remove('in-progress');
+
+    if (element.nodeName === 'SELECT') {
+      element.inert = false;
+    }
+  },
+  disable: () => {
+    element.classList.add('in-progress');
+
+    if (element.nodeName === 'SELECT') {
+      element.inert = true;
+    }
+  }
+});
+
 class ChealtForm extends HTMLElement {
   // eslint-disable-next-line complexity
   connectedCallback() {
@@ -423,22 +440,31 @@ class ChealtForm extends HTMLElement {
             }
 
             if (!apiEndpoint.includes('.json')) {
-              const response = await fetch(apiEndpoint, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-              });
+              const elementToUpdate = elementToUpdateSelector ? this.querySelector(elementToUpdateSelector) : element;
+              const updater = inProgressElementUpdater(elementToUpdate);
 
-              if (response.ok) {
-                const responseText = await response.text();
+              updater.disable();
 
-                const elementToUpdate = elementToUpdateSelector ? this.querySelector(elementToUpdateSelector) : element;
+              try {
+                const response = await fetch(apiEndpoint, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(data)
+                });
 
-                elementToUpdate.innerHTML = responseText;
-              } else {
-                logger.error(response);
+                if (response.ok) {
+                  const responseText = await response.text();
+
+                  elementToUpdate.innerHTML = responseText;
+                } else {
+                  logger.error(response);
+                }
+              } catch (error) {
+                logger.error(error);
+              } finally {
+                updater.enable();
               }
             } else {
               const response = await fetch(apiEndpoint, {

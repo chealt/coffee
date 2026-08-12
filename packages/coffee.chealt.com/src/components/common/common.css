@@ -208,6 +208,11 @@ a {
   }
 }
 
+select.in-progress {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 a[href].in-progress,
 button.in-progress {
   &::after {
