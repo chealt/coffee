@@ -5,7 +5,7 @@ import { titleCase } from "../../../../../utils/string.js";
 import Label from "../../../../form/label/label.astro";
 import Select from "../../../../form/select/select.astro";
 
-import originRegions from "../../../../../../data/originRegions.json" with { type: "json" };
+import originFarms from "../../../../../../data/originFarms.json" with { type: "json" };
 
 import T from "@components/i18n/t.astro";
 import { getTranslator } from "@components/i18n/t.js";
@@ -15,37 +15,35 @@ const t = await getTranslator({
   locale: Astro.currentLocale,
 });
 
-const { selected, originCountry } = Astro.props;
+const { selected, originCountry, originRegion } = Astro.props;
 ---
 
 <Label>
   <div class="name">
-    <T namespace="you.collections.item.details.locales" key="originRegion"
-      >{t("originRegion")}</T
+    <T namespace="you.collections.item.details.locales" key="originFarm"
+      >{t("originFarm")}</T
     >
   </div>
   <Select
-    name="originRegion"
+    name="originFarm"
     showEmpty
-    data-update-keys="[name='originCountry']"
+    data-update-keys="[name='originCountry'],[name='originRegion']"
     data-api-endpoint={getRelativeLocaleUrl(
       Astro.currentLocale,
-      "/origin-regions",
+      "/origin-farms",
     )}
   >
     {
-      originRegions
+      originFarms
         .filter(
-          ({ origin_country_id, language_code }) =>
-            language_code === Astro.currentLocale &&
+          ({ origin_country_id, origin_region_id }) =>
             (!originCountry ||
-              String(origin_country_id) === String(originCountry)),
+              String(originCountry) === String(origin_country_id)) &&
+            (!originRegion ||
+              String(originRegion) === String(origin_region_id)),
         )
-        .map(({ origin_region_id, name }) => (
-          <option
-            value={origin_region_id}
-            selected={String(origin_region_id) === String(selected)}
-          >
+        .map(({ id, name }) => (
+          <option value={id} selected={String(id) === String(selected)}>
             {titleCase(name)}
           </option>
         ))

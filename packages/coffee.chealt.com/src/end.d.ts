@@ -66,6 +66,7 @@ interface CollectionItemDetails {
   isDecaf: string;
   isStillFrozen: boolean;
   originCountry: string;
+  originFarm: string;
   originRegion: string;
   price: number;
   pricePerGram: number;

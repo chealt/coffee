@@ -1,0 +1,29 @@
+---
+export const partial = true;
+
+import originFarms from "../../../data/originFarms.json" with { type: "json" };
+
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
+import { titleCase } from "../../utils/string.js";
+
+const { originCountry, originRegion } = await Astro.request.json();
+
+const farms = originFarms.filter(
+  ({ origin_country_id, origin_region_id }) =>
+    (!originCountry || String(origin_country_id) === originCountry) &&
+    (!originRegion || String(origin_region_id) === originRegion),
+);
+
+const t = await getTranslator({
+  filePath: "common",
+  locale: Astro.currentLocale,
+});
+---
+
+<option value="" selected>
+  <T namespace="common.locales" key="unknown">
+    {t("unknown")}
+  </T>
+</option>
+{farms.map(({ id, name }) => <option value={id}>{titleCase(name)}</option>)}

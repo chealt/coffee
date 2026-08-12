@@ -11,8 +11,9 @@ const { originCountry } = await Astro.request.json();
 
 const regions = originRegions.filter(
   ({ origin_country_id, language_code }) =>
-    language_code === Astro.currentLocale &&
-    String(origin_country_id) === originCountry,
+    !originCountry ||
+    (language_code === Astro.currentLocale &&
+      String(origin_country_id) === originCountry),
 );
 
 const t = await getTranslator({

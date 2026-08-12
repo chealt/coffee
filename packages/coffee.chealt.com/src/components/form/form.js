@@ -433,12 +433,6 @@ class ChealtForm extends HTMLElement {
               return acc;
             }, staticValues);
 
-            if (Object.values(data).some((value) => value === undefined || value === '')) {
-              element.innerHTML = '';
-
-              return;
-            }
-
             if (!apiEndpoint.includes('.json')) {
               const elementToUpdate = elementToUpdateSelector ? this.querySelector(elementToUpdateSelector) : element;
               const updater = inProgressElementUpdater(elementToUpdate);

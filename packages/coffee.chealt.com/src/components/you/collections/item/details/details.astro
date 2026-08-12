@@ -7,6 +7,7 @@ import BrewingMethods from "./brewing-methods.astro";
 import Decaf from "./decaf.astro";
 import FreezingDates from "./freezing-dates.astro";
 import OriginCountries from "./origin-countries.astro";
+import OriginFarms from "./origin-farms.astro";
 import OriginRegions from "./origin-regions.astro";
 import Price from "./price.astro";
 import PricePerGram from "./price-per-gram.astro";
@@ -50,7 +51,13 @@ const {
       selected={details?.originCountry || extractedDetails?.originCountry}
     />
     <OriginRegions
+      originCountry={details?.originCountry}
       selected={details?.originRegion || extractedDetails?.originRegion}
+    />
+    <OriginFarms
+      originCountry={details?.originCountry}
+      originRegion={details?.originRegion}
+      selected={details?.originFarm || extractedDetails?.originFarm}
     />
     <Varieties
       selected={details?.["varieties[]"] || extractedDetails?.["varieties[]"]}
