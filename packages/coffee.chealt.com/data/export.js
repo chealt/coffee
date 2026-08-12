@@ -151,7 +151,7 @@ const saveExchangeRates = async () => {
 };
 
 const saveFarms = async () => {
-  const results = await turso.execute('SELECT * FROM origin_farms');
+  const results = await turso.execute('SELECT * FROM origin_farms ORDER BY name ASC');
 
   return writeFile('./data/originFarms.json', JSON.stringify(results.rows), { flag: 'w+' });
 };
