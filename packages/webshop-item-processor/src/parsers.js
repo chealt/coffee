@@ -1078,60 +1078,8 @@ const parsers = {
 
     const document = getDocument(html);
 
-    const ldScripts = Array.from(document.querySelectorAll('script[type="application/ld+json"]'));
-    const productLd = ldScripts
-      .map((script) => {
-        try {
-          return JSON.parse(script.textContent);
-        } catch {
-          return null;
-        }
-      })
-      .find((data) => data?.['@type'] === 'Product');
-
-    if (!productLd) {
-      logger.error(`No product data found for ${url}`);
-
-      throw new Error(errors.detailsMissing);
-    }
-
-    const variantsMatch = html.match(/var variants = (\[[\s\S]*?\]);/u);
-
-    if (!variantsMatch) {
-      logger.error(`No variants found for ${url}`);
-
-      throw new Error(errors.detailsMissing);
-    }
-
-    const variants = JSON.parse(variantsMatch[1]);
-
-    const parseWeight = (text) => {
-      const match = (text || '').toLowerCase().match(/(\d+(?:[.,]\d+)?)\s*(kg|gr?)\b/u);
-
-      if (!match) {
-        return null;
-      }
-
-      const num = Number(match[1].replace(',', '.'));
-
-      return match[2].startsWith('k') ? num * 1000 : num;
-    };
-
-    const availableVariants = variants
-      .filter(({ available }) => available)
-      .map((variant) => ({
-        weight: parseWeight(variant.option1) || variant.weight,
-        price: variant.price / 100
-      }))
-      .filter(({ weight, price }) => weight && price)
-      .sort((a, b) => a.weight - b.weight);
-
-    if (!availableVariants.length) {
-      return { isOutOfStock: true };
-    }
-
-    const { weight, price: rawPrice } = availableVariants[0];
-    const price = Number(rawPrice.toFixed(2));
+    const priceElement = document.querySelector('.price-item');
+    const price = Number(priceElement.textContent.trim().replace(',', '.').split(' ')[0]).toFixed(2);
 
     if (!price || isNaN(price)) {
       logger.error(`No price found for ${url}`);
@@ -1139,18 +1087,16 @@ const parsers = {
       throw new Error(errors.priceMissing);
     }
 
+    const weightOption =
+      document.querySelector('[name="options[Waga]"] option') ||
+      document.querySelector('variant-selects input[name^="waga-1"]');
+    const weight = weightOption.value.replace('g', '');
+
     const pricePerGram = Number((price / weight).toFixed(2));
 
-    const offers = Array.isArray(productLd.offers) ? productLd.offers : [productLd.offers].filter(Boolean);
-    const currency = offers[0]?.priceCurrency;
+    const currency = 'PLN';
 
-    if (!currency) {
-      logger.error(`No currency found for ${url}`);
-
-      throw new Error(errors.currencyMissing);
-    }
-
-    const image = Array.isArray(productLd.image) ? productLd.image[0] : productLd.image;
+    const image = document.querySelector('.product__media img').src;
 
     if (!image) {
       logger.error(`No image found for ${url}`);
@@ -1158,7 +1104,7 @@ const parsers = {
       throw new Error(errors.imageMissing);
     }
 
-    const title = (productLd.name || '').toLowerCase();
+    const title = document.querySelector('.product__title').textContent.trim().toLowerCase();
 
     const specs = {};
     const specContainers = Array.from(document.querySelectorAll('.accordion__content, .product__description'));
