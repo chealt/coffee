@@ -796,6 +796,7 @@ jobs:
           files: |
             yarn.lock
             .github/workflows/deploy.yml
+            packages/coffee.chealt.com/data/**
             packages/webshop-item-processor/package.json
             packages/webshop-item-processor/.yarnrc-lambda.yml
             packages/webshop-item-processor/src/**
