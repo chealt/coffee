@@ -495,7 +495,7 @@ const parsers = {
       new Set(
         Array.from(document.querySelectorAll('.woocommerce-LoopProduct-link'))
           .map(({ href }) => href)
-          .filter((href) => !href.includes('gift') && !href.includes('subscription'))
+          .filter((href) => !href.includes('gift') && !href.includes('subscription') && !href.includes('kit'))
       )
     );
   },
