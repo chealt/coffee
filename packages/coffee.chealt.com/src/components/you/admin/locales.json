@@ -1,11 +1,11 @@
 {
   "en": {
+    "run": "run",
+    "runParser": "Run roaster parser",
     "title": "Admin"
   },
   "pl": {
-    "title": "Admin"
-  },
-  "hu": {
+    "run": "run",
     "title": "Admin"
   }
 }

@@ -1,16 +1,26 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
 
+import roasters from "@data/roasters.json" with { type: "json" };
+
+import APIButton from "@components/common/api-button.astro";
+import Button from "@components/form/button/button.astro";
 import Common from "@components/common/common.astro";
+import Form from "@components/form/form.astro";
+import Label from "@components/form/label/label.astro";
+import Select from "@components/form/select/select.astro";
 import T from "@components/i18n/t.astro";
 import { getTranslator } from "@components/i18n/t.js";
+import { capitalize } from "../../../utils/string.js";
 
 const t = await getTranslator({
   filePath: "you/admin",
   locale: Astro.currentLocale,
 });
 
-const { shouldAuthenticate, canTranslate } = Astro.locals;
+const { shouldAuthenticate } = Astro.locals;
+
+const roastersWithParser = roasters.filter(({ is_best }) => Boolean(is_best));
 ---
 
 <Common
@@ -20,4 +30,32 @@ const { shouldAuthenticate, canTranslate } = Astro.locals;
   <h1>
     <T namespace="you.admin.locales" key="title">{t("title")}</T>
   </h1>
+  <section>
+    <Form
+      name="run-parser.json"
+      data-storage="api"
+      data-save-endpoint="/api"
+      data-exclude-from-local-storage
+    >
+      <Label>
+        <div class="name">
+          <T namespace="you.admin.locales" key="runParser">
+            {t("runParser")}
+          </T>
+        </div>
+        <Select name="roasterId">
+          {
+            roastersWithParser.map(({ id, name }) => (
+              <option value={id}>{capitalize(name)}</option>
+            ))
+          }
+        </Select>
+      </Label>
+      <Button class="primary">
+        <T namespace="you.admin.locales" key="run">
+          {t("run")}
+        </T>
+      </Button>
+    </Form>
+  </section>
 </Common>
