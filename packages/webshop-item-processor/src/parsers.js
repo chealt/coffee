@@ -810,9 +810,9 @@ const parsers = {
       processingMethods.find(({ name }) => details.process.includes(name))?.processing_method_id ||
       null;
 
-    const isFilter = details.roast.includes('filter');
-    const isEspresso = details.roast.includes('espresso');
-    const isOmni = isFilter && isEspresso;
+    const isFilter = details.roast?.includes('filter');
+    const isEspresso = details.roast?.includes('espresso');
+    const isOmni = !details.roast || (isFilter && isEspresso);
 
     const brewingMethodId =
       brewingMethods.find(
