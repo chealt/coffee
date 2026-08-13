@@ -1,6 +1,8 @@
 import { jwtVerify } from 'jose';
 
 import supportedLanguages from '../data/supportedLanguages.json' with { type: 'json' };
+
+import { isAdmin } from './server/admin.js';
 import { getImageUrl } from './server/AWS/storage.js';
 import { cookieNameSession, sessionSecret } from './server/authentication/config.js';
 import { getUsername } from './server/authentication/cookies.js';
@@ -210,6 +212,18 @@ export const onRequest = async (context, next) => {
       const loggedInUser = await getSessionUser(context);
 
       context.locals.username = loggedInUser?.username;
+
+      if (params[0] === 'admin' && !isAdmin(loggedInUser?.username)) {
+        context.locals.shouldAuthenticate = true;
+
+        const response = await next();
+
+        return new Response(response.body, {
+          status: 401,
+          statusText: 'Unauthorized',
+          headers: response.headers
+        });
+      }
 
       setGetSignedUrl(context);
       setImageUploadUrls(context);

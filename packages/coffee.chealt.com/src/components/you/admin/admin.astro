@@ -1,0 +1,23 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+import Common from "@components/common/common.astro";
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
+
+const t = await getTranslator({
+  filePath: "you/admin",
+  locale: Astro.currentLocale,
+});
+
+const { shouldAuthenticate, canTranslate } = Astro.locals;
+---
+
+<Common
+  shouldAuthenticate={shouldAuthenticate}
+  redirectUrl={getRelativeLocaleUrl(Astro.currentLocale, "/you/admin")}
+>
+  <h1>
+    <T namespace="you.admin.locales" key="title">{t("title")}</T>
+  </h1>
+</Common>
