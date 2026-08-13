@@ -3736,7 +3736,7 @@ const parsers = {
     const weight =
       Number(
         Array.from(document.querySelectorAll('.product__description p'))
-          .filter(({ textContent }) => textContent.toLowerCase().includes('weight'))[0]
+          .filter(({ textContent }) => textContent.toLowerCase().includes('weight:'))[0]
           ?.textContent.toLowerCase()
           .replace('weight:', '')
           .match(/\d+g/giu)[0]
