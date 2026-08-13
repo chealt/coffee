@@ -1523,11 +1523,12 @@ const parsers = {
 
     const region = details
       .match(/region (.*) odmiana/gu)
-      .join()
+      ?.join()
       .replace('region ', '')
       .replace(' odmiana', '')
       .trim();
-    const originRegionId = originRegions.find(({ name }) => region.includes(name))?.origin_region_id || null;
+    const originRegionId =
+      (region && originRegions.find(({ name }) => region.includes(name))?.origin_region_id) || null;
 
     const processingMethod = details
       .match(/obróbka (.*)/gu)
