@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.GIT_WRITE_TOKEN }}
       - uses: actions/setup-node@v7
         with:
           node-version-file: 'package.json'
