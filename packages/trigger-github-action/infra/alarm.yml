@@ -2,6 +2,16 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: CloudWatch Alarm for Trigger Github Action errors
 
 Resources:
+  AlarmNotificationTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: triggerGithubActionErrors
+  AlarmSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: alarm@centralbeans.com
+      Protocol: email
+      TopicArn: !Ref AlarmNotificationTopic
   triggerGithubActionErrorAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
@@ -10,7 +20,7 @@ Resources:
       ActionsEnabled: true
       OKActions: []
       AlarmActions:
-        - arn:aws:sns:eu-central-1:781346609033:triggerGithubActionErrors
+        - !Ref AlarmNotificationTopic
       InsufficientDataActions: []
       MetricName: Errors
       Namespace: AWS/Lambda
