@@ -1,5 +1,6 @@
 name: Data Export
 on:
+  workflow_dispatch: # required for triggering from Admin UI, can be empty as there are not inputs
   schedule:
     - cron: '0 0 * * *'
 permissions:
