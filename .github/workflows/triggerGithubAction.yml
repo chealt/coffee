@@ -60,6 +60,9 @@ jobs:
         with:
           node-version-file: 'package.json'
           cache: 'yarn'
+      - name: Install dependencies
+        working-directory: packages/trigger-github-action
+        run: yarn workspaces focus
       - name: Deploy
         id: deploy
         working-directory: packages/trigger-github-action
