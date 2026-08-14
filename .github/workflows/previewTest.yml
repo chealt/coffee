@@ -20,10 +20,8 @@ jobs:
         with:
           node-version-file: 'package.json'
           cache: 'yarn'
-      - name: build
-        run: |
-          yarn install --immutable
-          NODE_ENV=production yarn workspace @centralbeans/website build
+      # The adapter bakes wrangler.toml into dist/server/wrangler.json at build time and
+      # points wrangler at it, so the preview values have to be in place before building
       - name: Configure preview worker
         working-directory: packages/coffee.chealt.com
         run: |
@@ -38,6 +36,18 @@ jobs:
           grep -q 'pattern = "${{ env.PREVIEW_HOST }}"' wrangler.toml
           grep -q 'ORIGIN = "https://${{ env.PREVIEW_HOST }}"' wrangler.toml
           grep -q 'RELYING_PARTY_ID = "${{ env.PREVIEW_HOST }}"' wrangler.toml
+      - name: build
+        run: |
+          yarn install --immutable
+          NODE_ENV=production yarn workspace @centralbeans/website build
+      - name: Verify the generated worker config targets the preview
+        working-directory: packages/coffee.chealt.com
+        run: |
+          # wrangler deploys the generated config, so this is what actually reaches Cloudflare
+          grep -q '"name":"coffee-pr-${{ github.event.pull_request.number }}"' dist/server/wrangler.json
+          grep -q '"pattern":"${{ env.PREVIEW_HOST }}"' dist/server/wrangler.json
+          grep -q '"ORIGIN":"https://${{ env.PREVIEW_HOST }}"' dist/server/wrangler.json
+          grep -q '"RELYING_PARTY_ID":"${{ env.PREVIEW_HOST }}"' dist/server/wrangler.json
       - name: deploy
         uses: cloudflare/wrangler-action@v3
         with:
