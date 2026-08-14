@@ -43,6 +43,7 @@
 
   --card-height: 260px;
   --max-main-image-width: 600px;
+  --max-content-width: 2048px;
   --limited-width: 1024px;
   --limited-width--s: 600px;
   --icon-size: 32px;
@@ -98,7 +99,7 @@ body {
 }
 
 main {
-  max-width: 2048px;
+  max-width: var(--max-content-width);
   margin: 0 auto;
   padding: 0;
 }
