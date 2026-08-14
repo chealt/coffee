@@ -39,7 +39,7 @@ jobs:
         env:
           CI: true
           localDevServer: true
-          ORIGIN: ${{ secrets.ORIGIN }}
+          ORIGIN: http://localhost:4321
           RELYING_PARTY_ID: localhost
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
           TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
