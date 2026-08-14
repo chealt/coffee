@@ -1,0 +1,79 @@
+name: Trigger GitHub Action
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'yarn.lock'
+      - '.github/workflows/triggerGithubAction.yml'
+      - 'packages/trigger-github-action/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'yarn.lock'
+      - '.github/workflows/triggerGithubAction.yml'
+      - 'packages/trigger-github-action/**'
+jobs:
+  check-formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: Install dependencies
+        working-directory: packages/trigger-github-action
+        run: yarn workspace focus
+      - name: Check formatting
+        working-directory: packages/trigger-github-action
+        run: yarn format:check
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: Install dependencies
+        working-directory: packages/trigger-github-action
+        run: yarn workspace focus
+      - name: Lint
+        working-directory: packages/trigger-github-action
+        run: yarn lint
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' # only deploy on the main branch
+    needs:
+      - check-formatting
+      - lint
+    steps:
+      - uses: actions/checkout@v6
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: Deploy
+        id: deploy
+        working-directory: packages/trigger-github-action
+        run: |
+          yarn build
+          version=$(yarn deploy | jq -r '.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Release
+        working-directory: packages/trigger-github-action
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create '@centralbeans/trigger-github-action@${{ steps.deploy.outputs.version }}' \
+            --title "Release @centralbeans/trigger-github-action v${{ steps.deploy.outputs.version }}" \
+            --notes "Automated release" \
+            --draft=false \
+            --prerelease=false

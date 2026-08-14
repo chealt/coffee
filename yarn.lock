@@ -1163,6 +1163,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@centralbeans/trigger-github-action@workspace:packages/trigger-github-action":
+  version: 0.0.0-use.local
+  resolution: "@centralbeans/trigger-github-action@workspace:packages/trigger-github-action"
+  dependencies:
+    "@aws-sdk/client-secrets-manager": "npm:^3.1097.0"
+    "@sentry/aws-serverless": "npm:^10.68.0"
+    oxfmt: "npm:^0.61.0"
+    oxlint: "npm:^1.76.0"
+  languageName: unknown
+  linkType: soft
+
 "@centralbeans/webshop-item-processor@workspace:packages/webshop-item-processor":
   version: 0.0.0-use.local
   resolution: "@centralbeans/webshop-item-processor@workspace:packages/webshop-item-processor"

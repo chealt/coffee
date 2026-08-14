@@ -1,0 +1,19 @@
+{
+  "name": "@centralbeans/trigger-github-action",
+  "type": "module",
+  "scripts": {
+    "build": "cp .yarnrc-lambda.yml .yarnrc.yml && yarn workspaces focus --production && zip -rq package.zip . -x .yarnrc.yml .yarnrc-lambda.yml && rm .yarnrc.yml",
+    "deploy": "aws lambda update-function-code --function-name triggerGithubAction --zip-file fileb://package.zip --publish",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "lint": "oxlint"
+  },
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.1097.0",
+    "@sentry/aws-serverless": "^10.68.0"
+  },
+  "devDependencies": {
+    "oxfmt": "^0.61.0",
+    "oxlint": "^1.76.0"
+  }
+}

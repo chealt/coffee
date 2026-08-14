@@ -117,6 +117,7 @@
         "packages/send-registration-code/**/*.js",
         "packages/screenshot-lambda/**/*.js",
         "packages/translate/**/*.js",
+        "packages/trigger-github-action/**/*.js",
         "packages/webshop-item-processor/**/*.js",
         "packages/webshop-processor/**/*.js"
       ],
