@@ -99,6 +99,20 @@ jobs:
       - name: Install Playwright Browsers
         if: steps.cache.outputs.cache-hit != 'true'
         run: yarn workspace @centralbeans/website playwright install --with-deps chromium
+      # A newly created preview host answers only once Cloudflare has added the DNS record
+      # and issued its certificate, which takes minutes on the first deploy of a PR
+      - name: Wait for the preview host
+        run: |
+          for attempt in $(seq 1 60); do
+            if curl -sSf -o /dev/null --max-time 20 "https://${{ env.PREVIEW_HOST }}/"; then
+              echo "Preview host is up after ${attempt} attempt(s)."
+              exit 0
+            fi
+            echo "Attempt ${attempt}: https://${{ env.PREVIEW_HOST }}/ is not answering yet."
+            sleep 15
+          done
+          echo "Preview host never came up."
+          exit 1
       - name: Run Playwright tests
         env:
           baseUrl: https://${{ env.PREVIEW_HOST }}
