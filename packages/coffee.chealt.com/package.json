@@ -23,28 +23,28 @@
   },
   "dependencies": {
     "@astrojs/cloudflare": "12.6.13",
-    "@aws-sdk/client-lambda": "^3.1097.0",
-    "@aws-sdk/client-s3": "^3.1097.0",
-    "@aws-sdk/s3-request-presigner": "^3.1097.0",
+    "@aws-sdk/client-lambda": "^3.1110.0",
+    "@aws-sdk/client-s3": "^3.1110.0",
+    "@aws-sdk/s3-request-presigner": "^3.1110.0",
     "@libsql/client": "^0.17.4",
     "@playwright-testing-library/test": "^4.5.0",
-    "@playwright/test": "^1.62.0",
-    "@sentry/astro": "^10.68.0",
-    "@sentry/cloudflare": "^10.68.0",
+    "@playwright/test": "^1.62.1",
+    "@sentry/astro": "^10.70.0",
+    "@sentry/cloudflare": "^10.70.0",
     "@simplewebauthn/browser": "^13.3.0",
     "@simplewebauthn/server": "^13.3.2",
     "@tursodatabase/api": "^2.0.5",
-    "astro": "7.1.5",
+    "astro": "7.2.2",
     "cookie": "^2.0.1",
-    "jose": "^6.2.4"
+    "jose": "^6.2.8"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.12.1",
+    "@axe-core/playwright": "^4.13.0",
     "axe-html-reporter": "^2.2.11",
     "navigation-api-types": "^0.6.1",
-    "rollup-plugin-visualizer": "^7.0.1",
-    "vite": "8.1.5",
-    "wrangler": "^4.115.0"
+    "rollup-plugin-visualizer": "^7.1.1",
+    "vite": "8.2.1",
+    "wrangler": "^4.123.0"
   },
   "engines": {
     "node": ">=24"

@@ -9,11 +9,11 @@
     "lint": "oxlint"
   },
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.1097.0",
-    "@sentry/aws-serverless": "^10.68.0"
+    "@aws-sdk/client-secrets-manager": "^3.1110.0",
+    "@sentry/aws-serverless": "^10.70.0"
   },
   "devDependencies": {
-    "oxfmt": "^0.61.0",
-    "oxlint": "^1.76.0"
+    "oxfmt": "^0.63.0",
+    "oxlint": "^1.78.0"
   }
 }

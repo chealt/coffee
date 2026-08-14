@@ -7,7 +7,7 @@
     "test": "node test.js"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.1097.0",
-    "@sentry/aws-serverless": "^10.68.0"
+    "@aws-sdk/client-lambda": "^3.1110.0",
+    "@sentry/aws-serverless": "^10.70.0"
   }
 }
