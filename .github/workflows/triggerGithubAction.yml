@@ -25,7 +25,7 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         working-directory: packages/trigger-github-action
-        run: yarn workspace focus
+        run: yarn workspaces focus
       - name: Check formatting
         working-directory: packages/trigger-github-action
         run: yarn format:check
@@ -39,7 +39,7 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         working-directory: packages/trigger-github-action
-        run: yarn workspace focus
+        run: yarn workspaces focus
       - name: Lint
         working-directory: packages/trigger-github-action
         run: yarn lint
