@@ -7,6 +7,33 @@ import supportedLanguages from './data/supportedLanguages.json' with { type: 'js
 
 const locales = supportedLanguages.map(({ locale }) => locale);
 
+// The Cloudflare plugin resolves the worker build with the "browser" condition, but Vite skips
+// the legacy "browser" field in server environments. The AWS SDK needs both: the condition picks
+// the browser exports of its dependencies, while the field swaps its own runtime config for the
+// one that does not read from disk. With only the condition the two halves disagree, creating an
+// S3 client throws, and image uploads never get a signed URL.
+const awsSdkPackages = ['@aws-sdk/client-lambda', '@aws-sdk/client-s3', '@aws-sdk/s3-request-presigner'];
+
+const mainFieldsWithBrowser = (mainFields) => ['browser', ...(mainFields ?? ['module', 'jsnext:main', 'jsnext'])];
+
+const useBrowserFieldInWorker = {
+  name: 'use-browser-field-in-worker',
+  enforce: 'post',
+  configEnvironment(name, options) {
+    if (name !== 'ssr' || options.resolve?.mainFields?.includes('browser')) {
+      return;
+    }
+
+    options.resolve ??= {};
+    options.resolve.mainFields = mainFieldsWithBrowser(options.resolve.mainFields);
+
+    // dev pre-bundles dependencies with esbuild, which does its own resolving and ignores
+    // the field, so leave the SDK to the resolver above
+    options.optimizeDeps ??= {};
+    options.optimizeDeps.exclude = [...(options.optimizeDeps.exclude ?? []), ...awsSdkPackages];
+  }
+};
+
 export default defineConfig({
   output: 'server',
   prefetch: {
@@ -34,6 +61,7 @@ export default defineConfig({
   },
   vite: {
     plugins: [
+      useBrowserFieldInWorker
       // visualizer({
       //   open: process.env.ANALYZE
       // })
