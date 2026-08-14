@@ -15,7 +15,13 @@ export const handler = async () => {
 
   logger.info(`triggering github action`);
 
-  const response = await triggerAction({ token, owner: 'chealt', repo: 'coffee', workflow: 'dataExport' });
+  const response = await triggerAction({
+    body: { ref: 'main' },
+    token,
+    owner: 'chealt',
+    repo: 'coffee',
+    workflow: 'dataExport'
+  });
 
   if (response.ok) {
     return { success: true };
