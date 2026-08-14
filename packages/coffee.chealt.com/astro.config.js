@@ -1,6 +1,6 @@
 import cloudflare from '@astrojs/cloudflare';
 import sentry from '@sentry/astro';
-import { defineConfig } from 'astro/config';
+import { defineConfig, passthroughImageService } from 'astro/config';
 // import { visualizer } from 'rollup-plugin-visualizer';
 
 import supportedLanguages from './data/supportedLanguages.json' with { type: 'json' };
@@ -19,6 +19,9 @@ export default defineConfig({
     routing: {
       prefixDefaultLocale: true
     }
+  },
+  image: {
+    service: passthroughImageService()
   },
   devToolbar: {
     enabled: false
@@ -101,7 +104,5 @@ export default defineConfig({
       telemetry: false
     })
   ],
-  adapter: cloudflare({
-    imageService: 'passthrough'
-  })
+  adapter: cloudflare()
 });
