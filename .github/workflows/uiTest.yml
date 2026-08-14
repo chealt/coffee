@@ -35,17 +35,36 @@ jobs:
       - name: Install Playwright Browsers
         if: steps.cache.outputs.cache-hit != 'true'
         run: yarn workspace @centralbeans/website playwright install --with-deps chromium
-      - name: Run Playwright tests
+      # The dev server runs the site in workerd, whose env comes from wrangler.toml and
+      # .env, never from the job environment. Without this the worker would fall back to
+      # the production ORIGIN and RELYING_PARTY_ID, and have no database credentials.
+      - name: Write the dev server environment
+        working-directory: packages/coffee.chealt.com
         env:
-          CI: true
-          localDevServer: true
-          ORIGIN: ${{ secrets.ORIGIN }}
-          RELYING_PARTY_ID: ${{ secrets.RELYING_PARTY_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
           TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
           TURSO_AUTH_TOKEN_TEST: ${{ secrets.TURSO_AUTH_TOKEN_TEST }}
           TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
           TURSO_DATABASE_URL_TEST: ${{ secrets.TURSO_DATABASE_URL_TEST }}
+        run: |
+          {
+            echo "ORIGIN=http://localhost:4321"
+            echo "RELYING_PARTY_ID=localhost"
+            # the collection image test uploads to S3 through a signed URL
+            echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID"
+            echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
+            echo "SESSION_SECRET=$SESSION_SECRET"
+            echo "TURSO_AUTH_TOKEN=$TURSO_AUTH_TOKEN"
+            echo "TURSO_AUTH_TOKEN_TEST=$TURSO_AUTH_TOKEN_TEST"
+            echo "TURSO_DATABASE_URL=$TURSO_DATABASE_URL"
+            echo "TURSO_DATABASE_URL_TEST=$TURSO_DATABASE_URL_TEST"
+          } > .env
+      - name: Run Playwright tests
+        env:
+          CI: true
+          localDevServer: true
         run: yarn workspace @centralbeans/website playwright test
       - uses: actions/upload-artifact@v7
         name: Upload Playwright report

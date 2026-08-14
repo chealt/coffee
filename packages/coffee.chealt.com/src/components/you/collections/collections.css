@@ -93,9 +93,9 @@ header.title {
   display: flex;
   justify-content: flex-end;
   background-color: var(--color-background--alternative);
-  opacity: 0.8;
   position: absolute;
   width: 100%;
+  max-width: var(--max-content-width);
   z-index: var(--z-index--xs);
   transform: translateY(-100%);
 
