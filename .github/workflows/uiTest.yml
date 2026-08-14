@@ -41,6 +41,8 @@ jobs:
       - name: Write the dev server environment
         working-directory: packages/coffee.chealt.com
         env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
           TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
           TURSO_AUTH_TOKEN_TEST: ${{ secrets.TURSO_AUTH_TOKEN_TEST }}
@@ -50,6 +52,9 @@ jobs:
           {
             echo "ORIGIN=http://localhost:4321"
             echo "RELYING_PARTY_ID=localhost"
+            # the collection image test uploads to S3 through a signed URL
+            echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID"
+            echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
             echo "SESSION_SECRET=$SESSION_SECRET"
             echo "TURSO_AUTH_TOKEN=$TURSO_AUTH_TOKEN"
             echo "TURSO_AUTH_TOKEN_TEST=$TURSO_AUTH_TOKEN_TEST"

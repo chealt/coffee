@@ -13,6 +13,8 @@ const coffeeImage = {
 };
 
 const itemUrlPattern = /\/you\/collections\/[^/]+\/items\/[^/]+/u;
+const signedUrlEndpoint = '/api/storage/get-signed-url.json';
+const imageBucket = 'centralbeans-coffee-images';
 
 test.describe('collections pages', () => {
   test('should render the login page when not logged in', async ({ page }) => {
@@ -40,12 +42,27 @@ test.describe('collections pages', () => {
       .first()
       .click();
 
+    // the service worker uploads in the background, so its requests are reported on the context
+    const signedUrlResponse = page
+      .context()
+      .waitForEvent('response', (response) => response.url().includes(signedUrlEndpoint));
+    const uploadResponse = page
+      .context()
+      .waitForEvent(
+        'response',
+        (response) => response.request().method() === 'PUT' && response.url().includes(imageBucket)
+      );
+
     await (await fileChooserPromise).setFiles(coffeeImage);
 
     // a new item is created for the image, and the page navigates to it
     await page.waitForURL(itemUrlPattern);
 
     await expect(page.getByRole('img').first()).toBeVisible();
+
+    // the image element alone only proves the service worker cached it, so check it was stored
+    expect((await signedUrlResponse).status()).toBe(200);
+    expect((await uploadResponse).status()).toBe(200);
 
     // the tests share one user, so the item must not be left behind
     page.on('dialog', (dialog) => dialog.accept());
