@@ -2,7 +2,8 @@
   "en": {
     "run": "run",
     "runParser": "Run roaster parser",
-    "title": "Admin"
+    "title": "Admin",
+    "triggerDataExport": "Run data export"
   },
   "pl": {
     "run": "run",

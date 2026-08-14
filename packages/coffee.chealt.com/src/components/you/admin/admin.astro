@@ -58,4 +58,13 @@ const roastersWithParser = roasters.filter(({ is_best }) => Boolean(is_best));
       </Button>
     </Form>
   </section>
+  <section>
+    <APIButton apiEndpoint="/api/trigger-data-export.json">
+      <Button class="bordered">
+        <T namespace="you.admin.locales" key="triggerDataExport">
+          {t("triggerDataExport")}
+        </T>
+      </Button>
+    </APIButton>
+  </section>
 </Common>
