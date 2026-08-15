@@ -36,9 +36,25 @@ const isProd = import.meta.env.PROD;
     <link rel="manifest" href="/manifest.json" />
     <link rel="apple-touch-icon" href="/favicons/favicon-192x192.svg" />
     <title>{title ? `${title} | ${t("title")}` : t("title")}</title>
+    <script
+      type="speculationrules"
+      is:inline
+      set:html={JSON.stringify({
+        prerender: [
+          {
+            where: {
+              href_matches: "/*/you/collections/*/items/*",
+            },
+            eagerness: "moderate",
+          },
+        ],
+      })}
+    />
     <script is:inline>
       window.addEventListener("pagereveal", (event) => {
-        if (window.navigation.activation?.navigationType === "traverse") {
+        const { activation } = window.navigation;
+
+        if (activation?.navigationType === "traverse") {
           const viewTransitionName =
             sessionStorage.getItem("viewTransitionName");
 
@@ -51,33 +67,47 @@ const isProd = import.meta.env.PROD;
             if (element) {
               element.style.viewTransitionName = viewTransitionName;
               sessionStorage.removeItem("viewTransitionName");
+
+              return;
             }
           }
-        } else if (event.viewTransition && window.navigation.activation?.from) {
-          const previousUrl = window.navigation.activation.from.url;
-          const matches = previousUrl?.match(
-            /\/collections\/([0-9a-zA-Z-]*)\/items\/([0-9a-zA-Z-]*)\//,
-          );
+        }
 
-          if (previousUrl && matches) {
-            const collectionId = matches[1];
-            const itemId = matches[2];
+        // returning to the collections list from an item, either through the
+        // back link (push) or the back button / swipe back (traverse)
+        if (!event.viewTransition || !activation?.from) {
+          return;
+        }
 
-            /** @type {HTMLElement | null} */
-            const transitionTargetElement = document.querySelector(
-              `[data-selector="collection-id-${collectionId}"] #item-id-${itemId} picture`,
-            );
+        const previousUrl = activation.from.url;
+        const matches = previousUrl?.match(
+          /\/collections\/([0-9a-zA-Z-]*)\/items\/([0-9a-zA-Z-]*)\//,
+        );
 
-            if (transitionTargetElement) {
-              transitionTargetElement.scrollIntoView({
-                behavior: "instant",
-                block: "center",
-              });
+        if (!previousUrl || !matches) {
+          return;
+        }
 
-              transitionTargetElement.style.viewTransitionName =
-                "collectionItemCoverImage";
-            }
-          }
+        const collectionId = matches[1];
+        const itemId = matches[2];
+
+        /** @type {HTMLImageElement | null} */
+        const transitionTargetElement = document.querySelector(
+          `[data-selector="collection-id-${collectionId}"] #item-id-${itemId} img`,
+        );
+
+        if (transitionTargetElement) {
+          // the tile is lazy loaded, so the snapshot would be empty without this
+          transitionTargetElement.loading = "eager";
+          transitionTargetElement.fetchPriority = "high";
+
+          transitionTargetElement.scrollIntoView({
+            behavior: "instant",
+            block: "nearest",
+          });
+
+          transitionTargetElement.style.viewTransitionName =
+            "collectionItemCoverImage";
         }
       });
     </script>
