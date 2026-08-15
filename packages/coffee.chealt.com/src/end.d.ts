@@ -94,6 +94,7 @@ declare namespace App {
     imageUploadUrls: { small: string; medium: string; original: string };
     isTranslating: boolean;
     isYouPage: boolean;
+    loggedInUser: { userID; username };
     passkeys: Passkey[];
     registrationOptions: string;
     settings: {
