@@ -1,6 +1,5 @@
-import { relyingPartyID } from '../../../../server/authentication/config.js';
-import { getUserByUsernameOrEmail, getUser, getAuthenticationOptions } from '../../../../server/database/user.js';
-import { getAuthenticationOptions as getNewAuthenticationOptions } from '../../../../server/login.js';
+import { getUserByUsernameOrEmail, getUser } from '../../../../server/database/user.js';
+import { getAuthenticationOptions } from '../../../../server/login.js';
 import logger from '../../../../server/utils/logger.js';
 
 const POST = async ({ request }) => {
@@ -14,11 +13,7 @@ const POST = async ({ request }) => {
   const user = await getUser(userDefault.username);
 
   try {
-    let options = await getAuthenticationOptions(user.name);
-
-    if (options.rpId !== relyingPartyID) {
-      options = await getNewAuthenticationOptions(user.name);
-    }
+    const options = await getAuthenticationOptions(user.name);
 
     return new Response(JSON.stringify({ options }), {
       status: 200,
@@ -31,7 +26,8 @@ const POST = async ({ request }) => {
       JSON.stringify({
         error: 'Cannot get authentication options. Please try again!',
         errorCode: 'CANNOT_GET_AUTHENTICATION_OPTIONS'
-      })
+      }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
 };

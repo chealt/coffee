@@ -34,35 +34,6 @@ const getPasskeys = async (user) => {
   return rows;
 };
 
-const getRegistrationOptions = async (username) => {
-  const client = getClient(username);
-
-  const { rows } = await client.execute({
-    sql: 'SELECT registration_options FROM users WHERE name = (:name)',
-    args: { name: username }
-  });
-
-  return JSON.parse(rows[0].registration_options);
-};
-
-const recordRegistrationOptions = ({ user, options }) => {
-  const client = getClient(user.name);
-
-  return client.execute({
-    sql: 'UPDATE users SET registration_options = (:options) WHERE id = (:id)',
-    args: { id: user.id, options: JSON.stringify(options) }
-  });
-};
-
-const recordAuthenticationOptions = ({ user, options }) => {
-  const client = getClient(user.name);
-
-  return client.execute({
-    sql: 'UPDATE users SET authentication_options = (:options) WHERE id = (:id)',
-    args: { id: user.id, options: JSON.stringify(options) }
-  });
-};
-
 const storeRegistration = ({
   user,
   verification: {
@@ -86,17 +57,6 @@ const storeRegistration = ({
       created_at: new Date().toISOString()
     }
   });
-};
-
-const getAuthenticationOptions = async (username) => {
-  const client = getClient(username);
-
-  const { rows } = await client.execute({
-    sql: 'SELECT authentication_options FROM users WHERE name = (:name)',
-    args: { name: username }
-  });
-
-  return JSON.parse(rows[0].authentication_options);
 };
 
 const getPasskey = async ({ username, credentialId }) => {
@@ -134,11 +94,7 @@ export {
   getUser,
   getUserByUsernameOrEmail,
   getPasskeys,
-  getRegistrationOptions,
-  recordRegistrationOptions,
   storeRegistration,
-  recordAuthenticationOptions,
-  getAuthenticationOptions,
   getPasskey,
   deletePasskey,
   updatePasskeyCounter

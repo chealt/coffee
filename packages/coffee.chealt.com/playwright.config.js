@@ -24,8 +24,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  // The @auth tests share one user, so concurrent runs overwrite each other's WebAuthn challenge
-  workers: 1,
+  workers: '75%',
   reporter: [['html', { open: 'never' }], [process.env.CI ? 'github' : 'list']],
   use: {
     trace: 'on',

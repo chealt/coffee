@@ -14,6 +14,7 @@ class ChealtAuth extends HTMLElement {
     this.registrationErrorAuthenticatorPreviouslyRegistered = this.querySelector(
       '[data-registration-error-authenticator-previously-registered]'
     );
+    this.registrationErrorChallengeNotFound = this.querySelector('[data-registration-error-challenge-not-found]');
 
     this.registerOnSubmit();
   }
@@ -32,8 +33,7 @@ class ChealtAuth extends HTMLElement {
       this.registerButton.disabled = true;
 
       // clear any previous results
-      this.registrationSuccess.classList.add('hidden');
-      this.registrationError.classList.add('hidden');
+      this.hideRegistrationResult();
 
       try {
         const registration = await startRegistration({ optionsJSON: this.registrationOptions });
@@ -50,14 +50,16 @@ class ChealtAuth extends HTMLElement {
           })
         });
 
-        const { verified } = await response.json();
+        const { verified, errorCode } = await response.json();
 
-        if (verified && this.redirectUrl) {
+        if (verified) {
           if (this.redirectUrl) {
             window.location.href = this.redirectUrl;
           } else {
             this.registrationSuccess.classList.remove('hidden');
           }
+        } else if (errorCode === 'CHALLENGE_NOT_FOUND') {
+          this.registrationErrorChallengeNotFound.classList.remove('hidden');
         } else {
           this.registrationError.classList.remove('hidden');
         }
@@ -83,6 +85,7 @@ class ChealtAuth extends HTMLElement {
   hideRegistrationResult() {
     this.registrationSuccess.classList.add('hidden');
     this.registrationError.classList.add('hidden');
+    this.registrationErrorChallengeNotFound.classList.add('hidden');
   }
 }
 

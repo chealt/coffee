@@ -23,15 +23,23 @@ const addVirtualAuthenticator = async (page) => {
 const signRegistrationCode = (username) =>
   new SignJWT({ username }).setProtectedHeader({ alg: 'HS256' }).sign(new TextEncoder().encode(config.sessionSecret));
 
-// Registering also signs the user in, so this is the way to get an authenticated page
+// CDP reports credential IDs as base64, the site stores and renders them as base64url
+const toBase64URL = (base64) => base64.replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
+
+// Registering also signs the user in, so this is the way to get an authenticated page.
+// The tests share a user, so the credential ID is how a test finds the passkey it created.
 const registerPasskey = async (/** @type {import('@playwright/test').Page} */ page) => {
-  await addVirtualAuthenticator(page);
+  const { client, authenticatorId } = await addVirtualAuthenticator(page);
 
   const registrationCode = await signRegistrationCode(config.user.username);
 
   await page.goto(`${config.url}/registration/${config.user.username}?code=${registrationCode}`);
   await page.getByRole('button', { name: 'Register', exact: true }).click();
   await page.waitForURL(`${config.url}/`);
+
+  const { credentials } = await client.send('WebAuthn.getCredentials', { authenticatorId });
+
+  return { credentialId: toBase64URL(credentials[0].credentialId) };
 };
 
 export { addVirtualAuthenticator, registerPasskey, signRegistrationCode };

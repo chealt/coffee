@@ -4,11 +4,7 @@ import { registerPasskey } from '@test-utils/webauthn.js';
 
 const passkeysUrl = `${config.url}/you/profile/passkeys`;
 
-// The credential ID is the last value on a card, and identifies it across reloads
-const getCredentialId = (/** @type {import('@playwright/test').Page} */ page) =>
-  page.getByRole('listitem').first().getByRole('definition').last().textContent();
-
-test.describe('passkeys page', { tag: '@auth' }, () => {
+test.describe('passkeys page', () => {
   test('should render the login page when not logged in', async ({ page }) => {
     await page.goto(passkeysUrl);
 
@@ -26,11 +22,10 @@ test.describe('passkeys page', { tag: '@auth' }, () => {
   });
 
   test('should record when a passkey was last used', async ({ page }) => {
-    await registerPasskey(page);
+    const { credentialId } = await registerPasskey(page);
 
     await page.goto(passkeysUrl);
 
-    const credentialId = await getCredentialId(page);
     const passkey = page.getByRole('listitem').filter({ hasText: credentialId });
 
     // registering stores the creation date but the passkey has not authenticated anyone yet

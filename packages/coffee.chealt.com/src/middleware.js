@@ -99,8 +99,7 @@ const redirect = (url) =>
     }
   });
 
-// Speculative loads must not rotate the recorded WebAuthn challenge,
-// otherwise they invalidate the options embedded in the page the user is on
+// Speculative loads should not record challenges for pages nobody is looking at
 const isPrefetch = (request) =>
   (request.headers.get('sec-purpose') || request.headers.get('purpose') || '').includes('prefetch');
 

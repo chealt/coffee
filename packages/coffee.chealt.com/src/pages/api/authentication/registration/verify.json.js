@@ -1,4 +1,5 @@
 import { verifyRegistrationResponse } from '@simplewebauthn/server';
+import { decodeClientDataJSON } from '@simplewebauthn/server/helpers';
 
 import {
   origin,
@@ -7,17 +8,33 @@ import {
   cookieNameSession
 } from '../../../../server/authentication/config.js';
 import { getSessionJWT } from '../../../../server/authentication/session.js';
-import { getUser, getRegistrationOptions, storeRegistration } from '../../../../server/database/user.js';
+import { claimChallenge } from '../../../../server/database/challenges.js';
+import { getUser, storeRegistration } from '../../../../server/database/user.js';
 import logger from '../../../../server/utils/logger.js';
+
+const getErrorResponse = ({ message, errorCode }) =>
+  new Response(JSON.stringify({ error: message, errorCode }), {
+    status: 400,
+    headers: { 'Content-Type': 'application/json' }
+  });
 
 const POST = async ({ request }) => {
   const { username, ...registration } = await request.json();
 
-  const user = await getUser(username);
-
-  const currentOptions = await getRegistrationOptions(username);
-
   try {
+    const user = await getUser(username);
+
+    if (!user) {
+      return getErrorResponse({ message: 'Username not found', errorCode: 'USER_NOT_FOUND' });
+    }
+
+    const { challenge } = decodeClientDataJSON(registration.response.clientDataJSON);
+    const currentOptions = await claimChallenge({ username: user.name, challenge, type: 'registration' });
+
+    if (!currentOptions) {
+      return getErrorResponse({ message: 'Challenge not found', errorCode: 'CHALLENGE_NOT_FOUND' });
+    }
+
     const verification = await verifyRegistrationResponse({
       response: registration,
       expectedChallenge: currentOptions.challenge,
@@ -46,12 +63,7 @@ const POST = async ({ request }) => {
   } catch (error) {
     logger.error(error);
 
-    return new Response(JSON.stringify({ error: error.message }), {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      status: 400
-    });
+    return getErrorResponse({ message: error.message, errorCode: 'REGISTRATION_FAILED' });
   }
 };
 

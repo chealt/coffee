@@ -25,7 +25,7 @@ test.describe('collections pages', () => {
     await page.getByRole('textbox', { name: /username or email/iu }).fill(config.user.email);
   });
 
-  test('adds a new image to a collection', { tag: '@auth' }, async ({ page }) => {
+  test('adds a new image to a collection', async ({ page }) => {
     await registerPasskey(page);
 
     await page.goto(`${config.url}/you/collections`);

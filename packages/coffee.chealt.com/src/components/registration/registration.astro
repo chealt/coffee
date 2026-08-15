@@ -32,6 +32,9 @@ const { username } = Astro.props;
     <div data-registration-error class="error hidden">
       <div class="error-message"><T namespace="registration.locales" key="registrationError">{t("registrationError")}</T></div>
     </div>
+    <div data-registration-error-challenge-not-found class="error hidden">
+      <div class="error-message"><T namespace="registration.locales" key="registrationErrorChallengeNotFound">{t("registrationErrorChallengeNotFound")}</T></div>
+    </div>
     <div
       data-registration-error-authenticator-previously-registered
       class="error hidden"
