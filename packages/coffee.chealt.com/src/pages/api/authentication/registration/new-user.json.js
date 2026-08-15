@@ -1,3 +1,5 @@
+import { env } from 'cloudflare:workers';
+
 import { invoke } from '../../../../server/AWS/lambda.js';
 import { getUserByUsernameOrEmail } from '../../../../server/database/user.js';
 import logger from '../../../../server/utils/logger.js';
@@ -11,7 +13,7 @@ const POST = async (context) => {
       return new Response(JSON.stringify({ errorCode: 'EMAIL_REQUIRED' }), { status: 400 });
     }
 
-    const { success } = await context.locals.runtime.env.NEW_USER_RATE_LIMITER.limit({
+    const { success } = await env.NEW_USER_RATE_LIMITER.limit({
       key: `new-user-${email}`
     });
 

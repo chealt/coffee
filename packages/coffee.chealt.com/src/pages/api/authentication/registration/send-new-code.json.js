@@ -1,3 +1,5 @@
+import { env } from 'cloudflare:workers';
+
 import { invoke } from '../../../../server/AWS/lambda.js';
 import { getSessionUser } from '../../../../server/authentication/session.js';
 import { getUserByUsernameOrEmail, getUser } from '../../../../server/database/user.js';
@@ -10,8 +12,8 @@ const errorCodes = {
 
 const sendCode = ({ username, email }) => invoke({ name: 'sendRegistrationCode', payload: { username, email } });
 
-const checkRateLimit = async ({ context, email }) => {
-  const { success } = await context.locals.runtime.env.REGISTRATION_CODE_RATE_LIMITER.limit({
+const checkRateLimit = async ({ email }) => {
+  const { success } = await env.REGISTRATION_CODE_RATE_LIMITER.limit({
     key: `send-new-registration-code-${email}`
   });
 
