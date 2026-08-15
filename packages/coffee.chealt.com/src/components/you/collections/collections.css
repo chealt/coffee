@@ -36,10 +36,6 @@ body {
   }
 }
 
-.collections-list img {
-  will-change: transform;
-}
-
 .collections-page .title {
   position: relative;
   z-index: var(--z-index--s);
