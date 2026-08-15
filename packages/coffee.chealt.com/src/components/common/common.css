@@ -55,9 +55,6 @@
   --animation-duration: 1s;
   --animation-duration--slow: 2s;
   --animation-duration--very-slow: 5s;
-
-  --view-transition-duration: 0.3s;
-  --view-transition-easing: cubic-bezier(0.2, 0, 0, 1);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -551,8 +548,7 @@ sup {
   }
 
   ::view-transition-group(*) {
-    animation-duration: var(--view-transition-duration);
-    animation-timing-function: var(--view-transition-easing);
+    animation-duration: var(--animation-duration--fast);
   }
 
   ::view-transition-old(*),
