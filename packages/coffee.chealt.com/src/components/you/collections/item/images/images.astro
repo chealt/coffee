@@ -30,6 +30,8 @@ const { collectionItem } = Astro.locals;
                   id={filename}
                   data-dialog-id={`image-dialog-${index}`}
                   src={src}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  fetchpriority={index === 0 ? "high" : undefined}
                   style={
                     index === 0
                       ? "view-transition-name: collectionItemCoverImage;"
@@ -63,7 +65,7 @@ const { collectionItem } = Astro.locals;
 {
   collectionItem?.images.map(({ src }, index) => (
     <Dialog class="full-size-image" id={`image-dialog-${index}`} showClose>
-      <img src={src} />
+      <img src={src} loading="lazy" />
     </Dialog>
   ))
 }
