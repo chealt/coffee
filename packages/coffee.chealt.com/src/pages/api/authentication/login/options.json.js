@@ -13,8 +13,6 @@ const POST = async ({ request }) => {
   const user = await getUser(userDefault.username);
 
   try {
-    // every ceremony gets its own challenge, so handing out a fresh one never invalidates
-    // the options another tab or device is already working with
     const options = await getAuthenticationOptions(user.name);
 
     return new Response(JSON.stringify({ options }), {

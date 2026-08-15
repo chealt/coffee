@@ -24,9 +24,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  // The @auth tests share one user, and the passkeys tests identify their passkey as the
-  // newest one on the list, so a concurrent registration would pick the wrong card
-  workers: 1,
+  workers: '75%',
   reporter: [['html', { open: 'never' }], [process.env.CI ? 'github' : 'list']],
   use: {
     trace: 'on',

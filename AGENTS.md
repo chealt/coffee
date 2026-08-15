@@ -81,6 +81,20 @@ yarn recommendations:ci   # Generate recommendations for CI
 - Use `async`/`await` over raw promises
 - Avoid console.log in Astro components (oxlint will error); use it in Node packages
 
+### Comments
+
+Write very few comments. Clear names and small functions are preferred over explanation. Only
+add a comment when the code cannot express the reason on its own, such as a non-obvious
+workaround or a constraint imposed from outside the file. Never narrate what the next line
+does, and never add a comment just to restate a function or variable name. Linting directives
+(`eslint-disable`, etc.) are not comments in this sense and are fine to add where needed.
+
+### Tooling
+
+Never use the GitHub CLI (`gh`). It is not installed and never will be. `origin` is AWS
+CodeCommit and there is a separate `github` remote; push to both, and let the user handle
+anything that needs the GitHub web UI or API.
+
 ### Imports and Exports
 
 Import order (enforced by oxlint):

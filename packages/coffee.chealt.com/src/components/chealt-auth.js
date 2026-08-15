@@ -59,7 +59,6 @@ class ChealtAuth extends HTMLElement {
             this.registrationSuccess.classList.remove('hidden');
           }
         } else if (errorCode === 'CHALLENGE_NOT_FOUND') {
-          // the page was rendered with a challenge that has since been used or expired
           this.registrationErrorChallengeNotFound.classList.remove('hidden');
         } else {
           this.registrationError.classList.remove('hidden');

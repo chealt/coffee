@@ -57,8 +57,6 @@ class ChealtAuthLogin extends HTMLElement {
       const { verified, errorCode } = await this.verify({ username, response });
 
       if (!verified) {
-        // the embedded options are single use and expire, so drop them to let the next
-        // attempt start a fresh ceremony
         this.authenticationOptions = undefined;
 
         this.showError(errorCode);
@@ -73,17 +71,17 @@ class ChealtAuthLogin extends HTMLElement {
   }
 
   hideErrors() {
-    this.querySelectorAll('[data-error-code]').forEach((error) => {
-      error.classList.add('hidden');
+    this.querySelectorAll('[data-error-code]').forEach((errorElement) => {
+      errorElement.classList.add('hidden');
     });
   }
 
   showError(errorCode) {
-    const error =
+    const errorElement =
       this.querySelector(`[data-error-code="${errorCode}"]`) ??
       this.querySelector('[data-error-code="API_CALL_FAILED"]');
 
-    error?.classList.remove('hidden');
+    errorElement?.classList.remove('hidden');
   }
 
   async fetchAuthenticationOptions({ username }) {

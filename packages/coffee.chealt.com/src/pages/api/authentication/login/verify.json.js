@@ -17,7 +17,7 @@ import {
 } from '../../../../server/database/user.js';
 import logger from '../../../../server/utils/logger.js';
 
-const error = ({ message, errorCode }) =>
+const getErrorResponse = ({ message, errorCode }) =>
   new Response(JSON.stringify({ error: message, errorCode }), {
     status: 400,
     headers: { 'Content-Type': 'application/json' }
@@ -27,35 +27,33 @@ const POST = async ({ request }) => {
   const { username, ...body } = await request.json();
 
   if (!username) {
-    return error({ message: 'Username not found', errorCode: 'USER_NOT_FOUND' });
+    return getErrorResponse({ message: 'Username not found', errorCode: 'USER_NOT_FOUND' });
   }
 
   const userDefault = await getUserByUsernameOrEmail(username);
 
   if (!userDefault) {
-    return error({ message: 'Username not found', errorCode: 'USER_NOT_FOUND' });
+    return getErrorResponse({ message: 'Username not found', errorCode: 'USER_NOT_FOUND' });
   }
 
   try {
     const user = await getUser(userDefault.username);
 
     if (!user) {
-      return error({ message: 'Username not found', errorCode: 'USER_NOT_FOUND' });
+      return getErrorResponse({ message: 'Username not found', errorCode: 'USER_NOT_FOUND' });
     }
 
-    // the ceremony is identified by the challenge the authenticator signed, so parallel
-    // ceremonies for the same user cannot invalidate each other
     const { challenge } = decodeClientDataJSON(body.response.clientDataJSON);
     const currentOptions = await claimChallenge({ username: user.name, challenge, type: 'authentication' });
 
     if (!currentOptions) {
-      return error({ message: 'Challenge not found', errorCode: 'CHALLENGE_NOT_FOUND' });
+      return getErrorResponse({ message: 'Challenge not found', errorCode: 'CHALLENGE_NOT_FOUND' });
     }
 
     const passkey = await getPasskey({ username: user.name, credentialId: body.id });
 
     if (!passkey) {
-      return error({ message: 'Passkey not found', errorCode: 'PASSKEY_NOT_FOUND' });
+      return getErrorResponse({ message: 'Passkey not found', errorCode: 'PASSKEY_NOT_FOUND' });
     }
 
     const {
@@ -75,7 +73,7 @@ const POST = async ({ request }) => {
     });
 
     if (!verified) {
-      return error({ message: 'Verification failed', errorCode: 'VERIFICATION_FAILED' });
+      return getErrorResponse({ message: 'Verification failed', errorCode: 'VERIFICATION_FAILED' });
     }
 
     await updatePasskeyCounter({
@@ -98,10 +96,10 @@ const POST = async ({ request }) => {
         ]
       ]
     });
-  } catch (verificationError) {
-    logger.warn(verificationError);
+  } catch (error) {
+    logger.warn(error);
 
-    return error({ message: verificationError.message, errorCode: 'VERIFICATION_FAILED' });
+    return getErrorResponse({ message: error.message, errorCode: 'VERIFICATION_FAILED' });
   }
 };
 

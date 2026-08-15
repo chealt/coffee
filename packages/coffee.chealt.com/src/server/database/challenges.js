@@ -1,13 +1,7 @@
 /* eslint-disable camelcase */
 import { getClient } from './client.js';
 
-// Long enough for a user to work through an authenticator prompt, short enough that an
-// abandoned ceremony stops being usable
 const challengeTTL = 10 * 60 * 1000;
-
-// Ceremonies are abandoned far more often than they are finished, so the rows are pruned
-// on write instead of on a schedule. The cap only bites when a single user has an absurd
-// number of ceremonies open at once.
 const maxStoredChallenges = 20;
 
 const recordChallenge = ({ user, type, options }) => {
@@ -33,8 +27,6 @@ const recordChallenge = ({ user, type, options }) => {
         args: { user_id: user.id, now: createdAt }
       },
       {
-        // the challenge just inserted is excluded so that a burst of ceremonies sharing a
-        // created_at can never evict the one being handed out
         sql: 'DELETE FROM webauthn_challenges WHERE user_id = (:user_id) AND type = (:type) AND challenge != (:challenge) AND challenge NOT IN (SELECT challenge FROM webauthn_challenges WHERE user_id = (:user_id) AND type = (:type) ORDER BY created_at DESC LIMIT (:limit))',
         args: { user_id: user.id, type, challenge: options.challenge, limit: maxStoredChallenges }
       }
@@ -43,11 +35,6 @@ const recordChallenge = ({ user, type, options }) => {
   );
 };
 
-/**
- * Marks a challenge as used and returns the options it was handed out with, or undefined
- * when it is unknown, expired or already used. Claiming and reading are a single statement
- * so that two verifications of the same response cannot both proceed.
- */
 const claimChallenge = async ({ username, challenge, type }) => {
   const client = getClient(username);
   const now = new Date().toISOString();

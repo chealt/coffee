@@ -99,9 +99,7 @@ const redirect = (url) =>
     }
   });
 
-// Challenges are stored per ceremony, so a speculative load no longer invalidates the
-// options embedded in the page the user is on; skipping them just avoids recording
-// challenges for pages nobody is looking at
+// Speculative loads should not record challenges for pages nobody is looking at
 const isPrefetch = (request) =>
   (request.headers.get('sec-purpose') || request.headers.get('purpose') || '').includes('prefetch');
 
