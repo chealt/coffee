@@ -25,7 +25,6 @@
   width: 100vw;
   max-width: var(--max-main-image-width);
   display: block;
-  will-change: transform;
 }
 
 .item-details ul:has(.chip) {
