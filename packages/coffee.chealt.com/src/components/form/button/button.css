@@ -115,6 +115,8 @@ a.button:has(.icon):not(.column) {
 
 button.primary,
 a.button.primary {
+  border: 2px solid var(--color-primary);
+
   &:focus-visible {
     border-color: var(--color-primary--border) !important;
   }
