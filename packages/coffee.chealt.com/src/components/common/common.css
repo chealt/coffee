@@ -540,18 +540,6 @@ sup {
   }
 }
 
-@keyframes view-transition-fade-in {
-  from {
-    opacity: 0;
-  }
-}
-
-@keyframes view-transition-fade-out {
-  to {
-    opacity: 0;
-  }
-}
-
 @media (prefers-reduced-motion: no-preference) {
   @view-transition {
     navigation: auto;
@@ -572,29 +560,9 @@ sup {
     animation: none;
   }
 
+  /* a single texture with no blending: cross-fading the pair costs a
+     plus-lighter blend and an object-fit resample on every frame */
   ::view-transition-old(*) {
     display: none;
-  }
-
-  /* the cover image morphs between two very different aspect ratios: cover
-     keeps it from squashing, and the cross-fade hides the size difference */
-  ::view-transition-old(collectionItemCoverImage),
-  ::view-transition-new(collectionItemCoverImage) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    animation-duration: var(--view-transition-duration);
-    animation-timing-function: var(--view-transition-easing);
-    animation-fill-mode: both;
-  }
-
-  ::view-transition-old(collectionItemCoverImage) {
-    display: block;
-    animation-name: view-transition-fade-out;
-  }
-
-  ::view-transition-new(collectionItemCoverImage) {
-    animation-name: view-transition-fade-in;
   }
 }
