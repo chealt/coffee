@@ -542,9 +542,13 @@ sup {
     navigation: auto;
   }
 
+  /* only the named pairs animate, so the full page never gets snapshotted */
+  :root {
+    view-transition-name: none;
+  }
+
   ::view-transition-group(*) {
-    animation-duration: var(--animation-duration--very-fast);
-    animation-timing-function: ease-in-out;
+    animation-duration: var(--animation-duration--fast);
   }
 
   ::view-transition-old(*),

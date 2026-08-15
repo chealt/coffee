@@ -1,0 +1,5 @@
+::view-transition-old(collectionItemCoverImage),
+::view-transition-new(collectionItemCoverImage) {
+  border-radius: 20px;
+  overflow: clip;
+}

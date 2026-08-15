@@ -38,7 +38,9 @@ const isProd = import.meta.env.PROD;
     <title>{title ? `${title} | ${t("title")}` : t("title")}</title>
     <script is:inline>
       window.addEventListener("pagereveal", (event) => {
-        if (window.navigation.activation?.navigationType === "traverse") {
+        const { activation } = window.navigation;
+
+        if (activation?.navigationType === "traverse") {
           const viewTransitionName =
             sessionStorage.getItem("viewTransitionName");
 
@@ -53,8 +55,8 @@ const isProd = import.meta.env.PROD;
               sessionStorage.removeItem("viewTransitionName");
             }
           }
-        } else if (event.viewTransition && window.navigation.activation?.from) {
-          const previousUrl = window.navigation.activation.from.url;
+        } else if (event.viewTransition && activation?.from) {
+          const previousUrl = activation.from.url;
           const matches = previousUrl?.match(
             /\/collections\/([0-9a-zA-Z-]*)\/items\/([0-9a-zA-Z-]*)\//,
           );
@@ -65,7 +67,7 @@ const isProd = import.meta.env.PROD;
 
             /** @type {HTMLElement | null} */
             const transitionTargetElement = document.querySelector(
-              `[data-selector="collection-id-${collectionId}"] #item-id-${itemId} picture`,
+              `[data-selector="collection-id-${collectionId}"] #item-id-${itemId} img`,
             );
 
             if (transitionTargetElement) {
@@ -76,6 +78,10 @@ const isProd = import.meta.env.PROD;
 
               transitionTargetElement.style.viewTransitionName =
                 "collectionItemCoverImage";
+
+              event.viewTransition.finished.then(() => {
+                transitionTargetElement.style.viewTransitionName = "none";
+              });
             }
           }
         }

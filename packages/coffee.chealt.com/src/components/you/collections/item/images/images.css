@@ -4,7 +4,6 @@
   scroll-snap-type: x mandatory;
   scroll-marker-group: before;
   min-height: 440px;
-  max-height: 50vh;
   display: flex;
   flex-direction: row;
   align-items: center;

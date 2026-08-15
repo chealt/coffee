@@ -16,6 +16,7 @@ import T from "@components/i18n/t.astro";
 import { getTranslator } from "@components/i18n/t.js";
 
 import "./collections.css";
+import "./transition.css";
 
 const t = await getTranslator({
   filePath: "you/collections",
@@ -102,7 +103,11 @@ const { collections, collectionsControls, shouldAuthenticate, username } =
                             srcset={cover.srcMedium}
                             media="(max-width: 1800px)"
                           />
-                          <img src={cover.src} loading="lazy" />
+                          <img
+                            src={cover.src}
+                            loading="lazy"
+                            data-view-transition-name="collectionItemCoverImage"
+                          />
                         </picture>
                         {(details?.isStillFrozen && (
                           <div class="tag bottom frozen">

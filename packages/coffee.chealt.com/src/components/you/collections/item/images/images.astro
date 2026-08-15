@@ -23,19 +23,20 @@ const { collectionItem } = Astro.locals;
         <div class="carousel">
           {collectionItem?.images.map(
             ({ src, srcSmall, srcMedium, filename, status }, index) => (
-              <picture
-                style={
-                  index === 0
-                    ? "view-transition-name: collectionItemCoverImage;"
-                    : undefined
-                }
-              >
-                <source srcset={srcSmall} media="(max-width: 599px)" />
-                <source srcset={srcMedium} media="(max-width: 1023px)" />
+              <picture>
+                <source srcset={srcSmall} media="(max-width: 1023px)" />
+                <source srcset={srcMedium} media="(max-width: 1800px)" />
                 <img
                   id={filename}
                   data-dialog-id={`image-dialog-${index}`}
                   src={src}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  fetchpriority={index === 0 ? "high" : undefined}
+                  style={
+                    index === 0
+                      ? "view-transition-name: collectionItemCoverImage;"
+                      : undefined
+                  }
                 />
                 {status === "processing" && (
                   <Fragment>
@@ -64,7 +65,7 @@ const { collectionItem } = Astro.locals;
 {
   collectionItem?.images.map(({ src }, index) => (
     <Dialog class="full-size-image" id={`image-dialog-${index}`} showClose>
-      <img src={src} />
+      <img src={src} loading="lazy" />
     </Dialog>
   ))
 }
