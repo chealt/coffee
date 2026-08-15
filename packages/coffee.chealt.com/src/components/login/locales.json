@@ -6,6 +6,7 @@
     "apiCallFailed": "Please try again later",
     "userNotFound": "User not found",
     "cannotGetAuthenticationOptions": "Cannot get authentication options",
+    "challengeNotFound": "This login attempt has expired. Please try again.",
     "rateLimitExceeded": "You tried to send a new registration code too many times. Please try again later.",
     "sendRegistrationCode": "Send new registration code",
     "register": "Register"
@@ -17,6 +18,7 @@
     "apiCallFailed": "Proszę spróbować później",
     "userNotFound": "Użytkownik nie został znaleziony",
     "cannotGetAuthenticationOptions": "Nie można uzyskać opcji uwierzytelnienia",
+    "challengeNotFound": "Ta próba logowania wygasła. Proszę spróbować ponownie.",
     "rateLimitExceeded": "Zbyt wiele prób wysłania nowego kodu rejestracji. Proszę spróbować później.",
     "sendRegistrationCode": "Wyślij nowy kod rejestracji",
     "register": "Zarejestruj się"

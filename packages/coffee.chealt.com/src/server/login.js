@@ -1,7 +1,8 @@
 import { generateAuthenticationOptions } from '@simplewebauthn/server';
 
 import { relyingPartyID } from './authentication/config.js';
-import { getUser, getPasskeys, recordAuthenticationOptions } from './database/user.js';
+import { recordChallenge } from './database/challenges.js';
+import { getUser, getPasskeys } from './database/user.js';
 
 const getAuthenticationOptions = async (username) => {
   const user = await getUser(username);
@@ -15,7 +16,7 @@ const getAuthenticationOptions = async (username) => {
     }))
   });
 
-  await recordAuthenticationOptions({ user, options });
+  await recordChallenge({ user, type: 'authentication', options });
 
   return options;
 };

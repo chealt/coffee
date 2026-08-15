@@ -1,7 +1,8 @@
 import { generateRegistrationOptions } from '@simplewebauthn/server';
 
 import { relyingPartyName, relyingPartyID } from './authentication/config.js';
-import { getUser, getPasskeys, recordRegistrationOptions } from './database/user.js';
+import { recordChallenge } from './database/challenges.js';
+import { getUser, getPasskeys } from './database/user.js';
 
 const createRegistrationOptions = async (username) => {
   const user = await getUser(username);
@@ -24,7 +25,7 @@ const createRegistrationOptions = async (username) => {
     }
   });
 
-  await recordRegistrationOptions({ user, options });
+  await recordChallenge({ user, type: 'registration', options });
 
   return options;
 };

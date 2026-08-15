@@ -60,6 +60,11 @@ const { username, redirectUrl } = Astro.props;
             >{t("cannotGetAuthenticationOptions")}</T
           >
         </p>
+        <p data-error-code="CHALLENGE_NOT_FOUND" class="error hidden">
+          <T namespace="login.locales" key="challengeNotFound"
+            >{t("challengeNotFound")}</T
+          >
+        </p>
         <p data-error-code="RATE_LIMIT_EXCEEDED" class="error hidden">
           <T namespace="login.locales" key="rateLimitExceeded"
             >{t("rateLimitExceeded")}</T

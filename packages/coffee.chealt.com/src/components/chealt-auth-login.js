@@ -42,8 +42,8 @@ class ChealtAuthLogin extends HTMLElement {
       if (!optionsJSON) {
         const { options, errorCode } = await this.fetchAuthenticationOptions({ username });
 
-        if (!options && errorCode) {
-          this.querySelector(`[data-error-code="${errorCode}"]`).classList.remove('hidden');
+        if (!options) {
+          this.showError(errorCode);
           this.loginButton.disabled = false;
 
           return;
@@ -54,9 +54,15 @@ class ChealtAuthLogin extends HTMLElement {
 
       const response = await startAuthentication({ optionsJSON });
 
-      const verified = await this.verify({ username, response });
+      const { verified, errorCode } = await this.verify({ username, response });
 
-      if (verified && this.redirectUrl) {
+      if (!verified) {
+        // the embedded options are single use and expire, so drop them to let the next
+        // attempt start a fresh ceremony
+        this.authenticationOptions = undefined;
+
+        this.showError(errorCode);
+      } else if (this.redirectUrl) {
         window.location.href = this.redirectUrl;
       }
     } catch (error) {
@@ -70,6 +76,14 @@ class ChealtAuthLogin extends HTMLElement {
     this.querySelectorAll('[data-error-code]').forEach((error) => {
       error.classList.add('hidden');
     });
+  }
+
+  showError(errorCode) {
+    const error =
+      this.querySelector(`[data-error-code="${errorCode}"]`) ??
+      this.querySelector('[data-error-code="API_CALL_FAILED"]');
+
+    error?.classList.remove('hidden');
   }
 
   async fetchAuthenticationOptions({ username }) {
@@ -95,9 +109,7 @@ class ChealtAuthLogin extends HTMLElement {
       body: JSON.stringify({ username, ...response })
     });
 
-    const { verified } = await verification.json();
-
-    return verified;
+    return await verification.json();
   }
 
   disconnectCallback() {

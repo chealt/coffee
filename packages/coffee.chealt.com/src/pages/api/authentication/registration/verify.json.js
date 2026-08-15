@@ -1,4 +1,5 @@
 import { verifyRegistrationResponse } from '@simplewebauthn/server';
+import { decodeClientDataJSON } from '@simplewebauthn/server/helpers';
 
 import {
   origin,
@@ -7,17 +8,35 @@ import {
   cookieNameSession
 } from '../../../../server/authentication/config.js';
 import { getSessionJWT } from '../../../../server/authentication/session.js';
-import { getUser, getRegistrationOptions, storeRegistration } from '../../../../server/database/user.js';
+import { claimChallenge } from '../../../../server/database/challenges.js';
+import { getUser, storeRegistration } from '../../../../server/database/user.js';
 import logger from '../../../../server/utils/logger.js';
+
+const error = ({ message, errorCode }) =>
+  new Response(JSON.stringify({ error: message, errorCode }), {
+    status: 400,
+    headers: { 'Content-Type': 'application/json' }
+  });
 
 const POST = async ({ request }) => {
   const { username, ...registration } = await request.json();
 
-  const user = await getUser(username);
-
-  const currentOptions = await getRegistrationOptions(username);
-
   try {
+    const user = await getUser(username);
+
+    if (!user) {
+      return error({ message: 'Username not found', errorCode: 'USER_NOT_FOUND' });
+    }
+
+    // the ceremony is identified by the challenge the authenticator signed, so parallel
+    // ceremonies for the same user cannot invalidate each other
+    const { challenge } = decodeClientDataJSON(registration.response.clientDataJSON);
+    const currentOptions = await claimChallenge({ username: user.name, challenge, type: 'registration' });
+
+    if (!currentOptions) {
+      return error({ message: 'Challenge not found', errorCode: 'CHALLENGE_NOT_FOUND' });
+    }
+
     const verification = await verifyRegistrationResponse({
       response: registration,
       expectedChallenge: currentOptions.challenge,
@@ -43,15 +62,10 @@ const POST = async ({ request }) => {
         ]
       ]
     });
-  } catch (error) {
-    logger.error(error);
+  } catch (registrationError) {
+    logger.error(registrationError);
 
-    return new Response(JSON.stringify({ error: error.message }), {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      status: 400
-    });
+    return error({ message: registrationError.message, errorCode: 'REGISTRATION_FAILED' });
   }
 };
 
