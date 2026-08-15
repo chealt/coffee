@@ -560,8 +560,6 @@ sup {
     animation: none;
   }
 
-  /* a single texture with no blending: cross-fading the pair costs a
-     plus-lighter blend and an object-fit resample on every frame */
   ::view-transition-old(*) {
     display: none;
   }

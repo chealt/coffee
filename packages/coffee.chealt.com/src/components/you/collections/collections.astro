@@ -102,7 +102,11 @@ const { collections, collectionsControls, shouldAuthenticate, username } =
                             srcset={cover.srcMedium}
                             media="(max-width: 1800px)"
                           />
-                          <img src={cover.src} loading="lazy" />
+                          <img
+                            src={cover.src}
+                            loading="lazy"
+                            data-view-transition-name="collectionItemCoverImage"
+                          />
                         </picture>
                         {(details?.isStillFrozen && (
                           <div class="tag bottom frozen">
