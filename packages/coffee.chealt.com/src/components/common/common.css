@@ -55,6 +55,9 @@
   --animation-duration: 1s;
   --animation-duration--slow: 2s;
   --animation-duration--very-slow: 5s;
+
+  --view-transition-duration: 0.3s;
+  --view-transition-easing: cubic-bezier(0.2, 0, 0, 1);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -537,14 +540,31 @@ sup {
   }
 }
 
+@keyframes view-transition-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes view-transition-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   @view-transition {
     navigation: auto;
   }
 
+  /* only the named pairs animate, so the full page never gets snapshotted */
+  :root {
+    view-transition-name: none;
+  }
+
   ::view-transition-group(*) {
-    animation-duration: var(--animation-duration--very-fast);
-    animation-timing-function: ease-in-out;
+    animation-duration: var(--view-transition-duration);
+    animation-timing-function: var(--view-transition-easing);
   }
 
   ::view-transition-old(*),
@@ -554,5 +574,27 @@ sup {
 
   ::view-transition-old(*) {
     display: none;
+  }
+
+  /* the cover image morphs between two very different aspect ratios: cover
+     keeps it from squashing, and the cross-fade hides the size difference */
+  ::view-transition-old(collectionItemCoverImage),
+  ::view-transition-new(collectionItemCoverImage) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    animation-duration: var(--view-transition-duration);
+    animation-timing-function: var(--view-transition-easing);
+    animation-fill-mode: both;
+  }
+
+  ::view-transition-old(collectionItemCoverImage) {
+    display: block;
+    animation-name: view-transition-fade-out;
+  }
+
+  ::view-transition-new(collectionItemCoverImage) {
+    animation-name: view-transition-fade-in;
   }
 }
