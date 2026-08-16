@@ -35,7 +35,8 @@ const { shouldAuthenticate } = Astro.locals;
   <Button
     id="back-button"
     onclick="history.back(); return false;"
-    class="small bordered"
+    class="small bordered fade-in"
+    data-hide-while-transitioning
   >
     <Icon type="back" class="icon-only" />
     <span class="visually-hidden"

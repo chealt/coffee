@@ -56,6 +56,13 @@ const isProd = import.meta.env.PROD;
             }
           }
         } else if (event.viewTransition && activation?.from) {
+          // hide elements while in transition
+          const elementsToHide = document.querySelectorAll(
+            "[data-hide-while-transitioning]",
+          );
+
+          elementsToHide.forEach((e) => e.classList.add("hidden"));
+
           const previousUrl = activation.from.url;
           const matches = previousUrl?.match(
             /\/collections\/([0-9a-zA-Z-]*)\/items\/([0-9a-zA-Z-]*)\//,
@@ -84,6 +91,13 @@ const isProd = import.meta.env.PROD;
               });
             }
           }
+
+          // reveal elements that were hidden while in transition
+          event.viewTransition.finished.then(() => {
+            document
+              .querySelectorAll("[data-hide-while-transitioning]")
+              .forEach((e) => e.classList.remove("hidden"));
+          });
         }
       });
     </script>

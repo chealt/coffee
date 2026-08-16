@@ -274,7 +274,7 @@ sup {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .list-container {
@@ -534,6 +534,21 @@ sup {
 
   .forty {
     width: 40%;
+  }
+}
+
+.fade-in:not(.hidden) {
+  display: block;
+  opacity: 1;
+  translate: 0 0px;
+  transition-property: display opacity;
+  transition-duration: 0.4s;
+  transition-timing-function: ease-in-out;
+  transition-behavior: allow-discrete;
+
+  @starting-style {
+    opacity: 0;
+    translate: 0 40px;
   }
 }
 
