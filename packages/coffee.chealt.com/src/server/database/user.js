@@ -59,6 +59,19 @@ const storeRegistration = ({
   });
 };
 
+// public_key is a blob, but some rows hold the key as a hex string instead
+const toPublicKeyBytes = (publicKey) => {
+  if (typeof publicKey !== 'string') {
+    return new Uint8Array(publicKey);
+  }
+
+  if (!/^([\da-f]{2})+$/i.test(publicKey)) {
+    throw new Error('Passkey public key is neither a blob nor a hex string');
+  }
+
+  return Uint8Array.from(publicKey.match(/../g), (byte) => parseInt(byte, 16));
+};
+
 const getPasskey = async ({ username, credentialId }) => {
   const client = getClient(username);
   const user = await getUser(username);
@@ -68,7 +81,13 @@ const getPasskey = async ({ username, credentialId }) => {
     args: { id: user.id, credential_id: credentialId }
   });
 
-  return rows[0];
+  const passkey = rows[0];
+
+  if (!passkey) {
+    return undefined;
+  }
+
+  return { ...passkey, public_key: toPublicKeyBytes(passkey.public_key) };
 };
 
 const deletePasskey = ({ user, credentialId }) => {

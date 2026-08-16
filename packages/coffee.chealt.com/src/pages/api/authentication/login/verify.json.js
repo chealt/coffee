@@ -66,7 +66,7 @@ const POST = async ({ request }) => {
       expectedRPID: relyingPartyID,
       credential: {
         id: passkey.credential_id,
-        publicKey: new Uint8Array(passkey.public_key),
+        publicKey: passkey.public_key,
         counter: passkey.counter,
         transports: passkey.transports.split(',')
       }
