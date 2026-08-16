@@ -38,67 +38,49 @@ const isProd = import.meta.env.PROD;
     <title>{title ? `${title} | ${t("title")}` : t("title")}</title>
     <script is:inline>
       window.addEventListener("pagereveal", (event) => {
-        const { activation } = window.navigation;
+        const activation = window.navigation?.activation;
+        const viewTransition = event.viewTransition;
 
-        if (activation?.navigationType === "traverse") {
-          const viewTransitionName =
-            sessionStorage.getItem("viewTransitionName");
-
-          if (viewTransitionName) {
-            /** @type {HTMLElement | null} */
-            const element = document.querySelector(
-              `[data-view-transition-name="${viewTransitionName}"]`,
-            );
-
-            if (element) {
-              element.style.viewTransitionName = viewTransitionName;
-              sessionStorage.removeItem("viewTransitionName");
-            }
-          }
-        } else if (event.viewTransition && activation?.from) {
-          // hide elements while in transition
-          const elementsToHide = document.querySelectorAll(
-            "[data-hide-while-transitioning]",
-          );
-
-          elementsToHide.forEach((e) => e.classList.add("hidden"));
-
-          const previousUrl = activation.from.url;
-          const matches = previousUrl?.match(
-            /\/collections\/([0-9a-zA-Z-]*)\/items\/([0-9a-zA-Z-]*)\//,
-          );
-
-          if (previousUrl && matches) {
-            const collectionId = matches[1];
-            const itemId = matches[2];
-
-            /** @type {HTMLElement | null} */
-            const transitionTargetElement = document.querySelector(
-              `[data-selector="collection-id-${collectionId}"] #item-id-${itemId} img`,
-            );
-
-            if (transitionTargetElement) {
-              transitionTargetElement.scrollIntoView({
-                behavior: "instant",
-                block: "center",
-              });
-
-              transitionTargetElement.style.viewTransitionName =
-                "collectionItemCoverImage";
-
-              event.viewTransition.finished.then(() => {
-                transitionTargetElement.style.viewTransitionName = "none";
-              });
-            }
-          }
-
-          // reveal elements that were hidden while in transition
-          event.viewTransition.finished.then(() => {
-            document
-              .querySelectorAll("[data-hide-while-transitioning]")
-              .forEach((e) => e.classList.remove("hidden"));
-          });
+        if (!viewTransition || !activation?.from) {
+          return;
         }
+
+        // hide elements while in transition
+        document
+          .querySelectorAll("[data-hide-while-transitioning]")
+          .forEach((e) => e.classList.add("hidden"));
+
+        // reveal elements that were hidden while in transition
+        viewTransition.finished.then(() => {
+          document
+            .querySelectorAll("[data-hide-while-transitioning]")
+            .forEach((e) => e.classList.remove("hidden"));
+        });
+
+        // the element to animate is the one linking to the page we came from
+        const previousPath = new URL(activation.from.url).pathname;
+        const link = [...document.querySelectorAll("a[href]")].find(
+          (a) => new URL(a.href).pathname === previousPath,
+        );
+
+        /** @type {HTMLElement | null} */
+        const element = link?.querySelector("[data-view-transition-name]");
+        const viewTransitionName = element?.dataset.viewTransitionName;
+
+        if (!element || !viewTransitionName) {
+          return;
+        }
+
+        // traversals restore the scroll position on their own
+        if (activation.navigationType !== "traverse") {
+          element.scrollIntoView({ behavior: "instant", block: "center" });
+        }
+
+        element.style.viewTransitionName = viewTransitionName;
+
+        viewTransition.finished.then(() => {
+          element.style.viewTransitionName = "none";
+        });
       });
     </script>
   </head>

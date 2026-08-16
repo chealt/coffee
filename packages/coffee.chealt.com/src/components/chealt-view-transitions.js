@@ -6,10 +6,12 @@ class ChealtViewTransitions extends HTMLElement {
 
     elements.forEach((element) => {
       element.addEventListener('click', () => {
-        const viewTransitionName = element.getAttribute('data-view-transition-name');
+        elements.forEach((other) => {
+          other.style.viewTransitionName = 'none';
+        });
 
-        element.style.viewTransitionName = viewTransitionName;
-        sessionStorage.setItem('viewTransitionName', viewTransitionName);
+        // name the element so it is captured in the outgoing page snapshot
+        element.style.viewTransitionName = element.getAttribute('data-view-transition-name');
       });
     });
   }
