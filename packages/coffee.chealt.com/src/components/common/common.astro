@@ -83,6 +83,15 @@ const isProd = import.meta.env.PROD;
         });
       });
     </script>
+    <script is:inline>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker?.addEventListener("message", (event) => {
+          if (event.data?.action === "reload-page") {
+            window.location.reload();
+          }
+        });
+      }
+    </script>
   </head>
   <body>
     <chealt-view-transitions>

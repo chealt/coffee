@@ -100,12 +100,21 @@ const servePageFromCache = async (event) => {
 
   console.info('SW: Serving page from cache!', event.request.url);
 
-  // refresh in the background, the fresh version is served on the next navigation
-  const freshResponse = await fetchAndCachePage(event.request);
+  event.waitUntil(
+    // refresh in the background, the fresh version is served on the next navigation
+    fetchAndCachePage(event.request).then(async (freshResponse) => {
+      // remove page from cache when the user is unauthorized
+      if (freshResponse.status === 401) {
+        const cache = await caches.open(pagesCacheName);
 
-  if (freshResponse.status === 401) {
-    return freshResponse;
-  }
+        await cache.delete(event.request);
+
+        const client = await getClient(event.clientId);
+
+        return client?.postMessage({ action: 'reload-page' });
+      }
+    })
+  );
 
   return cachedResponse;
 };
