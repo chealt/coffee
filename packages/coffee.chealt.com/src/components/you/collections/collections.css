@@ -38,7 +38,7 @@ body {
 
 .collections-page .title {
   position: relative;
-  z-index: var(--z-index--s);
+  z-index: var(--z-index--m);
   background-color: var(--color-background);
 }
 
@@ -92,7 +92,7 @@ header.title {
   position: absolute;
   width: 100%;
   max-width: var(--max-content-width);
-  z-index: var(--z-index--xs);
+  z-index: var(--z-index--s);
   transform: translateY(-100%);
 
   @media (prefers-reduced-motion: no-preference) {
