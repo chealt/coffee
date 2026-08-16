@@ -63,7 +63,7 @@ const isProd = import.meta.env.PROD;
           (a) => new URL(a.href).pathname === previousPath,
         );
 
-        /** @type {HTMLElement | null} */
+        /** @type {HTMLElement | undefined | null} */
         const element = link?.querySelector("[data-view-transition-name]");
         const viewTransitionName = element?.dataset.viewTransitionName;
 

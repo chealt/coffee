@@ -11,7 +11,7 @@ class ChealtViewTransitions extends HTMLElement {
         });
 
         // name the element so it is captured in the outgoing page snapshot
-        element.style.viewTransitionName = element.getAttribute('data-view-transition-name');
+        element.style.viewTransitionName = element.dataset.viewTransitionName;
       });
     });
   }
