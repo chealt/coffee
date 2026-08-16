@@ -1,13 +1,19 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
 
-import Button from "../../form/button/button.astro";
-import Checkbox from "../../form/checkbox/checkbox.astro";
+import brewingMethods from "@data/brewingMethods.json" with { type: "json" };
+import roasters from "@data/roasters.json" with { type: "json" };
+
 import CoffeeImageUpload from "@components/common/coffee-image-upload.astro";
-import Common from "../../common/common.astro";
-import Dialog from "../../dialog/dialog.astro";
-import Form from "../../form/form.astro";
-import Icon from "../../icon/icon.astro";
+import Common from "@components/common/common.astro";
+import Dialog from "@components/dialog/dialog.astro";
+import Button from "@components/form/button/button.astro";
+import Checkbox from "@components/form/checkbox/checkbox.astro";
+import Form from "@components/form/form.astro";
+import Icon from "@components/icon/icon.astro";
+import { getTasteNoteGroupByNoteId } from "@components/taste-notes/utils.js";
+
+import Filters from "./filters/index.astro";
 import Header from "./header/header.astro";
 import NewCollection from "./new-collection.astro";
 import NewItem from "./new-item.astro";
@@ -25,6 +31,55 @@ const t = await getTranslator({
 
 const { collections, collectionsControls, shouldAuthenticate, username } =
   Astro.locals;
+
+const {
+  brewingMethodId,
+  brewingMethodGroupId,
+  countryId,
+  originCountryId,
+  processingMethodId,
+  roasterId,
+  tasteNoteGroupId,
+  tasteNoteId,
+  varietyId,
+} = Astro.props;
+
+const brewingMethodIdsInGroup =
+  brewingMethodGroupId &&
+  brewingMethods
+    .filter(
+      ({ brewing_method_group_id }) =>
+        !brewing_method_group_id ||
+        brewing_method_group_id === brewingMethodGroupId,
+    )
+    .map(({ brewing_method_id }) => String(brewing_method_id));
+
+const showCoffee = ({ details }) => {
+  if (!details) {
+    return true;
+  }
+
+  return (
+    (!brewingMethodId || String(brewingMethodId) === details.brewingMethod) &&
+    (!brewingMethodGroupId ||
+      brewingMethodIdsInGroup.includes(details.brewingMethod)) &&
+    (!countryId ||
+      roasters.find(({ id }) => String(id) === details.roaster)?.country_id ===
+        countryId) &&
+    (!originCountryId || String(originCountryId) === details.originCountry) &&
+    (!processingMethodId ||
+      String(processingMethodId) === details.processingMethod) &&
+    (!roasterId || String(roasterId) === details.roaster) &&
+    (!tasteNoteGroupId ||
+      details["tasteNoteIds[]"]?.some(
+        (id) =>
+          getTasteNoteGroupByNoteId(Number(id))?.taste_note_group_id ===
+          tasteNoteGroupId,
+      )) &&
+    (!varietyId ||
+      details["varieties[]"]?.some((id) => String(varietyId) === id))
+  );
+};
 ---
 
 <Common
@@ -63,6 +118,17 @@ const { collections, collectionsControls, shouldAuthenticate, username } =
       </Form>
     </div>
   </chealt-toggle>
+  <Filters
+    brewingMethodId={brewingMethodId}
+    brewingMethodGroupId={brewingMethodGroupId}
+    countryId={countryId}
+    originCountryId={originCountryId}
+    processingMethodId={processingMethodId}
+    roasterId={roasterId}
+    tasteNoteGroupId={tasteNoteGroupId}
+    tasteNoteId={tasteNoteId}
+    varietyId={varietyId}
+  />
   <coffee-collection>
     <ul
       class="collections-list"
@@ -85,45 +151,47 @@ const { collections, collectionsControls, shouldAuthenticate, username } =
               />
               <ul class="tiles items-list">
                 {items.length ? (
-                  items.map(({ id: itemId, cover, details }) => (
-                    <li>
-                      <a
-                        href={`${getRelativeLocaleUrl(
-                          Astro.currentLocale,
-                          `/you/collections/${collectionId}/items/${itemId}`,
-                        )}?from=collections`}
-                        id={`item-id-${itemId}`}
-                      >
-                        <picture>
-                          <source
-                            srcset={cover.srcSmall}
-                            media="(max-width: 1023px)"
-                          />
-                          <source
-                            srcset={cover.srcMedium}
-                            media="(max-width: 1800px)"
-                          />
-                          <img
-                            src={cover.src}
-                            loading="lazy"
-                            data-view-transition-name="collectionItemCoverImage"
-                          />
-                        </picture>
-                        {(details?.isStillFrozen && (
-                          <div class="tag bottom frozen">
-                            <Icon class="small" type="snowflake" />
-                            <span>{details.daysFrozen}</span>
-                          </div>
-                        )) ||
-                          (details?.daysSinceRoasting && (
-                            <div class="tag bottom">
-                              <Icon class="small" type="alarm" />
-                              <span>{details.daysSinceRoasting}</span>
+                  items
+                    .filter(showCoffee)
+                    .map(({ id: itemId, cover, details }) => (
+                      <li>
+                        <a
+                          href={`${getRelativeLocaleUrl(
+                            Astro.currentLocale,
+                            `/you/collections/${collectionId}/items/${itemId}`,
+                          )}`}
+                          id={`item-id-${itemId}`}
+                        >
+                          <picture>
+                            <source
+                              srcset={cover.srcSmall}
+                              media="(max-width: 1023px)"
+                            />
+                            <source
+                              srcset={cover.srcMedium}
+                              media="(max-width: 1800px)"
+                            />
+                            <img
+                              src={cover.src}
+                              loading="lazy"
+                              data-view-transition-name="collectionItemCoverImage"
+                            />
+                          </picture>
+                          {(details?.isStillFrozen && (
+                            <div class="tag bottom frozen">
+                              <Icon class="small" type="snowflake" />
+                              <span>{details.daysFrozen}</span>
                             </div>
-                          ))}
-                      </a>
-                    </li>
-                  ))
+                          )) ||
+                            (details?.daysSinceRoasting && (
+                              <div class="tag bottom">
+                                <Icon class="small" type="alarm" />
+                                <span>{details.daysSinceRoasting}</span>
+                              </div>
+                            ))}
+                        </a>
+                      </li>
+                    ))
                 ) : (
                   <NewItem collectionId={collectionId} />
                 )}

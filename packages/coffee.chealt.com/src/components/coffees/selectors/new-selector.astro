@@ -1,7 +1,9 @@
 ---
+import Button from "@components/form/button/button.astro";
+import Dialog from "@components/dialog/dialog.astro";
+import Icon from "@components/icon/icon.astro";
+
 import { getTranslator } from "@components/i18n/t.js";
-import Button from "../../form/button/button.astro";
-import Dialog from "../../dialog/dialog.astro";
 
 import "./new-selector.css";
 
@@ -22,6 +24,7 @@ const types = [
   "variety",
 ];
 const { selected = {} } = Astro.props;
+const nonSelected = !Object.values(selected).some((value) => Boolean(value));
 const availableTypes = types.filter(
   (type) =>
     !selected[type] &&
@@ -34,10 +37,17 @@ const availableTypes = types.filter(
   availableTypes.length > 0 ? (
     <Fragment>
       <Button
-        class="new-selector-button ghost inline"
+        class="new-selector-button ghost small column inline"
         data-dialog-id="new-selector"
       >
-        &nbsp;& ...
+        {nonSelected ? (
+          <Fragment>
+            <Icon type="search" />
+            {t("filter")}
+          </Fragment>
+        ) : (
+          <Fragment>&nbsp;& ...</Fragment>
+        )}
       </Button>
       <Dialog class="drawer" id="new-selector">
         <ul>

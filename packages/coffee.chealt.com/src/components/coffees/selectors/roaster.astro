@@ -1,12 +1,13 @@
 ---
-import roasters from '../../../../data/roasters.json' with { type: 'json' };
+import roasters from "../../../../data/roasters.json" with { type: "json" };
 
-import Button from '../../form/button/button.astro';
-import Dialog from '../../dialog/dialog.astro';
+import Button from "../../form/button/button.astro";
+import Dialog from "../../dialog/dialog.astro";
 
-import { getSafeUrl } from '../../utils/url.js';
+import { getSafeUrl } from "../../utils/url.js";
 
 const {
+  urlPrefix,
   brewingMethod,
   brewingMethodGroup,
   country,
@@ -16,7 +17,7 @@ const {
   roasterId,
   tasteNote,
   tasteNoteGroup,
-  variety
+  variety,
 } = Astro.props;
 ---
 
@@ -35,6 +36,7 @@ const {
           <Button
             href={getSafeUrl({
               locale: Astro.currentLocale,
+              urlPrefix,
               brewingMethod: brewingMethod?.name,
               brewingMethodGroup: brewingMethodGroup?.name,
               country: country?.name,
@@ -43,9 +45,9 @@ const {
               roaster: roasterId === id ? undefined : name,
               tasteNote: tasteNote?.name,
               tasteNoteGroup: tasteNoteGroup?.name,
-              variety: variety?.name
+              variety: variety?.name,
             })}
-            class={id === roasterId ? 'primary' : ''}
+            class={id === roasterId ? "primary" : ""}
           >
             {name}
           </Button>

@@ -4,6 +4,7 @@ import { encodeSafeURL } from '../../utils/string.js';
 
 const getSafeUrl = ({
   locale,
+  urlPrefix,
   brewingMethod,
   brewingMethodGroup,
   country,
@@ -16,7 +17,7 @@ const getSafeUrl = ({
 }) =>
   getRelativeLocaleUrl(
     locale,
-    `${brewingMethod ? `/brewing-methods/${encodeSafeURL(brewingMethod)}` : ''}${brewingMethodGroup ? `/brewing-method-groups/${encodeSafeURL(brewingMethodGroup)}` : ''}${country ? `/countries/${encodeSafeURL(country)}` : ''}${originCountry ? `/origin-countries/${encodeSafeURL(originCountry)}` : ''}${processingMethod ? `/processing-methods/${encodeSafeURL(processingMethod)}` : ''}${roaster ? `/roasters/${encodeSafeURL(roaster)}` : ''}${tasteNote ? `/taste-notes/${encodeSafeURL(tasteNote)}` : ''}${tasteNoteGroup ? `/taste-note-groups/${encodeSafeURL(tasteNoteGroup)}` : ''}${variety ? `/varieties/${variety.toLowerCase()}` : ''}`
+    `${urlPrefix || ''}${brewingMethod ? `/brewing-methods/${encodeSafeURL(brewingMethod)}` : ''}${brewingMethodGroup ? `/brewing-method-groups/${encodeSafeURL(brewingMethodGroup)}` : ''}${country ? `/countries/${encodeSafeURL(country)}` : ''}${originCountry ? `/origin-countries/${encodeSafeURL(originCountry)}` : ''}${processingMethod ? `/processing-methods/${encodeSafeURL(processingMethod)}` : ''}${roaster ? `/roasters/${encodeSafeURL(roaster)}` : ''}${tasteNote ? `/taste-notes/${encodeSafeURL(tasteNote)}` : ''}${tasteNoteGroup ? `/taste-note-groups/${encodeSafeURL(tasteNoteGroup)}` : ''}${variety ? `/varieties/${variety.toLowerCase()}` : ''}`
   );
 
 const getSafeUrlWithStats = ({

@@ -172,7 +172,7 @@ for (const coffee of allCoffees) {
 
   if (
     countryId &&
-    roasters.find((r) => r.id === roaster_id).country_id !== countryId
+    roasters.find((r) => r.id === roaster_id)?.country_id !== countryId
   ) {
     continue;
   }
@@ -209,7 +209,7 @@ for (const coffee of allCoffees) {
       .filter(({ coffee_id }) => coffee_id === id)
       .some(
         ({ taste_note_id }) =>
-          getTasteNoteGroupByNoteId(taste_note_id).taste_note_group_id ===
+          getTasteNoteGroupByNoteId(taste_note_id)?.taste_note_group_id ===
           tasteNoteGroupId,
       )
   ) {

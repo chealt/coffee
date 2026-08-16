@@ -37,7 +37,7 @@ const convertToUSD = ({ currency, price }) => {
   if (!exchangeRate) {
     logger.error(new Error(`No exchange rate found for currency ${currency}`));
 
-    return undefined;
+    return 0;
   }
 
   return price / exchangeRate;

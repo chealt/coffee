@@ -180,7 +180,8 @@ const getCollections = async (user) => {
           details: {
             daysFrozen,
             daysSinceRoasting,
-            isStillFrozen
+            isStillFrozen,
+            ...details
           },
           images
         };

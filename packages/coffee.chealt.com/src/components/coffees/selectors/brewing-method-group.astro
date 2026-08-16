@@ -1,12 +1,13 @@
 ---
-import brewingMethodGroups from '../../../../data/brewingMethodGroups.json' with { type: 'json' };
+import brewingMethodGroups from "../../../../data/brewingMethodGroups.json" with { type: "json" };
 
-import Button from '../../form/button/button.astro';
-import Dialog from '../../dialog/dialog.astro';
+import Button from "../../form/button/button.astro";
+import Dialog from "../../dialog/dialog.astro";
 
-import { getSafeUrl } from '../../utils/url.js';
+import { getSafeUrl } from "../../utils/url.js";
 
 const {
+  urlPrefix,
   brewingMethod,
   brewingMethodGroup,
   brewingMethodGroupId,
@@ -16,13 +17,16 @@ const {
   roaster,
   tasteNote,
   tasteNoteGroup,
-  variety
+  variety,
 } = Astro.props;
 ---
 
 {
   brewingMethodGroupId && (
-    <Button class="filter-dialog-title ghost inline" data-dialog-id="brewingMethodGroup">
+    <Button
+      class="filter-dialog-title ghost inline"
+      data-dialog-id="brewingMethodGroup"
+    >
       {brewingMethodGroup.name}
     </Button>
   )
@@ -35,17 +39,19 @@ const {
           <Button
             href={getSafeUrl({
               locale: Astro.currentLocale,
+              urlPrefix,
               brewingMethod: brewingMethod?.name,
-              brewingMethodGroup: brewingMethodGroupId === id ? undefined : name,
+              brewingMethodGroup:
+                brewingMethodGroupId === id ? undefined : name,
               country: country?.name,
               originCountry: originCountry?.name,
               processingMethod: processingMethod?.name,
               roaster: roaster?.name,
               tasteNote: tasteNote?.name,
               tasteNoteGroup: tasteNoteGroup?.name,
-              variety: variety?.name
+              variety: variety?.name,
             })}
-            class={brewingMethodGroupId === id ? 'primary' : ''}
+            class={brewingMethodGroupId === id ? "primary" : ""}
           >
             {name}
           </Button>

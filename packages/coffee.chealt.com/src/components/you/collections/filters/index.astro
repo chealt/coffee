@@ -1,0 +1,261 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+import countries from "@data/countries.json" with { type: "json" };
+import brewingMethods from "@data/brewingMethods.json" with { type: "json" };
+import brewingMethodGroups from "@data/brewingMethodGroups.json" with { type: "json" };
+import originCountries from "@data/originCountries.json" with { type: "json" };
+import processingMethods from "@data/processingMethods.json" with { type: "json" };
+import roasters from "@data/roasters.json" with { type: "json" };
+import tasteNotes from "@data/tasteNotes.json" with { type: "json" };
+import tasteNoteGroups from "@data/tasteNoteGroups.json" with { type: "json" };
+import varieties from "@data/varieties.json" with { type: "json" };
+import supportedLanguages from "@data/supportedLanguages.json" with { type: "json" };
+
+import BrewingMethodGroupSelector from "@components/coffees/selectors/brewing-method-group.astro";
+import BrewingMethodSelector from "@components/coffees/selectors/brewing-method.astro";
+import Button from "@components/form/button/button.astro";
+import CountrySelector from "@components/coffees/selectors/country.astro";
+import Icon from "@components/icon/icon.astro";
+import NewSelector from "@components/coffees/selectors/new-selector.astro";
+import OriginCountrySelector from "@components/coffees/selectors/origin-country.astro";
+import ProcessingMethodSelector from "@components/coffees/selectors/processing-method.astro";
+import RoasterSelector from "@components/coffees/selectors/roaster.astro";
+import TasteNoteGroupSelector from "@components/coffees/selectors/taste-note-group.astro";
+import VarietySelector from "@components/coffees/selectors/variety.astro";
+
+import "./index.css";
+
+const {
+  brewingMethodId,
+  brewingMethodGroupId,
+  countryId,
+  originCountryId,
+  processingMethodId,
+  roasterId,
+  tasteNoteGroupId,
+  tasteNoteId,
+  varietyId,
+} = Astro.props;
+
+const defaultLocale =
+  supportedLanguages.find(({ isDefault }) => isDefault)?.locale || "en";
+
+const isFiltered =
+  brewingMethodId ||
+  brewingMethodGroupId ||
+  countryId ||
+  originCountryId ||
+  processingMethodId ||
+  roasterId ||
+  tasteNoteGroupId ||
+  tasteNoteId ||
+  varietyId;
+
+const brewingMethodGroup =
+  brewingMethodGroupId &&
+  brewingMethodGroups.find(({ id }) => id === brewingMethodGroupId);
+const brewingMethod =
+  brewingMethodId &&
+  (brewingMethods.find(
+    ({ brewing_method_id, language_code }) =>
+      brewing_method_id === brewingMethodId &&
+      language_code === Astro.currentLocale,
+  ) ||
+    brewingMethods.find(
+      ({ brewing_method_id, language_code }) =>
+        brewing_method_id === brewingMethodId &&
+        language_code === defaultLocale,
+    ));
+const country =
+  countryId &&
+  (countries.find(
+    ({ country_id, language_code }) =>
+      country_id === countryId && language_code === Astro.currentLocale,
+  ) ||
+    countries.find(
+      ({ country_id, language_code }) =>
+        country_id === countryId && language_code === defaultLocale,
+    ));
+
+const originCountry =
+  originCountryId &&
+  (originCountries.find(
+    ({ origin_country_id, language_code }) =>
+      origin_country_id === originCountryId &&
+      language_code === Astro.currentLocale,
+  ) ||
+    originCountries.find(
+      ({ origin_country_id, language_code }) =>
+        origin_country_id === originCountryId &&
+        language_code === defaultLocale,
+    ));
+const processingMethod =
+  processingMethodId &&
+  (processingMethods.find(
+    ({ processing_method_id, language_code }) =>
+      processing_method_id === processingMethodId &&
+      language_code === Astro.currentLocale,
+  ) ||
+    processingMethods.find(
+      ({ processing_method_id, language_code }) =>
+        processing_method_id === processingMethodId &&
+        language_code === defaultLocale,
+    ));
+const roaster = roasterId && roasters.find(({ id }) => id === roasterId);
+const tasteNote =
+  tasteNoteId &&
+  (tasteNotes.find(
+    ({ taste_note_id, language_code }) =>
+      taste_note_id === tasteNoteId && language_code === Astro.currentLocale,
+  ) ||
+    tasteNotes.find(
+      ({ taste_note_id, language_code }) =>
+        taste_note_id === tasteNoteId && language_code === defaultLocale,
+    ));
+const tasteNoteGroup =
+  tasteNoteGroupId &&
+  (tasteNoteGroups.find(
+    ({ taste_note_group_id, language_code }) =>
+      taste_note_group_id === tasteNoteGroupId &&
+      language_code === Astro.currentLocale,
+  ) ||
+    tasteNoteGroups.find(
+      ({ taste_note_group_id, language_code }) =>
+        taste_note_group_id === tasteNoteGroupId &&
+        language_code === defaultLocale,
+    ));
+const variety = varietyId && varieties.find(({ id }) => id === varietyId);
+---
+
+<div class="filters-container">
+  <div class="filters">
+    <BrewingMethodSelector
+      urlPrefix="/you/collections"
+      brewingMethod={brewingMethod}
+      brewingMethodId={brewingMethodId}
+      brewingMethodGroup={brewingMethodGroup}
+      country={country}
+      originCountry={originCountry}
+      processingMethod={processingMethod}
+      roaster={roaster}
+      tasteNote={tasteNote}
+      tasteNoteGroup={tasteNoteGroup}
+      variety={variety}
+    />
+    <BrewingMethodGroupSelector
+      urlPrefix="/you/collections"
+      brewingMethod={brewingMethod}
+      brewingMethodGroup={brewingMethodGroup}
+      brewingMethodGroupId={brewingMethodGroupId}
+      country={country}
+      originCountry={originCountry}
+      processingMethod={processingMethod}
+      roaster={roaster}
+      tasteNote={tasteNote}
+      tasteNoteGroup={tasteNoteGroup}
+      variety={variety}
+    />
+    <CountrySelector
+      urlPrefix="/you/collections"
+      country={country}
+      countryId={countryId}
+      brewingMethod={brewingMethod}
+      brewingMethodGroup={brewingMethodGroup}
+      originCountry={originCountry}
+      processingMethod={processingMethod}
+      roaster={roaster}
+      tasteNote={tasteNote}
+      tasteNoteGroup={tasteNoteGroup}
+      variety={variety}
+    />
+    <OriginCountrySelector
+      urlPrefix="/you/collections"
+      brewingMethod={brewingMethod}
+      brewingMethodGroup={brewingMethodGroup}
+      country={country}
+      originCountry={originCountry}
+      originCountryId={originCountryId}
+      processingMethod={processingMethod}
+      roaster={roaster}
+      tasteNote={tasteNote}
+      tasteNoteGroup={tasteNoteGroup}
+      variety={variety}
+    />
+    <ProcessingMethodSelector
+      urlPrefix="/you/collections"
+      brewingMethod={brewingMethod}
+      brewingMethodGroup={brewingMethodGroup}
+      country={country}
+      originCountry={originCountry}
+      processingMethod={processingMethod}
+      processingMethodId={processingMethodId}
+      roaster={roaster}
+      tasteNote={tasteNote}
+      tasteNoteGroup={tasteNoteGroup}
+      variety={variety}
+    />
+    <RoasterSelector
+      urlPrefix="/you/collections"
+      brewingMethod={brewingMethod}
+      brewingMethodGroup={brewingMethodGroup}
+      country={country}
+      originCountry={originCountry}
+      roaster={roaster}
+      roasterId={roasterId}
+      processingMethod={processingMethod}
+      tasteNote={tasteNote}
+      tasteNoteGroup={tasteNoteGroup}
+      variety={variety}
+    />
+    <TasteNoteGroupSelector
+      urlPrefix="/you/collections"
+      brewingMethod={brewingMethod}
+      brewingMethodGroup={brewingMethodGroup}
+      country={country}
+      originCountry={originCountry}
+      processingMethod={processingMethod}
+      roaster={roaster}
+      tasteNote={tasteNote}
+      tasteNoteGroupId={tasteNoteGroupId}
+      tasteNoteGroup={tasteNoteGroup}
+      variety={variety}
+    />
+    <VarietySelector
+      urlPrefix="/you/collections"
+      brewingMethod={brewingMethod}
+      brewingMethodGroup={brewingMethodGroup}
+      country={country}
+      originCountry={originCountry}
+      processingMethod={processingMethod}
+      roaster={roaster}
+      tasteNote={tasteNote}
+      tasteNoteGroup={tasteNoteGroup}
+      variety={variety}
+      varietyId={varietyId}
+    />
+    <NewSelector
+      selected={{
+        brewingMethod: brewingMethod?.name,
+        brewingMethodGroup: brewingMethodGroup?.name,
+        country: country?.name,
+        originCountry: originCountry?.name,
+        processingMethod: processingMethod?.name,
+        roaster: roaster?.name,
+        tasteNote: tasteNote?.name,
+        tasteNoteGroup: tasteNoteGroup?.name,
+        variety: variety?.name,
+      }}
+    />
+  </div>
+  {
+    isFiltered && (
+      <Button
+        href={getRelativeLocaleUrl(Astro.currentLocale, "/you/collections")}
+        class="ghost inline small"
+      >
+        <Icon type="close" />
+      </Button>
+    )
+  }
+</div>

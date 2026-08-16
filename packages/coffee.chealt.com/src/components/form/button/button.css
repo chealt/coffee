@@ -35,6 +35,16 @@ a.button {
     border-radius: var(--border-radius);
   }
 
+  &.small {
+    padding: var(--gap--s);
+    font-size: 0.8rem;
+
+    .icon svg {
+      width: var(--icon-size--s);
+      height: var(--icon-size--s);
+    }
+  }
+
   &.inline {
     display: inline-block;
     padding: 0;
@@ -80,17 +90,6 @@ button[disabled],
 a.button[disabled] {
   pointer-events: none;
   opacity: 0.2;
-}
-
-button.small,
-a.button.small {
-  padding: var(--gap--s);
-  font-size: 0.8rem;
-
-  .icon svg {
-    width: var(--icon-size--s);
-    height: var(--icon-size--s);
-  }
 }
 
 button.high,

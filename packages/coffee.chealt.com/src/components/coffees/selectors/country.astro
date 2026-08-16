@@ -8,6 +8,7 @@ import Dialog from "../../dialog/dialog.astro";
 import { getSafeUrl } from "../../utils/url.js";
 
 const {
+  urlPrefix,
   brewingMethod,
   brewingMethodGroup,
   country,
@@ -49,6 +50,7 @@ if (!countriesLocale.length) {
           <Button
             href={getSafeUrl({
               locale: Astro.currentLocale,
+              urlPrefix,
               brewingMethod: brewingMethod?.name,
               brewingMethodGroup: brewingMethodGroup?.name,
               country: countryId === country_id ? undefined : name,
