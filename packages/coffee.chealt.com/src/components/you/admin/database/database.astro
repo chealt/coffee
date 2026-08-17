@@ -1,0 +1,81 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+import Button from "@components/form/button/button.astro";
+import Checkbox from "@components/form/checkbox/checkbox.astro";
+import Common from "@components/common/common.astro";
+import Icon from "@components/icon/icon.astro";
+
+import { capitalize } from "@utils/string.js";
+
+import "./database.css";
+
+import T from "@components/i18n/t.astro";
+import { getTranslator } from "@components/i18n/t.js";
+
+const t = await getTranslator({
+  filePath: "you/admin",
+  locale: Astro.currentLocale,
+});
+
+const { data, shouldAuthenticate } = Astro.locals;
+const { objectName } = Astro.props;
+---
+
+<Common
+  shouldAuthenticate={shouldAuthenticate}
+  redirectUrl={getRelativeLocaleUrl(Astro.currentLocale, "/you/admin/database")}
+>
+  <h1>
+    <span>{objectName}</span>
+    <Button class="primary rounded bordered floating right">
+      <Icon type="save" />
+    </Button>
+  </h1>
+  <div class="data-container">
+    <table class="data" cellspacing="0" cellpadding="0">
+      <thead>
+        {
+          data.schema.map(({ name, isReadonly }) => (
+            <th class={isReadonly ? "hidden" : undefined}>
+              {capitalize(name).replaceAll("_", " ")}
+            </th>
+          ))
+        }
+      </thead>
+      <tbody>
+        {
+          data.data.map((row) => (
+            <tr>
+              {data.schema.map(({ name, type, isReadonly }) => (
+                <td class={isReadonly ? "hidden" : undefined}>
+                  {(type === "INTEGER" && (
+                    <input
+                      type="number"
+                      value={row[name]}
+                      disabled={isReadonly}
+                    />
+                  )) ||
+                    (type === "TEXT" && (
+                      <input
+                        type="text"
+                        value={row[name]}
+                        disabled={isReadonly}
+                      />
+                    )) ||
+                    (type === "boolean" && (
+                      <Checkbox
+                        checked={row[name] === 1}
+                        disabled={isReadonly}
+                      />
+                    )) ||
+                    row[name]}
+                </td>
+              ))}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</Common>

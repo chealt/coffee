@@ -16,6 +16,7 @@ import logger from './server/utils/logger.js';
 import { setCollections, setCollectionItem } from './server/you/collections.js';
 import { setPasskeys } from './server/you/passkeys.js';
 import { setUnpublishedCoffees } from './server/you/admin.js';
+import { setDatabaseData } from './server/you/schema.js';
 
 const secretKey = new TextEncoder().encode(sessionSecret);
 
@@ -228,6 +229,10 @@ export const onRequest = async (context, next) => {
 
       if (params[0] === 'admin') {
         context.locals.unpublishedCoffees = await setUnpublishedCoffees();
+
+        if (params[1] === 'database') {
+          context.locals.data = await setDatabaseData({ tableName: params[2] });
+        }
       }
 
       setGetSignedUrl(context);

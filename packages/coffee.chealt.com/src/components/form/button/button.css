@@ -65,6 +65,7 @@ a.button {
 
   &.floating {
     position: fixed;
+    top: var(--gap);
     width: auto;
     z-index: var(--z-index--s);
     border-radius: 50%;
@@ -73,6 +74,7 @@ a.button {
     min-height: 0;
 
     &.bottom {
+      top: auto;
       bottom: var(--bottom-gap);
     }
 
