@@ -20,6 +20,7 @@ interface Collection {
   isBuiltIn: Boolean;
   items: CollectionItem[];
   name: string;
+  weight: number;
 }
 
 interface CollectionItem {

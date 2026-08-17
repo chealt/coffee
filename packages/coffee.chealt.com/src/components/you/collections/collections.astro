@@ -136,7 +136,7 @@ const showCoffee = ({ details }) => {
     >
       {
         collections?.map(
-          ({ id: collectionId, name, items, isBuiltIn }, index) => (
+          ({ id: collectionId, name, items, isBuiltIn, weight }, index) => (
             <li
               id={collectionId}
               data-selector={`collection-id-${collectionId}`}
@@ -148,6 +148,7 @@ const showCoffee = ({ details }) => {
                 isBuiltIn={isBuiltIn}
                 isFirst={index === 0}
                 isLast={index === collections.length - 1}
+                weight={weight}
               />
               <ul class="tiles items-list">
                 {items.length ? (

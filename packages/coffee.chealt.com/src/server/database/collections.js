@@ -144,17 +144,21 @@ const calculateDaysSinceRoasting = ({ brewDate, roastingDate, frozenDate, defros
   );
 };
 
+/** @type {(items: { details?: { weight?: number } }[]) => number} */
+const calculateCollectionWeight = (items) =>
+  items.reduce(
+    (totalWeight, item) => totalWeight + (!isNaN(Number(item.details?.weight)) ? Number(item.details?.weight) : 0),
+    0
+  );
+
 const getCollections = async (user) => {
   const collections = await queryCollections(user);
   const collectionItems = await queryCollectionItemsWithMainDetails(user);
   const collectionItemLinks = await queryCollectionItemLinks(user);
   const collectionItemImages = await queryCollectionItemImages(user);
 
-  return collections.map(({ id: collectionId, name, is_built_in: isBuiltIn }) => ({
-    id: collectionId,
-    name,
-    isBuiltIn: Boolean(isBuiltIn),
-    items: collectionItems
+  return collections.map(({ id: collectionId, name, is_built_in: isBuiltIn }) => {
+    const items = collectionItems
       .filter((item) =>
         collectionItemLinks.some((link) => link.collection_item_id === item.id && link.collection_id === collectionId)
       )
@@ -185,8 +189,17 @@ const getCollections = async (user) => {
           },
           images
         };
-      })
-  }));
+      });
+    const weight = calculateCollectionWeight(items);
+
+    return {
+      id: collectionId,
+      name,
+      isBuiltIn: Boolean(isBuiltIn),
+      items,
+      weight
+    };
+  });
 };
 
 const getExtractedDetails = (collectionItemImages) =>

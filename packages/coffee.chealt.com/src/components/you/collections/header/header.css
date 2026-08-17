@@ -2,8 +2,13 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-}
+  gap: var(--gap);
 
-.item-header coffee-collection-name {
-  flex-grow: 1;
+  & coffee-collection-name {
+    flex-grow: 1;
+  }
+
+  .weight {
+    opacity: 0.8;
+  }
 }

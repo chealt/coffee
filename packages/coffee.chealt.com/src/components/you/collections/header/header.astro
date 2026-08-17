@@ -1,16 +1,32 @@
 ---
-import Controls from './controls/controls.astro';
-import Name from './name.astro';
+import Controls from "./controls/controls.astro";
+import Name from "./name.astro";
 
-import './header.css';
+import "./header.css";
 
-const { collectionId, isBuiltIn, isFirst, isLast, name } = Astro.props;
+const { collectionId, isBuiltIn, isFirst, isLast, name, weight } = Astro.props;
 ---
 
 <coffee-collection-header data-collection-id={collectionId}>
   <header class="item-header">
     <Name isBuiltIn={isBuiltIn} name={name} collectionId={collectionId} />
-    <Controls collectionId={collectionId} isBuiltIn={isBuiltIn} isFirst={isFirst} isLast={isLast} />
+    {
+      weight && weight >= 100 && (
+        <span class="weight">
+          {`${Intl.NumberFormat(Astro.currentLocale, {
+            style: "unit",
+            unit: "kilogram",
+            unitDisplay: "short",
+          }).format(weight / 1000)}`}
+        </span>
+      )
+    }
+    <Controls
+      collectionId={collectionId}
+      isBuiltIn={isBuiltIn}
+      isFirst={isFirst}
+      isLast={isLast}
+    />
   </header>
 </coffee-collection-header>
 
