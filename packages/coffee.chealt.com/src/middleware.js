@@ -15,6 +15,7 @@ import { createRegistrationOptions } from './server/registration.js';
 import logger from './server/utils/logger.js';
 import { setCollections, setCollectionItem } from './server/you/collections.js';
 import { setPasskeys } from './server/you/passkeys.js';
+import { setUnpublishedCoffees } from './server/you/admin.js';
 
 const secretKey = new TextEncoder().encode(sessionSecret);
 
@@ -223,6 +224,10 @@ export const onRequest = async (context, next) => {
           statusText: 'Unauthorized',
           headers: response.headers
         });
+      }
+
+      if (params[0] === 'admin') {
+        context.locals.unpublishedCoffees = await setUnpublishedCoffees();
       }
 
       setGetSignedUrl(context);

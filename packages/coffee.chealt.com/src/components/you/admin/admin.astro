@@ -9,16 +9,19 @@ import Common from "@components/common/common.astro";
 import Form from "@components/form/form.astro";
 import Label from "@components/form/label/label.astro";
 import Select from "@components/form/select/select.astro";
+import Coffees from "@components/coffees/list.astro";
+
+import { capitalize } from "../../../utils/string.js";
+
 import T from "@components/i18n/t.astro";
 import { getTranslator } from "@components/i18n/t.js";
-import { capitalize } from "../../../utils/string.js";
 
 const t = await getTranslator({
   filePath: "you/admin",
   locale: Astro.currentLocale,
 });
 
-const { shouldAuthenticate } = Astro.locals;
+const { shouldAuthenticate, unpublishedCoffees } = Astro.locals;
 
 const roastersWithParser = roasters.filter(({ is_best }) => Boolean(is_best));
 ---
@@ -59,11 +62,27 @@ const roastersWithParser = roasters.filter(({ is_best }) => Boolean(is_best));
     </Form>
   </section>
   <section>
+    <h2>
+      <T namespace="you.admin.locales" key="unpublishedCoffees">
+        {t("unpublishedCoffees")}
+      </T>
+    </h2>
+    {unpublishedCoffees && <Coffees coffees={unpublishedCoffees} />}
+  </section>
+  <section>
     <APIButton apiEndpoint="/api/trigger-data-export.json">
       <Button class="bordered">
-        <T namespace="you.admin.locales" key="triggerDataExport">
-          {t("triggerDataExport")}
-        </T>
+        {
+          (unpublishedCoffees?.length && (
+            <T namespace="you.admin.locales" key="publish">
+              {t("publish")}
+            </T>
+          )) || (
+            <T namespace="you.admin.locales" key="triggerDataExport">
+              {t("triggerDataExport")}
+            </T>
+          )
+        }
       </Button>
     </APIButton>
   </section>

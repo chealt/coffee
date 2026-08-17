@@ -1,9 +1,11 @@
 {
   "en": {
+    "publish": "publish",
     "run": "run",
     "runParser": "Run roaster parser",
     "title": "Admin",
-    "triggerDataExport": "Run data export"
+    "triggerDataExport": "Run data export",
+    "unpublishedCoffees": "Unpublished coffees"
   },
   "pl": {
     "run": "run",

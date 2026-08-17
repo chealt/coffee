@@ -124,7 +124,7 @@ const getDetails =
   (coffee) => ({
     id: coffee.id,
     brewingMethod: coffee.brewing_method_id ? getBrewingMethod({ id: coffee.brewing_method_id, locale }) : undefined,
-    images: getCoffeeImages(coffee.id),
+    images: coffee.images || getCoffeeImages(coffee.id),
     tasteNotes: coffeeTasteNotes
       .filter(({ coffee_id: id }) => id === coffee.id)
       .map(({ taste_note_id: tasteNoteId }) => getTasteNote({ id: tasteNoteId, locale })),

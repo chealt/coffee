@@ -106,6 +106,7 @@ declare namespace App {
       newCoffeeNotification?: 'on' | 'off';
     };
     shouldAuthenticate: boolean;
+    unpublishedCoffees?: {}[];
     username: string;
   }
 }
