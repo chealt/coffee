@@ -104,6 +104,7 @@ main {
   max-width: var(--max-content-width);
   margin: 0 auto;
   padding: 0;
+  overflow-x: clip;
 }
 
 h1 {
