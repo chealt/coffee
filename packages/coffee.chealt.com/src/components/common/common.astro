@@ -18,7 +18,13 @@ const t = await getTranslator({
   locale: Astro.currentLocale,
 });
 
-const { shouldAuthenticate, redirectUrl, title, hideNav = false } = Astro.props;
+const {
+  shouldAuthenticate,
+  redirectUrl,
+  title,
+  hideNav = false,
+  htmlClass,
+} = Astro.props;
 const { canTranslate, isTranslating } = Astro.locals;
 const isAdmin = canTranslate;
 
@@ -26,7 +32,7 @@ const isProd = import.meta.env.PROD;
 ---
 
 <!doctype html>
-<html lang={Astro.currentLocale}>
+<html lang={Astro.currentLocale} class={htmlClass || undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />

@@ -26,6 +26,7 @@ const { shouldAuthenticate } = Astro.locals;
 ---
 
 <Common
+  htmlClass="collection-item-page"
   shouldAuthenticate={shouldAuthenticate}
   redirectUrl={getRelativeLocaleUrl(
     Astro.currentLocale,

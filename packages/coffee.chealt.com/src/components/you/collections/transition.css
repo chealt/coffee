@@ -1,5 +1,35 @@
-::view-transition-old(collectionItemCoverImage),
-::view-transition-new(collectionItemCoverImage) {
-  border-radius: 20px;
+::view-transition-image-pair(collectionItemCoverImage) {
   overflow: clip;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-image-pair(collectionItemCoverImage) {
+    overflow: hidden;
+    animation-duration: var(--view-transition-duration);
+    animation-name: morph-corners-to-collections;
+  }
+
+  html.collection-item-page::view-transition-image-pair(collectionItemCoverImage) {
+    animation-name: morph-corners-to-item;
+  }
+}
+
+@keyframes morph-corners-to-item {
+  from {
+    border-radius: var(--border-radius);
+  }
+
+  to {
+    border-radius: 0 0 20px 20px;
+  }
+}
+
+@keyframes morph-corners-to-collections {
+  from {
+    border-radius: 0 0 20px 20px;
+  }
+
+  to {
+    border-radius: var(--border-radius);
+  }
 }

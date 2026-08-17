@@ -55,6 +55,8 @@
   --animation-duration: 1s;
   --animation-duration--slow: 2s;
   --animation-duration--very-slow: 5s;
+
+  --view-transition-duration: var(--animation-duration--very-fast);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -568,7 +570,7 @@ sup {
   }
 
   ::view-transition-group(*) {
-    animation-duration: var(--animation-duration--fast);
+    animation-duration: var(--view-transition-duration);
   }
 
   ::view-transition-old(*),
