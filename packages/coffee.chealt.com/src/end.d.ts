@@ -93,6 +93,7 @@ declare namespace App {
     feedback: string;
     getSignedUrl: string;
     imageUploadUrls: { small: string; medium: string; original: string };
+    isAdmin: boolean;
     isTranslating: boolean;
     isYouPage: boolean;
     loggedInUser: { userID; username };

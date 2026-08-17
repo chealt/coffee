@@ -210,6 +210,7 @@ export const onRequest = async (context, next) => {
     try {
       const loggedInUser = await getSessionUser(context);
 
+      context.locals.isAdmin = isAdmin(loggedInUser?.username);
       context.locals.username = loggedInUser?.username;
 
       if (params[0] === 'admin' && !isAdmin(loggedInUser?.username)) {
