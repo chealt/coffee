@@ -67,7 +67,17 @@ const roastersWithParser = roasters.filter(({ is_best }) => Boolean(is_best));
         {t("unpublishedCoffees")}
       </T>
     </h2>
-    {unpublishedCoffees && <Coffees coffees={unpublishedCoffees} />}
+    {
+      (unpublishedCoffees?.length && (
+        <Coffees coffees={unpublishedCoffees} />
+      )) || (
+        <p>
+          <T namespace="you.admin.locales" key="nothingToPublish">
+            {t("nothingToPublish")}
+          </T>
+        </p>
+      )
+    }
   </section>
   <section>
     <APIButton apiEndpoint="/api/trigger-data-export.json">

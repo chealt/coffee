@@ -1,5 +1,6 @@
 {
   "en": {
+    "nothingToPublish": "Nothing to publish",
     "publish": "publish",
     "run": "run",
     "runParser": "Run roaster parser",
