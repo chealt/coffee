@@ -24,7 +24,8 @@
   }
 
   ::view-transition-new(carousel-markers) {
-    animation: fade-in 0.6s ease-in-out both;
+    animation: fade-in var(--animation-duration--very-fast) ease-in-out both;
+    animation-delay: var(--view-transition-duration);
   }
 }
 
