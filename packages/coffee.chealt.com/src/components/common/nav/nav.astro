@@ -41,7 +41,7 @@ const items = [
 ];
 ---
 
-<nav style={"view-transition-name: main-nav"}>
+<nav>
   {
     items.map(({ name, href, textKey, isActive }) => (
       <a href={href} class={isActive ? "active" : ""}>
