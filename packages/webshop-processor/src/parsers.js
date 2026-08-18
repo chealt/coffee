@@ -314,29 +314,21 @@ const parsers = {
     );
   },
   // Father's (Czech)
-  277: ({ html }) => {
+  277: ({ html, url }) => {
     const document = getDocument(html);
+    const { origin } = new URL(url);
 
-    const filterCoffeeElements = document.querySelectorAll('.product_cat-filter.instock');
-    const espressoCoffeeElements = document.querySelectorAll('.product_cat-espresso-en.instock');
-    const uniqueCoffeeElements = Array.from([...filterCoffeeElements, ...espressoCoffeeElements]).reduce(
-      (uniqueElements, element) => {
-        const id = Array.from(element.classList)
-          .filter((className) => className.startsWith('post-'))[0]
-          .slice(5);
-
-        if (!uniqueElements.some((uniqueElement) => uniqueElement.id === id)) {
-          uniqueElements.push({ id, element });
-        }
-
-        return uniqueElements;
-      },
-      []
+    return Array.from(
+      new Set(
+        Array.from(document.querySelectorAll('.product-card a'))
+          .map((a) => a.href)
+          .filter(
+            (href) =>
+              (href.includes('espresso') || href.includes('filter')) && !href.includes('box') && !href.includes('blend')
+          )
+          .map((href) => `${origin}${href}`)
+      )
     );
-
-    return uniqueCoffeeElements
-      .map(({ element }) => element.querySelector('a').href)
-      .filter((href) => !href.includes('-set'));
   },
   // PALE
   278: ({ html }) => {

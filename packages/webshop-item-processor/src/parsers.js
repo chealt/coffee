@@ -41,6 +41,11 @@ const errors = {
   weightMissing: 'Missing weight'
 };
 
+const includesWord = (text, word) =>
+  new RegExp(`(?<![\\p{L}\\p{N}])${word.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&')}(?:e?s)?(?![\\p{L}\\p{N}])`, 'iu').test(
+    text
+  );
+
 const cleanPrice = ({ priceElement, currencySymbol = '€' }) =>
   Number(priceElement.textContent.toLowerCase().replaceAll(currencySymbol, '').replaceAll(',', '.').trim()).toFixed(2);
 
@@ -2973,31 +2978,71 @@ const parsers = {
 
     const document = getDocument(html);
 
-    const price = Number(
-      document
-        .querySelector('.price.nasa-single-product-price .woocommerce-Price-amount')
-        .textContent.replaceAll('€ ', '')
-        .replace(',', '.')
-    ).toFixed(2);
+    const category = document
+      .querySelectorAll('nav[aria-label="Breadcrumb navigation"] li')[1]
+      ?.textContent.trim()
+      .toLowerCase();
 
-    const currencySymbol = document.querySelector('.woocommerce-Price-currencySymbol').textContent;
-    const currency = currencyCodes[currencySymbol];
+    if (category !== 'filter' && category !== 'espresso') {
+      logger.info(`Skipping non-coffee item ${url} in category ${category}`);
 
-    if (!currency) {
-      logger.error(`No currency found for ${url}`);
-
-      throw new Error(errors.currencyMissing);
+      return {};
     }
 
-    const weightElement = document.querySelector('div[data-attribute_name="attribute_pa_vaha"] .nasa-attr-text');
+    const title = document.querySelector('h1').textContent.trim().toLowerCase();
 
-    if (!weightElement) {
+    if (title.includes('blend')) {
+      return { isBlend: true };
+    }
+
+    if (title.includes('box')) {
+      return { isGiftSet: true };
+    }
+
+    const buttons = Array.from(document.querySelectorAll('main button'));
+
+    if (!buttons.some(({ textContent }) => textContent.includes('Add to basket'))) {
+      return { isOutOfStock: true };
+    }
+
+    const currencySymbols = Object.keys(currencyCodes);
+    const priceElement = Array.from(document.querySelectorAll('main span')).find(({ textContent }) => {
+      const text = textContent.trim().toLowerCase();
+
+      return text.length < 20 && /\d/u.test(text) && currencySymbols.some((symbol) => text.includes(symbol));
+    });
+
+    if (!priceElement) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    const currencySymbol = currencySymbols.find((symbol) =>
+      priceElement.textContent.trim().toLowerCase().includes(symbol)
+    );
+    const currency = currencyCodes[currencySymbol];
+    const price = cleanPrice({ priceElement, currencySymbol });
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    const packagingMatch = buttons
+      .map(({ textContent }) => textContent.trim().match(/^(?:(\d+)\s*x\s*)?(\d+(?:[.,]\d+)?)\s*(kg|g)$/iu))
+      .find(Boolean);
+
+    if (!packagingMatch) {
       logger.error(`No weight found for ${url}`);
 
       throw new Error(errors.weightMissing);
     }
 
-    const weight = Number(weightElement.textContent.replace('g', ''));
+    const [, packageCount = '1', packageWeight, weightUnit] = packagingMatch;
+    const weight =
+      Number(packageCount) * Number(packageWeight.replace(',', '.')) * (weightUnit.toLowerCase() === 'kg' ? 1000 : 1);
 
     if (!weight || isNaN(weight)) {
       logger.error(`No weight found for ${url}`);
@@ -3007,97 +3052,122 @@ const parsers = {
 
     const pricePerGram = Number((price / weight).toFixed(2));
 
-    const detailNames = Array.from(
-      document.querySelectorAll(
-        '.woocommerce-product-details__short-description b, .woocommerce-product-details__short-description strong'
-      )
-    ).map((element) => element.textContent.replace(':', '').trim().toLowerCase());
+    const shortDescription = document.querySelector('.ck-content');
+    const description = shortDescription.textContent.trim().toLowerCase();
 
-    let detailValues = Array.from(
-      document.querySelectorAll(
-        '.woocommerce-product-details__short-description b, .woocommerce-product-details__short-description strong'
-      )
-    ).map((element) => element.nextSibling?.textContent.replace(':', '').trim().toLowerCase());
+    const details = Array.from(shortDescription.querySelectorAll('strong, b')).reduce((_details, label) => {
+      const name = label.textContent.replace(':', '').trim().toLowerCase();
+      const value = label.nextSibling?.textContent.replace(':', '').trim().toLowerCase();
 
-    if (detailValues.length === 0) {
-      detailValues = Array.from(document.querySelectorAll('.woocommerce-product-details__short-description i')).map(
-        (element) => element.textContent.replace(':', '').trim().toLowerCase()
-      );
-    }
+      return name && value ? { ..._details, [name]: value } : _details;
+    }, {});
 
-    const details = detailNames.reduce((_details, name, index) => ({ ..._details, [name]: detailValues[index] }), {});
+    const disclosures = Array.from(document.querySelectorAll('main details')).map((disclosure) => ({
+      summary: disclosure.querySelector('summary').textContent.trim().toLowerCase(),
+      text: disclosure.querySelector('.ck-content')?.textContent.trim().toLowerCase() || ''
+    }));
+    const findDisclosure = (pattern) => disclosures.find(({ summary }) => pattern.test(summary))?.text || '';
 
-    if (Object.keys(details).length === 0 || !details.country) {
-      logger.error(`No details found at: ${url}`);
+    const productText = [title, description, ...disclosures.map(({ text }) => text)].join(' ');
+
+    const originCountryText = details.country || details.origin || '';
+    const findOriginCountry = (text) =>
+      originCountries
+        .filter(({ name }) => text.includes(name))
+        .sort(({ name: a }, { name: b }) => b.length - a.length)[0];
+    const originCountry =
+      findOriginCountry(originCountryText) || findOriginCountry(title) || findOriginCountry(productText);
+
+    if (!originCountry) {
+      logger.info(`No origin country found for ${url}`);
 
       return {};
     }
 
-    const originCountry = details.country;
-    const originCountryId = originCountries.find(({ name }) => name === originCountry)?.origin_country_id || null;
+    const { origin_country_id: originCountryId, name: originCountryName } = originCountry;
 
+    const originRegionId =
+      originRegions
+        .filter(
+          ({ origin_country_id: countryId, name }) => countryId === originCountryId && includesWord(productText, name)
+        )
+        .sort(({ name: a }, { name: b }) => b.length - a.length)[0]?.origin_region_id || null;
+
+    if (!originRegionId) {
+      logger.info(`Missing origin region for ${url}`);
+    }
+
+    const originFarmId =
+      originFarms
+        .filter(
+          ({ origin_country_id: countryId, name }) => countryId === originCountryId && includesWord(productText, name)
+        )
+        .sort(({ name: a }, { name: b }) => b.length - a.length)[0]?.id || null;
+
+    const processingText = details.process || details.processing || description || findDisclosure(/process/u);
     const processingMethodId =
-      processingMethods.find(({ name }) => name === details.process || name === details.processing)
-        ?.processing_method_id ||
-      processingMethods.find(({ name }) => details.process?.includes(name) || details.processing?.includes(name))
-        ?.processing_method_id ||
-      null;
+      processingMethods
+        .filter(({ name }) => processingText.includes(name))
+        .sort(({ name: a }, { name: b }) => b.length - a.length)[0]?.processing_method_id || null;
 
-    const brewingMethod = document.querySelector('.br_alabel_better_compatibility').textContent.trim().toLowerCase();
-    const brewingMethodId =
-      brewingMethods.find(
-        ({ name }) => name === brewingMethod || (brewingMethod === 'espresso / pour over' && name === 'omni')
-      )?.brewing_method_id || null;
+    if (!processingMethodId) {
+      logger.info(`Missing processing method: ${processingText}`);
+    }
 
-    const regionOrFarm = details.region;
+    const brewingMethodId = brewingMethods.find(({ name }) => name === category)?.brewing_method_id || null;
 
-    const originRegionId = originRegions.find(({ name }) => regionOrFarm.includes(name))?.origin_region_id || null;
-    const originFarmId = originFarms.find(({ name }) => regionOrFarm.includes(name))?.id || null;
-
-    const tasteNotesString =
-      details['taste notes'] ||
-      details['tasting notes'] ||
+    const tasteNotesText =
       details['taste profile'] ||
+      details['tasting notes'] ||
+      details['taste notes'] ||
       details['cup profile'] ||
-      details['flavour notes'] ||
-      details['flavour profile'] ||
-      details['flavor profile'];
-    const tasteNoteIds =
-      tasteNotesString
-        ?.split(', ')
-        .map((note) => note.trim().toLowerCase())
-        .map((note) => tasteNotes.find(({ name }) => name === note)?.taste_note_id)
-        .filter(Boolean) || [];
-
-    if (!tasteNotesString) {
-      logger.debug(url, ': ', details);
-    }
-
-    const missingTasteNotes = tasteNotesString
-      ?.split(', ')
-      .filter((note) => !tasteNotes.some(({ name }) => name === note.trim().toLowerCase()));
-
-    if (missingTasteNotes?.length) {
-      logger.info(`Missing taste notes: ${missingTasteNotes.join(', ')}`);
-    }
-
-    const varietiesString = details.variety || details.varietal;
-    const varietiesStrings = varietiesString.includes(', ') ? varietiesString.split(', ') : [varietiesString];
-    const varietyIds = varieties
-      .filter(
-        ({ name, alias }) =>
-          varietiesStrings.includes(name.toLowerCase()) || (alias && varietiesStrings.includes(alias.toLowerCase()))
+      description.match(/(?:tastes like|notes of|you will find|reminds us of)([^.]*)/u)?.[1] ||
+      description;
+    const tasteNotesFound = tasteNotes.filter(({ name }) => includesWord(tasteNotesText, name));
+    const tasteNoteIds = Array.from(
+      new Set(
+        tasteNotesFound
+          .filter(({ name }) => !tasteNotesFound.some(({ name: other }) => other !== name && other.includes(name)))
+          .map(({ taste_note_id: id }) => id)
       )
-      .filter(({ name }) => name.toLowerCase() !== originCountry)
-      .map(({ id }) => id);
+    );
+
+    if (!tasteNoteIds.length) {
+      logger.info(`Missing taste notes: ${tasteNotesText}`);
+    }
+
+    const varietyText = details.variety || details.varietal || findDisclosure(/variet/u) || description;
+    const varietiesFound = varieties.filter(
+      ({ name, alias }) =>
+        name.toLowerCase() !== originCountryName &&
+        (includesWord(varietyText, name) || (alias && includesWord(varietyText, alias)))
+    );
+    const varietyIds = Array.from(
+      new Set(
+        varietiesFound
+          .filter(
+            ({ name }) =>
+              !varietiesFound.some(
+                ({ name: other }) => other !== name && other.toLowerCase().includes(name.toLowerCase())
+              )
+          )
+          .map(({ id }) => id)
+      )
+    );
 
     if (!varietyIds.length) {
-      logger.info(`Missing varieties: ${varietiesStrings}`);
+      logger.info(`Missing varieties: ${varietyText}`);
     }
 
-    const image = document.querySelector('.nasa-item-main-image-wrap .wp-post-image').src;
+    const image = document.querySelector('main img[src*="/products/variants."]')?.getAttribute('src');
 
-    const isDecaf = details.processing?.includes('decaf') || details.process?.includes('decaf');
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    const isDecaf = url.includes('decaf') || title.includes('decaf') || processingText.includes('decaf');
 
     return {
       brewingMethodId,
