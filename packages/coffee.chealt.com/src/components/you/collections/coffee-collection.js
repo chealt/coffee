@@ -74,9 +74,13 @@ class CoffeeCollection extends HTMLElement {
       this.timeout = setTimeout(() => {
         link.setAttribute('is-held', true);
         link.classList.add('selected');
-        this.batchUpdatePopover.showPopover();
+        this.showBatchUpdatePopover();
       }, heldTimeout);
     }
+  }
+
+  showBatchUpdatePopover() {
+    this.batchUpdatePopover.showPopover();
   }
 
   updateCollectionCheckboxes() {

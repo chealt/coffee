@@ -7,10 +7,12 @@ class CoffeeCollectionHeader extends HTMLElement {
     this.renameTrigger = this.querySelector('[data-rename-trigger]');
     this.moveUpTrigger = this.querySelector('[data-move-up-trigger]');
     this.moveDownTrigger = this.querySelector('[data-move-down-trigger]');
+    this.selectAllTrigger = this.querySelector('[data-select-all-trigger]');
 
     this.renameTrigger.addEventListener('click', this.rename.bind(this));
     this.moveUpTrigger?.addEventListener('click', this.moveCollection.bind(this, 'up'));
     this.moveDownTrigger?.addEventListener('click', this.moveCollection.bind(this, 'down'));
+    this.selectAllTrigger?.addEventListener('click', this.selectAll.bind(this));
   }
 
   rename() {
@@ -76,6 +78,14 @@ class CoffeeCollectionHeader extends HTMLElement {
     await setItems(updateRanksKey, collectionIds);
 
     window.location.reload();
+  }
+
+  selectAll() {
+    this.closest('[data-type=collection]')
+      ?.querySelectorAll('.tiles a')
+      .forEach((element) => element.classList.add('selected'));
+    this.selectAllTrigger.closest('dialog')?.close();
+    this.closest('coffee-collection')?.showBatchUpdatePopover();
   }
 }
 

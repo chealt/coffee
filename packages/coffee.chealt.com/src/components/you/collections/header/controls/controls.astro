@@ -76,6 +76,14 @@ const { collectionId, isBuiltIn, isFirst, isLast } = Astro.props;
         </Button>
       </li>
       <li>
+        <Button class="ghost column" data-select-all-trigger>
+          <Icon type="list--checked" />
+          <T namespace="you.collections.header.controls.locales" key="selectAll"
+            >{t("selectAll")}</T
+          >
+        </Button>
+      </li>
+      <li>
         <Button class="column danger" data-delete-trigger for={collectionId}>
           <Icon type="delete" />
           <T namespace="you.collections.header.controls.locales" key="delete"

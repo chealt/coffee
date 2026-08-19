@@ -4,7 +4,8 @@
     "rename": "rename",
     "delete": "delete",
     "moveUp": "move up",
-    "moveDown": "move down"
+    "moveDown": "move down",
+    "selectAll": "select all"
   },
   "pl": {
     "add": "dodaj kawa",
