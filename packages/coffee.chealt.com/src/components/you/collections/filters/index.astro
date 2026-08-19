@@ -128,7 +128,7 @@ const tasteNoteGroup =
 const variety = varietyId && varieties.find(({ id }) => id === varietyId);
 ---
 
-<div class="filters-container">
+<div class=`filters-container${isFiltered ? ' visible' : ''}`>
   <div class="filters">
     <BrewingMethodSelector
       urlPrefix="/you/collections"

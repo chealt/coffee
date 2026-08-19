@@ -23,6 +23,10 @@ const t = await getTranslator({
 const { collectionId, itemId } = Astro.props;
 
 const { shouldAuthenticate } = Astro.locals;
+const navigatedFromSearchParam = "from";
+const backUrlPathname =
+  Astro.url.searchParams.get(navigatedFromSearchParam) || "/you/collections";
+const backUrl = getRelativeLocaleUrl(Astro.currentLocale, backUrlPathname);
 ---
 
 <Common
@@ -35,7 +39,7 @@ const { shouldAuthenticate } = Astro.locals;
 >
   <Button
     id="back-button"
-    onclick="history.back(); return false;"
+    href={backUrl}
     class="small bordered fade-in"
     data-hide-while-transitioning
   >

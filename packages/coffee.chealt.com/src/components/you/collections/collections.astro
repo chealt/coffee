@@ -166,7 +166,7 @@ const showCoffee = ({ details }) => {
                         <a
                           href={`${getRelativeLocaleUrl(
                             Astro.currentLocale,
-                            `/you/collections/${collectionId}/items/${itemId}`,
+                            `/you/collections/${collectionId}/items/${itemId}?from=${Astro.url.pathname.replace(`/${Astro.currentLocale}`, "")}`,
                           )}`}
                           id={`item-id-${itemId}`}
                         >
