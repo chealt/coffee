@@ -1,16 +1,21 @@
 class ChealtToggle extends HTMLElement {
   connectedCallback() {
-    this.trigger = this.querySelector('[data-trigger]');
-    this.content = this.querySelector('[data-content]');
+    this.triggers = this.querySelectorAll('[data-trigger],[data-trigger-selector]');
 
     this.toggleOnTriggerClick();
   }
 
   toggleOnTriggerClick() {
-    this.trigger.addEventListener('click', (event) => {
-      event.preventDefault();
+    this.triggers?.forEach((element) => {
+      element.addEventListener('click', (event) => {
+        event.preventDefault();
 
-      this.content.classList.toggle('visible');
+        const { trigger, triggerSelector } = element.dataset;
+
+        this.querySelectorAll(trigger ? '[data-content]' : triggerSelector).forEach((contentElement) => {
+          contentElement.classList.toggle('visible');
+        });
+      });
     });
   }
 }

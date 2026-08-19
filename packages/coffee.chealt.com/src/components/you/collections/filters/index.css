@@ -10,6 +10,15 @@
   background-color: var(--color-background--alternative);
   z-index: var(--z-index--xs);
   box-shadow: var(--shadow);
+  transform: translateY(-100%);
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform 0.2s ease-in-out;
+  }
+
+  &.visible {
+    transform: translateY(0);
+  }
 
   button {
     width: auto;

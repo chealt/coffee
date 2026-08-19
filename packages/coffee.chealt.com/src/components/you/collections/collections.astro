@@ -92,7 +92,14 @@ const showCoffee = ({ details }) => {
       <h1>
         <T namespace="you.collections.locales" key="title">{t("title")}</T>
       </h1>
-      <Button class="small" data-trigger>
+      <Button
+        class="ghost small column inline"
+        data-trigger-selector=".filters-container"
+      >
+        <Icon type="search" />
+        {t("filter")}
+      </Button>
+      <Button class="small" data-trigger-selector=".collections-controls">
         <Icon type="bottom-panel" />
       </Button>
       <Button
@@ -103,7 +110,7 @@ const showCoffee = ({ details }) => {
         <span class="visually-hidden">{username}</span>
       </Button>
     </header>
-    <div class="collections-controls" data-content>
+    <div class="collections-controls">
       <Form
         name="collectionsControls"
         data-storage="api"
@@ -117,18 +124,18 @@ const showCoffee = ({ details }) => {
         </Checkbox>
       </Form>
     </div>
+    <Filters
+      brewingMethodId={brewingMethodId}
+      brewingMethodGroupId={brewingMethodGroupId}
+      countryId={countryId}
+      originCountryId={originCountryId}
+      processingMethodId={processingMethodId}
+      roasterId={roasterId}
+      tasteNoteGroupId={tasteNoteGroupId}
+      tasteNoteId={tasteNoteId}
+      varietyId={varietyId}
+    />
   </chealt-toggle>
-  <Filters
-    brewingMethodId={brewingMethodId}
-    brewingMethodGroupId={brewingMethodGroupId}
-    countryId={countryId}
-    originCountryId={originCountryId}
-    processingMethodId={processingMethodId}
-    roasterId={roasterId}
-    tasteNoteGroupId={tasteNoteGroupId}
-    tasteNoteId={tasteNoteId}
-    varietyId={varietyId}
-  />
   <coffee-collection>
     <ul
       class="collections-list"
