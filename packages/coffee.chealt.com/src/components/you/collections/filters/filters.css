@@ -9,7 +9,6 @@
   text-transform: capitalize;
   background-color: var(--color-background--alternative);
   z-index: var(--z-index--xs);
-  box-shadow: var(--shadow);
   transform: translateY(-100%);
 
   @media (prefers-reduced-motion: no-preference) {

@@ -24,7 +24,7 @@ import RoasterSelector from "@components/coffees/selectors/roaster.astro";
 import TasteNoteGroupSelector from "@components/coffees/selectors/taste-note-group.astro";
 import VarietySelector from "@components/coffees/selectors/variety.astro";
 
-import "./index.css";
+import "./filters.css";
 
 const {
   brewingMethodId,
@@ -128,7 +128,9 @@ const tasteNoteGroup =
 const variety = varietyId && varieties.find(({ id }) => id === varietyId);
 ---
 
-<div class=`filters-container${isFiltered ? ' visible' : ''}`>
+<div
+  class=`filters-container collections-hidden-header${isFiltered ? ' visible' : ''}`
+>
   <div class="filters">
     <BrewingMethodSelector
       urlPrefix="/you/collections"

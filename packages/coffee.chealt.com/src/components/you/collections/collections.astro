@@ -13,7 +13,7 @@ import Form from "@components/form/form.astro";
 import Icon from "@components/icon/icon.astro";
 import { getTasteNoteGroupByNoteId } from "@components/taste-notes/utils.js";
 
-import Filters from "./filters/index.astro";
+import Filters from "./filters/filters.astro";
 import Header from "./header/header.astro";
 import NewCollection from "./new-collection.astro";
 import NewItem from "./new-item.astro";
@@ -110,7 +110,7 @@ const showCoffee = ({ details }) => {
         <span class="visually-hidden">{username}</span>
       </Button>
     </header>
-    <div class="collections-controls">
+    <div class="collections-controls collections-hidden-header">
       <Form
         name="collectionsControls"
         data-storage="api"
