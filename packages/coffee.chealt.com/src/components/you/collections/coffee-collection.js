@@ -1,6 +1,8 @@
-import { setItem } from '../../../utils/storage.js';
+import logger from '@components/errors/utils.js';
+import { setItem, setItems } from '../../../utils/storage.js';
 
 const addItemToCollection = 'chealt-add-item-to-collection';
+const markItemsAsBrewed = 'chealt-mark-items-as-brewed';
 const removeItemFromCollection = 'chealt-remove-item-from-collection';
 const itemIdPrefix = 'item-id-';
 const heldTimeout = 600;
@@ -9,6 +11,7 @@ class CoffeeCollection extends HTMLElement {
   connectedCallback() {
     this.batchUpdatePopover = this.querySelector('#batch-update');
     this.clearSelection = this.querySelector('[data-clear-trigger]');
+    this.markAsBrewedTrigger = this.querySelector('[data-mark-as-brewed-trigger]');
     this.editCollectionsDialog = this.querySelector('#edit-collections');
     this.editCollectionsTrigger = this.querySelector('[data-dialog-id="edit-collections"]');
     this.collectionCheckboxes = this.editCollectionsDialog.querySelectorAll('[type="checkbox"]');
@@ -41,6 +44,8 @@ class CoffeeCollection extends HTMLElement {
         this.querySelectorAll('.in-progress').forEach((element) => element.classList.remove('in-progress'));
       }
     });
+
+    this.markAsBrewedTrigger?.addEventListener('click', this.markAsBrewed.bind(this));
   }
 
   addInProgressClass(event) {
@@ -77,6 +82,10 @@ class CoffeeCollection extends HTMLElement {
         this.showBatchUpdatePopover();
       }, heldTimeout);
     }
+  }
+
+  hideBatchUpdatePopover() {
+    this.batchUpdatePopover.hidePopover();
   }
 
   showBatchUpdatePopover() {
@@ -131,6 +140,29 @@ class CoffeeCollection extends HTMLElement {
           })
         )
       );
+    }
+  }
+
+  async markAsBrewed() {
+    this.markAsBrewedTrigger?.setAttribute('disabled', true);
+    this.markAsBrewedTrigger?.classList.add('in-progress');
+
+    const selectedItemIds = Array.from(this.querySelectorAll('.selected') || []).map((element) =>
+      element.id.replace(itemIdPrefix, '')
+    );
+
+    if (selectedItemIds.length) {
+      try {
+        await setItems(markItemsAsBrewed, selectedItemIds);
+      } catch (error) {
+        logger.error(error);
+      } finally {
+        this.markAsBrewedTrigger?.removeAttribute('disabled');
+        this.markAsBrewedTrigger?.classList.remove('in-progress');
+
+        this.hideBatchUpdatePopover();
+        this.querySelectorAll('.selected').forEach(({ classList }) => classList.remove('selected'));
+      }
     }
   }
 

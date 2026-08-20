@@ -1,5 +1,5 @@
 import { getSessionUser } from '../../../server/authentication/session.js';
-import { updateRanks } from '../../../server/database/collections.js';
+import { markAsBrewed, updateRanks } from '../../../server/database/collections.js';
 import logger from '../../../server/utils/logger.js';
 
 const POST = async (context) => {
@@ -14,6 +14,10 @@ const POST = async (context) => {
 
   try {
     switch (key) {
+      case 'chealt-mark-items-as-brewed':
+        await markAsBrewed({ user, items: value });
+
+        break;
       case 'chealt-collection-update-ranks':
         await updateRanks({ user, items: value });
 

@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { getClient } from './client.js';
-import { getValue } from './formData.js';
+import { getValue, updateAttributeValue } from './formData.js';
 import coffees from '../../../data/coffees.json' with { type: 'json' };
 import { convertToUSD } from '../../components/coffees/utils.js';
 import logger from '../../components/errors/utils.js';
@@ -398,6 +398,21 @@ const updateRanks = async ({ user, items }) => {
   return await client.batch(collections_batch_commands);
 };
 
+const markAsBrewed = async ({ user, items }) => {
+  for (const id of items) {
+    await updateAttributeValue({
+      user,
+      key: `${id}.details`,
+      attributes: {
+        isBrewed: 'on',
+        brewDate: new Date().toISOString().slice(0, 10)
+      }
+    });
+
+    logger.info(`Updated details of item: ${id}`);
+  }
+};
+
 export {
   addCollection,
   addCollectionItem,
@@ -409,6 +424,7 @@ export {
   getCollections,
   getCollectionItem,
   getSimilarCoffeePrices,
+  markAsBrewed,
   updateCollectionName,
   updateRanks
 };

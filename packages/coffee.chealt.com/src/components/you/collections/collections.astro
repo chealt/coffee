@@ -224,6 +224,13 @@ const showCoffee = ({ details }) => {
           </Button>
         </li>
         <li>
+          <Button class="ghost column" data-mark-as-brewed-trigger>
+            <T namespace="you.collections.locales" key="markAsBrewed"
+              >{t("markAsBrewed")}</T
+            >
+          </Button>
+        </li>
+        <li>
           <Button class="ghost column warning" data-clear-trigger>
             <Icon type="close" />
             <T namespace="you.collections.locales" key="clearSelection"
