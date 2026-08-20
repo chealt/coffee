@@ -186,20 +186,22 @@ const showCoffee = ({ details }) => {
                             />
                           </picture>
                         </a>
-                        <div class="fade-in" data-hide-while-transitioning>
-                          {(details?.isStillFrozen && (
-                            <div class="tag bottom frozen">
-                              <Icon class="small" type="snowflake" />
-                              <span>{details.daysFrozen}</span>
-                            </div>
-                          )) ||
-                            (details?.daysSinceRoasting && (
-                              <div class="tag bottom">
-                                <Icon class="small" type="alarm" />
-                                <span>{details.daysSinceRoasting}</span>
+                        {details && !details?.isBrewed && (
+                          <div class="fade-in" data-hide-while-transitioning>
+                            {(details?.isStillFrozen && !details?.isBrewed && (
+                              <div class="tag bottom frozen">
+                                <Icon class="small" type="snowflake" />
+                                <span>{details.daysFrozen}</span>
                               </div>
-                            ))}
-                        </div>
+                            )) ||
+                              (details?.daysSinceRoasting && (
+                                <div class="tag bottom">
+                                  <Icon class="small" type="alarm" />
+                                  <span>{details.daysSinceRoasting}</span>
+                                </div>
+                              ))}
+                          </div>
+                        )}
                       </li>
                     ))
                 ) : (
