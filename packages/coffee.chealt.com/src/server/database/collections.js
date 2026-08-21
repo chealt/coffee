@@ -306,6 +306,18 @@ const deleteCollectionItem = async ({ user, collectionId, itemId }) => {
   });
 };
 
+const deleteCollectionItems = async ({ user, items }) => {
+  const client = getClient(user.name);
+  const now = new Date().toISOString();
+
+  return await client.batch(
+    items.map((itemId) => ({
+      sql: 'UPDATE collection_items SET deleted_at = :now WHERE id = :itemId',
+      args: { itemId, now }
+    }))
+  );
+};
+
 const updateCollectionName = async ({ user, id, name }) => {
   const client = getClient(user.name);
 
@@ -424,6 +436,7 @@ export {
   addItemToCollection,
   deleteCollection,
   deleteCollectionItem,
+  deleteCollectionItems,
   getCollections,
   getCollectionItem,
   getSimilarCoffeePrices,

@@ -218,16 +218,24 @@ const showCoffee = ({ details }) => {
         <li>
           <Button class="ghost column" data-dialog-id="edit-collections">
             <Icon type="edit" />
-            <T namespace="you.collections.locales" key="editCollection"
-              >{t("editCollection")}</T
-            >
+            <T namespace="you.collections.locales" key="editCollection">
+              {t("editCollection")}
+            </T>
           </Button>
         </li>
         <li>
           <Button class="ghost column" data-mark-as-brewed-trigger>
-            <T namespace="you.collections.locales" key="markAsBrewed"
-              >{t("markAsBrewed")}</T
-            >
+            <T namespace="you.collections.locales" key="markAsBrewed">
+              {t("markAsBrewed")}
+            </T>
+          </Button>
+        </li>
+        <li>
+          <Button class="ghost column" data-delete-collection-items-trigger>
+            <Icon type="delete" />
+            <T namespace="you.collections.locales" key="delete">
+              {t("delete")}
+            </T>
           </Button>
         </li>
         <li>

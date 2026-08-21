@@ -3,6 +3,7 @@ import { setItem, setItems } from '../../../utils/storage.js';
 
 const addItemToCollection = 'chealt-add-item-to-collection';
 const markItemsAsBrewed = 'chealt-mark-items-as-brewed';
+const deleteItems = 'chealt-delete-items';
 const removeItemFromCollection = 'chealt-remove-item-from-collection';
 const itemIdPrefix = 'item-id-';
 const heldTimeout = 600;
@@ -12,6 +13,7 @@ class CoffeeCollection extends HTMLElement {
     this.batchUpdatePopover = this.querySelector('#batch-update');
     this.clearSelection = this.querySelector('[data-clear-trigger]');
     this.markAsBrewedTrigger = this.querySelector('[data-mark-as-brewed-trigger]');
+    this.deleteCollectionItemsTrigger = this.querySelector('[data-delete-collection-items-trigger]');
     this.editCollectionsDialog = this.querySelector('#edit-collections');
     this.editCollectionsTrigger = this.querySelector('[data-dialog-id="edit-collections"]');
     this.collectionCheckboxes = this.editCollectionsDialog.querySelectorAll('[type="checkbox"]');
@@ -46,6 +48,7 @@ class CoffeeCollection extends HTMLElement {
     });
 
     this.markAsBrewedTrigger?.addEventListener('click', this.markAsBrewed.bind(this));
+    this.deleteCollectionItemsTrigger?.addEventListener('click', this.deleteItems.bind(this));
   }
 
   addInProgressClass(event) {
@@ -162,6 +165,31 @@ class CoffeeCollection extends HTMLElement {
 
         this.hideBatchUpdatePopover();
         this.querySelectorAll('.selected').forEach(({ classList }) => classList.remove('selected'));
+      }
+    }
+  }
+
+  async deleteItems() {
+    this.deleteCollectionItemsTrigger?.setAttribute('disabled', true);
+    this.deleteCollectionItemsTrigger?.classList.add('in-progress');
+
+    const selectedItemIds = Array.from(this.querySelectorAll('.selected') || []).map((element) =>
+      element.id.replace(itemIdPrefix, '')
+    );
+
+    if (selectedItemIds.length) {
+      try {
+        await setItems(deleteItems, selectedItemIds);
+      } catch (error) {
+        logger.error(error);
+      } finally {
+        this.deleteCollectionItemsTrigger?.removeAttribute('disabled');
+        this.deleteCollectionItemsTrigger?.classList.remove('in-progress');
+
+        this.hideBatchUpdatePopover();
+        this.querySelectorAll('.selected').forEach(({ classList }) => classList.remove('selected'));
+
+        window.location.reload();
       }
     }
   }
