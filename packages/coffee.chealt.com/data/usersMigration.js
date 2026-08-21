@@ -1,7 +1,7 @@
 /* oxlint-disable no-console */
 import { createClient } from '@libsql/client';
 import { createClient as createPlatformClient } from '@tursodatabase/api';
-import { migrate as migrateMultipleAuthChallenges } from './migrations/multiple-auth-challenges.js';
+import { migrate } from './migrations/add-collection-item-links-deleted-at.js';
 
 const databaseUrl = process.env.TURSO_DATABASE_URL;
 const defaultAuthToken = process.env.TURSO_AUTH_TOKEN;
@@ -51,6 +51,6 @@ await Promise.all(
       authToken
     });
 
-    await migrateMultipleAuthChallenges(userClient);
+    await migrate(userClient);
   })
 );

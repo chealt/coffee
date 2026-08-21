@@ -11,7 +11,7 @@ const queryCollections = async (user) => {
   const client = getClient(user.name);
 
   const results = await client.execute({
-    sql: 'SELECT id, name, is_built_in FROM collections ORDER BY rank ASC'
+    sql: 'SELECT id, name, is_built_in FROM collections WHERE deleted_at IS NULL ORDER BY rank ASC'
   });
 
   return results.rows;
@@ -21,7 +21,7 @@ const queryCollectionItemsWithMainDetails = async (user) => {
   const client = getClient(user.name);
 
   const results = await client.execute({
-    sql: 'SELECT ci.id AS id, fd.value AS details FROM collection_items ci LEFT JOIN form_data fd ON fd.key = ci.id || ".details"'
+    sql: 'SELECT ci.id AS id, fd.value AS details FROM collection_items ci LEFT JOIN form_data fd ON fd.key = ci.id || ".details" WHERE deleted_at IS NULL'
   });
 
   return results.rows.map(({ id, details }) => ({
@@ -45,7 +45,7 @@ const queryCollectionItemsByCollectionId = async (user, collectionId) => {
   const client = getClient(user.name);
 
   const results = await client.execute({
-    sql: 'SELECT ci.id FROM collection_items ci JOIN collection_item_links cil ON cil.collection_item_id = ci.id WHERE cil.collection_id = :collectionId',
+    sql: 'SELECT ci.id FROM collection_items ci JOIN collection_item_links cil ON cil.collection_item_id = ci.id WHERE cil.collection_id = :collectionId AND ci.deleted_at IS NULL AND cil.deleted_at IS NULL',
     args: { collectionId }
   });
 
@@ -56,7 +56,7 @@ const queryCollectionItem = async (user, itemId) => {
   const client = getClient(user.name);
 
   const results = await client.execute({
-    sql: 'SELECT id FROM collection_items WHERE id = :itemId',
+    sql: 'SELECT id FROM collection_items WHERE id = :itemId AND deleted_at IS NULL',
     args: { itemId }
   });
 
@@ -68,7 +68,7 @@ const queryCollectionItemImages = async (user, itemId) => {
 
   if (itemId) {
     const results = await client.execute({
-      sql: 'SELECT filename FROM collection_item_images WHERE collection_item_id = :itemId',
+      sql: 'SELECT filename FROM collection_item_images WHERE collection_item_id = :itemId AND deleted_at IS NULL',
       args: { itemId }
     });
 
@@ -76,7 +76,7 @@ const queryCollectionItemImages = async (user, itemId) => {
   }
 
   const results = await client.execute({
-    sql: 'SELECT filename, collection_item_id FROM collection_item_images'
+    sql: 'SELECT filename, collection_item_id FROM collection_item_images WHERE deleted_at IS NULL'
   });
 
   return results.rows;
@@ -87,7 +87,7 @@ const queryCollectionItemLinks = async (user, itemId) => {
 
   if (itemId) {
     const results = await client.execute({
-      sql: 'SELECT collection_item_id, collection_id FROM collection_item_links WHERE collection_item_id = :itemId',
+      sql: 'SELECT collection_item_id, collection_id FROM collection_item_links WHERE collection_item_id = :itemId AND deleted_at IS NULL',
       args: { itemId }
     });
 
@@ -95,7 +95,7 @@ const queryCollectionItemLinks = async (user, itemId) => {
   }
 
   const results = await client.execute({
-    sql: 'SELECT collection_item_id, collection_id FROM collection_item_links'
+    sql: 'SELECT collection_item_id, collection_id FROM collection_item_links WHERE deleted_at IS NULL'
   });
 
   return results.rows;
@@ -271,35 +271,38 @@ const getCollectionItem = async (user, itemId) => {
 
 const deleteCollection = async ({ user, id }) => {
   const client = getClient(user.name);
+  const now = new Date().toISOString();
 
   await client.execute({
-    sql: 'DELETE FROM collections WHERE id = :id',
-    args: { id }
+    sql: 'UPDATE collections SET deleted_at = :now WHERE id = :id',
+    args: { id, now }
   });
 
   const { rows } = await client.execute({
-    sql: 'SELECT ci.id FROM collection_items ci LEFT JOIN collection_item_links cil ON cil.collection_item_id = ci.id WHERE cil.id IS NULL'
+    sql: 'SELECT ci.id FROM collection_items ci LEFT JOIN collection_item_links cil ON cil.collection_item_id = ci.id WHERE cil.id IS NULL AND deleted_at IS NULL'
   });
   const orphanedItemIDs = rows.map((row) => `'${row.id}'`);
 
   return await client.execute({
-    sql: `DELETE FROM collection_items WHERE id IN (${orphanedItemIDs.join(',')})`
+    sql: `UPDATE collection_items SET deleted_at = :now WHERE id IN (${orphanedItemIDs.join(',')})`,
+    args: { now }
   });
 };
 
 const deleteCollectionItem = async ({ user, collectionId, itemId }) => {
   const client = getClient(user.name);
+  const now = new Date().toISOString();
 
   if (!collectionId) {
     return await client.execute({
-      sql: 'DELETE FROM collection_items WHERE id = :itemId',
-      args: { itemId }
+      sql: 'UPDATE collection_items SET deleted_at = :now WHERE id = :itemId',
+      args: { itemId, now }
     });
   }
 
   return await client.execute({
-    sql: 'DELETE FROM collection_item_links WHERE collection_item_id = :itemId AND collection_id = :collectionId',
-    args: { itemId, collectionId }
+    sql: 'UPDATE collection_item_links SET deleted_at = :now WHERE collection_item_id = :itemId AND collection_id = :collectionId',
+    args: { itemId, collectionId, now }
   });
 };
 
