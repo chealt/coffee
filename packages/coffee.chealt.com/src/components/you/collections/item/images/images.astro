@@ -21,37 +21,39 @@ const { collectionItem } = Astro.locals;
     {
       (collectionItem?.images.length && (
         <div class="carousel">
-          {collectionItem?.images.map(({ src, filename, status }, index) => (
-            <Fragment>
-              <img
-                id={filename}
-                data-dialog-id={`image-dialog-${index}`}
-                src={src}
-                loading={index === 0 ? "eager" : "lazy"}
-                fetchpriority={index === 0 ? "high" : undefined}
-                style={
-                  index === 0
-                    ? "view-transition-name: collectionItemCoverImage;"
-                    : undefined
-                }
-              />
-              {status === "processing" && (
-                <Fragment>
-                  <Button class="small round status" popovertarget="status">
-                    <Icon type="info" />
-                  </Button>
-                  <span popover="hint" id="status" class="tooltip">
-                    <T
-                      namespace="you.collections.item.images.locales"
-                      key="processing"
-                    >
-                      {t("processing")}
-                    </T>
-                  </span>
-                </Fragment>
-              )}
-            </Fragment>
-          ))}
+          {collectionItem?.images.map(
+            ({ srcSmall, filename, status }, index) => (
+              <Fragment>
+                <img
+                  id={filename}
+                  data-dialog-id={`image-dialog-${index}`}
+                  src={srcSmall}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  fetchpriority={index === 0 ? "high" : undefined}
+                  style={
+                    index === 0
+                      ? "view-transition-name: collectionItemCoverImage;"
+                      : undefined
+                  }
+                />
+                {status === "processing" && (
+                  <Fragment>
+                    <Button class="small round status" popovertarget="status">
+                      <Icon type="info" />
+                    </Button>
+                    <span popover="hint" id="status" class="tooltip">
+                      <T
+                        namespace="you.collections.item.images.locales"
+                        key="processing"
+                      >
+                        {t("processing")}
+                      </T>
+                    </span>
+                  </Fragment>
+                )}
+              </Fragment>
+            ),
+          )}
         </div>
       )) ||
         null
