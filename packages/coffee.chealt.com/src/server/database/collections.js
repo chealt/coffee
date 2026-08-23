@@ -11,7 +11,7 @@ const queryCollections = async (user) => {
   const client = getClient(user.name);
 
   const results = await client.execute({
-    sql: 'SELECT id, name, is_built_in FROM collections WHERE deleted_at IS NULL ORDER BY rank ASC'
+    sql: 'SELECT id, name, is_built_in FROM collections ORDER BY rank ASC'
   });
 
   return results.rows;
@@ -21,11 +21,12 @@ const queryCollectionItemsWithMainDetails = async (user) => {
   const client = getClient(user.name);
 
   const results = await client.execute({
-    sql: 'SELECT ci.id AS id, fd.value AS details FROM collection_items ci LEFT JOIN form_data fd ON fd.key = ci.id || ".details" WHERE deleted_at IS NULL'
+    sql: 'SELECT ci.id AS id, ci.deleted_at, fd.value AS details FROM collection_items ci LEFT JOIN form_data fd ON fd.key = ci.id || ".details"'
   });
 
-  return results.rows.map(({ id, details }) => ({
+  return results.rows.map(({ id, deleted_at, details }) => ({
     id,
+    deleted_at,
     details: details ? JSON.parse(details) : undefined
   }));
 };
@@ -45,7 +46,7 @@ const queryCollectionItemsByCollectionId = async (user, collectionId) => {
   const client = getClient(user.name);
 
   const results = await client.execute({
-    sql: 'SELECT ci.id FROM collection_items ci JOIN collection_item_links cil ON cil.collection_item_id = ci.id WHERE cil.collection_id = :collectionId AND ci.deleted_at IS NULL AND cil.deleted_at IS NULL',
+    sql: 'SELECT ci.id FROM collection_items ci JOIN collection_item_links cil ON cil.collection_item_id = ci.id WHERE cil.collection_id = :collectionId',
     args: { collectionId }
   });
 
@@ -56,7 +57,7 @@ const queryCollectionItem = async (user, itemId) => {
   const client = getClient(user.name);
 
   const results = await client.execute({
-    sql: 'SELECT id FROM collection_items WHERE id = :itemId AND deleted_at IS NULL',
+    sql: 'SELECT id FROM collection_items WHERE id = :itemId',
     args: { itemId }
   });
 
@@ -68,7 +69,7 @@ const queryCollectionItemImages = async (user, itemId) => {
 
   if (itemId) {
     const results = await client.execute({
-      sql: 'SELECT filename FROM collection_item_images WHERE collection_item_id = :itemId AND deleted_at IS NULL',
+      sql: 'SELECT filename FROM collection_item_images WHERE collection_item_id = :itemId',
       args: { itemId }
     });
 
@@ -76,7 +77,7 @@ const queryCollectionItemImages = async (user, itemId) => {
   }
 
   const results = await client.execute({
-    sql: 'SELECT filename, collection_item_id FROM collection_item_images WHERE deleted_at IS NULL'
+    sql: 'SELECT filename, collection_item_id FROM collection_item_images'
   });
 
   return results.rows;
@@ -95,7 +96,7 @@ const queryCollectionItemLinks = async (user, itemId) => {
   }
 
   const results = await client.execute({
-    sql: 'SELECT collection_item_id, collection_id FROM collection_item_links WHERE deleted_at IS NULL'
+    sql: 'SELECT collection_item_id, collection_id FROM collection_item_links'
   });
 
   return results.rows;
@@ -162,7 +163,7 @@ const getCollections = async (user) => {
       .filter((item) =>
         collectionItemLinks.some((link) => link.collection_item_id === item.id && link.collection_id === collectionId)
       )
-      ?.map(({ id: itemId, details }) => {
+      ?.map(({ id: itemId, deleted_at: deletedAt, details }) => {
         const images =
           collectionItemImages
             .filter((image) => image.collection_item_id === itemId)
@@ -187,7 +188,8 @@ const getCollections = async (user) => {
             isStillFrozen,
             ...details
           },
-          images
+          images,
+          isDeleted: Boolean(deletedAt)
         };
       });
     const weight = calculateCollectionWeight(items);

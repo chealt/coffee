@@ -34,6 +34,7 @@ interface CollectionItem {
   extractedDetails?: CollectionItemDetails;
   images: CollectionItemImage[];
   inCollections: string[];
+  isDeleted?: boolean;
   isFavorite?: boolean;
   review?: {
     acidity: number;
@@ -88,6 +89,7 @@ declare namespace App {
     collections: Collection[];
     collectionsControls: {
       showAge: string;
+      showArchived: string;
     };
     currency: string;
     feedback: string;

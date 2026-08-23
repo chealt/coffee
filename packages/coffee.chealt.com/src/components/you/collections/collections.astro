@@ -122,6 +122,14 @@ const showCoffee = ({ details }) => {
           <T namespace="you.collections.locales" key="showAge">{t("showAge")}</T
           >
         </Checkbox>
+        <Checkbox
+          name="showArchived"
+          checked={collectionsControls?.showArchived}
+        >
+          <T namespace="you.collections.locales" key="showArchived"
+            >{t("showArchived")}</T
+          >
+        </Checkbox>
       </Form>
     </div>
     <Filters
@@ -161,8 +169,8 @@ const showCoffee = ({ details }) => {
                 {items.length ? (
                   items
                     .filter(showCoffee)
-                    .map(({ id: itemId, cover, details }) => (
-                      <li>
+                    .map(({ id: itemId, cover, details, isDeleted }) => (
+                      <li class={`${(isDeleted && "archived") || ""}`}>
                         <a
                           href={`${getRelativeLocaleUrl(
                             Astro.currentLocale,
