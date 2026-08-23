@@ -184,7 +184,22 @@ const showCoffee = ({ details }) => {
                             data-view-transition-name="collectionItemCoverImage"
                           />
                         </a>
-                        {details && !details?.isBrewed && (
+                        {isDeleted && (
+                          <div class="restore-container">
+                            <Button
+                              data-restore-trigger
+                              class="primary rounded bordered shrink"
+                            >
+                              <T
+                                namespace="you.collections.locales"
+                                key="restore"
+                              >
+                                {t("restore")}
+                              </T>
+                            </Button>
+                          </div>
+                        )}
+                        {!isDeleted && details && !details?.isBrewed && (
                           <div class="fade-in" data-hide-while-transitioning>
                             {(details?.isStillFrozen && !details?.isBrewed && (
                               <div class="tag bottom frozen">

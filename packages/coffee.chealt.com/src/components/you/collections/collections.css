@@ -47,7 +47,10 @@ body {
 
   .archived {
     display: none;
-    opacity: 0.4;
+
+    a {
+      opacity: 0.4;
+    }
 
     .collections-page:has([name='showArchived']:checked) & {
       transform: translateY(0);
@@ -147,4 +150,12 @@ header.title {
 
 .collections-hidden-header {
   box-shadow: var(--shadow);
+}
+
+.restore-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
