@@ -21,41 +21,37 @@ const { collectionItem } = Astro.locals;
     {
       (collectionItem?.images.length && (
         <div class="carousel">
-          {collectionItem?.images.map(
-            ({ src, srcSmall, srcMedium, filename, status }, index) => (
-              <picture>
-                <source srcset={srcSmall} media="(max-width: 1023px)" />
-                <source srcset={srcMedium} media="(max-width: 1800px)" />
-                <img
-                  id={filename}
-                  data-dialog-id={`image-dialog-${index}`}
-                  src={src}
-                  loading={index === 0 ? "eager" : "lazy"}
-                  fetchpriority={index === 0 ? "high" : undefined}
-                  style={
-                    index === 0
-                      ? "view-transition-name: collectionItemCoverImage;"
-                      : undefined
-                  }
-                />
-                {status === "processing" && (
-                  <Fragment>
-                    <Button class="small round status" popovertarget="status">
-                      <Icon type="info" />
-                    </Button>
-                    <span popover="hint" id="status" class="tooltip">
-                      <T
-                        namespace="you.collections.item.images.locales"
-                        key="processing"
-                      >
-                        {t("processing")}
-                      </T>
-                    </span>
-                  </Fragment>
-                )}
-              </picture>
-            ),
-          )}
+          {collectionItem?.images.map(({ src, filename, status }, index) => (
+            <Fragment>
+              <img
+                id={filename}
+                data-dialog-id={`image-dialog-${index}`}
+                src={src}
+                loading={index === 0 ? "eager" : "lazy"}
+                fetchpriority={index === 0 ? "high" : undefined}
+                style={
+                  index === 0
+                    ? "view-transition-name: collectionItemCoverImage;"
+                    : undefined
+                }
+              />
+              {status === "processing" && (
+                <Fragment>
+                  <Button class="small round status" popovertarget="status">
+                    <Icon type="info" />
+                  </Button>
+                  <span popover="hint" id="status" class="tooltip">
+                    <T
+                      namespace="you.collections.item.images.locales"
+                      key="processing"
+                    >
+                      {t("processing")}
+                    </T>
+                  </span>
+                </Fragment>
+              )}
+            </Fragment>
+          ))}
         </div>
       )) ||
         null

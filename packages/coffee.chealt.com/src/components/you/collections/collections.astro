@@ -170,21 +170,11 @@ const showCoffee = ({ details }) => {
                           )}`}
                           id={`item-id-${itemId}`}
                         >
-                          <picture>
-                            <source
-                              srcset={cover.srcSmall}
-                              media="(max-width: 1023px)"
-                            />
-                            <source
-                              srcset={cover.srcMedium}
-                              media="(max-width: 1800px)"
-                            />
-                            <img
-                              src={cover.src}
-                              loading="lazy"
-                              data-view-transition-name="collectionItemCoverImage"
-                            />
-                          </picture>
+                          <img
+                            src={cover.src}
+                            loading="lazy"
+                            data-view-transition-name="collectionItemCoverImage"
+                          />
                         </a>
                         {details && !details?.isBrewed && (
                           <div class="fade-in" data-hide-while-transitioning>
