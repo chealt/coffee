@@ -3,5 +3,6 @@ CREATE TABLE `collections` (
   `name` text NOT NULL,
   `is_built_in` numeric DEFAULT FALSE NOT NULL,
   `rank` integer,
-  `deleted_at` text
+  `deleted_at` text,
+  `created_at` text
 );
