@@ -4,9 +4,11 @@ import {
   addCollectionItem,
   addCollectionItems,
   addCollectionItemImages,
-  updateCollectionName,
   addItemToCollection,
-  removeItemFromCollection
+  permanentlyDeleteCollectionItem,
+  removeItemFromCollection,
+  restoreCollectionItem,
+  updateCollectionName
 } from '../../../server/database/collections.js';
 import logger from '../../../server/utils/logger.js';
 
@@ -47,8 +49,16 @@ const POST = async (context) => {
         await addCollectionItemImages({ user, ...value });
 
         break;
+      case 'chealt-permanently-delete-collection-item':
+        await permanentlyDeleteCollectionItem({ user, itemId: value });
+
+        break;
       case 'chealt-remove-item-from-collection':
         await removeItemFromCollection({ user, ...value });
+
+        break;
+      case 'chealt-restore-collection-item':
+        await restoreCollectionItem({ user, itemId: value });
 
         break;
       default:

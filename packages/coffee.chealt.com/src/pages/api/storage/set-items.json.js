@@ -1,5 +1,10 @@
 import { getSessionUser } from '../../../server/authentication/session.js';
-import { deleteCollectionItems, markAsBrewed, updateRanks } from '../../../server/database/collections.js';
+import {
+  deleteCollectionItems,
+  markAsBrewed,
+  permanentlyDeleteCollectionItems,
+  updateRanks
+} from '../../../server/database/collections.js';
 import logger from '../../../server/utils/logger.js';
 
 const POST = async (context) => {
@@ -22,7 +27,10 @@ const POST = async (context) => {
         await deleteCollectionItems({ user, items: value });
 
         break;
+      case 'chealt-permanently-delete-items':
+        await permanentlyDeleteCollectionItems({ user, items: value });
 
+        break;
       case 'chealt-collection-update-ranks':
         await updateRanks({ user, items: value });
 

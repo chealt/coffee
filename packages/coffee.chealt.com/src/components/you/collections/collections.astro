@@ -188,6 +188,7 @@ const showCoffee = ({ details }) => {
                           <div class="restore-container">
                             <Button
                               data-restore-trigger
+                              data-item-id={itemId}
                               class="primary rounded bordered shrink"
                             >
                               <T
@@ -195,6 +196,18 @@ const showCoffee = ({ details }) => {
                                 key="restore"
                               >
                                 {t("restore")}
+                              </T>
+                            </Button>
+                            <Button
+                              data-permanently-delete-trigger
+                              data-item-id={itemId}
+                              class="danger rounded bordered shrink"
+                            >
+                              <T
+                                namespace="you.collections.locales"
+                                key="delete"
+                              >
+                                {t("delete")}
                               </T>
                             </Button>
                           </div>

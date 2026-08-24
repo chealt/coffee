@@ -5,6 +5,8 @@ const addItemToCollection = 'chealt-add-item-to-collection';
 const markItemsAsBrewed = 'chealt-mark-items-as-brewed';
 const deleteItems = 'chealt-delete-items';
 const removeItemFromCollection = 'chealt-remove-item-from-collection';
+const permanentlyDeleteCollectionItem = 'chealt-permanently-delete-collection-item';
+const restoreCollectionItem = 'chealt-restore-collection-item';
 const itemIdPrefix = 'item-id-';
 const heldTimeout = 600;
 
@@ -14,6 +16,8 @@ class CoffeeCollection extends HTMLElement {
     this.clearSelection = this.querySelector('[data-clear-trigger]');
     this.markAsBrewedTrigger = this.querySelector('[data-mark-as-brewed-trigger]');
     this.deleteCollectionItemsTrigger = this.querySelector('[data-delete-collection-items-trigger]');
+    this.restoreCollectionItemTriggers = this.querySelectorAll('[data-restore-trigger]');
+    this.permanentlyDeleteCollectionItemTriggers = this.querySelectorAll('[data-permanently-delete-trigger]');
     this.editCollectionsDialog = this.querySelector('#edit-collections');
     this.editCollectionsTrigger = this.querySelector('[data-dialog-id="edit-collections"]');
     this.collectionCheckboxes = this.editCollectionsDialog.querySelectorAll('[type="checkbox"]');
@@ -49,6 +53,12 @@ class CoffeeCollection extends HTMLElement {
 
     this.markAsBrewedTrigger?.addEventListener('click', this.markAsBrewed.bind(this));
     this.deleteCollectionItemsTrigger?.addEventListener('click', this.deleteItems.bind(this));
+    this.restoreCollectionItemTriggers.forEach((element) =>
+      element.addEventListener('click', CoffeeCollection.restoreCollectionItem(element.dataset.itemId))
+    );
+    this.permanentlyDeleteCollectionItemTriggers.forEach((element) =>
+      element.addEventListener('click', CoffeeCollection.permanentlyDeleteCollectionItem(element.dataset.itemId))
+    );
   }
 
   addInProgressClass(event) {
@@ -192,6 +202,22 @@ class CoffeeCollection extends HTMLElement {
         window.location.reload();
       }
     }
+  }
+
+  static restoreCollectionItem(itemId) {
+    return async () => {
+      await setItem(restoreCollectionItem, itemId);
+
+      window.location.reload();
+    };
+  }
+
+  static permanentlyDeleteCollectionItem(itemId) {
+    return async () => {
+      await setItem(permanentlyDeleteCollectionItem, itemId);
+
+      window.location.reload();
+    };
   }
 
   clearTimer() {

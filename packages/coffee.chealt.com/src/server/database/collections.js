@@ -317,6 +317,22 @@ const deleteCollectionItem = async ({ user, collectionId, itemId }) => {
   });
 };
 
+const permanentlyDeleteCollectionItem = async ({ user, collectionId, itemId }) => {
+  const client = getClient(user.name);
+
+  if (!collectionId) {
+    return await client.execute({
+      sql: 'DELETE FROM collection_items WHERE id = :itemId',
+      args: { itemId }
+    });
+  }
+
+  return await client.execute({
+    sql: 'DELETE FROM collection_item_links WHERE collection_item_id = :itemId AND collection_id = :collectionId',
+    args: { itemId, collectionId }
+  });
+};
+
 const deleteCollectionItems = async ({ user, items }) => {
   const client = getClient(user.name);
   const now = new Date().toISOString();
@@ -327,6 +343,26 @@ const deleteCollectionItems = async ({ user, items }) => {
       args: { itemId, now }
     }))
   );
+};
+
+const permanentlyDeleteCollectionItems = async ({ user, items }) => {
+  const client = getClient(user.name);
+
+  return await client.batch(
+    items.map((itemId) => ({
+      sql: 'DELETE FROM collection_items WHERE id = :itemId',
+      args: { itemId }
+    }))
+  );
+};
+
+const restoreCollectionItem = async ({ user, itemId }) => {
+  const client = getClient(user.name);
+
+  return await client.execute({
+    sql: 'UPDATE collection_items SET deleted_at = NULL WHERE id = :itemId',
+    args: { itemId }
+  });
 };
 
 const updateCollectionName = async ({ user, id, name }) => {
@@ -457,7 +493,10 @@ export {
   getCollectionItem,
   getSimilarCoffeePrices,
   markAsBrewed,
+  permanentlyDeleteCollectionItem,
+  permanentlyDeleteCollectionItems,
   removeItemFromCollection,
+  restoreCollectionItem,
   updateCollectionName,
   updateRanks
 };
