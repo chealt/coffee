@@ -8,13 +8,13 @@ import APIButton from "@components/common/api-button.astro";
 import T from "@components/i18n/t.astro";
 import { getTranslator } from "@components/i18n/t.js";
 import Button from "@components/form/button/button.astro";
-import Checkbox from "@components/form/checkbox/checkbox.astro";
 import Common from "@components/common/common.astro";
 import Form from "@components/form/form.astro";
 import Icon from "@components/icon/icon.astro";
 import Label from "@components/form/label/label.astro";
 import Logout from "@components/logout/logout.astro";
 import Select from "@components/form/select/select.astro";
+import Toggle from "@components/form/toggle/toggle.astro";
 import { capitalize } from "../../../utils/string.js";
 
 const t = await getTranslator({
@@ -97,7 +97,7 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
       {
         canTranslate && (
           <chealt-i18n-toggle>
-            <Checkbox
+            <Toggle
               name="isTranslating"
               value="on"
               checked={settings?.isTranslating === "on"}
@@ -106,7 +106,7 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
               <T namespace="you.profile.locales" key="isTranslating">
                 {t("isTranslating")}
               </T>
-            </Checkbox>
+            </Toggle>
           </chealt-i18n-toggle>
         )
       }
@@ -118,7 +118,7 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
             </T>
           </div>
         </legend>
-        <Checkbox
+        <Toggle
           name="newCoffeeNotification"
           value="on"
           checked={settings?.newCoffeeNotification === "on"}
@@ -126,7 +126,7 @@ const currencies = exchangeRates.map(({ currency_code }) => currency_code);
           <T namespace="you.profile.locales" key="newCoffee">
             {t("newCoffee")}
           </T>
-        </Checkbox>
+        </Toggle>
       </fieldset>
       <APIButton
         apiEndpoint="/api/authentication/registration/send-new-code.json?profile"

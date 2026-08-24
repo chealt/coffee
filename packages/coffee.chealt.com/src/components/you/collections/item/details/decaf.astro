@@ -1,5 +1,5 @@
 ---
-import Checkbox from "../../../../form/checkbox/checkbox.astro";
+import Toggle from "@components/form/toggle/toggle.astro";
 
 import T from "@components/i18n/t.astro";
 import { getTranslator } from "@components/i18n/t.js";
@@ -12,8 +12,8 @@ const t = await getTranslator({
 const { checked } = Astro.props;
 ---
 
-<Checkbox name="isDecaf" checked={checked === "on"}
-  ><T namespace="you.collections.item.details.locales" key="decaf"
-    >{t("decaf")}</T
-  ></Checkbox
->
+<Toggle name="isDecaf" checked={checked === "on"}>
+  <T namespace="you.collections.item.details.locales" key="decaf">
+    {t("decaf")}
+  </T>
+</Toggle>

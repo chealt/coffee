@@ -11,6 +11,7 @@ import Button from "@components/form/button/button.astro";
 import Checkbox from "@components/form/checkbox/checkbox.astro";
 import Form from "@components/form/form.astro";
 import Icon from "@components/icon/icon.astro";
+import Toggle from "@components/form/toggle/toggle.astro";
 import { getTasteNoteGroupByNoteId } from "@components/taste-notes/utils.js";
 
 import Filters from "./filters/filters.astro";
@@ -118,18 +119,16 @@ const showCoffee = ({ details }) => {
         data-save-on-input
         data-exclude-from-local-storage
       >
-        <Checkbox name="showAge" checked={collectionsControls?.showAge}>
-          <T namespace="you.collections.locales" key="showAge">{t("showAge")}</T
-          >
-        </Checkbox>
-        <Checkbox
-          name="showArchived"
-          checked={collectionsControls?.showArchived}
-        >
-          <T namespace="you.collections.locales" key="showArchived"
-            >{t("showArchived")}</T
-          >
-        </Checkbox>
+        <Toggle name="showAge" checked={collectionsControls?.showAge}>
+          <T namespace="you.collections.locales" key="showAge">
+            {t("showAge")}
+          </T>
+        </Toggle>
+        <Toggle name="showArchived" checked={collectionsControls?.showArchived}>
+          <T namespace="you.collections.locales" key="showArchived">
+            {t("showArchived")}
+          </T>
+        </Toggle>
       </Form>
     </div>
     <Filters

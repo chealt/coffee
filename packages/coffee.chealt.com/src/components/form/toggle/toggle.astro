@@ -1,0 +1,15 @@
+---
+import Label from "../label/label.astro";
+
+import "./toggle.css";
+---
+
+<Label class="toggle-container">
+  <div class="inputs">
+    <span class="toggle"></span>
+    <input class="visually-hidden" type="checkbox" {...Astro.props} />
+    <div class="label">
+      <slot />
+    </div>
+  </div>
+</Label>
