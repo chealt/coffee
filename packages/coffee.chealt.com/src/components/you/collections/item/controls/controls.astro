@@ -34,11 +34,11 @@ const { collectionItem, collections } = Astro.locals;
       type="favorite"
       class=`${collectionItem.isFavorite ? 'active' : ''}`
     />
-    <span
-      ><T namespace="you.collections.item.controls.locales" key="favorite"
-        >{t("favorite")}</T
-      ></span
-    >
+    <span>
+      <T namespace="you.collections.item.controls.locales" key="favorite">
+        {t("favorite")}
+      </T>
+    </span>
   </Button>
   <CoffeeImageUpload data-collection-id={collectionId} data-item-id={itemId}>
     <Button
@@ -46,11 +46,11 @@ const { collectionItem, collections } = Astro.locals;
       href={getRelativeLocaleUrl(Astro.currentLocale, "/you/collections")}
     >
       <Icon type="add" />
-      <span
-        ><T namespace="you.collections.item.controls.locales" key="add"
-          >{t("add")}</T
-        ></span
-      >
+      <span>
+        <T namespace="you.collections.item.controls.locales" key="add">
+          {t("add")}
+        </T>
+      </span>
     </Button>
   </CoffeeImageUpload>
   <Button
@@ -58,20 +58,23 @@ const { collectionItem, collections } = Astro.locals;
     data-dialog-id={`collection-item-menu-${collectionId}-${itemId}`}
   >
     <Icon type="menu" />
-    <span
-      ><T namespace="you.collections.item.controls.locales" key="more"
-        >{t("more")}</T
-      ></span
-    >
+    <span>
+      <T namespace="you.collections.item.controls.locales" key="more">
+        {t("more")}
+      </T>
+    </span>
   </Button>
   <Dialog class="drawer" id={`collection-item-menu-${collectionId}-${itemId}`}>
     <ul>
       <li>
         <Button class="column" for="edit-collections">
           <Icon type="edit" />
-          <T namespace="you.collections.item.controls.locales" key="collections"
-            >{t("collections")}</T
+          <T
+            namespace="you.collections.item.controls.locales"
+            key="collections"
           >
+            {t("collections")}
+          </T>
         </Button>
         <Button
           class="column danger"
@@ -85,9 +88,9 @@ const { collectionItem, collections } = Astro.locals;
           data-dont-close-dialog
         >
           <Icon type="delete" />
-          <T namespace="you.collections.item.controls.locales" key="delete"
-            >{t("delete")}</T
-          >
+          <T namespace="you.collections.item.controls.locales" key="delete">
+            {t("delete")}
+          </T>
         </Button>
       </li>
     </ul>
