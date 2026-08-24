@@ -46,7 +46,7 @@ const queryCollectionItemsByCollectionId = async (user, collectionId) => {
   const client = getClient(user.name);
 
   const results = await client.execute({
-    sql: 'SELECT ci.id FROM collection_items ci JOIN collection_item_links cil ON cil.collection_item_id = ci.id WHERE cil.collection_id = :collectionId',
+    sql: 'SELECT ci.id FROM collection_items ci JOIN collection_item_links cil ON cil.collection_item_id = ci.id WHERE cil.collection_id = :collectionId ORDER BY ci.created_at DESC',
     args: { collectionId }
   });
 
@@ -57,7 +57,7 @@ const queryCollectionItem = async (user, itemId) => {
   const client = getClient(user.name);
 
   const results = await client.execute({
-    sql: 'SELECT id FROM collection_items WHERE id = :itemId',
+    sql: 'SELECT id FROM collection_items WHERE id = :itemId ORDER BY created_at DESC',
     args: { itemId }
   });
 
@@ -69,7 +69,7 @@ const queryCollectionItemImages = async (user, itemId) => {
 
   if (itemId) {
     const results = await client.execute({
-      sql: 'SELECT filename FROM collection_item_images WHERE collection_item_id = :itemId',
+      sql: 'SELECT filename FROM collection_item_images WHERE collection_item_id = :itemId ORDER BY created_at ASC',
       args: { itemId }
     });
 
@@ -77,7 +77,7 @@ const queryCollectionItemImages = async (user, itemId) => {
   }
 
   const results = await client.execute({
-    sql: 'SELECT filename, collection_item_id FROM collection_item_images'
+    sql: 'SELECT filename, collection_item_id FROM collection_item_images ORDER BY created_at ASC'
   });
 
   return results.rows;
@@ -88,7 +88,7 @@ const queryCollectionItemLinks = async (user, itemId) => {
 
   if (itemId) {
     const results = await client.execute({
-      sql: 'SELECT collection_item_id, collection_id FROM collection_item_links WHERE collection_item_id = :itemId AND deleted_at IS NULL',
+      sql: 'SELECT collection_item_id, collection_id FROM collection_item_links WHERE collection_item_id = :itemId AND deleted_at IS NULL ORDER BY created_at DESC',
       args: { itemId }
     });
 
@@ -96,7 +96,7 @@ const queryCollectionItemLinks = async (user, itemId) => {
   }
 
   const results = await client.execute({
-    sql: 'SELECT collection_item_id, collection_id FROM collection_item_links'
+    sql: 'SELECT collection_item_id, collection_id FROM collection_item_links ORDER BY created_at DESC'
   });
 
   return results.rows;
