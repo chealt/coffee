@@ -340,54 +340,58 @@ const updateCollectionName = async ({ user, id, name }) => {
 
 const addCollection = async ({ user, id, name, isBuiltIn }) => {
   const client = getClient(user.name);
+  const now = new Date().toISOString();
 
   return await client.execute({
-    sql: 'INSERT INTO collections (id, name, is_built_in) VALUES (:id, :name, :isBuiltIn)',
-    args: { id, name, isBuiltIn }
+    sql: 'INSERT INTO collections (id, name, is_built_in, created_at) VALUES (:id, :name, :isBuiltIn), :now',
+    args: { id, name, isBuiltIn, now }
   });
 };
 
 const addCollectionItem = async ({ user, id, itemId, filename }) => {
   const client = getClient(user.name);
+  const now = new Date().toISOString();
 
   await client.execute({
-    sql: 'INSERT INTO collection_items (id) VALUES (:itemId)',
-    args: { itemId }
+    sql: 'INSERT INTO collection_items (id, created_at) VALUES (:itemId, :now)',
+    args: { itemId, now }
   });
 
   await client.execute({
-    sql: 'INSERT INTO collection_item_links (collection_id, collection_item_id) VALUES (:id, :itemId)',
-    args: { id, itemId }
+    sql: 'INSERT INTO collection_item_links (collection_id, collection_item_id, created_at) VALUES (:id, :itemId, :now)',
+    args: { id, itemId, now }
   });
 
   return await client.execute({
-    sql: 'INSERT INTO collection_item_images (filename, collection_item_id) VALUES (:filename, :itemId) ON CONFLICT(filename, collection_item_id) DO NOTHING',
-    args: { filename, itemId }
+    sql: 'INSERT INTO collection_item_images (filename, collection_item_id, created_at) VALUES (:filename, :itemId, :now) ON CONFLICT(filename, collection_item_id) DO NOTHING',
+    args: { filename, itemId, now }
   });
 };
 
 const addItemToCollection = async ({ user, collectionId, itemId }) => {
   const client = getClient(user.name);
+  const now = new Date().toISOString();
 
   return await client.execute({
-    sql: 'INSERT INTO collection_item_links (collection_id, collection_item_id) VALUES (:collectionId, :itemId)',
-    args: { collectionId, itemId }
+    sql: 'INSERT INTO collection_item_links (collection_id, collection_item_id, created_at) VALUES (:collectionId, :itemId, :now)',
+    args: { collectionId, itemId, now }
   });
 };
 
 const addCollectionItems = async ({ user, id, items }) => {
   const client = getClient(user.name);
+  const now = new Date().toISOString();
 
   const collection_items_batch_commands = items.map((item) => ({
-    sql: 'INSERT INTO collection_items (id) VALUES (:id) ON CONFLICT(id) DO NOTHING',
-    args: { id: item.id }
+    sql: 'INSERT INTO collection_items (id, created_at) VALUES (:id, :now) ON CONFLICT(id) DO NOTHING',
+    args: { id: item.id, now }
   }));
 
   await client.batch(collection_items_batch_commands);
 
   const collection_item_links_batch_commands = items.map((item) => ({
-    sql: 'INSERT INTO collection_item_links (collection_id, collection_item_id) VALUES (:collectionID, :collectionItemID)',
-    args: { collectionID: id, collectionItemID: item.id }
+    sql: 'INSERT INTO collection_item_links (collection_id, collection_item_id, created_at) VALUES (:collectionID, :collectionItemID, :now)',
+    args: { collectionID: id, collectionItemID: item.id, now }
   }));
 
   await client.batch(collection_item_links_batch_commands);
@@ -395,8 +399,8 @@ const addCollectionItems = async ({ user, id, items }) => {
   const collection_item_images_batch_commands = items
     .map((item) =>
       item.images.map((image) => ({
-        sql: 'INSERT INTO collection_item_images (filename, collection_item_id) VALUES (:filename, :collectionItemID) ON CONFLICT(filename, collection_item_id) DO NOTHING',
-        args: { filename: image.filename, collectionItemID: item.id }
+        sql: 'INSERT INTO collection_item_images (filename, collection_item_id, created_at) VALUES (:filename, :collectionItemID, :now) ON CONFLICT(filename, collection_item_id) DO NOTHING',
+        args: { filename: image.filename, collectionItemID: item.id, now }
       }))
     )
     .flat();
@@ -406,10 +410,11 @@ const addCollectionItems = async ({ user, id, items }) => {
 
 const addCollectionItemImages = async ({ user, itemId, filename }) => {
   const client = getClient(user.name);
+  const now = new Date().toISOString();
 
   return await client.execute({
-    sql: 'INSERT INTO collection_item_images (filename, collection_item_id) VALUES (:filename, :itemId)',
-    args: { filename, itemId }
+    sql: 'INSERT INTO collection_item_images (filename, collection_item_id, created_at) VALUES (:filename, :itemId, :now)',
+    args: { filename, itemId, now }
   });
 };
 
