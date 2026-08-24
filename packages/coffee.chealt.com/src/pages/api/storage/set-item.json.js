@@ -5,8 +5,8 @@ import {
   addCollectionItems,
   addCollectionItemImages,
   updateCollectionName,
-  deleteCollectionItem,
-  addItemToCollection
+  addItemToCollection,
+  removeItemFromCollection
 } from '../../../server/database/collections.js';
 import logger from '../../../server/utils/logger.js';
 
@@ -48,7 +48,7 @@ const POST = async (context) => {
 
         break;
       case 'chealt-remove-item-from-collection':
-        await deleteCollectionItem({ user, ...value });
+        await removeItemFromCollection({ user, ...value });
 
         break;
       default:

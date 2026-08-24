@@ -291,6 +291,15 @@ const deleteCollection = async ({ user, id }) => {
   });
 };
 
+const removeItemFromCollection = async ({ user, collectionId, itemId }) => {
+  const client = getClient(user.name);
+
+  return await client.execute({
+    sql: 'DELETE FROM collection_item_links WHERE collection_item_id = :itemId AND collection_id = :collectionId',
+    args: { itemId, collectionId }
+  });
+};
+
 const deleteCollectionItem = async ({ user, collectionId, itemId }) => {
   const client = getClient(user.name);
   const now = new Date().toISOString();
@@ -443,6 +452,7 @@ export {
   getCollectionItem,
   getSimilarCoffeePrices,
   markAsBrewed,
+  removeItemFromCollection,
   updateCollectionName,
   updateRanks
 };
