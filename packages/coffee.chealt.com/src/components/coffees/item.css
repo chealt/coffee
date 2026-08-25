@@ -1,5 +1,7 @@
 .list .coffee-details {
   width: 100%;
+  box-sizing: border-box;
+  padding: 0 var(--gap);
 }
 
 .coffee-details {
