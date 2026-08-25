@@ -28,6 +28,7 @@
   --shadow: 0 -6px 12px var(--color-text);
 
   --border-radius: 16px;
+  --border-radius--inner: 8px;
   --border-radius--s: 8px;
 
   --z-index--xs: 10;
@@ -357,7 +358,7 @@ sup {
       height: var(--card-height);
       overflow: hidden;
       box-sizing: border-box;
-      border-radius: var(--border-radius);
+      border-radius: var(--border-radius--inner);
     }
 
     .image.large {
@@ -368,7 +369,7 @@ sup {
       display: block;
       width: 100%;
       height: auto;
-      border-radius: var(--border-radius);
+      border-radius: var(--border-radius--inner);
     }
 
     .name {
