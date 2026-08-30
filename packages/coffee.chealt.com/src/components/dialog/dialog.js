@@ -47,6 +47,10 @@ class CoffeeDialog extends HTMLElement {
   openOnClick() {
     this.triggerButton?.forEach((button) => {
       button.addEventListener('click', (event) => {
+        if (event.pseudoTarget?.type === '::scroll-marker') {
+          return;
+        }
+
         event.preventDefault();
 
         this.dialog.showModal();
