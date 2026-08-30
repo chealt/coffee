@@ -1,5 +1,9 @@
 import { getSessionUser } from '../../../server/authentication/session.js';
-import { deleteCollection, deleteCollectionItem } from '../../../server/database/collections.js';
+import {
+  deleteCollection,
+  deleteCollectionItem,
+  deleteCollectionItemImage
+} from '../../../server/database/collections.js';
 import { deletePasskey } from '../../../server/database/user.js';
 import logger from '../../../server/utils/logger.js';
 
@@ -11,23 +15,28 @@ const DELETE = async (context) => {
   }
 
   const { key, value } = await context.request.json();
+  const user = { name: loggedInUser.username, if: loggedInUser.userID };
 
   try {
     switch (key) {
       case 'collection':
-        await deleteCollection({ user: { name: loggedInUser.username, id: loggedInUser.userID }, id: value });
+        await deleteCollection({ user, id: value });
 
         break;
       case 'chealt-collection-item':
         await deleteCollectionItem({
-          user: { name: loggedInUser.username, id: loggedInUser.userID },
+          user,
           itemId: value
         });
 
         break;
+      case 'collection-item-image':
+        await deleteCollectionItemImage({ user, filename: value });
+
+        break;
       case 'passkey':
         await deletePasskey({
-          user: { name: loggedInUser.username, id: loggedInUser.userID },
+          user,
           credentialId: value
         });
 

@@ -317,6 +317,15 @@ const deleteCollectionItem = async ({ user, collectionId, itemId }) => {
   });
 };
 
+const deleteCollectionItemImage = async ({ user, filename }) => {
+  const client = getClient(user.name);
+
+  return await client.execute({
+    sql: 'DELETE FROM collection_item_images WHERE filename = :filename',
+    args: { filename }
+  });
+};
+
 const permanentlyDeleteCollectionItem = async ({ user, collectionId, itemId }) => {
   const client = getClient(user.name);
 
@@ -488,6 +497,7 @@ export {
   addItemToCollection,
   deleteCollection,
   deleteCollectionItem,
+  deleteCollectionItemImage,
   deleteCollectionItems,
   getCollections,
   getCollectionItem,

@@ -86,6 +86,10 @@ a.button {
   &.shrink {
     width: auto;
   }
+
+  &.rotated {
+    transform: rotate(90deg);
+  }
 }
 
 button[disabled],
