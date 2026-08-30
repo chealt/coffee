@@ -8,7 +8,8 @@ import {
   permanentlyDeleteCollectionItem,
   removeItemFromCollection,
   restoreCollectionItem,
-  updateCollectionName
+  updateCollectionName,
+  useCollectionItemImageAsCover
 } from '../../../server/database/collections.js';
 import logger from '../../../server/utils/logger.js';
 
@@ -59,6 +60,10 @@ const POST = async (context) => {
         break;
       case 'chealt-restore-collection-item':
         await restoreCollectionItem({ user, itemId: value });
+
+        break;
+      case 'chealt-collection-item-image-use-as-cover':
+        await useCollectionItemImageAsCover({ user, ...value });
 
         break;
       default:

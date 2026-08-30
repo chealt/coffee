@@ -69,7 +69,7 @@ const queryCollectionItemImages = async (user, itemId) => {
 
   if (itemId) {
     const results = await client.execute({
-      sql: 'SELECT filename FROM collection_item_images WHERE collection_item_id = :itemId ORDER BY created_at ASC',
+      sql: 'SELECT filename FROM collection_item_images WHERE collection_item_id = :itemId ORDER BY is_cover DESC, created_at ASC',
       args: { itemId }
     });
 
@@ -489,6 +489,20 @@ const markAsBrewed = async ({ user, items }) => {
   }
 };
 
+const useCollectionItemImageAsCover = async ({ user, itemId, filename }) => {
+  const client = getClient(user.name);
+
+  await client.execute({
+    sql: 'UPDATE collection_item_images SET is_cover = NULL WHERE collection_item_id = :itemId',
+    args: { itemId }
+  });
+
+  return await client.execute({
+    sql: 'UPDATE collection_item_images SET is_cover = TRUE WHERE filename = :filename AND collection_item_id = :itemId',
+    args: { filename, itemId }
+  });
+};
+
 export {
   addCollection,
   addCollectionItem,
@@ -508,5 +522,6 @@ export {
   removeItemFromCollection,
   restoreCollectionItem,
   updateCollectionName,
-  updateRanks
+  updateRanks,
+  useCollectionItemImageAsCover
 };

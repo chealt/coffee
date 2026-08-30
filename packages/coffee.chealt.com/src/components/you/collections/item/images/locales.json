@@ -1,7 +1,8 @@
 {
   "en": {
     "delete": "delete",
-    "processing": "Getting coffee details from the image"
+    "processing": "Getting coffee details from the image",
+    "useAsCover": "use as cover"
   },
   "pl": {
     "processing": "Pobieranie szczegółów kawy z zdjęcia"

@@ -1,7 +1,7 @@
 /* oxlint-disable no-console */
 import { createClient } from '@libsql/client';
 import { createClient as createPlatformClient } from '@tursodatabase/api';
-import { migrate } from './migrations/add-created-at.js';
+import { migrate } from './migrations/add-collection-item-images-is-cover.js';
 
 const databaseUrl = process.env.TURSO_DATABASE_URL;
 const defaultAuthToken = process.env.TURSO_AUTH_TOKEN;

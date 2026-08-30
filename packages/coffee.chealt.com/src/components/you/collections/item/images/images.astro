@@ -16,81 +16,101 @@ const t = await getTranslator({
 const { collectionItem } = Astro.locals;
 ---
 
-<ul>
-  <li class="picture-collection">
-    {
-      (collectionItem?.images.length && (
-        <div class="carousel">
-          {collectionItem?.images.map(
-            ({ srcSmall, filename, status }, index) => (
-              <div
-                class="image-container"
-                data-type="collection-item-image"
-                id={filename}
-              >
-                <Fragment>
-                  <img
-                    data-dialog-id={`image-dialog-${index}`}
-                    src={srcSmall}
-                    loading={index === 0 ? "eager" : "lazy"}
-                    fetchpriority={index === 0 ? "high" : undefined}
-                    style={
-                      index === 0
-                        ? "view-transition-name: collectionItemCoverImage;"
-                        : undefined
-                    }
-                  />
-                  {status === "processing" && (
-                    <Fragment>
-                      <Button class="small round status" popovertarget="status">
-                        <Icon type="info" />
-                      </Button>
-                      <span popover="hint" id="status" class="tooltip">
-                        <T
-                          namespace="you.collections.item.images.locales"
-                          key="processing"
-                        >
-                          {t("processing")}
-                        </T>
-                      </span>
-                    </Fragment>
-                  )}
-                </Fragment>
-                <Button
-                  data-edit-trigger
-                  class="ghost shrink tight rotated"
-                  data-dialog-id={`edit-image-dialog-${index}`}
+<coffee-collection-item-image-controls>
+  <ul>
+    <li class="picture-collection">
+      {
+        (collectionItem?.images.length && (
+          <div class="carousel">
+            {collectionItem?.images.map(
+              ({ srcSmall, filename, status }, index) => (
+                <div
+                  class="image-container"
+                  data-type="collection-item-image"
+                  id={filename}
                 >
-                  <Icon type="menu" />
-                </Button>
-                <Dialog class="drawer" id={`edit-image-dialog-${index}`}>
-                  <ul>
-                    <li>
-                      <Button
-                        class="column danger"
-                        data-delete-trigger
-                        for={filename}
-                      >
-                        <Icon type="delete" />
-                        <T
-                          namespace="you.collections.item.images.locales"
-                          key="delete"
+                  <Fragment>
+                    <img
+                      data-dialog-id={`image-dialog-${index}`}
+                      src={srcSmall}
+                      loading={index === 0 ? "eager" : "lazy"}
+                      fetchpriority={index === 0 ? "high" : undefined}
+                      style={
+                        index === 0
+                          ? "view-transition-name: collectionItemCoverImage;"
+                          : undefined
+                      }
+                    />
+                    {status === "processing" && (
+                      <Fragment>
+                        <Button
+                          class="small round status"
+                          popovertarget="status"
                         >
-                          {t("delete")}
-                        </T>
-                      </Button>
-                    </li>
-                  </ul>
-                </Dialog>
-              </div>
-            ),
-          )}
-        </div>
-      )) ||
-        null
-    }
-  </li>
-</ul>
+                          <Icon type="info" />
+                        </Button>
+                        <span popover="hint" id="status" class="tooltip">
+                          <T
+                            namespace="you.collections.item.images.locales"
+                            key="processing"
+                          >
+                            {t("processing")}
+                          </T>
+                        </span>
+                      </Fragment>
+                    )}
+                  </Fragment>
+                  <Button
+                    data-edit-trigger
+                    class="ghost shrink tight rotated"
+                    data-dialog-id={`edit-image-dialog-${index}`}
+                  >
+                    <Icon type="menu" />
+                  </Button>
+                  <Dialog class="drawer" id={`edit-image-dialog-${index}`}>
+                    <ul>
+                      <li>
+                        {index !== 0 && (
+                          <Button
+                            class="column"
+                            data-use-as-cover-trigger
+                            data-image-filename={filename}
+                          >
+                            <Icon type="image" />
+                            <T
+                              namespace="you.collections.item.images.locales"
+                              key="useAsCover"
+                            >
+                              {t("useAsCover")}
+                            </T>
+                          </Button>
+                        )}
+                        <Button
+                          class="column danger"
+                          data-delete-trigger
+                          for={filename}
+                        >
+                          <Icon type="delete" />
+                          <T
+                            namespace="you.collections.item.images.locales"
+                            key="delete"
+                          >
+                            {t("delete")}
+                          </T>
+                        </Button>
+                      </li>
+                    </ul>
+                  </Dialog>
+                </div>
+              ),
+            )}
+          </div>
+        )) ||
+          null
+      }
+    </li>
+  </ul>
+</coffee-collection-item-image-controls>
 {
   collectionItem?.images.map(({ src }, index) => (
     <Dialog class="full-size-image" id={`image-dialog-${index}`} showClose>
@@ -98,3 +118,5 @@ const { collectionItem } = Astro.locals;
     </Dialog>
   ))
 }
+
+<script src="./image-controls.js"></script>
