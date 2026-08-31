@@ -1,10 +1,12 @@
 ---
 import './icon.css';
 
+// The key is quoted because Vite's dependency scanner mistakes a bare `import` at the start of a
+// frontmatter line for an import statement and fails to parse the file, which breaks astro dev
 const images = import.meta.glob('/public/icons/*.svg', {
   eager: true,
   query: '?raw',
-  import: 'default'
+  'import': 'default'
 });
 
 const { type } = Astro.props;

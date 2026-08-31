@@ -21,12 +21,13 @@ const tc = await getTranslator({
   locale: Astro.currentLocale,
 });
 
+// Quoted for the same reason as in the icon component: a bare `import` key trips the dependency scanner
 const brewingMethodImages = await import.meta.glob(
   "/public/icons/brewing-methods/*.*",
   {
     eager: true,
     query: "?raw",
-    import: "default",
+    "import": "default",
   },
 );
 
