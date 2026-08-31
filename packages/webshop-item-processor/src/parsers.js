@@ -4217,7 +4217,8 @@ const parsers = {
 
     const currency = currencyCodes['zł'];
 
-    const weight = 250;
+    const description = document.querySelector('.single-product__description')?.textContent.toLowerCase().trim();
+    const weight = description.includes(' 125 g.') ? 125 : 250;
 
     if (!weight || isNaN(weight)) {
       logger.error(`No weight found for ${url}`);
