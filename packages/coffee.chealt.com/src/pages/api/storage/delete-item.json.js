@@ -15,7 +15,7 @@ const DELETE = async (context) => {
   }
 
   const { key, value } = await context.request.json();
-  const user = { name: loggedInUser.username, if: loggedInUser.userID };
+  const user = { name: loggedInUser.username, id: loggedInUser.userID };
 
   try {
     switch (key) {
