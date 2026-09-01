@@ -3,5 +3,9 @@
 [![Deploy](https://github.com/chealt/coffee/workflows/Deploy/badge.svg)](https://github.com/chealt/coffee/actions/workflows/deploy.yml)
 [![Data Export](https://github.com/chealt/coffee/actions/workflows/dataExport.yml/badge.svg)](https://github.com/chealt/coffee/actions/workflows/dataExport.yml)
 [![UI Tests](https://github.com/chealt/coffee/workflows/UI%20Tests/badge.svg)](https://github.com/chealt/coffee/actions/workflows/uiTest.yml)
+[![Preview](https://github.com/chealt/coffee/actions/workflows/previewTest.yml/badge.svg)](https://github.com/chealt/coffee/actions/workflows/previewTest.yml)
+[![Cleanup Test Passkeys](https://github.com/chealt/coffee/actions/workflows/cleanupTestPasskeys.yml/badge.svg)](https://github.com/chealt/coffee/actions/workflows/cleanupTestPasskeys.yml)
+[![Trigger GitHub Action](https://github.com/chealt/coffee/actions/workflows/triggerGithubAction.yml/badge.svg)](https://github.com/chealt/coffee/actions/workflows/triggerGithubAction.yml)
+[![Trigger GitHub Action - Infra](https://github.com/chealt/coffee/actions/workflows/triggerGithubActionInfra.yml/badge.svg)](https://github.com/chealt/coffee/actions/workflows/triggerGithubActionInfra.yml)
 
 # coffee
