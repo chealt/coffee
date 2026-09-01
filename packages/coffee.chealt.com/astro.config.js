@@ -36,10 +36,12 @@ const useBrowserFieldInWorker = {
 
 export default defineConfig({
   output: 'server',
-  prefetch: {
-    prefetchAll: true,
-    defaultStrategy: 'viewport'
-  },
+  prefetch: process.env.CI
+    ? {
+        prefetchAll: true,
+        defaultStrategy: 'viewport'
+      }
+    : false,
   i18n: {
     locales,
     defaultLocale: supportedLanguages.find(({ isDefault }) => isDefault)?.locale || 'en',
@@ -120,7 +122,7 @@ export default defineConfig({
   },
   integrations: [
     sentry({
-      enabled: Boolean(process.env.NODE_ENV === 'production' && process.env.SENTRY_AUTH_TOKEN),
+      enabled: Boolean(!process.env.CI && process.env.NODE_ENV === 'production' && process.env.SENTRY_AUTH_TOKEN),
       project: 'website',
       org: 'central-beans',
       authToken: process.env.SENTRY_AUTH_TOKEN,
