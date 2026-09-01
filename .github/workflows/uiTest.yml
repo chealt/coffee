@@ -35,10 +35,11 @@ jobs:
       - name: Install Playwright Browsers
         if: steps.cache.outputs.cache-hit != 'true'
         run: yarn workspace @centralbeans/website playwright install --with-deps chromium
-      # The dev server runs the site in workerd, whose env comes from wrangler.toml and
-      # .env, never from the job environment. Without this the worker would fall back to
-      # the production ORIGIN and RELYING_PARTY_ID, and have no database credentials.
-      - name: Write the dev server environment
+      # The tests run against the built worker under `wrangler dev`, whose env comes from
+      # wrangler.toml and .env, never from the job environment. Without this the worker
+      # would fall back to the production ORIGIN and RELYING_PARTY_ID (baked into
+      # dist/server/wrangler.json at build time) and have no database credentials.
+      - name: Write the worker environment
         working-directory: packages/coffee.chealt.com
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

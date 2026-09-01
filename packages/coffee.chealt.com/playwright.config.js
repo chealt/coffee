@@ -53,14 +53,16 @@ export default defineConfig({
     }
   ],
   // When baseUrl is set the tests run against a deployed site (prod or a PR
-  // preview), so the local dev server is not needed.
+  // preview), so the local server is not needed.
   ...(process.env.baseUrl
     ? {}
     : {
         webServer: {
-          command: 'yarn dev',
-          port: 4321,
-          reuseExistingServer: true
+          command: 'yarn build && yarn wrangler dev --port 4321 --show-interactive-dev-session false',
+          url: 'http://localhost:4321/en/',
+          timeout: 180 * 1000,
+          reuseExistingServer: !process.env.CI,
+          env: { WRANGLER_SEND_METRICS: 'false' }
         }
       })
 });
