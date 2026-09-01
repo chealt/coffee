@@ -18,7 +18,7 @@ if (process.env.CI && !process.env.localDevServer && !process.env.identityHeader
 }
 
 // CI splits the suite across parallel jobs, one shard each. Both values come from the
-// workflow so the shard count lives in a single place there.
+// workflow, where the shard count is the length of the matrix list.
 const shardIndex = Number(process.env.shardIndex) || 0;
 const shardTotal = Number(process.env.shardTotal) || 0;
 const isSharded = shardIndex > 0 && shardTotal > 1;
@@ -47,25 +47,13 @@ export default defineConfig({
     }
   },
   projects: [
+    // The tests share a single account and leave the passkeys they register behind. No
+    // teardown clears them: it would delete the passkeys the other shards are still
+    // using. The Cleanup Test Passkeys workflow sweeps the shared account daily instead.
     {
       name: 'chromium',
-      use: getDevice('Desktop Chrome'),
-      ...(isSharded ? {} : { teardown: 'cleanup' })
-    },
-    // The tests share a single user and the cleanup deletes all of its passkeys, so it
-    // cannot take part in a sharded run: whichever shard it landed in would delete the
-    // passkeys the other shards are still using. It is left out of the projects there so
-    // no shard picks it up, and CI runs it once after every shard with an unsharded
-    // `playwright test --project=cleanup`.
-    ...(isSharded
-      ? []
-      : [
-          {
-            name: 'cleanup',
-            testMatch: /.*\.teardown\.js/u,
-            use: getDevice('Desktop Chrome')
-          }
-        ])
+      use: getDevice('Desktop Chrome')
+    }
   ],
   ...(isSharded ? { shard: { current: shardIndex, total: shardTotal } } : {}),
   // When baseUrl is set the tests run against a deployed site (prod or a PR

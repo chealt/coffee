@@ -10,6 +10,8 @@
   "scripts": {
     "add:logos": "node --env-file=.env data/addLogos.js",
     "build": "astro build",
+    "delete:test-passkeys": "node --env-file=.env data/deleteTestPasskeys.js",
+    "delete:test-passkeys:ci": "node data/deleteTestPasskeys.js",
     "dev": "AWS_PROFILE=centralbeans.com astro dev",
     "export:translations": "node --env-file=.env data/i18n.js",
     "export:data": "node --env-file=.env data/export.js",

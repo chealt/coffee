@@ -799,46 +799,6 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
               https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
               -d '{"context":"UI Tests - prod / report (shard ${{ matrix.shard }}/${{ strategy.job-total }})","state":"${{ steps.report-upload.outcome }}","target_url":"https://playwright-reports.centralbeans.com/test-reports/prod/${{ github.ref_name }}/shard-${{ matrix.shard }}/index.html"}'
-  # The tests share a single user and the cleanup deletes all of its passkeys, so it can
-  # only run once every shard is done - a shard running it would break the others
-  website-test-cleanup:
-    runs-on: ubuntu-latest
-    needs: website-test
-    if: always() && needs.website-test.result != 'skipped'
-    steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: 'package.json'
-          cache: 'yarn'
-      - name: Install dependencies
-        run: yarn install --immutable
-      - name: Get Playwright version
-        id: playwright_version
-        working-directory: packages/coffee.chealt.com
-        shell: bash
-        run: |
-          version=$(yarn info @playwright/test --json | jq -r '.children.Version')
-          echo "version=$version" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v5
-        name: Get Playwright from cache
-        id: cache
-        with:
-          path: |
-            ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-chromium-${{ steps.playwright_version.outputs.version }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-chromium-
-      - name: Install Playwright Browsers
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn workspace @centralbeans/website playwright install --with-deps chromium
-      - name: Delete the passkeys left behind by the shards
-        env:
-          baseUrl: https://centralbeans.com
-          CI: true
-          identityHeaderValue: ${{ secrets.IDENTITY_HEADER_VALUE }}
-          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-        run: yarn workspace @centralbeans/website playwright test --project=cleanup
   webshop-item-processor:
     runs-on: ubuntu-latest
     steps:

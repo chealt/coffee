@@ -1,0 +1,26 @@
+name: Cleanup Test Passkeys
+on:
+  workflow_dispatch: # allows clearing the passkeys straight away, without waiting for the schedule
+  schedule:
+    # the UI tests only ever add to the pile, so a daily sweep is enough
+    - cron: '30 2 * * *'
+permissions:
+  contents: read
+jobs:
+  delete-passkeys:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --immutable
+      # Local, preview and prod runs share the account and the database behind it, so this
+      # one job cleans up after all of them
+      - name: Delete the passkeys left behind by the UI tests
+        env:
+          TURSO_AUTH_TOKEN_TEST: ${{ secrets.TURSO_AUTH_TOKEN_TEST }}
+          TURSO_DATABASE_URL_TEST: ${{ secrets.TURSO_DATABASE_URL_TEST }}
+        run: yarn workspace @centralbeans/website delete:test-passkeys:ci
