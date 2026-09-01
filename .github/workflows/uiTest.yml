@@ -5,29 +5,17 @@ on:
   pull_request:
     branches: [main]
 jobs:
-  shards:
-    runs-on: ubuntu-latest
-    env:
-      # The number of parallel jobs the UI tests are split into
-      SHARD_TOTAL: 4
-    outputs:
-      indexes: ${{ steps.matrix.outputs.indexes }}
-      total: ${{ steps.matrix.outputs.total }}
-    steps:
-      - name: Build the shard matrix
-        id: matrix
-        run: |
-          echo "indexes=$(seq 1 "$SHARD_TOTAL" | jq -sc .)" >> $GITHUB_OUTPUT
-          echo "total=$SHARD_TOTAL" >> $GITHUB_OUTPUT
   test:
-    needs: shards
     timeout-minutes: 60
     runs-on: ubuntu-latest
     strategy:
       # A failing shard must not cancel the others, they still have reports to upload
       fail-fast: false
       matrix:
-        shard: ${{ fromJSON(needs.shards.outputs.indexes) }}
+        # The number of parallel jobs the UI tests are split into. Add or remove entries
+        # to change it - `strategy.job-total` follows the length of this list, so the
+        # shard count lives here alone.
+        shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v7
@@ -87,7 +75,7 @@ jobs:
           CI: true
           localDevServer: true
           shardIndex: ${{ matrix.shard }}
-          shardTotal: ${{ needs.shards.outputs.total }}
+          shardTotal: ${{ strategy.job-total }}
         run: yarn workspace @centralbeans/website playwright test
       - uses: actions/upload-artifact@v7
         name: Upload Playwright report
@@ -130,7 +118,7 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
               https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
-              -d '{"context":"UI Tests / report (shard ${{ matrix.shard }}/${{ needs.shards.outputs.total }})","state":"${{ steps.report-upload.outcome }}","target_url":"https://playwright-reports.centralbeans.com/test-reports/${{ github.sha }}/shard-${{ matrix.shard }}/index.html"}'
+              -d '{"context":"UI Tests / report (shard ${{ matrix.shard }}/${{ strategy.job-total }})","state":"${{ steps.report-upload.outcome }}","target_url":"https://playwright-reports.centralbeans.com/test-reports/${{ github.sha }}/shard-${{ matrix.shard }}/index.html"}'
   # The tests share a single user and the cleanup deletes all of its passkeys, so it can
   # only run once every shard is done - a shard running it would break the others
   cleanup:
