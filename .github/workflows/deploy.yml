@@ -771,6 +771,8 @@ jobs:
           name: a11y-report-shard-${{ matrix.shard }}
           path: packages/coffee.chealt.com/a11y-report/
           retention-days: 30
+          # Shards without an a11y-scanning test have nothing to upload
+          if-no-files-found: ignore
       - uses: aws-actions/configure-aws-credentials@v6
         if: always()
         with:
@@ -788,7 +790,11 @@ jobs:
           # Attachments are content-hashed (immutable), the rest of the report must not be cached
           aws s3 sync packages/coffee.chealt.com/playwright-report/data/ s3://centralbeans-playwright-reports/test-reports/$REPORT_PREFIX/data --cache-control "public,max-age=31536000,immutable"
           aws s3 sync packages/coffee.chealt.com/playwright-report/ s3://centralbeans-playwright-reports/test-reports/$REPORT_PREFIX --exclude "data/*" --cache-control "no-cache"
-          [ -d "packages/coffee.chealt.com/a11y-report/" ] && aws s3 sync packages/coffee.chealt.com/a11y-report/ s3://centralbeans-playwright-reports/a11y-reports/$REPORT_PREFIX --cache-control "no-cache"
+          # Only the shards that get an a11y-scanning test write a report, and a shard
+          # without one must not fail the step
+          if [ -d "packages/coffee.chealt.com/a11y-report/" ]; then
+            aws s3 sync packages/coffee.chealt.com/a11y-report/ s3://centralbeans-playwright-reports/a11y-reports/$REPORT_PREFIX --cache-control "no-cache"
+          fi
       - name: Report test report upload status
         if: always()
         run: |
