@@ -76,6 +76,14 @@ jobs:
   website-test:
     runs-on: ubuntu-latest
     needs: deploy-preview
+    strategy:
+      # A failing shard must not cancel the others, they still have reports to upload
+      fail-fast: false
+      matrix:
+        # The number of parallel jobs the UI tests are split into. Add or remove entries
+        # to change it - `strategy.job-total` follows the length of this list, so the
+        # shard count lives here alone.
+        shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v7
@@ -123,33 +131,45 @@ jobs:
           CI: true
           identityHeaderValue: ${{ secrets.IDENTITY_HEADER_VALUE }}
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          shardIndex: ${{ matrix.shard }}
+          shardTotal: ${{ strategy.job-total }}
         run: yarn workspace @centralbeans/website playwright test
       - uses: actions/upload-artifact@v7
         name: Upload Playwright report
         if: always()
         with:
-          name: playwright-report
+          name: playwright-report-shard-${{ matrix.shard }}
           path: packages/coffee.chealt.com/playwright-report/
           retention-days: 30
       - uses: actions/upload-artifact@v7
         name: Upload A11y report
         if: always()
         with:
-          name: a11y-report
+          name: a11y-report-shard-${{ matrix.shard }}
           path: packages/coffee.chealt.com/a11y-report/
           retention-days: 30
+          # Shards without an a11y-scanning test have nothing to upload
+          if-no-files-found: ignore
       - uses: aws-actions/configure-aws-credentials@v6
         if: always()
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      # Every shard writes a complete report of its own slice, so each one gets its own
+      # prefix instead of overwriting the previous shard's upload
       - name: Upload files to AWS
         id: report-upload
         if: always()
+        env:
+          REPORT_PREFIX: preview/pr-${{ github.event.pull_request.number }}/shard-${{ matrix.shard }}
         run: |
-          aws s3 sync packages/coffee.chealt.com/playwright-report/ s3://centralbeans-playwright-reports/test-reports/preview/pr-${{ github.event.pull_request.number }}
-          aws s3 sync packages/coffee.chealt.com/a11y-report/ s3://centralbeans-playwright-reports/a11y-reports/preview/pr-${{ github.event.pull_request.number }}
+          aws s3 sync packages/coffee.chealt.com/playwright-report/ s3://centralbeans-playwright-reports/test-reports/$REPORT_PREFIX
+          # Only the shards that get an a11y-scanning test write a report, and a shard
+          # without one must not fail the step
+          if [ -d "packages/coffee.chealt.com/a11y-report/" ]; then
+            aws s3 sync packages/coffee.chealt.com/a11y-report/ s3://centralbeans-playwright-reports/a11y-reports/$REPORT_PREFIX
+          fi
       - name: Report test report upload status
         if: always()
         run: |
@@ -159,7 +179,7 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
               https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.event.pull_request.head.sha }} \
-              -d '{"context":"UI Tests - preview / report","state":"${{ steps.report-upload.outcome }}","target_url":"https://playwright-reports.centralbeans.com/test-reports/preview/pr-${{ github.event.pull_request.number }}/index.html"}'
+              -d '{"context":"UI Tests - preview / report (shard ${{ matrix.shard }}/${{ strategy.job-total }})","state":"${{ steps.report-upload.outcome }}","target_url":"https://playwright-reports.centralbeans.com/test-reports/preview/pr-${{ github.event.pull_request.number }}/shard-${{ matrix.shard }}/index.html"}'
   cleanup:
     if: github.event.action == 'closed' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest

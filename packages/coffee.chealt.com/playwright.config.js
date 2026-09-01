@@ -17,6 +17,12 @@ if (process.env.CI && !process.env.localDevServer && !process.env.identityHeader
   throw new Error('identityHeaderValue must be set in CI builds');
 }
 
+// CI splits the suite across parallel jobs, one shard each. Both values come from the
+// workflow, where the shard count is the length of the matrix list.
+const shardIndex = Number(process.env.shardIndex) || 0;
+const shardTotal = Number(process.env.shardTotal) || 0;
+const isSharded = shardIndex > 0 && shardTotal > 1;
+
 export default defineConfig({
   testDir: './src',
   testMatch: /.*\.ui-spec\.js/u,
@@ -41,17 +47,15 @@ export default defineConfig({
     }
   },
   projects: [
+    // The tests share a single account and leave the passkeys they register behind. No
+    // teardown clears them: it would delete the passkeys the other shards are still
+    // using. The Cleanup Test Passkeys workflow sweeps the shared account daily instead.
     {
       name: 'chromium',
-      use: getDevice('Desktop Chrome'),
-      teardown: 'cleanup'
-    },
-    {
-      name: 'cleanup',
-      testMatch: /.*\.teardown\.js/u,
       use: getDevice('Desktop Chrome')
     }
   ],
+  ...(isSharded ? { shard: { current: shardIndex, total: shardTotal } } : {}),
   // When baseUrl is set the tests run against a deployed site (prod or a PR
   // preview), so the local server is not needed.
   ...(process.env.baseUrl
