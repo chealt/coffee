@@ -5,9 +5,29 @@ on:
   pull_request:
     branches: [main]
 jobs:
+  shards:
+    runs-on: ubuntu-latest
+    env:
+      # The number of parallel jobs the UI tests are split into
+      SHARD_TOTAL: 4
+    outputs:
+      indexes: ${{ steps.matrix.outputs.indexes }}
+      total: ${{ steps.matrix.outputs.total }}
+    steps:
+      - name: Build the shard matrix
+        id: matrix
+        run: |
+          echo "indexes=$(seq 1 "$SHARD_TOTAL" | jq -sc .)" >> $GITHUB_OUTPUT
+          echo "total=$SHARD_TOTAL" >> $GITHUB_OUTPUT
   test:
+    needs: shards
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    strategy:
+      # A failing shard must not cancel the others, they still have reports to upload
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.shards.outputs.indexes) }}
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v7
@@ -66,19 +86,21 @@ jobs:
         env:
           CI: true
           localDevServer: true
+          shardIndex: ${{ matrix.shard }}
+          shardTotal: ${{ needs.shards.outputs.total }}
         run: yarn workspace @centralbeans/website playwright test
       - uses: actions/upload-artifact@v7
         name: Upload Playwright report
         if: always()
         with:
-          name: playwright-report
+          name: playwright-report-shard-${{ matrix.shard }}
           path: packages/coffee.chealt.com/playwright-report/
           retention-days: 30
       - uses: actions/upload-artifact@v7
         name: Upload A11y report
         if: always()
         with:
-          name: a11y-report
+          name: a11y-report-shard-${{ matrix.shard }}
           path: packages/coffee.chealt.com/a11y-report/
           retention-days: 30
       - uses: aws-actions/configure-aws-credentials@v6
@@ -87,14 +109,18 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      # Every shard writes a complete report of its own slice, so each one gets its own
+      # prefix instead of overwriting the previous shard's upload
       - name: Upload files to AWS
         id: report-upload
         if: always()
+        env:
+          REPORT_PREFIX: ${{ github.sha }}/shard-${{ matrix.shard }}
         run: |
           # Attachments are content-hashed (immutable), the rest of the report must not be cached
-          aws s3 sync packages/coffee.chealt.com/playwright-report/data/ s3://centralbeans-playwright-reports/test-reports/${{ github.sha }}/data --cache-control "public,max-age=31536000,immutable"
-          aws s3 sync packages/coffee.chealt.com/playwright-report/ s3://centralbeans-playwright-reports/test-reports/${{ github.sha }} --exclude "data/*" --cache-control "no-cache"
-          [ -d "packages/coffee.chealt.com/a11y-report/" ] && aws s3 sync packages/coffee.chealt.com/a11y-report/ s3://centralbeans-playwright-reports/a11y-reports/${{ github.sha }} --cache-control "no-cache"
+          aws s3 sync packages/coffee.chealt.com/playwright-report/data/ s3://centralbeans-playwright-reports/test-reports/$REPORT_PREFIX/data --cache-control "public,max-age=31536000,immutable"
+          aws s3 sync packages/coffee.chealt.com/playwright-report/ s3://centralbeans-playwright-reports/test-reports/$REPORT_PREFIX --exclude "data/*" --cache-control "no-cache"
+          [ -d "packages/coffee.chealt.com/a11y-report/" ] && aws s3 sync packages/coffee.chealt.com/a11y-report/ s3://centralbeans-playwright-reports/a11y-reports/$REPORT_PREFIX --cache-control "no-cache"
       - name: Report test report upload status
         if: always()
         run: |
@@ -104,4 +130,65 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
               https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
-              -d '{"context":"UI Tests / report","state":"${{ steps.report-upload.outcome }}","target_url":"https://playwright-reports.centralbeans.com/test-reports/${{ github.sha }}/index.html"}'
+              -d '{"context":"UI Tests / report (shard ${{ matrix.shard }}/${{ needs.shards.outputs.total }})","state":"${{ steps.report-upload.outcome }}","target_url":"https://playwright-reports.centralbeans.com/test-reports/${{ github.sha }}/shard-${{ matrix.shard }}/index.html"}'
+  # The tests share a single user and the cleanup deletes all of its passkeys, so it can
+  # only run once every shard is done - a shard running it would break the others
+  cleanup:
+    needs: test
+    if: always()
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Get Playwright version
+        id: playwright_version
+        working-directory: packages/coffee.chealt.com
+        shell: bash
+        run: |
+          version=$(yarn info @playwright/test --json | jq -r '.children.Version')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v5
+        name: Get Playwright from cache
+        id: cache
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-chromium-${{ steps.playwright_version.outputs.version }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-chromium-
+      - name: Install Playwright Browsers
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: yarn workspace @centralbeans/website playwright install --with-deps chromium
+      - name: Write the worker environment
+        working-directory: packages/coffee.chealt.com
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          TURSO_AUTH_TOKEN_TEST: ${{ secrets.TURSO_AUTH_TOKEN_TEST }}
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          TURSO_DATABASE_URL_TEST: ${{ secrets.TURSO_DATABASE_URL_TEST }}
+        run: |
+          {
+            echo "ORIGIN=http://localhost:4321"
+            echo "RELYING_PARTY_ID=localhost"
+            echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID"
+            echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
+            echo "SESSION_SECRET=$SESSION_SECRET"
+            echo "TURSO_AUTH_TOKEN=$TURSO_AUTH_TOKEN"
+            echo "TURSO_AUTH_TOKEN_TEST=$TURSO_AUTH_TOKEN_TEST"
+            echo "TURSO_DATABASE_URL=$TURSO_DATABASE_URL"
+            echo "TURSO_DATABASE_URL_TEST=$TURSO_DATABASE_URL_TEST"
+          } > .env
+      - name: Delete the passkeys left behind by the shards
+        env:
+          CI: true
+          localDevServer: true
+        run: yarn workspace @centralbeans/website playwright test --project=cleanup

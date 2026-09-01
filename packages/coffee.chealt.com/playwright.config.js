@@ -17,6 +17,12 @@ if (process.env.CI && !process.env.localDevServer && !process.env.identityHeader
   throw new Error('identityHeaderValue must be set in CI builds');
 }
 
+// CI splits the suite across parallel jobs, one shard each. Both values come from the
+// workflow so the shard count lives in a single place there.
+const shardIndex = Number(process.env.shardIndex) || 0;
+const shardTotal = Number(process.env.shardTotal) || 0;
+const isSharded = shardIndex > 0 && shardTotal > 1;
+
 export default defineConfig({
   testDir: './src',
   testMatch: /.*\.ui-spec\.js/u,
@@ -44,14 +50,24 @@ export default defineConfig({
     {
       name: 'chromium',
       use: getDevice('Desktop Chrome'),
-      teardown: 'cleanup'
+      ...(isSharded ? {} : { teardown: 'cleanup' })
     },
-    {
-      name: 'cleanup',
-      testMatch: /.*\.teardown\.js/u,
-      use: getDevice('Desktop Chrome')
-    }
+    // The tests share a single user and the cleanup deletes all of its passkeys, so it
+    // cannot take part in a sharded run: whichever shard it landed in would delete the
+    // passkeys the other shards are still using. It is left out of the projects there so
+    // no shard picks it up, and CI runs it once after every shard with an unsharded
+    // `playwright test --project=cleanup`.
+    ...(isSharded
+      ? []
+      : [
+          {
+            name: 'cleanup',
+            testMatch: /.*\.teardown\.js/u,
+            use: getDevice('Desktop Chrome')
+          }
+        ])
   ],
+  ...(isSharded ? { shard: { current: shardIndex, total: shardTotal } } : {}),
   // When baseUrl is set the tests run against a deployed site (prod or a PR
   // preview), so the local server is not needed.
   ...(process.env.baseUrl
