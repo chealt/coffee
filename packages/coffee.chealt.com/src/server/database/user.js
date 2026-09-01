@@ -26,8 +26,9 @@ const getUserByUsernameOrEmail = async (usernameOrEmail) => {
 const getPasskeys = async (user) => {
   const client = getClient(user.name);
 
+  // limit the passkeys because the client side cannot handle more passkeys
   const { rows } = await client.execute({
-    sql: 'SELECT * FROM passkeys WHERE user_id = (:id) ORDER BY id DESC',
+    sql: `SELECT * FROM passkeys WHERE user_id = (:id) ORDER BY id DESC LIMIT 20`,
     args: { id: user.id }
   });
 
