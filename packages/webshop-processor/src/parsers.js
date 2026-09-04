@@ -662,6 +662,22 @@ const parsers = {
           .filter((href) => href && !href.includes('zestaw') && !href.includes('blend'))
       )
     );
+  },
+  // Kolo Coffee
+  327: async ({ url }) => {
+    const { origin, pathname } = new URL(url);
+
+    const response = await fetch(`${origin}${pathname}/products.json?limit=250`);
+    const { products } = await response.json();
+
+    const excludedTags = ['merch', 'subscription', 'drip coffee'];
+
+    return products
+      .filter(
+        ({ product_type, tags }) =>
+          product_type !== 'Wholesale' && !tags.some((tag) => excludedTags.includes(tag.toLowerCase()))
+      )
+      .map(({ handle }) => `${origin}/products/${handle}`);
   }
 };
 
