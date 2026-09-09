@@ -378,7 +378,7 @@ const parsers = {
     const { origin } = new URL(url);
 
     return Array.from(document.querySelectorAll('.product-card-wrapper .full-unstyled-link[id^="CardLink"]'))
-      .filter(({ href }) => !href.includes('paper-filters'))
+      .filter(({ href }) => !href.includes('paper-filters') && !href.includes('tasting-kit'))
       .map(({ href }) => `${origin}${href}`);
   },
   // Stow
