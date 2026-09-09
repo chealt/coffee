@@ -431,7 +431,9 @@ const parsers = {
 
     const { origin } = new URL(url);
 
-    return Array.from(document.querySelectorAll('a.contents:has(img)')).map(({ href }) => `${origin}${href.trim()}`);
+    return Array.from(document.querySelectorAll('a.contents:has(img)'))
+      .filter(({ href }) => !href.includes('drip-box'))
+      .map(({ href }) => `${origin}${href.trim()}`);
   },
   // Teso
   291: ({ html }) => {
