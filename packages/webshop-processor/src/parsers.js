@@ -42,7 +42,7 @@ const parsers = {
       new Set(
         Array.from(document.querySelectorAll(`.product-miniature:not(:has(.out_of_stock)) a.product-thumbnail`))
           .map(({ href }) => href)
-          .filter((url) => !url.includes('drippera'))
+          .filter((url) => !url.includes('drippera') && !url.includes('mixtura') && !url.includes('torba'))
       )
     );
   },
