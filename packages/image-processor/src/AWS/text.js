@@ -60,19 +60,24 @@ const extractText = async ({ filename }) => {
   const command = new DetectDocumentTextCommand(input);
 
   logger.info(`Extracting text from ${filename}`);
-  const { Blocks } = await client.send(command);
-  const texts = Blocks.filter(({ Confidence }) => Confidence > 90).map(({ Text: text }) => text);
 
-  if (texts.length) {
-    logger.info(`Extracted texts: ${texts.join(', ')} from ${filename}`);
-  }
+  try {
+    const { Blocks } = await client.send(command);
+    const texts = Blocks.filter(({ Confidence }) => Confidence > 90).map(({ Text: text }) => text);
 
-  if (texts.length) {
-    logger.info(`Calling text interpreter for ${filename}`);
-    await invokeLambda({
-      functionName: 'imageTextInterpreter',
-      payload: { filename, texts }
-    });
+    if (texts.length) {
+      logger.info(`Extracted texts: ${texts.join(', ')} from ${filename}`);
+    }
+
+    if (texts.length) {
+      logger.info(`Calling text interpreter for ${filename}`);
+      await invokeLambda({
+        functionName: 'imageTextInterpreter',
+        payload: { filename, texts }
+      });
+    }
+  } catch (error) {
+    logger.error(error);
   }
 };
 
