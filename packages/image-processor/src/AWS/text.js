@@ -62,7 +62,18 @@ const extractText = async ({ filename }) => {
   logger.info(`Extracting text from ${filename}`);
 
   try {
-    const { Blocks } = await client.send(command);
+    // 30 seconds timeout for text extraction
+    const abortController = new AbortController();
+    const timeoutId = setTimeout(() => {
+      abortController.abort();
+    }, 30 * 1000);
+
+    const { Blocks } = await client.send(command, {
+      abortSignal: abortController.signal
+    });
+
+    clearTimeout(timeoutId);
+
     const texts = Blocks.filter(({ Confidence }) => Confidence > 90).map(({ Text: text }) => text);
 
     if (texts.length) {
