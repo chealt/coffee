@@ -536,6 +536,8 @@ const parsers = {
               !href.includes('selection-coffee-set') &&
               !href.includes('selection-of-coffee') &&
               !href.includes('instant-coffee') &&
+              !href.includes('blend') &&
+              !href.includes('drip-bags') &&
               !href.includes('brew-bags')
           )
           .map((href) => (href.startsWith('http') ? href : `${origin}${href}`))
