@@ -1,6 +1,5 @@
 ---
 import Admin from "../admin/admin.astro";
-import Analytics from "./analytics.astro";
 import I18NContainer from "../i18n/container.astro";
 import Login from "../login/login.astro";
 import Nav from "./nav/nav.astro";
@@ -119,7 +118,6 @@ const isProd = import.meta.env.PROD;
         {!hideNav && <Nav />}
       </chealt-data>
       <img src={loaderImage.src} class="visually-hidden" aria-hidden="true" />
-      {isProd && <Analytics />}
     </chealt-view-transitions>
   </body>
 </html>
