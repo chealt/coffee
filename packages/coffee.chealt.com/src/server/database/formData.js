@@ -10,6 +10,17 @@ const insert = async ({ user, key, value }) => {
   });
 };
 
+const getValue = async ({ user, key }) => {
+  const client = getClient(user.name);
+
+  const results = await client.execute({
+    sql: 'SELECT value FROM form_data WHERE key = :key',
+    args: { key }
+  });
+
+  return results?.rows[0]?.value ? JSON.parse(results.rows[0].value) : undefined;
+};
+
 const updateAttributeValue = async ({ user, key, attributes }) => {
   const oldValue = await getValue({ user, key });
 
@@ -38,17 +49,6 @@ const updateAttributeValue = async ({ user, key, attributes }) => {
 
     throw error;
   }
-};
-
-const getValue = async ({ user, key }) => {
-  const client = getClient(user.name);
-
-  const results = await client.execute({
-    sql: 'SELECT value FROM form_data WHERE key = :key',
-    args: { key }
-  });
-
-  return results?.rows[0]?.value ? JSON.parse(results.rows[0].value) : undefined;
 };
 
 export { getValue, insert, updateAttributeValue };

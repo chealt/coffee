@@ -11,9 +11,9 @@
     "test": "yarn build && yarn start && yarn test:trigger"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1117.0",
-    "@sentry/aws-serverless": "^10.71.0",
+    "@aws-sdk/client-s3": "^3.1144.0",
+    "@sentry/aws-serverless": "^11.2.0",
     "aws-lambda-ric": "^4.0.2",
-    "playwright": "1.62.1"
+    "playwright": "1.63.0"
   }
 }

@@ -49,6 +49,8 @@ const addImageToCollectionItem = 'chealt-add-image-to-collection-item';
 
 let isTranslating = false;
 
+const getClient = (clientId) => self.clients.get(clientId);
+
 self.addEventListener('install', (event) => {
   console.info('SW: Install event');
 
@@ -286,8 +288,6 @@ const checkCollectionImageUpload = async (imageUrl) => {
 
   return response.ok;
 };
-
-const getClient = (clientId) => self.clients.get(clientId);
 
 const sendMissingMessage = async ({ clientId, filename }) => {
   const client = await getClient(clientId);
