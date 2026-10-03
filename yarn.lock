@@ -237,9 +237,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-dynamodb@npm:^3.1144.0":
-  version: 3.1144.0
-  resolution: "@aws-sdk/client-dynamodb@npm:3.1144.0"
+"@aws-sdk/client-dynamodb@npm:^3.1146.0":
+  version: 3.1146.0
+  resolution: "@aws-sdk/client-dynamodb@npm:3.1146.0"
   dependencies:
     "@aws-sdk/core": "npm:^3.978.1"
     "@aws-sdk/credential-provider-node": "npm:^3.972.84"
@@ -251,13 +251,13 @@ __metadata:
     "@smithy/node-http-handler": "npm:^4.12.1"
     "@smithy/types": "npm:^4.19.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/b917ce1c8f7b18d726346e705299f072eab048a5ce1d4cb48db38615864c502fbb210ce3eda4887252fc0e1b238fd1a801f2afb912b628346814b35bb9ae4a82
+  checksum: 10c0/764f9df99ffbbed62f241cab101bc41ac1874744b27f4825f571206f59ba5ea21293717eeac3f89c56c29c35e30c35f77fb9c4b3a9b4cc53f96e3dd57845f940
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-lambda@npm:^3.1144.0":
-  version: 3.1144.0
-  resolution: "@aws-sdk/client-lambda@npm:3.1144.0"
+"@aws-sdk/client-lambda@npm:^3.1146.0":
+  version: 3.1146.0
+  resolution: "@aws-sdk/client-lambda@npm:3.1146.0"
   dependencies:
     "@aws-sdk/core": "npm:^3.978.1"
     "@aws-sdk/credential-provider-node": "npm:^3.972.84"
@@ -267,13 +267,13 @@ __metadata:
     "@smithy/node-http-handler": "npm:^4.12.1"
     "@smithy/types": "npm:^4.19.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/f6e14cb696b15c8f7d81c7a580649fed12a596f25a7eadd553364dbebe2c37b6b9c1eee15c3d45ac6f7d18e2df779368da4674c722373a483dac3c9a21444f01
+  checksum: 10c0/c6b5fa1a0d20cdf3d7da18068d7f737eb696bc9d3fdbef9ba7d8905bf38bc7a9c8a248c0828b2c4d89005f2fb319eda4dcb2f3ceae2483500cfb3b00fa2c47ff
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-s3@npm:^3.1144.0":
-  version: 3.1144.0
-  resolution: "@aws-sdk/client-s3@npm:3.1144.0"
+"@aws-sdk/client-s3@npm:^3.1146.0":
+  version: 3.1146.0
+  resolution: "@aws-sdk/client-s3@npm:3.1146.0"
   dependencies:
     "@aws-sdk/checksums": "npm:^3.1001.1"
     "@aws-sdk/core": "npm:^3.978.1"
@@ -286,13 +286,13 @@ __metadata:
     "@smithy/node-http-handler": "npm:^4.12.1"
     "@smithy/types": "npm:^4.19.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/c681d9125c748157fab8d11752464055517d61579457658f8ba33bc37776d18068d3488dbb253f039481d13dc1f243d4a2fd09f196f93882b88a07c5fca71fb3
+  checksum: 10c0/2c5ac51be29afd167fa7b2b0b2d58a9364d9df6e448075a3d899a1be2cca0c5ebe26b1c4668cdd48120bf6674b07d304434f351a3171e2a4b97c1ee6309391d2
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-secrets-manager@npm:^3.1144.0":
-  version: 3.1144.0
-  resolution: "@aws-sdk/client-secrets-manager@npm:3.1144.0"
+"@aws-sdk/client-secrets-manager@npm:^3.1146.0":
+  version: 3.1146.0
+  resolution: "@aws-sdk/client-secrets-manager@npm:3.1146.0"
   dependencies:
     "@aws-sdk/core": "npm:^3.978.1"
     "@aws-sdk/credential-provider-node": "npm:^3.972.84"
@@ -302,13 +302,13 @@ __metadata:
     "@smithy/node-http-handler": "npm:^4.12.1"
     "@smithy/types": "npm:^4.19.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/6fa48cb6445edb7fa189865103cf048e62b19e48ad4e7dce24af728a215f564758ab9dea03a24591bacd1b95936a72173861b73c5d512ebc09317c97369d118c
+  checksum: 10c0/f3a7305c33729dd37712641f0e1c92c9f13f39120bdb42ca32029a2a887dbb60e651e51010aeab19d7134901a6b6f4d5fe062910e5affd81299dec5746ada63c
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-sesv2@npm:^3.1144.0":
-  version: 3.1144.0
-  resolution: "@aws-sdk/client-sesv2@npm:3.1144.0"
+"@aws-sdk/client-sesv2@npm:^3.1146.0":
+  version: 3.1146.0
+  resolution: "@aws-sdk/client-sesv2@npm:3.1146.0"
   dependencies:
     "@aws-sdk/core": "npm:^3.978.1"
     "@aws-sdk/credential-provider-node": "npm:^3.972.84"
@@ -319,13 +319,13 @@ __metadata:
     "@smithy/node-http-handler": "npm:^4.12.1"
     "@smithy/types": "npm:^4.19.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/7dfb12910854b00b7cfc96e74be467135ed4e65289918f117afbc46413aa4416225b8c495e35fc64cef23eadd9b83004ad16284d7e6c864c7fdb520e4b38b716
+  checksum: 10c0/9df784a5471ba3bcad35a5ad3c352dfa9542986096ad8431411a98ed23a2240f795ba2d4c2e21a159c55d3bce50117b584f7406eba874cdc672e93a964402d98
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-textract@npm:^3.1144.0":
-  version: 3.1144.0
-  resolution: "@aws-sdk/client-textract@npm:3.1144.0"
+"@aws-sdk/client-textract@npm:^3.1146.0":
+  version: 3.1146.0
+  resolution: "@aws-sdk/client-textract@npm:3.1146.0"
   dependencies:
     "@aws-sdk/core": "npm:^3.978.1"
     "@aws-sdk/credential-provider-node": "npm:^3.972.84"
@@ -335,13 +335,13 @@ __metadata:
     "@smithy/node-http-handler": "npm:^4.12.1"
     "@smithy/types": "npm:^4.19.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/d2b2fe5787b2c4f6c56b487869090e3d23885ea6bdd7deaefa386974f42c7456a21c3041a7906cbf963b03db7e5a388795d69c54d227905f856683334b9d63ba
+  checksum: 10c0/314ad5e9cd4ac9d8e5c9e7068a5366a9bc70b9ccc543787bdab20b71489c2545d7f3ee16295dc2a7f40b8acdb0678e55618a1a7a719bbd8d088b4a7cc101d207
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-translate@npm:^3.1117.0, @aws-sdk/client-translate@npm:^3.1144.0":
-  version: 3.1144.0
-  resolution: "@aws-sdk/client-translate@npm:3.1144.0"
+"@aws-sdk/client-translate@npm:^3.1146.0":
+  version: 3.1146.0
+  resolution: "@aws-sdk/client-translate@npm:3.1146.0"
   dependencies:
     "@aws-sdk/core": "npm:^3.978.1"
     "@aws-sdk/credential-provider-node": "npm:^3.972.84"
@@ -351,7 +351,7 @@ __metadata:
     "@smithy/node-http-handler": "npm:^4.12.1"
     "@smithy/types": "npm:^4.19.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/2184f6626eb0d3a71c2cafe1528752ee3de1686b8a12716631ee5db497bede99f12b16a3dac272c5cd264d121301dc0d4f091b23c15e265771e265d56a48c53d
+  checksum: 10c0/b9842b5edd50a883f55de371bce59a94562b23da0be6ceaf6f0d7f3aee205cf43178f21b7d4e04250b0abc9c93307238c8b424195be6d33bbd5f7d4b275e95e3
   languageName: node
   linkType: hard
 
@@ -560,9 +560,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/s3-request-presigner@npm:^3.1144.0":
-  version: 3.1144.0
-  resolution: "@aws-sdk/s3-request-presigner@npm:3.1144.0"
+"@aws-sdk/s3-request-presigner@npm:^3.1146.0":
+  version: 3.1146.0
+  resolution: "@aws-sdk/s3-request-presigner@npm:3.1146.0"
   dependencies:
     "@aws-sdk/core": "npm:^3.978.1"
     "@aws-sdk/signature-v4-multi-region": "npm:^3.996.47"
@@ -570,7 +570,7 @@ __metadata:
     "@smithy/core": "npm:^3.35.0"
     "@smithy/types": "npm:^4.19.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/46fe7be2796124d642145d6acc8c11cae0e3b7aa2819d6bbd18d8eb719a62b3245477405208fbfc34cb23e6c033aa8ab239ebee89bbf2c9f8622e83926ae1ce8
+  checksum: 10c0/bacce5b06a4fd7902be8702de9e2598012ed58bd44921efeabc8b07b403ea48fde072de8dfb29aff7e7e3d6165ebb97bbe5f17b524b2251fb0cd9c2b16ae45bb
   languageName: node
   linkType: hard
 
@@ -798,9 +798,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/coffee-admin@workspace:packages/coffee-admin"
   dependencies:
-    "@aws-sdk/client-translate": "npm:^3.1117.0"
-    "@libsql/client": "npm:^0.17.4"
-    "@playwright/test": "npm:^1.62.1"
+    "@aws-sdk/client-translate": "npm:^3.1146.0"
+    "@libsql/client": "npm:^0.18.0"
+    "@playwright/test": "npm:^1.63.0"
   languageName: unknown
   linkType: soft
 
@@ -808,11 +808,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/create-user@workspace:packages/create-user"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.1144.0"
-    "@aws-sdk/client-sesv2": "npm:^3.1144.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1146.0"
+    "@aws-sdk/client-sesv2": "npm:^3.1146.0"
     "@centralbeans/email": "workspace:^"
     "@libsql/client": "npm:^0.18.0"
-    "@sentry/aws-serverless": "npm:^11.2.0"
+    "@sentry/aws-serverless": "npm:^11.4.0"
     "@tursodatabase/api": "npm:^2.0.5"
     jsonwebtoken: "npm:^9.0.3"
   languageName: unknown
@@ -822,9 +822,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/delete-user@workspace:packages/delete-user"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.1144.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1146.0"
     "@libsql/client": "npm:^0.18.0"
-    "@sentry/aws-serverless": "npm:^11.2.0"
+    "@sentry/aws-serverless": "npm:^11.4.0"
     "@tursodatabase/api": "npm:^2.0.5"
   languageName: unknown
   linkType: soft
@@ -839,9 +839,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/flag-removed@workspace:packages/flag-removed"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.1144.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1146.0"
     "@libsql/client": "npm:^0.18.0"
-    "@sentry/aws-serverless": "npm:^11.2.0"
+    "@sentry/aws-serverless": "npm:^11.4.0"
     jsdom: "npm:30.1.1"
     undici: "npm:^8.11.2"
   languageName: unknown
@@ -851,12 +851,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/image-processor@workspace:packages/image-processor"
   dependencies:
-    "@aws-sdk/client-lambda": "npm:^3.1144.0"
-    "@aws-sdk/client-s3": "npm:^3.1144.0"
-    "@aws-sdk/client-secrets-manager": "npm:^3.1144.0"
-    "@aws-sdk/client-textract": "npm:^3.1144.0"
+    "@aws-sdk/client-lambda": "npm:^3.1146.0"
+    "@aws-sdk/client-s3": "npm:^3.1146.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1146.0"
+    "@aws-sdk/client-textract": "npm:^3.1146.0"
     "@libsql/client": "npm:^0.18.0"
-    "@sentry/aws-serverless": "npm:^11.2.0"
+    "@sentry/aws-serverless": "npm:^11.4.0"
     sharp: "npm:^0.35.5"
   languageName: unknown
   linkType: soft
@@ -865,9 +865,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/image-text-interpreter@workspace:packages/image-text-interpreter"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.1144.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1146.0"
     "@libsql/client": "npm:^0.18.0"
-    "@sentry/aws-serverless": "npm:^11.2.0"
+    "@sentry/aws-serverless": "npm:^11.4.0"
   languageName: unknown
   linkType: soft
 
@@ -875,9 +875,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/import-currencies@workspace:packages/import-currencies"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.1144.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1146.0"
     "@libsql/client": "npm:^0.18.0"
-    "@sentry/aws-serverless": "npm:^11.2.0"
+    "@sentry/aws-serverless": "npm:^11.4.0"
   languageName: unknown
   linkType: soft
 
@@ -885,10 +885,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/invoke-flag-removed@workspace:packages/invoke-flag-removed"
   dependencies:
-    "@aws-sdk/client-lambda": "npm:^3.1144.0"
-    "@aws-sdk/client-secrets-manager": "npm:^3.1144.0"
+    "@aws-sdk/client-lambda": "npm:^3.1146.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1146.0"
     "@libsql/client": "npm:^0.18.0"
-    "@sentry/aws-serverless": "npm:^11.2.0"
+    "@sentry/aws-serverless": "npm:^11.4.0"
   languageName: unknown
   linkType: soft
 
@@ -896,11 +896,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/notifications@workspace:packages/notifications"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.1144.0"
-    "@aws-sdk/client-sesv2": "npm:^3.1144.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1146.0"
+    "@aws-sdk/client-sesv2": "npm:^3.1146.0"
     "@centralbeans/email": "workspace:^"
     "@libsql/client": "npm:^0.18.0"
-    "@sentry/aws-serverless": "npm:^11.2.0"
+    "@sentry/aws-serverless": "npm:^11.4.0"
     "@tursodatabase/api": "npm:^2.0.5"
   languageName: unknown
   linkType: soft
@@ -909,9 +909,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/record-roaster-webshop@workspace:packages/record-roaster-webshop"
   dependencies:
-    "@aws-sdk/client-lambda": "npm:^3.1144.0"
-    "@aws-sdk/client-s3": "npm:^3.1144.0"
-    "@sentry/aws-serverless": "npm:^11.2.0"
+    "@aws-sdk/client-lambda": "npm:^3.1146.0"
+    "@aws-sdk/client-s3": "npm:^3.1146.0"
+    "@sentry/aws-serverless": "npm:^11.4.0"
   languageName: unknown
   linkType: soft
 
@@ -919,11 +919,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/record-webshop-item-details@workspace:packages/record-webshop-item-details"
   dependencies:
-    "@aws-sdk/client-dynamodb": "npm:^3.1144.0"
-    "@aws-sdk/client-s3": "npm:^3.1144.0"
-    "@aws-sdk/client-secrets-manager": "npm:^3.1144.0"
+    "@aws-sdk/client-dynamodb": "npm:^3.1146.0"
+    "@aws-sdk/client-s3": "npm:^3.1146.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1146.0"
     "@libsql/client": "npm:^0.18.0"
-    "@sentry/aws-serverless": "npm:^11.2.0"
+    "@sentry/aws-serverless": "npm:^11.4.0"
     sharp: "npm:^0.35.5"
   languageName: unknown
   linkType: soft
@@ -932,8 +932,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/record-webshop-item@workspace:packages/record-webshop-item"
   dependencies:
-    "@aws-sdk/client-lambda": "npm:^3.1144.0"
-    "@sentry/aws-serverless": "npm:^11.2.0"
+    "@aws-sdk/client-lambda": "npm:^3.1146.0"
+    "@sentry/aws-serverless": "npm:^11.4.0"
   languageName: unknown
   linkType: soft
 
@@ -941,9 +941,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/register-new-user@workspace:packages/register-new-user"
   dependencies:
-    "@aws-sdk/client-sesv2": "npm:^3.1144.0"
+    "@aws-sdk/client-sesv2": "npm:^3.1146.0"
     "@centralbeans/email": "workspace:^"
-    "@sentry/aws-serverless": "npm:^11.2.0"
+    "@sentry/aws-serverless": "npm:^11.4.0"
   languageName: unknown
   linkType: soft
 
@@ -951,8 +951,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/screenshot-lambda@workspace:packages/screenshot-lambda"
   dependencies:
-    "@aws-sdk/client-s3": "npm:^3.1144.0"
-    "@sentry/aws-serverless": "npm:^11.2.0"
+    "@aws-sdk/client-s3": "npm:^3.1146.0"
+    "@sentry/aws-serverless": "npm:^11.4.0"
     aws-lambda-ric: "npm:^4.0.2"
     playwright: "npm:1.63.0"
   languageName: unknown
@@ -962,11 +962,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/send-registration-code@workspace:packages/send-registration-code"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.1144.0"
-    "@aws-sdk/client-sesv2": "npm:^3.1144.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1146.0"
+    "@aws-sdk/client-sesv2": "npm:^3.1146.0"
     "@centralbeans/email": "workspace:^"
     "@libsql/client": "npm:^0.18.0"
-    "@sentry/aws-serverless": "npm:^11.2.0"
+    "@sentry/aws-serverless": "npm:^11.4.0"
     "@tursodatabase/api": "npm:^2.0.5"
     jsonwebtoken: "npm:^9.0.3"
   languageName: unknown
@@ -976,7 +976,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/translate@workspace:packages/translate"
   dependencies:
-    "@aws-sdk/client-translate": "npm:^3.1144.0"
+    "@aws-sdk/client-translate": "npm:^3.1146.0"
     "@libsql/client": "npm:^0.18.0"
   languageName: unknown
   linkType: soft
@@ -985,8 +985,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/trigger-github-action@workspace:packages/trigger-github-action"
   dependencies:
-    "@aws-sdk/client-secrets-manager": "npm:^3.1144.0"
-    "@sentry/aws-serverless": "npm:^11.2.0"
+    "@aws-sdk/client-secrets-manager": "npm:^3.1146.0"
+    "@sentry/aws-serverless": "npm:^11.4.0"
     oxfmt: "npm:^0.71.0"
     oxlint: "npm:^1.86.0"
   languageName: unknown
@@ -996,9 +996,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/webshop-item-processor@workspace:packages/webshop-item-processor"
   dependencies:
-    "@aws-sdk/client-lambda": "npm:^3.1144.0"
-    "@aws-sdk/client-translate": "npm:^3.1144.0"
-    "@sentry/aws-serverless": "npm:^11.2.0"
+    "@aws-sdk/client-lambda": "npm:^3.1146.0"
+    "@aws-sdk/client-translate": "npm:^3.1146.0"
+    "@sentry/aws-serverless": "npm:^11.4.0"
     jsdom: "npm:30.1.1"
   languageName: unknown
   linkType: soft
@@ -1007,8 +1007,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@centralbeans/webshop-processor@workspace:packages/webshop-processor"
   dependencies:
-    "@aws-sdk/client-lambda": "npm:^3.1144.0"
-    "@sentry/aws-serverless": "npm:^11.2.0"
+    "@aws-sdk/client-lambda": "npm:^3.1146.0"
+    "@sentry/aws-serverless": "npm:^11.4.0"
     jsdom: "npm:30.1.1"
   languageName: unknown
   linkType: soft
@@ -1018,15 +1018,15 @@ __metadata:
   resolution: "@centralbeans/website@workspace:packages/coffee.chealt.com"
   dependencies:
     "@astrojs/cloudflare": "npm:14.3.3"
-    "@aws-sdk/client-lambda": "npm:^3.1144.0"
-    "@aws-sdk/client-s3": "npm:^3.1144.0"
-    "@aws-sdk/s3-request-presigner": "npm:^3.1144.0"
+    "@aws-sdk/client-lambda": "npm:^3.1146.0"
+    "@aws-sdk/client-s3": "npm:^3.1146.0"
+    "@aws-sdk/s3-request-presigner": "npm:^3.1146.0"
     "@axe-core/playwright": "npm:^4.13.0"
     "@libsql/client": "npm:^0.18.0"
     "@playwright-testing-library/test": "npm:^4.5.0"
     "@playwright/test": "npm:^1.63.0"
-    "@sentry/astro": "npm:^11.2.0"
-    "@sentry/cloudflare": "npm:^11.2.0"
+    "@sentry/astro": "npm:^11.4.0"
+    "@sentry/cloudflare": "npm:^11.4.0"
     "@simplewebauthn/browser": "npm:^14.0.0"
     "@simplewebauthn/server": "npm:^14.0.3"
     "@tursodatabase/api": "npm:^2.0.5"
@@ -1037,7 +1037,7 @@ __metadata:
     navigation-api-types: "npm:^0.6.1"
     rollup-plugin-visualizer: "npm:^7.1.1"
     vite: "npm:8.3.2"
-    wrangler: "npm:^4.146.0"
+    wrangler: "npm:^4.147.0"
   languageName: unknown
   linkType: soft
 
@@ -1045,7 +1045,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@chealt/image-proxy@workspace:packages/image-proxy"
   dependencies:
-    wrangler: "npm:^4.146.0"
+    wrangler: "npm:^4.147.0"
   languageName: unknown
   linkType: soft
 
@@ -2019,19 +2019,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@libsql/client@npm:^0.17.4":
-  version: 0.17.4
-  resolution: "@libsql/client@npm:0.17.4"
-  dependencies:
-    "@libsql/core": "npm:^0.17.4"
-    "@libsql/hrana-client": "npm:^0.10.0"
-    js-base64: "npm:^3.7.5"
-    libsql: "npm:^0.5.28"
-    promise-limit: "npm:^2.7.0"
-  checksum: 10c0/3cebcee2b60a5a9927cc03bd424033cd55a6e05af897fb99974d43d45f06fe8dcaaff4d3c82e2299b2ff0ae066f32bb76fc3e5431768136e002e35533b111c4d
-  languageName: node
-  linkType: hard
-
 "@libsql/client@npm:^0.18.0":
   version: 0.18.0
   resolution: "@libsql/client@npm:0.18.0"
@@ -2042,15 +2029,6 @@ __metadata:
     libsql: "npm:^0.5.28"
     promise-limit: "npm:^2.7.0"
   checksum: 10c0/3492699b754be04b186bc64139ea400f0458ab5a25e37712f802b18cb22f07d851579b62be6ca1fc89121ebb062aac03c4a3bc6b9c51b10cd32df21fde39d726
-  languageName: node
-  linkType: hard
-
-"@libsql/core@npm:^0.17.4":
-  version: 0.17.4
-  resolution: "@libsql/core@npm:0.17.4"
-  dependencies:
-    js-base64: "npm:^3.7.5"
-  checksum: 10c0/907abad154a940da4168878f330b69a39793098617d94929ca685a2ac5d18304f3751fe1b235303de8435097d232cb5d9e7476022329808faa436aeff8fb2b64
   languageName: node
   linkType: hard
 
@@ -2836,7 +2814,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/test@npm:^1.62.1, @playwright/test@npm:^1.63.0":
+"@playwright/test@npm:^1.63.0":
   version: 1.63.0
   resolution: "@playwright/test@npm:1.63.0"
   dependencies:
@@ -2986,67 +2964,67 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/astro@npm:^11.2.0":
-  version: 11.2.0
-  resolution: "@sentry/astro@npm:11.2.0"
+"@sentry/astro@npm:^11.4.0":
+  version: 11.4.0
+  resolution: "@sentry/astro@npm:11.4.0"
   dependencies:
-    "@sentry/browser": "npm:11.2.0"
-    "@sentry/bundler-plugins": "npm:11.2.0"
-    "@sentry/conventions": "npm:^0.24.0"
-    "@sentry/core": "npm:11.2.0"
-    "@sentry/node": "npm:11.2.0"
-    "@sentry/server-runtime-injection": "npm:11.2.0"
-    "@sentry/server-utils": "npm:11.2.0"
+    "@sentry/browser": "npm:11.4.0"
+    "@sentry/bundler-plugins": "npm:11.4.0"
+    "@sentry/conventions": "npm:^0.25.0"
+    "@sentry/core": "npm:11.4.0"
+    "@sentry/node": "npm:11.4.0"
+    "@sentry/server-runtime-injection": "npm:11.4.0"
+    "@sentry/server-utils": "npm:11.4.0"
   peerDependencies:
     astro: ">=4.0.0-beta || >=7.0.0-beta"
-  checksum: 10c0/d465e6286847953fc6cdedb514b6198103178c597a0383c2918ffaaff19b478a3e278a439be29790b26b1ea93cc5e24af01745e89fd90151b1a411500dc99a97
+  checksum: 10c0/f375ec799a3d243ac9d1e310610da76c520bd1b783d88318bf5689f66a526c40e602bbcf7e5f8d148c3062c155db09a31f62d93724dcec7200e66411b7da7c2f
   languageName: node
   linkType: hard
 
-"@sentry/aws-serverless@npm:^11.2.0":
-  version: 11.2.0
-  resolution: "@sentry/aws-serverless@npm:11.2.0"
+"@sentry/aws-serverless@npm:^11.4.0":
+  version: 11.4.0
+  resolution: "@sentry/aws-serverless@npm:11.4.0"
   dependencies:
-    "@sentry/conventions": "npm:^0.24.0"
-    "@sentry/core": "npm:11.2.0"
-    "@sentry/node": "npm:11.2.0"
-    "@sentry/server-runtime-injection": "npm:11.2.0"
-    "@sentry/server-utils": "npm:11.2.0"
+    "@sentry/conventions": "npm:^0.25.0"
+    "@sentry/core": "npm:11.4.0"
+    "@sentry/node": "npm:11.4.0"
+    "@sentry/server-runtime-injection": "npm:11.4.0"
+    "@sentry/server-utils": "npm:11.4.0"
     "@types/aws-lambda": "npm:^8.10.161"
-  checksum: 10c0/3889ac001b34f27ca068bff06fc712d5877516ec6552b75f245eb1a693898dbf1a761ed9a42eb62ffc65485e2b8b5bd7d7d5f235fd3849028570ab2171af0fa5
+  checksum: 10c0/3a39a4a1aaf7df9ecd85843116b7023c48cda7e74408c970ee8dc4ddb4fb3a1e3129ed43c8e896b2e74816f600ac4a93dd1607c0c0da5e79d667de4f646ce152
   languageName: node
   linkType: hard
 
-"@sentry/browser-utils@npm:11.2.0":
-  version: 11.2.0
-  resolution: "@sentry/browser-utils@npm:11.2.0"
+"@sentry/browser-utils@npm:11.4.0":
+  version: 11.4.0
+  resolution: "@sentry/browser-utils@npm:11.4.0"
   dependencies:
-    "@sentry/conventions": "npm:^0.24.0"
-    "@sentry/core": "npm:11.2.0"
+    "@sentry/conventions": "npm:^0.25.0"
+    "@sentry/core": "npm:11.4.0"
     web-vitals: "npm:^6.1.1"
-  checksum: 10c0/224a6a934a09ff73200b81f7f172cc75dbb81f9e848bb529b933d7158077e007a690c2c3505e474e97e52ed1a1c004fae54019b5f186816db50d4b654e1ce036
+  checksum: 10c0/b554959b5323e4f95e47cfecac5f86ee48498e92e6cb4a61a22427d855d5e6067c77e911b156a9465971d8f4b0713b5eaef1d7159dd8046a8952dcf19f706fec
   languageName: node
   linkType: hard
 
-"@sentry/browser@npm:11.2.0":
-  version: 11.2.0
-  resolution: "@sentry/browser@npm:11.2.0"
+"@sentry/browser@npm:11.4.0":
+  version: 11.4.0
+  resolution: "@sentry/browser@npm:11.4.0"
   dependencies:
-    "@sentry/browser-utils": "npm:11.2.0"
-    "@sentry/conventions": "npm:^0.24.0"
-    "@sentry/core": "npm:11.2.0"
-    "@sentry/feedback": "npm:11.2.0"
-    "@sentry/replay": "npm:11.2.0"
-    "@sentry/replay-canvas": "npm:11.2.0"
-  checksum: 10c0/01dd9cdfa2cdfd69f3ddd3a4cc3ccab9638dca9eac30d99cdc71033086e71319e5452e2561b4b1e0fc69e29b53c79058e60a33b6ed4b75f5ce081f57320e7afc
+    "@sentry/browser-utils": "npm:11.4.0"
+    "@sentry/conventions": "npm:^0.25.0"
+    "@sentry/core": "npm:11.4.0"
+    "@sentry/feedback": "npm:11.4.0"
+    "@sentry/replay": "npm:11.4.0"
+    "@sentry/replay-canvas": "npm:11.4.0"
+  checksum: 10c0/5312f7255eb4f30ecf937b71b9db94260510ad5afe894eb528ca300a5442cd722840deca842bce153329b443778c7c5c8f88c505e0b01ff042720d443b1d0d7a
   languageName: node
   linkType: hard
 
-"@sentry/bundler-plugins@npm:11.2.0":
-  version: 11.2.0
-  resolution: "@sentry/bundler-plugins@npm:11.2.0"
+"@sentry/bundler-plugins@npm:11.4.0":
+  version: 11.4.0
+  resolution: "@sentry/bundler-plugins@npm:11.4.0"
   dependencies:
-    "@sentry/core": "npm:11.2.0"
+    "@sentry/core": "npm:11.4.0"
     dotenv: "npm:^17.4.2"
     glob: "npm:^13.0.6"
     magic-string: "npm:~0.30.8 || ^1.0.0"
@@ -3064,19 +3042,19 @@ __metadata:
       optional: true
     webpack:
       optional: true
-  checksum: 10c0/b9eb58e5f1d4c3b1b2dfbb95dee12aa08d2f83d2320db97431382df48e2c172be4311dd580a20c25cdb1cb1b8c6504efef3f7d0bc3f0e2e382b66d522449b230
+  checksum: 10c0/fcd58b68e85d3ccdde18d0a5044b2db70ef65dfed451463a9e0c1d116c98d41cf53760508f70f80bdc8f2323eb00a40351b32c423d5d4d8f0b2ada8f2279a674
   languageName: node
   linkType: hard
 
-"@sentry/cloudflare@npm:^11.2.0":
-  version: 11.2.0
-  resolution: "@sentry/cloudflare@npm:11.2.0"
+"@sentry/cloudflare@npm:^11.4.0":
+  version: 11.4.0
+  resolution: "@sentry/cloudflare@npm:11.4.0"
   dependencies:
     "@opentelemetry/api": "npm:^1.9.1"
-    "@sentry/conventions": "npm:^0.24.0"
-    "@sentry/core": "npm:11.2.0"
-    "@sentry/opentelemetry": "npm:11.2.0"
-    "@sentry/server-utils": "npm:11.2.0"
+    "@sentry/conventions": "npm:^0.25.0"
+    "@sentry/core": "npm:11.4.0"
+    "@sentry/opentelemetry": "npm:11.4.0"
+    "@sentry/server-utils": "npm:11.4.0"
     magic-string: "npm:~0.30.21"
   peerDependencies:
     "@cloudflare/workers-types": ^4.x || ^5.x
@@ -3086,100 +3064,100 @@ __metadata:
       optional: true
     wrangler:
       optional: true
-  checksum: 10c0/7e3a971f67a4904098f9e4432008dd0d99ad05dae3de854a8c9bc9d2dfab2b7dadfcb7a2f1a459700b48c5efa9ff55ec9392bc93f87da4abe0ce07173b9d845c
+  checksum: 10c0/84c12908f41cecd8dab56e162877de8efbd2f87bf5b645623c914bbaa4c5973bab2b3f16a8a5471d2be11ce7859a97b4fd3df6ad9f688537f7cec59dc545e0fc
   languageName: node
   linkType: hard
 
-"@sentry/conventions@npm:^0.24.0":
-  version: 0.24.0
-  resolution: "@sentry/conventions@npm:0.24.0"
-  checksum: 10c0/3258b9ccc2de260a7d52f6cd267f092d429e00586b4e01f03a28df82f74209c6b10706879acfeb6c10941c225cab2f1568212130591a6c0efbb75cd56448c796
+"@sentry/conventions@npm:^0.25.0":
+  version: 0.25.0
+  resolution: "@sentry/conventions@npm:0.25.0"
+  checksum: 10c0/6caaaa077eb1045e3cfba9a016bfe8f75e7c012d98ada6c1f96a9e5dbb1599df302184983a10d713db82f119bb3100d066d57a449fd015d6defce696b55edaea
   languageName: node
   linkType: hard
 
-"@sentry/core@npm:11.2.0":
-  version: 11.2.0
-  resolution: "@sentry/core@npm:11.2.0"
+"@sentry/core@npm:11.4.0":
+  version: 11.4.0
+  resolution: "@sentry/core@npm:11.4.0"
   dependencies:
-    "@sentry/conventions": "npm:^0.24.0"
-  checksum: 10c0/1e29287104df9228a65b829dfbfb46a32d524c8877b43f2bbe5499815bbb72faed018959ac2a644442d18adb0e360c3e81f1a4376bf49f880dc85432c219dad9
+    "@sentry/conventions": "npm:^0.25.0"
+  checksum: 10c0/332ed5e597df6377b7d629214ec077745fa070c575eab50700770e26f9a757721bc8a7b4f5bbd0fe1e4507a79d6ac5dd709c0e6796926172157735c7cacb897d
   languageName: node
   linkType: hard
 
-"@sentry/feedback@npm:11.2.0":
-  version: 11.2.0
-  resolution: "@sentry/feedback@npm:11.2.0"
+"@sentry/feedback@npm:11.4.0":
+  version: 11.4.0
+  resolution: "@sentry/feedback@npm:11.4.0"
   dependencies:
-    "@sentry/core": "npm:11.2.0"
-  checksum: 10c0/356ce90d56043b26aaa995ebd482a1cc5aded733bc26ee28e07ae1be2919e2f551a154c0b9ac546299610c99b8749dff64b2706b1bfce7368be9081f00e2377f
+    "@sentry/core": "npm:11.4.0"
+  checksum: 10c0/1414438e190e4d45c88b73708a98688671ff7ac374db649be5fe37f9dd8dedbc9ea25e6a7fc90020fde9cb95e11adb299a5d0f1a2a3a96a361de2ecc314856fa
   languageName: node
   linkType: hard
 
-"@sentry/node@npm:11.2.0":
-  version: 11.2.0
-  resolution: "@sentry/node@npm:11.2.0"
+"@sentry/node@npm:11.4.0":
+  version: 11.4.0
+  resolution: "@sentry/node@npm:11.4.0"
   dependencies:
     "@opentelemetry/api": "npm:^1.9.1"
-    "@sentry/bundler-plugins": "npm:11.2.0"
-    "@sentry/conventions": "npm:^0.24.0"
-    "@sentry/core": "npm:11.2.0"
-    "@sentry/opentelemetry": "npm:11.2.0"
-    "@sentry/server-runtime-injection": "npm:11.2.0"
-    "@sentry/server-utils": "npm:11.2.0"
-  checksum: 10c0/27c7e43b30d7731d1adcf57e42ee4426a17d7bcca03daceb5ab1ae730afff52f2e4f5d3009726844b2f3fb260d1d723870b6dc189696e212028ab522064939e8
+    "@sentry/bundler-plugins": "npm:11.4.0"
+    "@sentry/conventions": "npm:^0.25.0"
+    "@sentry/core": "npm:11.4.0"
+    "@sentry/opentelemetry": "npm:11.4.0"
+    "@sentry/server-runtime-injection": "npm:11.4.0"
+    "@sentry/server-utils": "npm:11.4.0"
+  checksum: 10c0/2717e3093b4ac2f5938b06136a3e88047a552897034585222fcf5ec41658c905dfee97ef997a218cd7d5cfc5cc440564ac77557ab976a9961504cc5215f0a2b9
   languageName: node
   linkType: hard
 
-"@sentry/opentelemetry@npm:11.2.0":
-  version: 11.2.0
-  resolution: "@sentry/opentelemetry@npm:11.2.0"
+"@sentry/opentelemetry@npm:11.4.0":
+  version: 11.4.0
+  resolution: "@sentry/opentelemetry@npm:11.4.0"
   dependencies:
-    "@sentry/conventions": "npm:^0.24.0"
-    "@sentry/core": "npm:11.2.0"
+    "@sentry/conventions": "npm:^0.25.0"
+    "@sentry/core": "npm:11.4.0"
   peerDependencies:
     "@opentelemetry/api": ^1.9.0
-  checksum: 10c0/fa323d656b89d2b4457bfc789aae53839d0b6fcc37dbbc513edbd361f0b92060567c1ad74a7f659071902fbb07d467fbfd5784a39cec63720300160c6fca5688
+  checksum: 10c0/46b731198d21304fbb478225c151e5d3cf65bdebdc50d829e54b441fe9d36e35b147274a40657d8fc5fec63b1b82f391333a80f5a0b92373760beb5a028f20ee
   languageName: node
   linkType: hard
 
-"@sentry/replay-canvas@npm:11.2.0":
-  version: 11.2.0
-  resolution: "@sentry/replay-canvas@npm:11.2.0"
+"@sentry/replay-canvas@npm:11.4.0":
+  version: 11.4.0
+  resolution: "@sentry/replay-canvas@npm:11.4.0"
   dependencies:
-    "@sentry/core": "npm:11.2.0"
-    "@sentry/replay": "npm:11.2.0"
-  checksum: 10c0/40d23cb2b6f5aaae74ab5d76d758b803c0a111decc4ed287bb425532fdf46c145c0c31843d9e2f18e37d7dc07eef775019b2e12f83a7efab81601631f60ddaed
+    "@sentry/core": "npm:11.4.0"
+    "@sentry/replay": "npm:11.4.0"
+  checksum: 10c0/18bd7b27b4067045b2ac554bf50f518c3c6762c95233bd6233b73065782681df964a387722b898c51c2727ec524afb11c359adeda0b72eb1fc4a24a738e27636
   languageName: node
   linkType: hard
 
-"@sentry/replay@npm:11.2.0":
-  version: 11.2.0
-  resolution: "@sentry/replay@npm:11.2.0"
+"@sentry/replay@npm:11.4.0":
+  version: 11.4.0
+  resolution: "@sentry/replay@npm:11.4.0"
   dependencies:
-    "@sentry/browser-utils": "npm:11.2.0"
-    "@sentry/core": "npm:11.2.0"
-  checksum: 10c0/dc9c17e1bd71bb23e52f0ecdd26bcbd501a48be1a86ed5b3f54a063ff3bf31681bbee6c0542d3d4118e31a868e1813389160b2e41d1b36ca5c8dd354e1db4d81
+    "@sentry/browser-utils": "npm:11.4.0"
+    "@sentry/core": "npm:11.4.0"
+  checksum: 10c0/0a5ed9239b80225f982c85e243465dfcdbfabaaff0839182797b714fc17f33fcf2cdff14d55119b08d9731b64db2811bffaf668be011fcc96fdcd5c0f11db744
   languageName: node
   linkType: hard
 
-"@sentry/server-runtime-injection@npm:11.2.0":
-  version: 11.2.0
-  resolution: "@sentry/server-runtime-injection@npm:11.2.0"
+"@sentry/server-runtime-injection@npm:11.4.0":
+  version: 11.4.0
+  resolution: "@sentry/server-runtime-injection@npm:11.4.0"
   dependencies:
-    "@sentry/core": "npm:11.2.0"
-    "@sentry/server-utils": "npm:11.2.0"
-  checksum: 10c0/1d1be6cdaa4b51ea4aef40f5c606dc92c71b69d86d9bccbc0f265af1b5ebbbdccdc52f5d0298199baf559b7829abe0e2262bd73593b914db46e9c1b7f8010dab
+    "@sentry/core": "npm:11.4.0"
+    "@sentry/server-utils": "npm:11.4.0"
+  checksum: 10c0/97f6ffe1a8564beab595110f247a9f1025855537ef67cfc33b5295a2b03c063bc49b17e2ed9bdf63eb026ccbe339aa50c1d9141f4933755445e60782adc6a504
   languageName: node
   linkType: hard
 
-"@sentry/server-utils@npm:11.2.0":
-  version: 11.2.0
-  resolution: "@sentry/server-utils@npm:11.2.0"
+"@sentry/server-utils@npm:11.4.0":
+  version: 11.4.0
+  resolution: "@sentry/server-utils@npm:11.4.0"
   dependencies:
     "@opentelemetry/api": "npm:^1.9.1"
-    "@sentry/conventions": "npm:^0.24.0"
-    "@sentry/core": "npm:11.2.0"
-  checksum: 10c0/cf935677ffeb281183152a99ec4e91734bfda8e26c71f135e7c64e703cc823f3bf4ac09032125e2401341376f38d76e9ef48374bc0f8a169b6c87a7a3acee3c0
+    "@sentry/conventions": "npm:^0.25.0"
+    "@sentry/core": "npm:11.4.0"
+  checksum: 10c0/9afdaad87d3107002e1a1d788265abf855d720025d4a60115a6c8e82710ba3ae7a2edffa9b830f84a802bdb20644a1203f5878544322977b94a8ea445dee52fd
   languageName: node
   linkType: hard
 
@@ -3949,7 +3927,7 @@ __metadata:
     oxfmt: "npm:^0.71.0"
     oxlint: "npm:^1.86.0"
     supports-color: "npm:^11.0.0"
-    wrangler: "npm:^4.146.0"
+    wrangler: "npm:^4.147.0"
   languageName: unknown
   linkType: soft
 
@@ -7444,7 +7422,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wrangler@npm:4.146.0, wrangler@npm:^4.146.0":
+"wrangler@npm:4.146.0":
   version: 4.146.0
   resolution: "wrangler@npm:4.146.0"
   dependencies:
@@ -7470,6 +7448,35 @@ __metadata:
     wrangler: bin/wrangler.js
     wrangler2: bin/wrangler.js
   checksum: 10c0/1299f22cb049189a93c84b247392d0bcdfc77aa969194669737628630fe994a87f349c7621fad30ce7490928967464b3f29cbc0ac514f988050456faaadd754f
+  languageName: node
+  linkType: hard
+
+"wrangler@npm:^4.147.0":
+  version: 4.147.0
+  resolution: "wrangler@npm:4.147.0"
+  dependencies:
+    "@cloudflare/kv-asset-handler": "npm:0.5.0"
+    "@cloudflare/unenv-preset": "npm:2.16.2"
+    blake3-wasm: "npm:2.1.5"
+    esbuild: "npm:0.28.1"
+    fsevents: "npm:2.3.3"
+    miniflare: "npm:5.20261001.0-alpha"
+    path-to-regexp: "npm:6.3.0"
+    unenv: "npm:2.0.0-rc.24"
+    workerd: "npm:1.20261001.1"
+  peerDependencies:
+    "@cloudflare/workers-types": ^5.20261001.1
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  peerDependenciesMeta:
+    "@cloudflare/workers-types":
+      optional: true
+  bin:
+    cf-wrangler: bin/cf-wrangler.js
+    wrangler: bin/wrangler.js
+    wrangler2: bin/wrangler.js
+  checksum: 10c0/66de8547fb68c61db2cbdace4cfba18988790c49f548b5c358eb0152009f9df02fd2a17725dd8f7804d8d3484d083f29e6faa1479df2ecc57fc80168d686d12b
   languageName: node
   linkType: hard
 
