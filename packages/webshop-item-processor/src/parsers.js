@@ -4570,9 +4570,8 @@ const parsers = {
       throw new Error(errors.currencyMissing);
     }
 
-    const image = product.featured_image || product.images?.[0]
-      ? `https:${product.featured_image || product.images[0]}`
-      : null;
+    const image =
+      product.featured_image || product.images?.[0] ? `https:${product.featured_image || product.images[0]}` : null;
 
     if (!image) {
       logger.error(`No image found for ${url}`);
@@ -4591,7 +4590,8 @@ const parsers = {
     const wordBoundary = (text, term) => new RegExp(`(?<!\\p{L})${escapeRegex(term)}(?!\\p{L})`, 'iu').test(text);
 
     const sortedCountries = [...originCountries].sort((a, b) => b.name.length - a.name.length);
-    const findCountry = (text) => sortedCountries.find(({ name }) => wordBoundary(text, name))?.origin_country_id || null;
+    const findCountry = (text) =>
+      sortedCountries.find(({ name }) => wordBoundary(text, name))?.origin_country_id || null;
     const originCountryId = findCountry(title) || findCountry(tagsText) || findCountry(descriptionText);
 
     if (!originCountryId) {
@@ -4636,7 +4636,8 @@ const parsers = {
       new Set(
         matchedVarieties
           .filter(
-            ({ name }) => !matchedVarieties.some(({ name: otherName }) => otherName !== name && otherName.includes(name))
+            ({ name }) =>
+              !matchedVarieties.some(({ name: otherName }) => otherName !== name && otherName.includes(name))
           )
           .map(({ id }) => id)
       )
@@ -4665,15 +4666,19 @@ const parsers = {
       logger.info(`Missing taste notes: ${descriptionText}`);
     }
 
-    const variantOptionsText = availableVariants.map(({ options }) => options.join(' ')).join(' ').toLowerCase();
+    const variantOptionsText = availableVariants
+      .map(({ options }) => options.join(' '))
+      .join(' ')
+      .toLowerCase();
     const hasEspresso = wordBoundary(variantOptionsText, 'espresso');
     const hasFilter = wordBoundary(variantOptionsText, 'filter');
-    const brewingMethodId = brewingMethods.find(
-      ({ name }) =>
-        (hasEspresso && hasFilter && name === 'omni') ||
-        (hasEspresso && !hasFilter && name === 'espresso') ||
-        (!hasEspresso && hasFilter && name === 'filter')
-    )?.brewing_method_id || brewingMethods.find(({ name }) => name === 'omni')?.brewing_method_id;
+    const brewingMethodId =
+      brewingMethods.find(
+        ({ name }) =>
+          (hasEspresso && hasFilter && name === 'omni') ||
+          (hasEspresso && !hasFilter && name === 'espresso') ||
+          (!hasEspresso && hasFilter && name === 'filter')
+      )?.brewing_method_id || brewingMethods.find(({ name }) => name === 'omni')?.brewing_method_id;
 
     const isDecaf = url.toLowerCase().includes('decaf') || title.includes('decaf');
 
