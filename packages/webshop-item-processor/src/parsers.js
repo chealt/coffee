@@ -4512,6 +4512,189 @@ const parsers = {
       weight
     };
   },
+  // Kolo
+  296: ({ html, url, roasterId }) => {
+    logger.info(`Parsing item page: ${url}`);
+
+    const document = getDocument(html);
+
+    const productForm = document.querySelector('.product_form');
+
+    if (!productForm) {
+      logger.error(`No product data found for ${url}`);
+
+      throw new Error(errors.detailsMissing);
+    }
+
+    const product = JSON.parse(productForm.getAttribute('data-product'));
+
+    // the shop's weight field is unreliable (1kg variants list 250), so titles take priority
+    const parseWeight = ({ weight, public_title: publicTitle, title }) => {
+      const match = (publicTitle || title || '').match(/(\d+(?:[.,]\d+)?)\s*(kg|g)\b/iu);
+
+      if (match) {
+        const amount = Number(match[1].replace(',', '.'));
+
+        return match[2].toLowerCase() === 'kg' ? amount * 1000 : amount;
+      }
+
+      return weight || null;
+    };
+
+    const availableVariants = product.variants
+      .map((variant) => ({ ...variant, parsedWeight: parseWeight(variant) }))
+      .filter(({ available, parsedWeight }) => available && parsedWeight)
+      .sort((a, b) => a.parsedWeight - b.parsedWeight);
+
+    if (!availableVariants.length) {
+      return { isOutOfStock: true };
+    }
+
+    const smallestVariant = availableVariants[0];
+    const price = Number((smallestVariant.price / 100).toFixed(2));
+    const weight = smallestVariant.parsedWeight;
+
+    if (!price || isNaN(price)) {
+      logger.error(`No price found for ${url}`);
+
+      throw new Error(errors.priceMissing);
+    }
+
+    const pricePerGram = Number((price / weight).toFixed(2));
+
+    const currency = productForm.getAttribute('data-shop-currency');
+
+    if (!currency) {
+      logger.error(`No currency found for ${url}`);
+
+      throw new Error(errors.currencyMissing);
+    }
+
+    const image = product.featured_image || product.images?.[0]
+      ? `https:${product.featured_image || product.images[0]}`
+      : null;
+
+    if (!image) {
+      logger.error(`No image found for ${url}`);
+
+      throw new Error(errors.imageMissing);
+    }
+
+    const title = (product.title || '').toLowerCase();
+    const tagsText = (product.tags || []).join(' ').toLowerCase();
+    const descriptionText = getDocument(product.description || '')
+      .body.textContent.replace(/\s+/gu, ' ')
+      .trim()
+      .toLowerCase();
+
+    const escapeRegex = (text) => text.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+    const wordBoundary = (text, term) => new RegExp(`(?<!\\p{L})${escapeRegex(term)}(?!\\p{L})`, 'iu').test(text);
+
+    const sortedCountries = [...originCountries].sort((a, b) => b.name.length - a.name.length);
+    const findCountry = (text) => sortedCountries.find(({ name }) => wordBoundary(text, name))?.origin_country_id || null;
+    const originCountryId = findCountry(title) || findCountry(tagsText) || findCountry(descriptionText);
+
+    if (!originCountryId) {
+      logger.error(`No origin country found for ${url}, got: ${title}`);
+
+      throw new Error(errors.originCountryMissing);
+    }
+
+    const regionText = `${title} ${tagsText} ${descriptionText}`;
+    const originRegionId =
+      originRegions
+        .filter(({ origin_country_id: countryId }) => countryId === originCountryId)
+        .sort((a, b) => b.name.length - a.name.length)
+        .find(({ name }) => wordBoundary(regionText, name))?.origin_region_id || null;
+
+    if (!originRegionId) {
+      logger.info(`Missing origin region: ${regionText}`);
+    }
+
+    const farmText = `${title} ${tagsText} ${descriptionText}`;
+    const originFarmId =
+      originFarms.find(
+        ({ name, origin_country_id: countryId }) =>
+          countryId === originCountryId && farmText.includes(name.toLowerCase())
+      )?.id || null;
+
+    const processText = `${tagsText} ${descriptionText}`;
+    const sortedProcessingMethods = [...processingMethods].sort((a, b) => b.name.length - a.name.length);
+    const processingMethodId =
+      sortedProcessingMethods.find(({ name }) => wordBoundary(processText, name))?.processing_method_id || null;
+
+    if (!processingMethodId) {
+      logger.info(`Missing processing method: ${processText}`);
+    }
+
+    const varietyText = `${tagsText} ${descriptionText}`;
+    const matchedVarieties = [...varieties]
+      .sort((a, b) => b.name.length - a.name.length)
+      .filter(({ name, alias }) => wordBoundary(varietyText, name) || (alias && wordBoundary(varietyText, alias)));
+    // exclude varieties that include each other like 'catuai' and 'red catuai'
+    const varietyIds = Array.from(
+      new Set(
+        matchedVarieties
+          .filter(
+            ({ name }) => !matchedVarieties.some(({ name: otherName }) => otherName !== name && otherName.includes(name))
+          )
+          .map(({ id }) => id)
+      )
+    );
+
+    if (!varietyIds.length) {
+      logger.info(`Missing varieties: ${varietyText}`);
+    }
+
+    const matchedTasteNotes = [...tasteNotes]
+      .sort((a, b) => b.name.length - a.name.length)
+      .filter(({ name }) => wordBoundary(descriptionText, name));
+    // exclude taste notes that include each other like 'berry' and 'forest fruits'
+    const tasteNoteIds = Array.from(
+      new Set(
+        matchedTasteNotes
+          .filter(
+            ({ name }) =>
+              !matchedTasteNotes.some(({ name: otherName }) => otherName !== name && otherName.includes(name))
+          )
+          .map(({ taste_note_id: id }) => id)
+      )
+    );
+
+    if (!tasteNoteIds.length) {
+      logger.info(`Missing taste notes: ${descriptionText}`);
+    }
+
+    const variantOptionsText = availableVariants.map(({ options }) => options.join(' ')).join(' ').toLowerCase();
+    const hasEspresso = wordBoundary(variantOptionsText, 'espresso');
+    const hasFilter = wordBoundary(variantOptionsText, 'filter');
+    const brewingMethodId = brewingMethods.find(
+      ({ name }) =>
+        (hasEspresso && hasFilter && name === 'omni') ||
+        (hasEspresso && !hasFilter && name === 'espresso') ||
+        (!hasEspresso && hasFilter && name === 'filter')
+    )?.brewing_method_id || brewingMethods.find(({ name }) => name === 'omni')?.brewing_method_id;
+
+    const isDecaf = url.toLowerCase().includes('decaf') || title.includes('decaf');
+
+    return {
+      brewingMethodId,
+      currency,
+      image,
+      isDecaf,
+      originCountryId,
+      originFarmId,
+      originRegionId,
+      price,
+      pricePerGram,
+      processingMethodId,
+      roasterId,
+      tasteNoteIds,
+      varietyIds,
+      webshopItemLink: url,
+      weight
+    };
+  },
   // Craft Beans
   297: ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);

@@ -455,6 +455,24 @@ const parsers = {
       )
     );
   },
+  // Kolo
+  296: async ({ url }) => {
+    const { origin } = new URL(url);
+
+    const response = await fetch(`${origin}/products.json?limit=250`);
+    const { products } = await response.json();
+
+    return products
+      .filter(
+        ({ handle }) =>
+          !handle.includes('subscription') &&
+          !handle.includes('kolo-cup') &&
+          !handle.includes('wholesale') &&
+          !handle.includes('merch') &&
+          !handle.includes('gift-card')
+      )
+      .map(({ handle }) => `${origin}/products/${handle}`);
+  },
   // Craft Beans
   297: ({ html }) => {
     const document = getDocument(html);
