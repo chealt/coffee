@@ -170,19 +170,21 @@ const showCoffee = ({ details }) => {
                     .filter(showCoffee)
                     .map(({ id: itemId, cover, details, isDeleted }) => (
                       <li class={`${(isDeleted && "archived") || ""}`}>
-                        <a
-                          href={`${getRelativeLocaleUrl(
-                            Astro.currentLocale,
-                            `/you/collections/${collectionId}/items/${itemId}?from=${Astro.url.pathname.replace(`/${Astro.currentLocale}`, "")}`,
-                          )}`}
-                          id={`item-id-${itemId}`}
-                        >
-                          <img
-                            src={cover.srcSmall}
-                            loading="lazy"
-                            data-view-transition-name="collectionItemCoverImage"
-                          />
-                        </a>
+                        {cover && (
+                          <a
+                            href={`${getRelativeLocaleUrl(
+                              Astro.currentLocale,
+                              `/you/collections/${collectionId}/items/${itemId}?from=${Astro.url.pathname.replace(`/${Astro.currentLocale}`, "")}`,
+                            )}`}
+                            id={`item-id-${itemId}`}
+                          >
+                            <img
+                              src={cover.srcSmall}
+                              loading="lazy"
+                              data-view-transition-name="collectionItemCoverImage"
+                            />
+                          </a>
+                        )}
                         {isDeleted && (
                           <div class="restore-container">
                             <Button

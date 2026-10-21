@@ -17,7 +17,12 @@ const measure = ({ page }) =>
       const largestContentfulPaint = await page.evaluate(
         () =>
           new Promise((innerResolve) => {
+            // pages that never paint (broken SSR, frozen rendering) never emit an
+            // entry, which would hang the fixture teardown until the test timeout
+            const timeoutId = setTimeout(() => innerResolve(undefined), 5000);
+
             new PerformanceObserver((l) => {
+              clearTimeout(timeoutId);
               const entries = l.getEntries();
               // the last entry is the largest contentful paint
               const largestPaintEntry = entries.at(-1);
