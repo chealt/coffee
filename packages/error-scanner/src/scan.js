@@ -308,6 +308,8 @@ const collectClusters = async (region, days) => {
   return { clusters, logEntries, alarms };
 };
 
+const hasOpenTasks = (state) => Object.values(state.signatures).some((entry) => entry.status === 'open');
+
 const main = async () => {
   const args = parseArgs(process.argv.slice(2));
   const region = process.env.AWS_REGION;
@@ -354,9 +356,9 @@ const main = async () => {
   if (!tasks.commitAndPush(root, message)) {
     console.log('No agent-tasks changes to commit.');
   }
-  if (ctx.created.length > 0 && args.dispatch && usePrs) {
+  if (args.dispatch && usePrs && (ctx.created.length > 0 || hasOpenTasks(ctx.state))) {
     prs.dispatchWorkflow('errorFix.yml');
-    console.log('Dispatched errorFix workflow for new tasks.');
+    console.log('Dispatched errorFix workflow.');
   }
 };
 
