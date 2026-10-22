@@ -6,7 +6,7 @@ import {
   StartQueryCommand
 } from '@aws-sdk/client-cloudwatch-logs';
 
-const ERROR_PATTERN = '(?i)(error|exception|unhandled|timed out|fail)';
+const ERROR_PATTERN = '(?i)(error|exceptions?\\b|unhandled|timed out|fail)';
 
 const buildQueryString = (pattern) => `fields @timestamp, @message
 | filter @message like /${pattern}/
