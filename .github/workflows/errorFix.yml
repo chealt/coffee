@@ -1,4 +1,4 @@
-name: errorFix
+name: Fix AWS Errors
 on:
   workflow_dispatch:
     inputs:

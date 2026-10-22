@@ -1,4 +1,4 @@
-name: errorScan
+name: Scan AWS Errors
 on:
   schedule:
     - cron: '0 6 * * 1'
