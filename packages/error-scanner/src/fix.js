@@ -70,7 +70,7 @@ const main = async () => {
     '1. Read AGENTS.md and follow the repository conventions.',
     '2. Investigate the error from the task brief and find the root cause. Reproduce it if possible (parser workspaces need the ROASTER_ID environment variable).',
     '3. Implement a minimal fix. Only touch packages related to the error.',
-    '4. Run the relevant workspace tests and `yarn lint`. Fix any failures caused by your changes.',
+    '4. Run the relevant workspace tests, `yarn lint`, and `yarn format`. Fix any failures caused by your changes and commit the formatting fixes.',
     `5. Move the task file: git mv agent-tasks/open/${found.fileName} agent-tasks/in-review/${found.fileName}, set its front matter status to "in-review", and add a short root-cause and fix note to the file.`,
     `6. Commit everything with the message: fix(${taskId}): <short description>`,
     `7. Push the branch: git push -u origin ${branch}`,
