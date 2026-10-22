@@ -57,9 +57,7 @@ export const handler = async ({ id, webshopItemLink, roasterId, isTest }) => {
     logger.error(error);
     const reason = error.cause?.code || error.cause?.message;
 
-    logger.error(
-      `Fetch failed for ${webshopItemLink} with error: ${error.message}${reason ? ` (${reason})` : ''}`
-    );
+    logger.error(`Fetch failed for ${webshopItemLink} with error: ${error.message}${reason ? ` (${reason})` : ''}`);
 
     return;
   }
