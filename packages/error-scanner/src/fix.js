@@ -18,8 +18,14 @@ const parseArgs = (argv) => {
   return args;
 };
 
-const defaultBranch = (root) =>
-  tasks.git(['rev-parse', '--abbrev-ref', 'origin/HEAD'], { cwd: root }).replace(/^origin\//, '') || 'main';
+const defaultBranch = (root) => {
+  try {
+    return tasks.git(['rev-parse', '--abbrev-ref', 'origin/HEAD'], { cwd: root }).replace(/^origin\//, '');
+  } catch {
+    // actions/checkout never creates the origin/HEAD symref
+    return 'main';
+  }
+};
 
 const main = async () => {
   const args = parseArgs(process.argv.slice(2));
