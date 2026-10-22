@@ -13,12 +13,12 @@ workflow engine on top of it.
 
 ## What lives here
 
-| Path | What it is |
-| --- | --- |
-| `infra/kubernetes.yml` | CloudFormation: VPC, EKS cluster, Graviton spot nodes, addons, EFS workspace storage, artifacts bucket, cluster access for humans and the deployer |
-| `infra/namespace.yml` | Kubernetes manifests: `tekton-ci` namespace and the EFS-backed workspace PV/PVC |
-| `infra/pipeline.yml` | CloudFormation: CodePipeline + CodeBuild that, on every push to `main`, deploys `kubernetes.yml` and then applies Tekton + `namespace.yml` with `kubectl` |
-| `infra/bootstrap.sh` | One-time deploy of the pipeline itself (chicken-and-egg: the pipeline cannot create itself) |
+| Path                   | What it is                                                                                                                                                |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `infra/kubernetes.yml` | CloudFormation: VPC, EKS cluster, Graviton spot nodes, addons, EFS workspace storage, artifacts bucket, cluster access for humans and the deployer        |
+| `infra/namespace.yml`  | Kubernetes manifests: `tekton-ci` namespace and the EFS-backed workspace PV/PVC                                                                           |
+| `infra/pipeline.yml`   | CloudFormation: CodePipeline + CodeBuild that, on every push to `main`, deploys `kubernetes.yml` and then applies Tekton + `namespace.yml` with `kubectl` |
+| `infra/bootstrap.sh`   | One-time deploy of the pipeline itself (chicken-and-egg: the pipeline cannot create itself)                                                               |
 
 ## How a deploy works
 
