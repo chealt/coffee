@@ -1208,6 +1208,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@centralbeans/tekton@workspace:packages/tekton":
+  version: 0.0.0-use.local
+  resolution: "@centralbeans/tekton@workspace:packages/tekton"
+  languageName: unknown
+  linkType: soft
+
 "@centralbeans/translate@workspace:packages/translate":
   version: 0.0.0-use.local
   resolution: "@centralbeans/translate@workspace:packages/translate"
