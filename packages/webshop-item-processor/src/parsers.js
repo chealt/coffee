@@ -1101,13 +1101,15 @@ const parsers = {
 
     const currency = 'PLN';
 
-    const image = document.querySelector('.product__media img').src;
+    const imageSrc = document.querySelector('.product__media img').src;
 
-    if (!image) {
+    if (!imageSrc) {
       logger.error(`No image found for ${url}`);
 
       throw new Error(errors.imageMissing);
     }
+
+    const image = `https:${imageSrc}`;
 
     const title = document.querySelector('.product__title').textContent.trim().toLowerCase();
 
