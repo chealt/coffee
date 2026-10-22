@@ -30,6 +30,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           token: ${{ secrets.GIT_WRITE_TOKEN }}
+          fetch-depth: 0
       - uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}

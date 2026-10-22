@@ -185,6 +185,7 @@ const commitAndPush = (root, message) => {
     git(['config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com'], { cwd: root });
   }
   git(['commit', '-m', message], { cwd: root });
+  git(['pull', '--rebase', 'origin', 'main'], { cwd: root });
   git(['push', 'origin', 'HEAD'], { cwd: root });
   return true;
 };
