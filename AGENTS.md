@@ -91,9 +91,10 @@ does, and never add a comment just to restate a function or variable name. Linti
 
 ### Tooling
 
-Never use the GitHub CLI (`gh`). It is not installed and never will be. `origin` is AWS
-CodeCommit and there is a separate `github` remote; push to both, and let the user handle
-anything that needs the GitHub web UI or API.
+Never use the GitHub CLI (`gh`). It is not installed and never will be. `origin` and `github`
+point to GitHub (`chealt/coffee`); push there. The `aws` remote is CodeCommit — do not push
+to it for now (pushes currently fail with 403). Let the user handle anything that needs the
+GitHub web UI or API.
 
 ### Imports and Exports
 
