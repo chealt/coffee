@@ -50,12 +50,14 @@ export const handler = async ({ id, webshopItemLink, roasterId, isTest }) => {
     response = await fetch(webshopItemLink, {
       redirect: 'manual',
       dispatcher: new Agent({
-        connectTimeout: 10 * 1000 * 1000 // 10 seconds
+        connectTimeout: 10 * 1000 // 10 seconds
       })
     });
   } catch (error) {
-    logger.error(error.cause || error);
-    logger.error(`Fetch failed for ${webshopItemLink} with error: ${error.message}`);
+    logger.error(error);
+    const reason = error.cause?.code || error.cause?.message;
+
+    logger.error(`Fetch failed for ${webshopItemLink} with error: ${error.message}${reason ? ` (${reason})` : ''}`);
 
     return;
   }
