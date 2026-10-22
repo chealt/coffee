@@ -1,0 +1,19 @@
+{
+  "name": "@centralbeans/error-scanner",
+  "type": "module",
+  "scripts": {
+    "scan": "node src/scan.js",
+    "fix": "node src/fix.js",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "lint": "oxlint"
+  },
+  "dependencies": {
+    "@aws-sdk/client-cloudwatch": "^3.1146.0",
+    "@aws-sdk/client-cloudwatch-logs": "^3.1146.0"
+  },
+  "devDependencies": {
+    "oxfmt": "^0.71.0",
+    "oxlint": "^1.86.0"
+  }
+}

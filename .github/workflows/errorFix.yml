@@ -1,0 +1,64 @@
+name: errorFix
+on:
+  workflow_dispatch:
+    inputs:
+      taskId:
+        description: 'Task id to fix (e.g. 0007). Empty = all open tasks.'
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  list:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.set.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v6
+      - id: set
+        env:
+          TASK_ID: ${{ inputs.taskId }}
+        run: |
+          ids=$(find agent-tasks/open -name '[0-9]*-*.md' 2>/dev/null | sed -E 's#.*/([0-9]+)-.*\.md$#\1#' | sort -u)
+          if [ -n "$TASK_ID" ]; then
+            ids=$(printf '%s\n' "$ids" | grep -x "$TASK_ID" || true)
+          fi
+          matrix=$(printf '%s\n' "$ids" | jq -R -s 'split("\n") | map(select(length > 0))')
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+  fix:
+    needs: list
+    if: needs.list.outputs.matrix != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        task: ${{ fromJson(needs.list.outputs.matrix) }}
+    # One attempt per task at a time: a newer dispatch supersedes a stale run,
+    # WIP survives on the task/<id> branch so nothing is lost.
+    concurrency:
+      group: errorFix-${{ matrix.task }}
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          cache: 'yarn'
+      - run: yarn install --immutable
+      - run: npm install --global @earendil-works/pi-coding-agent@latest
+      - name: Run fix agent for task ${{ matrix.task }}
+        run: yarn workspace @centralbeans/error-scanner fix --task ${{ matrix.task }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
+          AGENT_MODEL: ${{ vars.AGENT_MODEL || 'glm-5.3' }}
+          PI_PROVIDER: ${{ vars.PI_PROVIDER || 'zai' }}
+          AGENT_TIMEOUT_MINUTES: '75'

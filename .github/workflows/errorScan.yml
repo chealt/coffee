@@ -1,0 +1,48 @@
+name: errorScan
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+    inputs:
+      dryRun:
+        description: 'Report only: no commits, no task creation, no dispatch'
+        type: boolean
+        default: false
+      days:
+        description: 'Lookback window in days'
+        type: number
+        default: 7
+
+permissions:
+  contents: write
+  actions: write
+
+# Never run two scans in parallel: both would commit to agent-tasks/.
+concurrency:
+  group: errorScan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          cache: 'yarn'
+      - run: yarn install --immutable
+      - name: Scan AWS for errors
+        run: yarn workspace @centralbeans/error-scanner scan --days ${{ inputs.days || 7 }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DRY_RUN: ${{ inputs.dryRun }}
+          ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
+          AGENT_MODEL: ${{ vars.AGENT_MODEL || 'glm-5.3' }}
+          PI_PROVIDER: ${{ vars.PI_PROVIDER || 'zai' }}
