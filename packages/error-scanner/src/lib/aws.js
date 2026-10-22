@@ -6,7 +6,8 @@ import {
   StartQueryCommand
 } from '@aws-sdk/client-cloudwatch-logs';
 
-const ERROR_PATTERN = '(?i)(error|exception|unhandled|timed out|fail)';
+// Word boundaries around "exception": "exceptional" in Manhattan product URLs would otherwise match and create false-positive tasks
+const ERROR_PATTERN = '(?i)(error|\\bexceptions?\\b|unhandled|timed out|fail)';
 
 const buildQueryString = (pattern) => `fields @timestamp, @message
 | filter @message like /${pattern}/
