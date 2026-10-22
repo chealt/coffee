@@ -1,0 +1,374 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Pipeline that deploys the Tekton kubernetes stacks on push to main
+
+Parameters:
+  RepositoryName:
+    Type: String
+    Default: centralbeans
+  BranchName:
+    Type: String
+    Default: main
+  ClusterName:
+    Type: String
+    Default: tekton-ci
+  AdminRoleArn:
+    Type: String
+    Description: IAM role that gets cluster admin access (humans)
+  CodeBuildImage:
+    Type: String
+    Default: aws/codebuild/amazonlinux-aarch64-standard:3.0
+  KubectlVersion:
+    Type: String
+    Default: v1.34.1
+  TektonReleaseUrl:
+    Type: String
+    Default: https://storage.googleapis.com/tekton-releases/pipeline/latest/release.notags.yaml
+
+Resources:
+  ArtifactsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${AWS::AccountId}-tekton-artifacts'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+  PipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${ClusterName}-pipeline-role'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codepipeline.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: source-and-actions
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - codecommit:GetBranch
+                  - codecommit:GetCommit
+                  - codecommit:UploadArchive
+                  - codecommit:GetUploadArchiveStatus
+                  - codecommit:CancelUploadArchive
+                Resource: !Sub 'arn:${AWS::Partition}:codecommit:${AWS::Region}:${AWS::AccountId}:${RepositoryName}'
+              - Effect: Allow
+                Action:
+                  - codebuild:StartBuild
+                  - codebuild:StopBuild
+                  - codebuild:BatchGetBuilds
+                  - codebuild:BatchGetProjects
+                Resource: !GetAtt WorkloadDeployProject.Arn
+              - Effect: Allow
+                Action: iam:PassRole
+                Resource:
+                  - !GetAtt CloudFormationDeployRole.Arn
+                  - !GetAtt WorkloadDeployRole.Arn
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:GetBucketVersioning
+                  - s3:PutObject
+                Resource:
+                  - !GetAtt ArtifactsBucket.Arn
+                  - !Sub '${ArtifactsBucket.Arn}/*'
+
+  # The role CloudFormation assumes when it creates the cluster stack resources
+  CloudFormationDeployRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${ClusterName}-cloudformation-deploy'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: cloudformation.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: manage-tekton-kubernetes-stack
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - eks:CreateCluster
+                  - eks:DescribeCluster
+                  - eks:UpdateClusterVersion
+                  - eks:TagResource
+                  - eks:ListTagsForResource
+                  - eks:CreateAddon
+                  - eks:DescribeAddon
+                  - eks:CreateAccessEntry
+                  - eks:DescribeAccessEntry
+                  - eks:AssociateAccessPolicy
+                  - eks:ListAccessPolicies
+                  - eks:CreateNodegroup
+                  - eks:DescribeNodegroup
+                  - eks:DeleteCluster
+                  - eks:DeleteAddon
+                  - eks:DeleteNodegroup
+                  - eks:DeleteAccessEntry
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - ec2:CreateVpc
+                  - ec2:DeleteVpc
+                  - ec2:CreateSubnet
+                  - ec2:DeleteSubnet
+                  - ec2:CreateInternetGateway
+                  - ec2:DeleteInternetGateway
+                  - ec2:AttachInternetGateway
+                  - ec2:CreateNatGateway
+                  - ec2:DeleteNatGateway
+                  - ec2:AllocateAddress
+                  - ec2:ReleaseAddress
+                  - ec2:CreateRouteTable
+                  - ec2:DeleteRouteTable
+                  - ec2:CreateRoute
+                  - ec2:DeleteRoute
+                  - ec2:AssociateRouteTable
+                  - ec2:CreateSecurityGroup
+                  - ec2:DeleteSecurityGroup
+                  - ec2:AuthorizeSecurityGroupIngress
+                  - ec2:RevokeSecurityGroupIngress
+                  - ec2:CreateTags
+                  - ec2:DeleteTags
+                  - ec2:DescribeVpcs
+                  - ec2:DescribeSubnets
+                  - ec2:DescribeSecurityGroups
+                  - ec2:DescribeRouteTables
+                  - ec2:DescribeInternetGateways
+                  - ec2:DescribeNatGateways
+                  - ec2:DescribeAddresses
+                  - ec2:DescribeAvailabilityZones
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - iam:CreateRole
+                  - iam:DeleteRole
+                  - iam:GetRole
+                  - iam:PassRole
+                  - iam:TagRole
+                  - iam:AttachRolePolicy
+                  - iam:DetachRolePolicy
+                  - iam:CreateInstanceProfile
+                  - iam:DeleteInstanceProfile
+                  - iam:AddRoleToInstanceProfile
+                  - iam:RemoveRoleFromInstanceProfile
+                  - iam:GetInstanceProfile
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - iam:CreateServiceLinkedRole
+                  - iam:GetServiceLinkedRoleDeletionStatus
+                Resource: !Sub 'arn:${AWS::Partition}:iam::${AWS::AccountId}:role/aws-service-role/eks-nodegroup.amazonaws.com/AWSServiceRoleForAmazonEKSNodegroup'
+              - Effect: Allow
+                Action:
+                  - elasticfilesystem:CreateFileSystem
+                  - elasticfilesystem:DeleteFileSystem
+                  - elasticfilesystem:DescribeFileSystems
+                  - elasticfilesystem:CreateMountTarget
+                  - elasticfilesystem:DeleteMountTarget
+                  - elasticfilesystem:DescribeMountTargets
+                  - elasticfilesystem:CreateAccessPoint
+                  - elasticfilesystem:DeleteAccessPoint
+                  - elasticfilesystem:DescribeAccessPoints
+                  - elasticfilesystem:PutFileSystemPolicy
+                  - elasticfilesystem:TagResource
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - s3:CreateBucket
+                  - s3:DeleteBucket
+                  - s3:PutBucketPublicAccessBlock
+                  - s3:PutEncryptionConfiguration
+                  - s3:GetBucketLocation
+                  - s3:ListBucket
+                Resource: !GetAtt ArtifactsBucket.Arn
+
+  # CodeBuild only does in-cluster work (kubectl); it needs no AWS resource
+  # permissions beyond reading cluster info
+  WorkloadDeployRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${ClusterName}-workload-deploy'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: deploy-tekton-workloads
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: eks:DescribeCluster
+                Resource: !Sub 'arn:${AWS::Partition}:eks:${AWS::Region}:${AWS::AccountId}:cluster/${ClusterName}'
+              - Effect: Allow
+                Action: cloudformation:DescribeStacks
+                Resource: !Sub 'arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/tekton-kubernetes/*'
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - logs:DescribeLogGroups
+                Resource: !Sub 'arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/*'
+              - Effect: Allow
+                Action: s3:GetObject
+                Resource:
+                  - !GetAtt ArtifactsBucket.Arn
+                  - !Sub '${ArtifactsBucket.Arn}/*'
+
+  WorkloadDeployProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Sub '${ClusterName}-workload-deploy'
+      ServiceRole: !GetAtt WorkloadDeployRole.Arn
+      Artifacts:
+        Type: CODEPIPELINE
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: !Sub
+          - |
+            version: 0.2
+            env:
+              shell: bash
+            phases:
+              build:
+                commands:
+                  - cd packages/tekton/infra
+                  - curl -sLo kubectl https://dl.k8s.io/release/${KubectlVersion}/bin/linux/arm64/kubectl
+                  - chmod +x kubectl
+                  - export PATH="$PWD:$PATH"
+                  - STACK_JSON=$(aws --region ${AWS::Region} cloudformation describe-stacks --stack-name tekton-kubernetes --query 'Stacks[0].Outputs' --output json)
+                  - export EFS_FILE_SYSTEM_ID=$(echo "$STACK_JSON" | jq -r '.[] | select(.OutputKey=="EfsFileSystemId").OutputValue')
+                  - export EFS_ACCESS_POINT_ID=$(echo "$STACK_JSON" | jq -r '.[] | select(.OutputKey=="EfsAccessPointId").OutputValue')
+                  - aws --region ${AWS::Region} eks update-kubeconfig --name ${ClusterName}
+                  - curl -sLo tekton-release.yaml ${TektonReleaseUrl}
+                  - kubectl apply -f tekton-release.yaml
+                  - sed -e "s|__EFS_FILE_SYSTEM_ID__|$EFS_FILE_SYSTEM_ID|" -e "s|__EFS_ACCESS_POINT_ID__|$EFS_ACCESS_POINT_ID|" namespace.yml | kubectl apply -f -
+                  - kubectl rollout status deployment/tekton-pipelines-controller -n tekton-pipelines --timeout=300s
+                  - echo "Tekton workloads deployed"
+          - KubectlVersion: !Ref KubectlVersion
+            TektonReleaseUrl: !Ref TektonReleaseUrl
+      Environment:
+        Type: ARM_CONTAINER
+        Image: !Ref CodeBuildImage
+        ComputeType: BUILD_GENERAL1_SMALL
+        EnvironmentVariables:
+          - Name: ClusterName
+            Value: !Ref ClusterName
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      TimeoutInMinutes: 60
+
+  Pipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      Name: !Sub '${ClusterName}-deploy'
+      RoleArn: !GetAtt PipelineRole.Arn
+      PipelineType: V1
+      ArtifactStore:
+        Type: S3
+        Location: !Ref ArtifactsBucket
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: Source
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Provider: CodeCommit
+                Version: '1'
+              Configuration:
+                RepositoryName: !Ref RepositoryName
+                BranchName: !Ref BranchName
+                PollForSourceChanges: false
+              OutputArtifacts:
+                - Name: Source
+        - Name: Cluster
+          Actions:
+            - Name: DeployKubernetes
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: CloudFormation
+                Version: '1'
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                StackName: tekton-kubernetes
+                TemplatePath: Source::packages/tekton/infra/kubernetes.yml
+                Capabilities: CAPABILITY_NAMED_IAM
+                RoleArn: !GetAtt CloudFormationDeployRole.Arn
+                ParameterOverrides: !Sub
+                  - '{"ClusterName":"${ClusterName}","AdminRoleArn":"${AdminRoleArn}","DeployRoleArn":"${WorkloadDeployRoleArn}"}'
+                  - WorkloadDeployRoleArn: !GetAtt WorkloadDeployRole.Arn
+              InputArtifacts:
+                - Name: Source
+        - Name: Workloads
+          Actions:
+            - Name: DeployTekton
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: '1'
+              Configuration:
+                ProjectName: !Ref WorkloadDeployProject
+              InputArtifacts:
+                - Name: Source
+
+  PushEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub '${ClusterName}-main-push'
+      State: ENABLED
+      EventPattern:
+        source: [aws.codecommit]
+        'detail-type': ['CodeCommit Repository State Change']
+        detail:
+          event: [referenceUpdated]
+          repositoryName: [!Ref RepositoryName]
+          referenceType: [branch]
+          referenceFullName: [!Sub 'refs/heads/${BranchName}']
+      Targets:
+        - Id: pipeline
+          Arn: !GetAtt Pipeline.Arn
+          RoleArn: !GetAtt PipelineTriggerRole.Arn
+
+  PipelineTriggerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${ClusterName}-pipeline-trigger'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: start-pipeline
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: codepipeline:StartPipelineExecution
+                Resource: !GetAtt Pipeline.Arn

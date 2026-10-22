@@ -1,0 +1,8 @@
+{
+  "name": "@centralbeans/tekton",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "bootstrap": "sh infra/bootstrap.sh"
+  }
+}

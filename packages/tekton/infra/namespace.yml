@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tekton-ci
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: tekton-workspace
+spec:
+  capacity:
+    storage: 50Gi
+  accessModes: [ReadWriteMany]
+  mountOptions: [tls]
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: '__EFS_FILE_SYSTEM_ID__::__EFS_ACCESS_POINT_ID__'
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ''
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tekton-workspace
+  namespace: tekton-ci
+spec:
+  accessModes: [ReadWriteMany]
+  storageClassName: ''
+  volumeName: tekton-workspace
+  resources:
+    requests:
+      storage: 50Gi

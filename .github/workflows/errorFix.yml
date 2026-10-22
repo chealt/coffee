@@ -22,11 +22,12 @@ jobs:
         env:
           TASK_ID: ${{ inputs.taskId }}
         run: |
+          mkdir -p agent-tasks/open
           ids=$(find agent-tasks/open -name '[0-9]*-*.md' 2>/dev/null | sed -E 's#.*/([0-9]+)-.*\.md$#\1#' | sort -u)
           if [ -n "$TASK_ID" ]; then
             ids=$(printf '%s\n' "$ids" | grep -x "$TASK_ID" || true)
           fi
-          matrix=$(printf '%s\n' "$ids" | jq -R -s 'split("\n") | map(select(length > 0))')
+          matrix=$(printf '%s\n' "$ids" | jq -R -s -c 'split("\n") | map(select(length > 0))')
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
 
   fix:
