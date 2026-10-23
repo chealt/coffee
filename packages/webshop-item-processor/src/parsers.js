@@ -75,6 +75,12 @@ const parsers = {
       return { isOutOfStock: true };
     }
 
+    if (product.title.toLowerCase().includes('advent calendar')) {
+      logger.info(`Skipping advent calendar gift set ${url}`);
+
+      return { isGiftSet: true };
+    }
+
     const parseVariantWeight = (title) => {
       const match = title.match(/(\d+)\s*(g|kg)/i);
 
