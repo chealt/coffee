@@ -1094,7 +1094,7 @@ const parsers = {
 
     const weightOption =
       document.querySelector('[name="options[Waga]"] option') ||
-      document.querySelector('variant-selects input[name^="waga-1"]');
+      document.querySelector('variant-selects input[name^="waga-1" i]');
     const weight = weightOption.value.replace('g', '');
 
     const pricePerGram = Number((price / weight).toFixed(2));
