@@ -54,7 +54,6 @@ jobs:
           node-version-file: package.json
           cache: 'yarn'
       - run: yarn install --immutable
-      - run: npm install --global @earendil-works/pi-coding-agent@latest
       - name: Run fix agent for task ${{ matrix.task }}
         run: yarn workspace @centralbeans/error-scanner fix --task ${{ matrix.task }}
         env:
