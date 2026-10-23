@@ -75,6 +75,12 @@ const parsers = {
       return { isOutOfStock: true };
     }
 
+    if (product.title.toLowerCase().includes('advent calendar')) {
+      logger.info(`Skipping advent calendar gift set ${url}`);
+
+      return { isGiftSet: true };
+    }
+
     const parseVariantWeight = (title) => {
       const match = title.match(/(\d+)\s*(g|kg)/i);
 
@@ -1094,7 +1100,7 @@ const parsers = {
 
     const weightOption =
       document.querySelector('[name="options[Waga]"] option') ||
-      document.querySelector('variant-selects input[name^="waga-1"]');
+      document.querySelector('variant-selects input[name^="waga-1" i]');
     const weight = weightOption.value.replace('g', '');
 
     const pricePerGram = Number((price / weight).toFixed(2));

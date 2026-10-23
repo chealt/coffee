@@ -649,8 +649,9 @@ const parsers = {
 
     return products
       .filter(
-        ({ product_type, title, handle }) =>
+        ({ product_type, title, handle, tags }) =>
           product_type === 'Coffee' &&
+          !tags.includes('b2b-only') &&
           !title.toLowerCase().startsWith('drip bag') &&
           !handle.includes('box') &&
           !handle.includes('pack')
