@@ -2,161 +2,161 @@
   "signatures": {
     "/aws/lambda/flagRemoved | <time> <uuid> INFO Checking coffee: <url>": {
       "taskId": "0001",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-22",
       "occurrences": 68
     },
     "/aws/lambda/flagRemoved | <time> <uuid> ERROR Fetch failed for <url> with error: fetch failed": {
       "taskId": "0002",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-23",
       "occurrences": 110
     },
     "/aws/lambda/flagRemoved | <time> <uuid> ERROR TypeError: fetch failed | Object.processResponse (node_modules/undici/lib/web/fetch/index.js)": {
       "taskId": "0003",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-23",
       "occurrences": 110
     },
     "/aws/lambda/invokeFlagRemoved | <time> <uuid> INFO Invoking flag-removed for coffee with id <num>, and link <url>": {
       "taskId": "0004",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-22",
       "occurrences": 68
     },
     "/aws/lambda/recordRoasterWebshop | <time> <uuid> ERROR Invoke Error {<string>:<string>,<string>:<string>,<string>,<string>,<string>,<string>,<string>,<string>]} | handler (file://src/index.js:<num>:<num>)\",<string>,<string>,<string>,<string>,<string>,<string>]}": {
       "taskId": "0005",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-23",
       "occurrences": 6
     },
     "/aws/lambda/recordWebshopItem | <time> <uuid> INFO Recording webshop item page for \"<url> and roaster id: <num>": {
       "taskId": "0006",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-22",
       "occurrences": 8
     },
     "/aws/lambda/recordWebshopItem | <time> <uuid> INFO Fetching webshop item page <url>": {
       "taskId": "0007",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-22",
       "occurrences": 8
     },
     "/aws/lambda/recordWebshopItemDetails | <time> <uuid> ERROR Error storing image for <url> TypeError: Failed to parse URL from //migacoffee.pl/cdn/shop/files/COSTA_RICA_LOS_CIPRESES.png?v=<num>&width=<num>": {
       "taskId": "0008",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-23",
       "occurrences": 6
     },
     "/aws/lambda/recordWebshopItemDetails | <time> <uuid> ERROR Error storing image for <url> TypeError: Failed to parse URL from //migacoffee.pl/cdn/shop/files/BRAZYLIA_<uuid>.png?v=<num>&width=<num>": {
       "taskId": "0009",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-23",
       "occurrences": 6
     },
     "/aws/lambda/recordWebshopItemDetails | <time> <uuid> INFO Recording webshop item <url> with details {<string>:<num>,<string>:\"EUR\",<string>:\"<url>": {
       "taskId": "0010",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-22",
       "occurrences": 8
     },
     "/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR Could not parse CSS stylesheet": {
       "taskId": "0011",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-23",
       "occurrences": 174
     },
     "/aws/lambda/webshopItemProcessor | <time> <uuid> INFO Missing origin region: panama bambito estate filter coffee new its a first year that we work with bambito, we are happy to share this exceptional coffee. bambito is family owned far | best of panama for washed geisha. this lot number <num> of geisha went through a step of <num> hours fermentation then w": {
       "taskId": "0012",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-22",
       "occurrences": 4
     },
     "/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR Invoke Error {<string>:<string>,<string>:<string>,<string>:[<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>]} | <num> (file://src/parsers.js:<num>:<num>)\",<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<stri": {
       "taskId": "0013",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-23",
       "occurrences": 288
     },
     "/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR No weight found for <url>": {
       "taskId": "0014",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-23",
       "occurrences": 6
     },
     "/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR No product data found for <url>": {
       "taskId": "0015",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-23",
       "occurrences": 60
     },
     "/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR No variations found for <url>": {
       "taskId": "0016",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-23",
       "occurrences": 6
     },
     "/aws/lambda/webshopItemProcessor | <time> <uuid> INFO Calling record webshop item details for <url>": {
       "taskId": "0017",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-22",
       "occurrences": 8
     },
     "/aws/lambda/webshopItemProcessor | <time> <uuid> INFO Processing <url>": {
       "taskId": "0018",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-22",
       "occurrences": 8
     },
     "/aws/lambda/webshopItemProcessor | <time> <uuid> INFO Parsing item page: <url>": {
       "taskId": "0019",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-22",
       "occurrences": 8
     },
     "/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR No price found for <url>": {
       "taskId": "0020",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-23",
       "occurrences": 6
     },
     "/aws/lambda/webshopProcessor | <time> <uuid> INFO Invoking record lambda for <url>": {
       "taskId": "0021",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-22",
       "occurrences": 8
     },
     "/aws/lambda/webshopProcessor | <time> <uuid> ERROR Could not parse CSS stylesheet": {
       "taskId": "0022",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-23",
       "occurrences": 588
     },
     "/aws/lambda/webshopProcessor | <time> <uuid> ERROR Invoke Error {<string>:<string>,<string>:<string>,<string>:[<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>]} | <num> (file://src/parsers.js:<num>:<num>)\",<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<stri": {
       "taskId": "0023",
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-22",
       "lastSeen": "2026-10-23",
       "occurrences": 6
