@@ -15,6 +15,9 @@ const itemUrlPattern = /\/you\/collections\/[^/]+\/items\/[^/]+/u;
 const imageBucket = 'centralbeans-coffee-images';
 
 test.describe('collections pages', () => {
+  // Registration involves several slow round trips on CI, do not let the default 30s eat them
+  test.setTimeout(60_000);
+
   test('should render the login page when not logged in', async ({ page }) => {
     await page.goto(`${config.url}/you/collections`);
 

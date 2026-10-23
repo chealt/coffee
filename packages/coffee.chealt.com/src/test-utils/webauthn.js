@@ -34,6 +34,9 @@ const registerPasskey = async (/** @type {import('@playwright/test').Page} */ pa
   const registrationCode = await signRegistrationCode(config.user.username);
 
   await page.goto(`${config.url}/registration/${config.user.username}?code=${registrationCode}`);
+  // Clicking before the chealt-auth module registers its click handler makes the form
+  // submit natively, which never redirects
+  await page.waitForFunction(() => customElements.get('chealt-auth') !== undefined);
   await page.getByRole('button', { name: 'Register', exact: true }).click();
   await page.waitForURL(`${config.url}/`);
   // The redirect after a successful verify can still be settling when waitForURL resolves,

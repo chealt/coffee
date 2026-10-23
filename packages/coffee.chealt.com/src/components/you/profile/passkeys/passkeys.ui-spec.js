@@ -5,6 +5,9 @@ import { registerPasskey } from '@test-utils/webauthn.js';
 const passkeysUrl = `${config.url}/you/profile/passkeys`;
 
 test.describe('passkeys page', () => {
+  // Registration involves several slow round trips on CI, do not let the default 30s eat them
+  test.setTimeout(60_000);
+
   test('should render the login page when not logged in', async ({ page }) => {
     await page.goto(passkeysUrl);
 
