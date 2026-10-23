@@ -6,10 +6,9 @@ import {
   StartQueryCommand
 } from '@aws-sdk/client-cloudwatch-logs';
 
-// "exception" must not be followed by "al": Manhattan Coffee Roasters product URLs contain the
-// category segment "/coffees/exceptional/", which otherwise trips the error filter on benign INFO logs.
-// No lookaheads here: Logs Insights uses the Hyperscan engine, which does not support them.
-const ERROR_PATTERN = '(?i)(error|exception([^a]|$)|unhandled|timed out|fail)';
+// Trailing word boundaries keep product URLs like /coffees/exceptional/ from matching, while the
+// Lambda text-log level tag (\tERROR\t) still matches every error-level entry.
+const ERROR_PATTERN = '(?i)(errors?\\b|exceptions?\\b|fail(ed|ing|ures?|s)?\\b|unhandled|timed out)';
 
 const buildQueryString = (pattern) => `fields @timestamp, @message
 | filter @message like /${pattern}/
