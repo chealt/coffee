@@ -1,7 +1,6 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { shortHash, slugify } from './signature.js';
 
 const STATUSES = ['open', 'in-review', 'done'];
 
@@ -71,35 +70,18 @@ const updateFrontMatter = (path, updates) => {
   writeFileSync(path, `---\n${renderFrontMatter(data)}\n---${body}`);
 };
 
-const findTaskFile = (root, taskId) => {
+const findTaskFile = (root, alarmId) => {
   for (const status of STATUSES) {
     const dir = join(tasksDir(root), status);
     if (!existsSync(dir)) {
       continue;
     }
-    const fileName = readdirSync(dir).find((name) => name.startsWith(`${taskId}-`));
-    if (fileName) {
+    const fileName = `${alarmId}.md`;
+    if (readdirSync(dir).includes(fileName)) {
       return { path: join(dir, fileName), fileName, status, dir };
     }
   }
   return undefined;
-};
-
-const nextTaskId = (root) => {
-  const ids = [0];
-  for (const status of STATUSES) {
-    const dir = join(tasksDir(root), status);
-    if (!existsSync(dir)) {
-      continue;
-    }
-    for (const name of readdirSync(dir)) {
-      const match = name.match(/^(\d+)-/);
-      if (match) {
-        ids.push(Number(match[1]));
-      }
-    }
-  }
-  return String(Math.max(...ids) + 1).padStart(4, '0');
 };
 
 const consoleUrl = (region) => `https://${region}.console.aws.amazon.com/cloudwatch/home?region=${region}#alarms:v2`;
@@ -107,21 +89,18 @@ const consoleUrl = (region) => `https://${region}.console.aws.amazon.com/cloudwa
 const renderTask = (task, { region }) => `---
 id: "${task.id}"
 status: "${task.status}"
-source: "${task.source}"
-signature: ${JSON.stringify(task.signature)}
 logGroup: ${JSON.stringify(task.logGroup ?? '')}
 firstSeen: "${task.firstSeen}"
 lastSeen: "${task.lastSeen}"
 occurrences: ${task.occurrences}
 ---
 
-# Task ${task.id} — ${task.title}
+# Task ${task.id}
 
 Detected by the weekly error scan on ${task.lastSeen}.
 
 - **Occurrences:** ${task.occurrences}
 - **Log group:** \`${task.logGroup ?? 'n/a'}\`
-- **Signature:** \`${task.signature}\`
 ${task.prNote ? `\n> Open PR check: ${task.prNote}\n` : ''}
 ## Sample errors
 
@@ -145,14 +124,14 @@ Alarm console: ${consoleUrl(region)}
 const writeTaskFile = (root, task, options) => {
   const dir = join(tasksDir(root), 'open');
   mkdirSync(dir, { recursive: true });
-  const fileName = `${task.id}-${slugify(task.title) || 'error'}-${shortHash(task.signature)}.md`;
+  const fileName = `${task.id}.md`;
   const path = join(dir, fileName);
   writeFileSync(path, renderTask(task, options));
   return { path, fileName };
 };
 
-const moveTaskFile = (root, taskId, fromStatus, toStatus) => {
-  const found = findTaskFile(root, taskId);
+const moveTaskFile = (root, alarmId, fromStatus, toStatus) => {
+  const found = findTaskFile(root, alarmId);
   if (!found || found.status !== fromStatus) {
     return false;
   }
@@ -188,7 +167,6 @@ export {
   git,
   loadState,
   moveTaskFile,
-  nextTaskId,
   repoRoot,
   saveState,
   tasksDir,

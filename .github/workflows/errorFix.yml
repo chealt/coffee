@@ -23,7 +23,7 @@ jobs:
           TASK_ID: ${{ inputs.taskId }}
         run: |
           mkdir -p agent-tasks/open
-          ids=$(find agent-tasks/open -name '[0-9]*-*.md' 2>/dev/null | sed -E 's#.*/([0-9]+)-.*\.md$#\1#' | sort -u)
+          ids=$(find agent-tasks/open -name '*.md' 2>/dev/null | sed -E 's#^.*/(.*)\.md$#\1#' | sort -u)
           if [ -n "$TASK_ID" ]; then
             ids=$(printf '%s\n' "$ids" | grep -x "$TASK_ID" || true)
           fi

@@ -8,26 +8,26 @@ and dispatch one fixing agent per task.
 Two workflows, coupled only by files in `agent-tasks/` and git:
 
 1. **errorScan** (cron Mondays 06:00 UTC, or manual) — runs `src/scan.js`:
-   - Lists CloudWatch alarms in `ALARM` state and turns each into a task
-     (deduplicated by alarm signature).
-   - Clusters errors by a normalized signature (log group + message + first stack frame,
-     with timestamps/IDs/numbers stripped) so recurring errors stay one task.
+   - Lists CloudWatch alarms in `ALARM` state and turns each into a task.
+   - Tasks are identified by the alarm name (sanitized to `[A-Za-z0-9._-]`): the task file,
+     branch, PR title, and state key all use it — one task file per alarm for its whole life.
    - Dedupes against `agent-tasks/state.json` and open PRs:
      - task already open → bump counts
-     - agent PR (`task/<id>` branch) in flight → mark `pr-open`, never recreate
-     - new error + an unrelated open PR touches related files → an agent validates the PR
-       diff against the error; if it fixes it, no task is created
+     - agent PR (`task/<alarm>` branch) in flight → mark `pr-open`, never recreate
+     - new alarm + an unrelated open PR touches related files → an agent validates the PR
+       diff against the alarm; if it fixes it, no task is created
    - Commits new task files + state to `main` and dispatches **errorFix**.
-2. **errorFix** (dispatched, or manual with/without a task id) — fans out one job per open
-   task (`max-parallel: 2`). Each job checks out the repo, reuses branch `task/<id>` if it
+2. **errorFix** (dispatched, or manual with/without an alarm name) — fans out one job per open
+   task (`max-parallel: 2`). Each job checks out the repo, reuses branch `task/<alarm>` if it
    exists (long-running fixes are resumable), and runs a headless `pi` agent that fixes,
    tests, moves the task file to `in-review/`, and opens a PR.
 
-Task lifecycle: `open/` → (agent PR moves it) → `in-review/` → (next scan confirms the
-error is gone after merge) → `done/`. If an error reappears, the task is reopened.
+Task lifecycle: `open/<alarm>.md` → (agent PR moves it) → `in-review/` → (next scan confirms the
+alarm cleared after merge) → `done/`. If the alarm re-enters ALARM, the same task file is
+reopened — incident history is not kept.
 
 Concurrency: `errorScan` has a workflow-level group (scans serialize); each fix job has a
-per-task group `errorFix-<id>` with `cancel-in-progress` so a newer attempt supersedes a
+per-task group `errorFix-<alarm>` with `cancel-in-progress` so a newer attempt supersedes a
 stale one without duplicate agents on the same task.
 
 ## Setup
@@ -50,7 +50,7 @@ Optional repository variables (defaults match the setup above):
 AWS_REGION=... yarn workspace @centralbeans/error-scanner scan --dry-run
 
 # run one fix agent locally (no gh available: pushes the branch, you open the PR)
-ZAI_API_KEY=... yarn workspace @centralbeans/error-scanner fix --task 0007
+ZAI_API_KEY=... yarn workspace @centralbeans/error-scanner fix --task flagRemovedErrors
 ```
 
 Run local fixes in a `git worktree` so agent branches don't interfere with your checkout.

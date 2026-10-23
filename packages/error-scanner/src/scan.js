@@ -113,33 +113,25 @@ const checkOpenPrCoverage = async (cluster, ctx) => {
 };
 
 const createTask = (cluster, prNote, ctx) => {
-  const taskId = tasks.nextTaskId(ctx.root);
-  const title =
-    cluster.source === 'alarm'
-      ? `alarm ${cluster.alarm.name}`
-      : (cluster.samples[0] ?? cluster.signature).split('\n')[0].slice(0, 80);
+  const alarmId = cluster.signature;
   const task = {
-    id: taskId,
+    id: alarmId,
     status: 'open',
-    source: cluster.source ?? 'logs',
-    signature: cluster.signature,
     logGroup: cluster.logGroup,
-    title,
     firstSeen: ctx.todayStr,
     lastSeen: ctx.todayStr,
     occurrences: cluster.occurrences,
     samples: cluster.samples,
     prNote
   };
-  const { fileName } = tasks.writeTaskFile(ctx.root, task, { region: ctx.region });
+  tasks.writeTaskFile(ctx.root, task, { region: ctx.region });
   ctx.state.signatures[cluster.signature] = {
-    taskId,
     status: 'open',
     firstSeen: ctx.todayStr,
     lastSeen: ctx.todayStr,
     occurrences: cluster.occurrences
   };
-  ctx.created.push(`${taskId} (${fileName})`);
+  ctx.created.push(alarmId);
 };
 
 const handleNewCluster = async (cluster, ctx) => {
@@ -158,49 +150,50 @@ const handleNewCluster = async (cluster, ctx) => {
   createTask(cluster, coverage.note || undefined, ctx);
 };
 
-const labelEntry = (entry) => (entry.taskId !== undefined ? entry.taskId : `PR #${entry.prNumber}`);
+const labelEntry = (entry, alarmId, root) =>
+  alarmId && tasks.findTaskFile(root, alarmId) ? alarmId : `PR #${entry.prNumber}`;
 
-const findPrForEntry = (entry, openPrs) => {
-  if (entry.taskId !== undefined) {
-    return prs.prForBranch(openPrs, `task/${entry.taskId}`);
+const findPrForEntry = (entry, openPrs, root, alarmId) => {
+  if (alarmId && tasks.findTaskFile(root, alarmId)) {
+    return prs.prForBranch(openPrs, `task/${alarmId}`);
   }
   return openPrs.find((candidate) => candidate.number === entry.prNumber);
 };
 
-const reopenEntry = (entry, reason, ctx) => {
-  tasks.moveTaskFile(ctx.root, entry.taskId, 'in-review', 'open');
-  const found = tasks.findTaskFile(ctx.root, entry.taskId);
+const reopenEntry = (entry, reason, ctx, alarmId) => {
+  tasks.moveTaskFile(ctx.root, alarmId, 'in-review', 'open');
+  const found = tasks.findTaskFile(ctx.root, alarmId);
   if (found) {
     tasks.updateFrontMatter(found.path, { status: 'open' });
   }
   entry.status = 'open';
   delete entry.prNumber;
-  ctx.reopened.push(`${entry.taskId}: PR ${reason}`);
+  ctx.reopened.push(`${alarmId}: PR ${reason}`);
 };
 
-const handleOpenEntry = (entry, pr, ctx) => {
+const handleOpenEntry = (entry, pr, ctx, alarmId) => {
   if (pr) {
     entry.status = 'pr-open';
     entry.prNumber = pr.number;
-    ctx.updated.push(`${entry.taskId}: agent PR #${pr.number} in flight`);
+    ctx.updated.push(`${alarmId}: agent PR #${pr.number} in flight`);
     return;
   }
-  const found = tasks.findTaskFile(ctx.root, entry.taskId);
+  const found = tasks.findTaskFile(ctx.root, alarmId);
   if (found?.status === 'open') {
     tasks.updateFrontMatter(found.path, { lastSeen: ctx.todayStr, occurrences: entry.occurrences });
   }
-  ctx.updated.push(`${entry.taskId}: still open (${entry.occurrences} total occurrences)`);
+  ctx.updated.push(`${alarmId}: still open (${entry.occurrences} total occurrences)`);
 };
 
 const handleInFlightEntry = (cluster, entry, pr, ctx) => {
   if (pr) {
-    ctx.updated.push(`${labelEntry(entry)}: PR in flight, counts updated`);
+    ctx.updated.push(`${labelEntry(entry, cluster.signature, ctx.root)}: PR in flight, counts updated`);
     return;
   }
   const prInfo = entry.prNumber !== undefined && ctx.usePrs ? JSON.parse(prs.prState(entry.prNumber)) : null;
   const merged = Boolean(prInfo?.mergedAt);
-  if (entry.taskId !== undefined) {
-    reopenEntry(entry, merged ? 'merged but error persists (regression)' : 'closed without merge', ctx);
+  if (tasks.findTaskFile(ctx.root, cluster.signature)) {
+    reopenEntry(entry, merged ? 'merged but error persists (regression)' : 'closed without merge', ctx, cluster.signature);
     return;
   }
   createTask(
@@ -210,28 +203,26 @@ const handleInFlightEntry = (cluster, entry, pr, ctx) => {
   );
 };
 
-const handleDoneEntry = (entry, ctx) => {
-  if (entry.taskId !== undefined) {
-    tasks.moveTaskFile(ctx.root, entry.taskId, 'done', 'open');
-    const found = tasks.findTaskFile(ctx.root, entry.taskId);
-    if (found) {
-      tasks.updateFrontMatter(found.path, { status: 'open', lastSeen: ctx.todayStr, occurrences: entry.occurrences });
-    }
+const handleDoneEntry = (entry, ctx, alarmId) => {
+  tasks.moveTaskFile(ctx.root, alarmId, 'done', 'open');
+  const found = tasks.findTaskFile(ctx.root, alarmId);
+  if (found) {
+    tasks.updateFrontMatter(found.path, { status: 'open', lastSeen: ctx.todayStr, occurrences: entry.occurrences });
   }
   entry.status = 'open';
-  ctx.reopened.push(`${labelEntry(entry)}: error reappeared after being fixed`);
+  ctx.reopened.push(`${alarmId}: error reappeared after being fixed`);
 };
 
 const handleExistingCluster = (cluster, entry, ctx) => {
   entry.lastSeen = ctx.todayStr;
   entry.occurrences = (entry.occurrences ?? 0) + cluster.occurrences;
-  const pr = findPrForEntry(entry, ctx.openPrs);
+  const pr = findPrForEntry(entry, ctx.openPrs, ctx.root, cluster.signature);
   if (entry.status === 'open') {
-    handleOpenEntry(entry, pr, ctx);
+    handleOpenEntry(entry, pr, ctx, cluster.signature);
   } else if (entry.status === 'pr-open') {
     handleInFlightEntry(cluster, entry, pr, ctx);
   } else if (entry.status === 'done') {
-    handleDoneEntry(entry, ctx);
+    handleDoneEntry(entry, ctx, cluster.signature);
   }
 };
 
@@ -240,19 +231,19 @@ const settleAbsentEntries = (seen, ctx) => {
     if (seen.has(signature) || entry.status !== 'pr-open') {
       continue;
     }
-    if (findPrForEntry(entry, ctx.openPrs)) {
+    if (findPrForEntry(entry, ctx.openPrs, ctx.root, signature)) {
       continue;
     }
-    if (entry.taskId === undefined) {
+    const found = tasks.findTaskFile(ctx.root, signature);
+    if (!found) {
       entry.status = 'done';
       continue;
     }
-    const found = tasks.findTaskFile(ctx.root, entry.taskId);
-    if (found?.status !== 'in-review') {
+    if (found.status !== 'in-review') {
       continue;
     }
-    tasks.moveTaskFile(ctx.root, entry.taskId, 'in-review', 'done');
-    const moved = tasks.findTaskFile(ctx.root, entry.taskId);
+    tasks.moveTaskFile(ctx.root, signature, 'in-review', 'done');
+    const moved = tasks.findTaskFile(ctx.root, signature);
     if (moved) {
       tasks.updateFrontMatter(moved.path, { status: 'done' });
     }

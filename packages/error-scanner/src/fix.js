@@ -30,23 +30,23 @@ const defaultBranch = (root) => {
 const main = async () => {
   const args = parseArgs(process.argv.slice(2));
   if (!args.task) {
-    throw new Error('Usage: yarn workspace @centralbeans/error-scanner fix --task <taskId>');
+    throw new Error('Usage: yarn workspace @centralbeans/error-scanner fix --task <alarmName>');
   }
-  const taskId = args.task.replace(/^task\//, '').padStart(4, '0');
+  const alarmId = args.task.replace(/^task\//, '');
   const root = tasks.repoRoot();
-  const found = tasks.findTaskFile(root, taskId);
+  const found = tasks.findTaskFile(root, alarmId);
   if (!found) {
-    throw new Error(`No task file found for task ${taskId}`);
+    throw new Error(`No task file found for alarm ${alarmId}`);
   }
   if (found.status !== 'open') {
-    console.log(`Task ${taskId} is "${found.status}", nothing to do.`);
+    console.log(`Task ${alarmId} is "${found.status}", nothing to do.`);
     return;
   }
 
   const useGh = prs.hasGh() && Boolean(process.env.GH_TOKEN);
-  const branch = `task/${taskId}`;
+  const branch = `task/${alarmId}`;
   if (useGh && prs.prForBranch(prs.parseOpenPrs(prs.listOpenPrs()), branch)) {
-    console.log(`Task ${taskId} already has an open PR, skipping.`);
+    console.log(`Task ${alarmId} already has an open PR, skipping.`);
     return;
   }
 
@@ -61,9 +61,9 @@ const main = async () => {
 
   const base = defaultBranch(root);
   // found was resolved before the checkout; a resumed task branch may already have moved the file to in-review
-  const brief = tasks.findTaskFile(root, taskId);
+  const brief = tasks.findTaskFile(root, alarmId);
   if (!brief) {
-    throw new Error(`No task file found for task ${taskId} on branch ${branch}`);
+    throw new Error(`No task file found for task ${alarmId} on branch ${branch}`);
   }
   const taskContent = readFileSync(brief.path, 'utf8');
   const instructions = [
@@ -77,17 +77,17 @@ const main = async () => {
     '3. Implement a minimal fix. Only touch packages related to the error.',
     '4. Run the relevant workspace tests, `yarn lint`, and `yarn format`. Fix any failures caused by your changes and commit the formatting fixes.',
     `5. Move the task file: git mv agent-tasks/${brief.status}/${brief.fileName} agent-tasks/in-review/${brief.fileName} (skip the move if it is already there), set its front matter status to "in-review", and add a short root-cause and fix note to the file.`,
-    `6. Commit everything with the message: fix(${taskId}): <short description>`,
+    `6. Commit everything with the message: fix(${alarmId}): <short description>`,
     `7. Push the branch: git push -u origin ${branch}`,
     useGh
-      ? `8. Create the pull request: gh pr create --base ${base} --head ${branch} --title "fix(${taskId}): <short description>" with a body covering what was wrong, what changed, and how it was tested. Include the error signature from the task file.`
+      ? `8. Create the pull request: gh pr create --base ${base} --head ${branch} --title "fix(${alarmId}): <short description>" with a body covering what was wrong, what changed, and how it was tested. Include the error signature from the task file.`
       : '8. gh is unavailable: push the branch to the origin remote (and github, if present) and stop. A human opens the PR.',
     '',
     `Hard rules: never commit on or push to ${base}, never modify .github/workflows, never touch other task files or agent-tasks/state.json.`,
     `If branch ${branch} already contains earlier work-in-progress commits for this task, review them and continue from there instead of restarting.`
   ].join('\n');
 
-  console.log(`Starting fix agent for task ${taskId}...`);
+  console.log(`Starting fix agent for task ${alarmId}...`);
   await runPi({
     prompt: instructions,
     stdin: taskContent,

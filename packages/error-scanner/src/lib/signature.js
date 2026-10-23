@@ -1,15 +1,5 @@
-import { createHash } from 'node:crypto';
+const sanitizeAlarmId = (name) => name.replace(/[^A-Za-z0-9._-]+/g, '-');
 
-const alarmSignature = (alarm) => `alarm | ${alarm.name}`;
+const alarmSignature = (alarm) => sanitizeAlarmId(alarm.name);
 
-const shortHash = (signature) => createHash('sha1').update(signature).digest('hex').slice(0, 8);
-
-const slugify = (text) =>
-  text
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 30)
-    .replace(/-+$/g, '');
-
-export { alarmSignature, shortHash, slugify };
+export { alarmSignature, sanitizeAlarmId };
