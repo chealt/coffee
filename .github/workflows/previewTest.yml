@@ -125,6 +125,14 @@ jobs:
           done
           echo "Preview host never came up."
           exit 1
+      # See the matching step in deploy.yml: keep the shared test account's passkey pile
+      # from growing across runs.
+      - name: Delete the passkeys left behind by previous UI test runs
+        if: matrix.shard == 1
+        env:
+          TURSO_AUTH_TOKEN_TEST: ${{ secrets.TURSO_AUTH_TOKEN_TEST }}
+          TURSO_DATABASE_URL_TEST: ${{ secrets.TURSO_DATABASE_URL_TEST }}
+        run: yarn workspace @centralbeans/website delete:test-passkeys:ci
       - name: Run Playwright tests
         env:
           baseUrl: https://${{ env.PREVIEW_HOST }}

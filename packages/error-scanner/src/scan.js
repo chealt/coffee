@@ -193,7 +193,12 @@ const handleInFlightEntry = (cluster, entry, pr, ctx) => {
   const prInfo = entry.prNumber !== undefined && ctx.usePrs ? JSON.parse(prs.prState(entry.prNumber)) : null;
   const merged = Boolean(prInfo?.mergedAt);
   if (tasks.findTaskFile(ctx.root, cluster.signature)) {
-    reopenEntry(entry, merged ? 'merged but error persists (regression)' : 'closed without merge', ctx, cluster.signature);
+    reopenEntry(
+      entry,
+      merged ? 'merged but error persists (regression)' : 'closed without merge',
+      ctx,
+      cluster.signature
+    );
     return;
   }
   createTask(

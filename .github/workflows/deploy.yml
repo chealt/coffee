@@ -748,6 +748,15 @@ jobs:
       - name: Install Playwright Browsers
         if: steps.cache.outputs.cache-hit != 'true'
         run: yarn workspace @centralbeans/website playwright install --with-deps chromium
+      # The passkey tests authenticate a shared test account, and every run leaves its
+      # registered credentials behind. Login gets slower with every leftover, so start
+      # each run from a clean slate instead of waiting for the daily cleanup.
+      - name: Delete the passkeys left behind by previous UI test runs
+        if: matrix.shard == 1
+        env:
+          TURSO_AUTH_TOKEN_TEST: ${{ secrets.TURSO_AUTH_TOKEN_TEST }}
+          TURSO_DATABASE_URL_TEST: ${{ secrets.TURSO_DATABASE_URL_TEST }}
+        run: yarn workspace @centralbeans/website delete:test-passkeys:ci
       - name: Run Playwright tests
         env:
           baseUrl: https://centralbeans.com
