@@ -8,8 +8,8 @@ and dispatch one fixing agent per task.
 Two workflows, coupled only by files in `agent-tasks/` and git:
 
 1. **errorScan** (cron Mondays 06:00 UTC, or manual) — runs `src/scan.js`:
-   - Queries CloudWatch Logs Insights across all `/aws/lambda/*` log groups (last 7 days)
-     and lists CloudWatch alarms in `ALARM` state.
+   - Lists CloudWatch alarms in `ALARM` state and turns each into a task
+     (deduplicated by alarm signature).
    - Clusters errors by a normalized signature (log group + message + first stack frame,
      with timestamps/IDs/numbers stripped) so recurring errors stay one task.
    - Dedupes against `agent-tasks/state.json` and open PRs:

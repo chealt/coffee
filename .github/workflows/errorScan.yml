@@ -8,10 +8,6 @@ on:
         description: 'Report only: no commits, no task creation, no dispatch'
         type: boolean
         default: false
-      days:
-        description: 'Lookback window in days'
-        type: number
-        default: 7
 
 permissions:
   contents: write
@@ -42,7 +38,7 @@ jobs:
           cache: 'yarn'
       - run: yarn install --immutable
       - name: Scan AWS for errors
-        run: yarn workspace @centralbeans/error-scanner scan --days ${{ inputs.days || 7 }}
+        run: yarn workspace @centralbeans/error-scanner scan
         env:
           GH_TOKEN: ${{ github.token }}
           DRY_RUN: ${{ inputs.dryRun }}

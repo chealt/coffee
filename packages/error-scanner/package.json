@@ -9,8 +9,7 @@
     "lint": "oxlint"
   },
   "dependencies": {
-    "@aws-sdk/client-cloudwatch": "^3.1146.0",
-    "@aws-sdk/client-cloudwatch-logs": "^3.1146.0"
+    "@aws-sdk/client-cloudwatch": "^3.1146.0"
   },
   "devDependencies": {
     "@earendil-works/pi-coding-agent": "^1.4.0",

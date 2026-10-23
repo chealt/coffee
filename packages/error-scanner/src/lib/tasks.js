@@ -102,10 +102,9 @@ const nextTaskId = (root) => {
   return String(Math.max(...ids) + 1).padStart(4, '0');
 };
 
-const consoleUrl = (region) =>
-  `https://${region}.console.aws.amazon.com/cloudwatch/home?region=${region}#logsV2:logs-insights`;
+const consoleUrl = (region) => `https://${region}.console.aws.amazon.com/cloudwatch/home?region=${region}#alarms:v2`;
 
-const renderTask = (task, { days, region, pattern }) => `---
+const renderTask = (task, { region }) => `---
 id: "${task.id}"
 status: "${task.status}"
 source: "${task.source}"
@@ -120,7 +119,7 @@ occurrences: ${task.occurrences}
 
 Detected by the weekly error scan on ${task.lastSeen}.
 
-- **Occurrences (last ${days} days):** ${task.occurrences}
+- **Occurrences:** ${task.occurrences}
 - **Log group:** \`${task.logGroup ?? 'n/a'}\`
 - **Signature:** \`${task.signature}\`
 ${task.prNote ? `\n> Open PR check: ${task.prNote}\n` : ''}
@@ -130,16 +129,9 @@ ${task.prNote ? `\n> Open PR check: ${task.prNote}\n` : ''}
 ${task.samples.join('\n\n---\n\n')}
 \`\`\`
 
-## Logs Insights
+## CloudWatch
 
-Console: ${consoleUrl(region)} — select the log group, time range \`last ${days} days\`, paste:
-
-\`\`\`
-fields @timestamp, @message
-| filter @message like /${pattern}/
-| sort @timestamp desc
-| limit 200
-\`\`\`
+Alarm console: ${consoleUrl(region)}
 
 ## Definition of done
 

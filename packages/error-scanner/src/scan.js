@@ -1,14 +1,13 @@
-import { ERROR_PATTERN, listAlarmsInAlarm, queryErrors } from './lib/aws.js';
+import { listAlarmsInAlarm } from './lib/aws.js';
 import { extractJson, runPi } from './lib/pi.js';
 import * as prs from './lib/prs.js';
-import { alarmSignature, clusterBySignature } from './lib/signature.js';
+import { alarmSignature } from './lib/signature.js';
 import * as tasks from './lib/tasks.js';
 
 const MODEL = process.env.AGENT_MODEL || 'sonnet';
 
 const parseArgs = (argv) => {
   const args = {
-    days: Number(process.env.SCAN_DAYS ?? 7),
     dryRun: process.env.DRY_RUN === 'true',
     dispatch: true
   };
@@ -16,10 +15,6 @@ const parseArgs = (argv) => {
     const arg = argv[i];
     if (arg === '--dry-run') {
       args.dryRun = true;
-    } else if (arg === '--days') {
-      args.days = Number(argv[++i]);
-    } else if (arg.startsWith('--days=')) {
-      args.days = Number(arg.slice(7));
     } else if (arg === '--no-dispatch') {
       args.dispatch = false;
     }
@@ -136,11 +131,7 @@ const createTask = (cluster, prNote, ctx) => {
     samples: cluster.samples,
     prNote
   };
-  const { fileName } = tasks.writeTaskFile(ctx.root, task, {
-    days: ctx.args.days,
-    region: ctx.region,
-    pattern: ERROR_PATTERN
-  });
+  const { fileName } = tasks.writeTaskFile(ctx.root, task, { region: ctx.region });
   ctx.state.signatures[cluster.signature] = {
     taskId,
     status: 'open',
@@ -269,10 +260,8 @@ const settleAbsentEntries = (seen, ctx) => {
   }
 };
 
-const printSummary = (clusters, logEntries, alarms, ctx) => {
-  console.log(
-    `Scanned ${clusters.length} error clusters (${logEntries.length} log matches, ${alarms.length} alarms in ALARM).`
-  );
+const printSummary = (clusters, alarms, ctx) => {
+  console.log(`Scanned ${clusters.length} error clusters (${alarms.length} alarms in ALARM).`);
   const sections = [
     ['Covered by open PR', ctx.coveredByPr],
     ['New tasks', ctx.created],
@@ -290,22 +279,18 @@ const printSummary = (clusters, logEntries, alarms, ctx) => {
   }
 };
 
-const collectClusters = async (region, days) => {
-  const logEntries = await queryErrors({ region, days });
+const collectClusters = async (region) => {
   const alarms = await listAlarmsInAlarm({ region });
-  const clusters = [
-    ...clusterBySignature(logEntries),
-    ...alarms.map((alarm) => ({
-      signature: alarmSignature(alarm),
-      alarm,
-      logGroup: alarm.dimensions.find((dimension) => dimension.startsWith('/aws/lambda/')) ?? '',
-      occurrences: 1,
-      samples: [`${alarm.name}: ${alarm.reason}`.slice(0, 2000)],
-      lastTimestamp: null,
-      source: 'alarm'
-    }))
-  ];
-  return { clusters, logEntries, alarms };
+  const clusters = alarms.map((alarm) => ({
+    signature: alarmSignature(alarm),
+    alarm,
+    logGroup: alarm.dimensions.find((dimension) => dimension.startsWith('/aws/lambda/')) ?? '',
+    occurrences: 1,
+    samples: [`${alarm.name}: ${alarm.reason}`.slice(0, 2000)],
+    lastTimestamp: null,
+    source: 'alarm'
+  }));
+  return { clusters, alarms };
 };
 
 const hasOpenTasks = (state) => Object.values(state.signatures).some((entry) => entry.status === 'open');
@@ -332,7 +317,7 @@ const main = async () => {
     coveredByPr: []
   };
 
-  const { clusters, logEntries, alarms } = await collectClusters(region, args.days);
+  const { clusters, alarms } = await collectClusters(region);
   const seen = new Set();
   for (const cluster of clusters) {
     seen.add(cluster.signature);
@@ -344,7 +329,7 @@ const main = async () => {
     }
   }
   settleAbsentEntries(seen, ctx);
-  printSummary(clusters, logEntries, alarms, ctx);
+  printSummary(clusters, alarms, ctx);
 
   if (args.dryRun) {
     console.log('\nDry run: nothing written, nothing committed, no dispatch.');

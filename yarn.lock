@@ -274,22 +274,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-cloudwatch-logs@npm:^3.1146.0":
-  version: 3.1155.0
-  resolution: "@aws-sdk/client-cloudwatch-logs@npm:3.1155.0"
-  dependencies:
-    "@aws-sdk/core": "npm:^3.978.5"
-    "@aws-sdk/credential-provider-node": "npm:^3.972.88"
-    "@aws-sdk/types": "npm:^3.975.0"
-    "@smithy/core": "npm:^3.36.1"
-    "@smithy/fetch-http-handler": "npm:^5.8.0"
-    "@smithy/node-http-handler": "npm:^4.12.1"
-    "@smithy/types": "npm:^4.19.0"
-    tslib: "npm:^2.6.2"
-  checksum: 10c0/f2336b1dc8ac6002b18885e29ae6b77c7b62e59ed7cffb4bfabcf16abaeb3c4b00d94bcb9c591d18091a8aa776b64e32686cecf6906cc611f7d8cb2de5ed5a10
-  languageName: node
-  linkType: hard
-
 "@aws-sdk/client-cloudwatch@npm:^3.1146.0":
   version: 3.1155.0
   resolution: "@aws-sdk/client-cloudwatch@npm:3.1155.0"
@@ -1162,7 +1146,6 @@ __metadata:
   resolution: "@centralbeans/error-scanner@workspace:packages/error-scanner"
   dependencies:
     "@aws-sdk/client-cloudwatch": "npm:^3.1146.0"
-    "@aws-sdk/client-cloudwatch-logs": "npm:^3.1146.0"
     "@earendil-works/pi-coding-agent": "npm:^1.4.0"
     oxfmt: "npm:^0.71.0"
     oxlint: "npm:^1.86.0"
