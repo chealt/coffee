@@ -60,18 +60,23 @@ const main = async () => {
   }
 
   const base = defaultBranch(root);
-  const taskContent = readFileSync(found.path, 'utf8');
+  // found was resolved before the checkout; a resumed task branch may already have moved the file to in-review
+  const brief = tasks.findTaskFile(root, taskId);
+  if (!brief) {
+    throw new Error(`No task file found for task ${taskId} on branch ${branch}`);
+  }
+  const taskContent = readFileSync(brief.path, 'utf8');
   const instructions = [
     'You are an autonomous agent fixing a production error in this repository. You run non-interactively, so never ask questions — make reasonable decisions and record them.',
     '',
-    `The full task brief is piped via stdin and also saved at agent-tasks/open/${found.fileName}.`,
+    `The full task brief is piped via stdin and also saved at agent-tasks/${brief.status}/${brief.fileName}.`,
     '',
     'Steps:',
     '1. Read AGENTS.md and follow the repository conventions.',
     '2. Investigate the error from the task brief and find the root cause. Reproduce it if possible (parser workspaces need the ROASTER_ID environment variable).',
     '3. Implement a minimal fix. Only touch packages related to the error.',
-    '4. Run the relevant workspace tests and `yarn lint`. Fix any failures caused by your changes.',
-    `5. Move the task file: git mv agent-tasks/open/${found.fileName} agent-tasks/in-review/${found.fileName}, set its front matter status to "in-review", and add a short root-cause and fix note to the file.`,
+    '4. Run the relevant workspace tests, `yarn lint`, and `yarn format`. Fix any failures caused by your changes and commit the formatting fixes.',
+    `5. Move the task file: git mv agent-tasks/${brief.status}/${brief.fileName} agent-tasks/in-review/${brief.fileName} (skip the move if it is already there), set its front matter status to "in-review", and add a short root-cause and fix note to the file.`,
     `6. Commit everything with the message: fix(${taskId}): <short description>`,
     `7. Push the branch: git push -u origin ${branch}`,
     useGh

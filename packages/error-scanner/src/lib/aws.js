@@ -6,8 +6,9 @@ import {
   StartQueryCommand
 } from '@aws-sdk/client-cloudwatch-logs';
 
-// Word boundaries around "exception": "exceptional" in Manhattan product URLs would otherwise match and create false-positive tasks
-const ERROR_PATTERN = '(?i)(error|\\bexceptions?\\b|unhandled|timed out|fail)';
+// Trailing word boundaries keep product URLs like /coffees/exceptional/ from matching, while the
+// Lambda text-log level tag (\tERROR\t) still matches every error-level entry.
+const ERROR_PATTERN = '(?i)(errors?\\b|exceptions?\\b|fail(ed|ing|ures?|s)?\\b|unhandled|timed out)';
 
 const buildQueryString = (pattern) => `fields @timestamp, @message
 | filter @message like /${pattern}/
