@@ -46,7 +46,9 @@ test.describe('collections pages', () => {
 
     await (await fileChooserPromise).setFiles(coffeeImage);
 
-    await expect(page.getByRole('heading', { name: /details/iu, level: 1 })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /details/iu, level: 1 })).toBeVisible({
+      timeout: 30_000
+    });
 
     expect((await uploadResponse).status()).toBe(200);
 

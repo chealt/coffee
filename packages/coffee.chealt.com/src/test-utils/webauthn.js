@@ -36,6 +36,9 @@ const registerPasskey = async (/** @type {import('@playwright/test').Page} */ pa
   await page.goto(`${config.url}/registration/${config.user.username}?code=${registrationCode}`);
   await page.getByRole('button', { name: 'Register', exact: true }).click();
   await page.waitForURL(`${config.url}/`);
+  // The redirect after a successful verify can still be settling when waitForURL resolves,
+  // which aborts whatever navigation the test starts next
+  await page.waitForLoadState();
 
   const { credentials } = await client.send('WebAuthn.getCredentials', { authenticatorId });
 
