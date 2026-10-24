@@ -73,9 +73,28 @@ jobs:
           TURSO_AUTH_TOKEN_TEST: ${{ secrets.TURSO_AUTH_TOKEN_TEST }}
           TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
           TURSO_DATABASE_URL_TEST: ${{ secrets.TURSO_DATABASE_URL_TEST }}
-  website-test:
+  # See the matching job in deploy.yml: clear the shared test account's passkey pile
+  # before the shards start, a shard-local cleanup would race the parallel tests.
+  passkey-cleanup:
     runs-on: ubuntu-latest
     needs: deploy-preview
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Delete the passkeys left behind by previous UI test runs
+        env:
+          TURSO_AUTH_TOKEN_TEST: ${{ secrets.TURSO_AUTH_TOKEN_TEST }}
+          TURSO_DATABASE_URL_TEST: ${{ secrets.TURSO_DATABASE_URL_TEST }}
+        run: yarn workspace @centralbeans/website delete:test-passkeys:ci
+
+  website-test:
+    runs-on: ubuntu-latest
+    needs: passkey-cleanup
     strategy:
       # A failing shard must not cancel the others, they still have reports to upload
       fail-fast: false
@@ -125,14 +144,8 @@ jobs:
           done
           echo "Preview host never came up."
           exit 1
-      # See the matching step in deploy.yml: keep the shared test account's passkey pile
-      # from growing across runs.
-      - name: Delete the passkeys left behind by previous UI test runs
-        if: matrix.shard == 1
-        env:
-          TURSO_AUTH_TOKEN_TEST: ${{ secrets.TURSO_AUTH_TOKEN_TEST }}
-          TURSO_DATABASE_URL_TEST: ${{ secrets.TURSO_DATABASE_URL_TEST }}
-        run: yarn workspace @centralbeans/website delete:test-passkeys:ci
+      # See the matching job in deploy.yml: the passkey pile is cleared by the
+      # passkey-cleanup job before the shards start
       - name: Run Playwright tests
         env:
           baseUrl: https://${{ env.PREVIEW_HOST }}

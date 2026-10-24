@@ -710,9 +710,29 @@ jobs:
             --notes "Automated release" \
             --draft=false \
             --prerelease=false
-  website-test:
+  # The passkey tests authenticate a shared test account, and every run leaves its
+  # registered credentials behind. Login gets slower with every leftover, so clear the
+  # pile before the shards start - a shard-local cleanup would race the parallel tests.
+  passkey-cleanup:
     runs-on: ubuntu-latest
     needs: website
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Delete the passkeys left behind by previous UI test runs
+        env:
+          TURSO_AUTH_TOKEN_TEST: ${{ secrets.TURSO_AUTH_TOKEN_TEST }}
+          TURSO_DATABASE_URL_TEST: ${{ secrets.TURSO_DATABASE_URL_TEST }}
+        run: yarn workspace @centralbeans/website delete:test-passkeys:ci
+
+  website-test:
+    runs-on: ubuntu-latest
+    needs: passkey-cleanup
     strategy:
       # A failing shard must not cancel the others, they still have reports to upload
       fail-fast: false
@@ -748,15 +768,6 @@ jobs:
       - name: Install Playwright Browsers
         if: steps.cache.outputs.cache-hit != 'true'
         run: yarn workspace @centralbeans/website playwright install --with-deps chromium
-      # The passkey tests authenticate a shared test account, and every run leaves its
-      # registered credentials behind. Login gets slower with every leftover, so start
-      # each run from a clean slate instead of waiting for the daily cleanup.
-      - name: Delete the passkeys left behind by previous UI test runs
-        if: matrix.shard == 1
-        env:
-          TURSO_AUTH_TOKEN_TEST: ${{ secrets.TURSO_AUTH_TOKEN_TEST }}
-          TURSO_DATABASE_URL_TEST: ${{ secrets.TURSO_DATABASE_URL_TEST }}
-        run: yarn workspace @centralbeans/website delete:test-passkeys:ci
       - name: Run Playwright tests
         env:
           baseUrl: https://centralbeans.com
