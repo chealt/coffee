@@ -32,8 +32,8 @@ const listAlarmTransitions = async ({ region, since }) => {
       let reason = item.historySummary ?? '';
       try {
         const data = JSON.parse(item.historyData ?? '{}');
-        newState = data.newState;
-        reason = data.stateRationale ?? reason;
+        newState = data.newState?.stateValue;
+        reason = data.newState?.stateReason ?? reason;
       } catch {
         newState = undefined;
       }
