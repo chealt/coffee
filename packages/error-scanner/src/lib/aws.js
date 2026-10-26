@@ -5,6 +5,8 @@ import { execFileSync } from 'node:child_process';
 const awsCli = (region, args) =>
   JSON.parse(execFileSync('aws', ['--region', region, ...args, '--output', 'json'], { encoding: 'utf8' }));
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const paginateCli = (region, args, itemsKey) => {
   const items = [];
   let nextToken;
@@ -23,6 +25,25 @@ const listAlarms = ({ region }) =>
     stateValue: alarm.StateValue,
     dimensions: (alarm.Dimensions ?? []).map((dimension) => dimension.Value).filter(Boolean)
   }));
+
+const parseBreachTimes = (historyData) => {
+  try {
+    const state = JSON.parse(historyData ?? '{}').newState;
+    let reasonData = state?.stateReasonData;
+    if (typeof reasonData === 'string') {
+      try {
+        reasonData = JSON.parse(reasonData);
+      } catch {
+        reasonData = undefined;
+      }
+    }
+    return (reasonData?.evaluatedDatapoints ?? [])
+      .map((point) => Date.parse(point.timestamp))
+      .filter((time) => Number.isFinite(time));
+  } catch {
+    return [];
+  }
+};
 
 const listAlarmTransitions = ({ region, since }) =>
   paginateCli(
@@ -47,7 +68,13 @@ const listAlarmTransitions = ({ region, since }) =>
       } catch {
         newState = undefined;
       }
-      return { name: item.AlarmName, timestamp: new Date(item.Timestamp), newState, reason };
+      return {
+        name: item.AlarmName,
+        timestamp: new Date(item.Timestamp),
+        newState,
+        reason,
+        breachTimes: parseBreachTimes(item.HistoryData)
+      };
     })
     .filter((transition) => transition.newState === 'ALARM');
 
@@ -67,14 +94,48 @@ const listFiredAlarms = ({ region, since }) => {
       (acc, transition) => (acc && acc.timestamp >= transition.timestamp ? acc : transition),
       undefined
     );
+    const breachTimes = [...new Set(fired.flatMap((transition) => transition.breachTimes))].sort((a, b) => a - b);
     return {
       name,
       reason: latest?.reason ?? reasonByName.get(name) ?? '',
       dimensions: dimensionsByName.get(name) ?? [],
       occurrences: Math.max(fired.length, 1),
-      lastTimestamp: latest?.timestamp ?? null
+      lastTimestamp: latest?.timestamp ?? null,
+      breachTimes
     };
   });
 };
 
-export { listFiredAlarms };
+const ERROR_QUERY =
+  'fields @timestamp, @message | filter @message like /\\b(?i)(error|exception|unhandled|timed out|fail)\\b/ | sort @timestamp desc | limit 1000';
+
+const queryLogErrors = async ({ region, logGroup, startTime, endTime }) => {
+  const { queryId } = awsCli(region, [
+    'logs',
+    'start-query',
+    '--log-group-name',
+    logGroup,
+    '--start-time',
+    String(Math.floor(startTime / 1000)),
+    '--end-time',
+    String(Math.floor(endTime / 1000)),
+    '--query-string',
+    ERROR_QUERY
+  ]);
+  for (let attempt = 0; attempt < 30; attempt++) {
+    const response = awsCli(region, ['logs', 'get-query-results', '--query-id', queryId]);
+    if (response.status === 'Complete') {
+      return (response.results ?? []).map((row) => {
+        const field = (name) => row.find((entry) => entry.field === name)?.value ?? '';
+        return { timestamp: field('@timestamp'), message: field('@message'), logGroup };
+      });
+    }
+    if (['Failed', 'Cancelled', 'Timeout'].includes(response.status)) {
+      throw new Error(`Logs Insights query ${queryId} ended with status ${response.status}`);
+    }
+    await sleep(2000);
+  }
+  throw new Error(`Logs Insights query ${queryId} did not complete in time`);
+};
+
+export { listFiredAlarms, queryLogErrors };

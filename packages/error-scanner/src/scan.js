@@ -1,7 +1,7 @@
-import { listFiredAlarms } from './lib/aws.js';
+import { listFiredAlarms, queryLogErrors } from './lib/aws.js';
 import { extractJson, runPi } from './lib/pi.js';
 import * as prs from './lib/prs.js';
-import { alarmSignature } from './lib/signature.js';
+import { clusterBySignature, sanitizeAlarmId, shortHash } from './lib/signature.js';
 import * as tasks from './lib/tasks.js';
 
 const MODEL = process.env.AGENT_MODEL || 'sonnet';
@@ -113,10 +113,12 @@ const checkOpenPrCoverage = async (cluster, ctx) => {
 };
 
 const createTask = (cluster, prNote, ctx) => {
-  const alarmId = cluster.signature;
+  const taskId = cluster.signature;
   const task = {
-    id: alarmId,
+    id: taskId,
     status: 'open',
+    alarm: cluster.alarm,
+    signature: cluster.rawSignature,
     logGroup: cluster.logGroup,
     firstSeen: ctx.todayStr,
     lastSeen: ctx.todayStr,
@@ -133,7 +135,7 @@ const createTask = (cluster, prNote, ctx) => {
     lastSeen: ctx.todayStr,
     occurrences: cluster.occurrences
   };
-  ctx.created.push(alarmId);
+  ctx.created.push(taskId);
 };
 
 const handleNewCluster = async (cluster, ctx) => {
@@ -258,9 +260,9 @@ const settleAbsentEntries = (seen, ctx) => {
   }
 };
 
-const printSummary = (clusters, alarms, ctx, since) => {
+const printSummary = (clusters, alarms, ctx, since, entriesCount) => {
   console.log(
-    `Scanned ${clusters.length} error clusters (${alarms.length} alarms fired since ${since.toISOString().slice(0, 10)}).`
+    `Scanned ${clusters.length} error clusters (${alarms.length} alarms fired since ${since.toISOString().slice(0, 10)}, ${entriesCount} log entries matched).`
   );
   const sections = [
     ['Covered by open PR', ctx.coveredByPr],
@@ -281,16 +283,34 @@ const printSummary = (clusters, alarms, ctx, since) => {
 
 const collectClusters = async (region, since) => {
   const alarms = await listFiredAlarms({ region, since });
-  const clusters = alarms.map((alarm) => ({
-    signature: alarmSignature(alarm),
-    alarm,
-    logGroup: alarm.dimensions.find((dimension) => dimension.startsWith('/aws/lambda/')) ?? '',
-    occurrences: alarm.occurrences,
-    samples: [`${alarm.name}: ${alarm.reason}`.slice(0, 2000)],
-    lastTimestamp: alarm.lastTimestamp,
-    source: 'alarm'
-  }));
-  return { clusters, alarms };
+  const clusters = [];
+  let entriesCount = 0;
+  for (const alarm of alarms) {
+    const dimension = alarm.dimensions[0];
+    if (!dimension) {
+      continue;
+    }
+    const logGroup = dimension.startsWith('/aws/lambda/') ? dimension : `/aws/lambda/${dimension}`;
+    const times = alarm.breachTimes.length > 0 ? alarm.breachTimes : [Date.now() - 60 * 60 * 1000];
+    const startTime = Math.min(...times) - 5 * 60 * 1000;
+    const endTime = Math.max(...times) + 15 * 60 * 1000;
+    let entries = [];
+    try {
+      entries = await queryLogErrors({ region, logGroup, startTime, endTime });
+    } catch (error) {
+      console.error(`Log query failed for ${alarm.name} (${logGroup}): ${error.message}`);
+    }
+    entriesCount += entries.length;
+    for (const cluster of clusterBySignature(entries)) {
+      clusters.push({
+        ...cluster,
+        signature: `${sanitizeAlarmId(alarm.name)}-${shortHash(cluster.signature)}`,
+        rawSignature: cluster.signature,
+        alarm: alarm.name
+      });
+    }
+  }
+  return { clusters, alarms, entriesCount };
 };
 
 const hasOpenTasks = (state) => Object.values(state.signatures).some((entry) => entry.status === 'open');
@@ -318,7 +338,7 @@ const main = async () => {
   };
 
   const since = ctx.state.lastScanAt ? new Date(ctx.state.lastScanAt) : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-  const { clusters, alarms } = await collectClusters(region, since);
+  const { clusters, alarms, entriesCount } = await collectClusters(region, since);
   const seen = new Set();
   for (const cluster of clusters) {
     seen.add(cluster.signature);
@@ -330,7 +350,7 @@ const main = async () => {
     }
   }
   settleAbsentEntries(seen, ctx);
-  printSummary(clusters, alarms, ctx, since);
+  printSummary(clusters, alarms, ctx, since, entriesCount);
 
   if (args.dryRun) {
     console.log('\nDry run: nothing written, nothing committed, no dispatch.');

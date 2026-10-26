@@ -89,6 +89,8 @@ const consoleUrl = (region) => `https://${region}.console.aws.amazon.com/cloudwa
 const renderTask = (task, { region }) => `---
 id: "${task.id}"
 status: "${task.status}"
+alarm: "${task.alarm}"
+signature: ${JSON.stringify(task.signature ?? '')}
 logGroup: ${JSON.stringify(task.logGroup ?? '')}
 firstSeen: "${task.firstSeen}"
 lastSeen: "${task.lastSeen}"
@@ -97,10 +99,11 @@ occurrences: ${task.occurrences}
 
 # Task ${task.id}
 
-Detected by the weekly error scan on ${task.lastSeen}.
+Detected by the weekly error scan on ${task.lastSeen}. Triggering alarm: \`${task.alarm}\`.
 
 - **Occurrences:** ${task.occurrences}
 - **Log group:** \`${task.logGroup ?? 'n/a'}\`
+- **Signature:** \`${task.signature ?? ''}\`
 ${task.prNote ? `\n> Open PR check: ${task.prNote}\n` : ''}
 ## Sample errors
 
