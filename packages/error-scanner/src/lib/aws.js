@@ -108,6 +108,13 @@ const listFiredAlarms = ({ region, since }) => {
 // codebase logs; the ?-prefixed terms and phrase form an OR
 const ERROR_FILTER_PATTERN = '?ERROR ?error ?Exception ?exception ?fail ?FAIL ?unhandled ?Unhandled ?"timed out"';
 
+// Keyword matching in filter patterns is substring-based, so terms like ?exception also match
+// product URLs such as /product/coffees/exceptional/bombe/ in benign INFO lines. Re-check matched
+// events with word boundaries, like the Logs Insights \b pattern this query replaced.
+const ERROR_KEYWORDS = /\b(?:errors?|exceptions?|fail(?:ed|ing|ures?|s)?)\b|\bunhandled|timed out/i;
+
+const isErrorMessage = (message) => ERROR_KEYWORDS.test(message);
+
 const queryLogErrors = async ({ region, logGroup, startTime, endTime }) => {
   const logs = new CloudWatchLogsClient({ region });
   const entries = [];
@@ -123,11 +130,13 @@ const queryLogErrors = async ({ region, logGroup, startTime, endTime }) => {
       })
     );
     entries.push(
-      ...(response.events ?? []).map((event) => ({
-        timestamp: new Date(event.timestamp).toISOString(),
-        message: event.message,
-        logGroup
-      }))
+      ...(response.events ?? [])
+        .map((event) => ({
+          timestamp: new Date(event.timestamp).toISOString(),
+          message: event.message,
+          logGroup
+        }))
+        .filter((entry) => isErrorMessage(entry.message))
     );
     nextToken = response.nextToken;
   } while (nextToken);
