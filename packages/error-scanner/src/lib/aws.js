@@ -25,7 +25,18 @@ const listAlarms = ({ region }) =>
   }));
 
 const listAlarmTransitions = ({ region, since }) =>
-  paginateCli(region, ['cloudwatch', 'describe-alarm-history', '--history-item-type', 'StateUpdate', '--start-date', since.toISOString().replace(/\.\d{3}Z$/, 'Z')], 'AlarmHistoryItems')
+  paginateCli(
+    region,
+    [
+      'cloudwatch',
+      'describe-alarm-history',
+      '--history-item-type',
+      'StateUpdate',
+      '--start-date',
+      since.toISOString().replace(/\.\d{3}Z$/, 'Z')
+    ],
+    'AlarmHistoryItems'
+  )
     .map((item) => {
       let newState;
       let reason = item.HistorySummary ?? '';
@@ -52,7 +63,10 @@ const listFiredAlarms = ({ region, since }) => {
   const names = new Set([...current, ...transitions.map((transition) => transition.name)]);
   return [...names].map((name) => {
     const fired = transitions.filter((transition) => transition.name === name);
-    const latest = fired.reduce((acc, transition) => (acc && acc.timestamp >= transition.timestamp ? acc : transition), undefined);
+    const latest = fired.reduce(
+      (acc, transition) => (acc && acc.timestamp >= transition.timestamp ? acc : transition),
+      undefined
+    );
     return {
       name,
       reason: latest?.reason ?? reasonByName.get(name) ?? '',

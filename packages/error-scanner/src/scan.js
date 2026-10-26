@@ -259,7 +259,9 @@ const settleAbsentEntries = (seen, ctx) => {
 };
 
 const printSummary = (clusters, alarms, ctx, since) => {
-  console.log(`Scanned ${clusters.length} error clusters (${alarms.length} alarms fired since ${since.toISOString().slice(0, 10)}).`);
+  console.log(
+    `Scanned ${clusters.length} error clusters (${alarms.length} alarms fired since ${since.toISOString().slice(0, 10)}).`
+  );
   const sections = [
     ['Covered by open PR', ctx.coveredByPr],
     ['New tasks', ctx.created],
