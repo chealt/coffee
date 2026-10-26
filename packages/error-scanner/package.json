@@ -8,6 +8,9 @@
     "format:check": "oxfmt --check",
     "lint": "oxlint"
   },
+  "dependencies": {
+    "@aws-sdk/client-cloudwatch-logs": "^3.1157.0"
+  },
   "devDependencies": {
     "@earendil-works/pi-coding-agent": "^1.4.0",
     "oxfmt": "^0.71.0",

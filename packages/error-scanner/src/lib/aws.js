@@ -1,12 +1,10 @@
 import { execFileSync } from 'node:child_process';
+import { CloudWatchLogsClient, FilterLogEventsCommand } from '@aws-sdk/client-cloudwatch-logs';
 
 // The AWS JS SDK returns empty results for describe-alarm-history here while the CLI
 // returns the real entries, so the scanner shells out to the CLI instead.
 const awsCli = (region, args) =>
   JSON.parse(execFileSync('aws', ['--region', region, ...args, '--output', 'json'], { encoding: 'utf8' }));
-
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 const paginateCli = (region, args, itemsKey) => {
   const items = [];
   let nextToken;
@@ -106,36 +104,34 @@ const listFiredAlarms = ({ region, since }) => {
   });
 };
 
-const ERROR_QUERY =
-  'fields @timestamp, @message | filter @message like /\\b(?i)(error|exception|unhandled|timed out|fail)\\b/ | sort @timestamp desc | limit 1000';
+// Token matching in filter patterns is case-sensitive, so cover the casings this
+// codebase logs; the ?-prefixed terms and phrase form an OR
+const ERROR_FILTER_PATTERN = '?ERROR ?error ?Exception ?exception ?fail ?FAIL ?unhandled ?Unhandled ?"timed out"';
 
 const queryLogErrors = async ({ region, logGroup, startTime, endTime }) => {
-  const { queryId } = awsCli(region, [
-    'logs',
-    'start-query',
-    '--log-group-name',
-    logGroup,
-    '--start-time',
-    String(Math.floor(startTime / 1000)),
-    '--end-time',
-    String(Math.floor(endTime / 1000)),
-    '--query-string',
-    ERROR_QUERY
-  ]);
-  for (let attempt = 0; attempt < 30; attempt++) {
-    const response = awsCli(region, ['logs', 'get-query-results', '--query-id', queryId]);
-    if (response.status === 'Complete') {
-      return (response.results ?? []).map((row) => {
-        const field = (name) => row.find((entry) => entry.field === name)?.value ?? '';
-        return { timestamp: field('@timestamp'), message: field('@message'), logGroup };
-      });
-    }
-    if (['Failed', 'Cancelled', 'Timeout'].includes(response.status)) {
-      throw new Error(`Logs Insights query ${queryId} ended with status ${response.status}`);
-    }
-    await sleep(2000);
-  }
-  throw new Error(`Logs Insights query ${queryId} did not complete in time`);
+  const logs = new CloudWatchLogsClient({ region });
+  const entries = [];
+  let nextToken;
+  do {
+    const response = await logs.send(
+      new FilterLogEventsCommand({
+        logGroupName: logGroup,
+        startTime,
+        endTime,
+        filterPattern: ERROR_FILTER_PATTERN,
+        nextToken
+      })
+    );
+    entries.push(
+      ...(response.events ?? []).map((event) => ({
+        timestamp: new Date(event.timestamp).toISOString(),
+        message: event.message,
+        logGroup
+      }))
+    );
+    nextToken = response.nextToken;
+  } while (nextToken);
+  return entries;
 };
 
 export { listFiredAlarms, queryLogErrors };
