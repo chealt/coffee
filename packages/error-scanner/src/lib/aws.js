@@ -1,57 +1,51 @@
-import { CloudWatchClient, DescribeAlarmHistoryCommand, DescribeAlarmsCommand } from '@aws-sdk/client-cloudwatch';
+import { execFileSync } from 'node:child_process';
 
-const mapAlarm = (alarm) => ({
-  name: alarm.alarmName,
-  reason: alarm.stateReason ?? '',
-  stateValue: alarm.stateValue,
-  dimensions: (alarm.dimensions ?? []).map((dimension) => dimension.value).filter(Boolean)
-});
+// The AWS JS SDK returns empty results for describe-alarm-history here while the CLI
+// returns the real entries, so the scanner shells out to the CLI instead.
+const awsCli = (region, args) =>
+  JSON.parse(execFileSync('aws', ['--region', region, ...args, '--output', 'json'], { encoding: 'utf8' }));
 
-const listAlarms = async ({ region }) => {
-  const cloudwatch = new CloudWatchClient({ region });
-  const alarms = [];
+const paginateCli = (region, args, itemsKey) => {
+  const items = [];
   let nextToken;
   do {
-    const response = await cloudwatch.send(new DescribeAlarmsCommand({ nextToken }));
-    alarms.push(...(response.metricAlarms ?? []).map(mapAlarm));
-    nextToken = response.nextToken;
+    const response = awsCli(region, nextToken ? [...args, '--next-token', nextToken] : args);
+    items.push(...(response[itemsKey] ?? []));
+    nextToken = response.NextToken;
   } while (nextToken);
-  return alarms;
+  return items;
 };
 
-const listAlarmTransitions = async ({ region, since }) => {
-  const cloudwatch = new CloudWatchClient({ region });
-  const transitions = [];
-  let nextToken;
-  do {
-    const response = await cloudwatch.send(
-      new DescribeAlarmHistoryCommand({ HistoryItemType: 'StateUpdate', StartDate: since, nextToken })
-    );
-    for (const item of response.alarmHistoryItems ?? []) {
+const listAlarms = ({ region }) =>
+  paginateCli(region, ['cloudwatch', 'describe-alarms'], 'MetricAlarms').map((alarm) => ({
+    name: alarm.AlarmName,
+    reason: alarm.StateReason ?? '',
+    stateValue: alarm.StateValue,
+    dimensions: (alarm.Dimensions ?? []).map((dimension) => dimension.Value).filter(Boolean)
+  }));
+
+const listAlarmTransitions = ({ region, since }) =>
+  paginateCli(region, ['cloudwatch', 'describe-alarm-history', '--history-item-type', 'StateUpdate', '--start-date', since.toISOString().replace(/\.\d{3}Z$/, 'Z')], 'AlarmHistoryItems')
+    .map((item) => {
       let newState;
-      let reason = item.historySummary ?? '';
+      let reason = item.HistorySummary ?? '';
       try {
-        const data = JSON.parse(item.historyData ?? '{}');
+        const data = JSON.parse(item.HistoryData ?? '{}');
         newState = data.newState?.stateValue;
         reason = data.newState?.stateReason ?? reason;
       } catch {
         newState = undefined;
       }
-      transitions.push({ name: item.alarmName, timestamp: item.timestamp, newState, reason });
-    }
-    nextToken = response.nextToken;
-  } while (nextToken);
-  return transitions.filter((transition) => transition.newState === 'ALARM');
-};
+      return { name: item.AlarmName, timestamp: new Date(item.Timestamp), newState, reason };
+    })
+    .filter((transition) => transition.newState === 'ALARM');
 
 // Alarms that entered ALARM since the given time, plus ones still in ALARM now — a recovered
 // burst between scans must still create a task, and a long-standing alarm's transition can
 // predate the window.
-const listFiredAlarms = async ({ region, since }) => {
-  const [alarms, transitions] = await Promise.all([
-    listAlarms({ region }),
-    listAlarmTransitions({ region, since })
-  ]);
+const listFiredAlarms = ({ region, since }) => {
+  const alarms = listAlarms({ region });
+  const transitions = listAlarmTransitions({ region, since });
   const dimensionsByName = new Map(alarms.map((alarm) => [alarm.name, alarm.dimensions]));
   const reasonByName = new Map(alarms.map((alarm) => [alarm.name, alarm.reason]));
   const current = alarms.filter((alarm) => alarm.stateValue === 'ALARM').map((alarm) => alarm.name);
