@@ -757,16 +757,22 @@ const parsers = {
 
     const document = getDocument(html);
 
+    if (document.querySelector('h1').textContent.toLowerCase().includes('advent calendar')) {
+      logger.info(`Skipping advent calendar gift set ${url}`);
+
+      return { isGiftSet: true };
+    }
+
     const description = document.querySelector('.product__description p').textContent.trim().toLowerCase();
 
-    const [priceText, currency] = document
-      .querySelector('[name=add]')
-      .textContent.replaceAll(/\s+/gi, ' ')
-      .replace('Buy', '')
-      .trim()
-      .split(' ');
+    const [priceText, currency] =
+      document
+        .querySelector('[name=add]')
+        .textContent.replaceAll(/\s+/gi, ' ')
+        .match(/([\d.,]+)\s*([A-Za-z]{3})/i)
+        ?.slice(1) || [];
 
-    const price = Number(priceText);
+    const price = Number(priceText?.replaceAll(',', '.'));
 
     if (!price || isNaN(price)) {
       logger.error(`No price found for ${url}`);
@@ -774,14 +780,11 @@ const parsers = {
       throw new Error(errors.priceMissing);
     }
 
-    const weight =
-      Number(document.querySelector('.product__description').textContent.split('\n').pop().replace(' G', '')) ||
-      Number(
-        document
-          .querySelector('[name="options[Title]"] option')
-          .value.match(/\d+\s*g/i)[0]
-          .replace('g', '')
-      );
+    const weightText =
+      document.querySelector('.product__description').textContent.match(/\d+\s*g/i)?.[0] ||
+      document.querySelector('[name="options[Title]"] option')?.value.match(/\d+\s*g/i)?.[0];
+
+    const weight = Number(weightText?.replace(/g/i, '').trim());
 
     if (!weight || isNaN(weight)) {
       logger.error(`No weight found for ${url}`);
