@@ -2555,6 +2555,12 @@ const parsers = {
 
     const document = getDocument(html);
 
+    if (document.querySelector('.post-password-form')) {
+      logger.info(`Skipping password protected item ${url}`);
+
+      return { isOutOfStock: true };
+    }
+
     const variationsAttr = document.querySelector('.variations_form')?.getAttribute('data-product_variations');
 
     if (!variationsAttr) {
