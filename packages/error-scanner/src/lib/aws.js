@@ -108,6 +108,13 @@ const listFiredAlarms = ({ region, since }) => {
 // codebase logs; the ?-prefixed terms and phrase form an OR
 const ERROR_FILTER_PATTERN = '?ERROR ?error ?Exception ?exception ?fail ?FAIL ?unhandled ?Unhandled ?"timed out"';
 
+// Terms in filter patterns match substrings, so ?exception also hits words like "exceptional"
+// in product URLs; word boundaries on the fetched entries keep such INFO lines out while
+// real error lines (the \tERROR\t level tag, TypeError, "failed", "timed out") still match.
+const ERROR_LINE_PATTERN = /(errors?\b|exceptions?\b|fail(?:ed|ing|ures?|s)?\b|unhandled|timed out)/i;
+
+const isErrorMessage = (message) => ERROR_LINE_PATTERN.test(message);
+
 const queryLogErrors = async ({ region, logGroup, startTime, endTime }) => {
   const logs = new CloudWatchLogsClient({ region });
   const entries = [];
@@ -123,15 +130,17 @@ const queryLogErrors = async ({ region, logGroup, startTime, endTime }) => {
       })
     );
     entries.push(
-      ...(response.events ?? []).map((event) => ({
-        timestamp: new Date(event.timestamp).toISOString(),
-        message: event.message,
-        logGroup
-      }))
+      ...(response.events ?? [])
+        .filter((event) => isErrorMessage(event.message))
+        .map((event) => ({
+          timestamp: new Date(event.timestamp).toISOString(),
+          message: event.message,
+          logGroup
+        }))
     );
     nextToken = response.nextToken;
   } while (nextToken);
   return entries;
 };
 
-export { listFiredAlarms, queryLogErrors };
+export { isErrorMessage, listFiredAlarms, queryLogErrors };
