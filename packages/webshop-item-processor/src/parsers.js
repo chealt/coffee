@@ -441,9 +441,10 @@ const parsers = {
 
     const currency = 'PLN';
 
-    const weight = Number(
-      document.querySelector('select[name="group[8]"] option[selected]').textContent.replace(' g', '')
-    );
+    const weightElement =
+      document.querySelector('input[name="group[8]"]:checked')?.closest('label')?.querySelector('.elc-wp__label') ||
+      document.querySelector('select[name="group[8]"] option[selected]');
+    const weight = Number(weightElement?.textContent.replace(' g', ''));
 
     if (!weight || isNaN(weight)) {
       logger.error(`No weight found for ${url}`);
