@@ -124,7 +124,9 @@ const createTask = (cluster, prNote, ctx) => {
     samples: cluster.samples,
     prNote
   };
-  tasks.writeTaskFile(ctx.root, task, { region: ctx.region });
+  if (!ctx.args.dryRun) {
+    tasks.writeTaskFile(ctx.root, task, { region: ctx.region });
+  }
   ctx.state.signatures[cluster.signature] = {
     status: 'open',
     firstSeen: ctx.todayStr,
