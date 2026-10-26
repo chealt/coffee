@@ -3,6 +3,7 @@
   "type": "module",
   "scripts": {
     "scan": "node src/scan.js",
+    "test": "node --test test.js",
     "fix": "node src/fix.js",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
