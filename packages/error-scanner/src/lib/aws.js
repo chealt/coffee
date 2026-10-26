@@ -25,7 +25,7 @@ const listAlarmTransitions = async ({ region, since }) => {
   let nextToken;
   do {
     const response = await cloudwatch.send(
-      new DescribeAlarmHistoryCommand({ HistoryItemType: 'Alarm', StartDate: since, nextToken })
+      new DescribeAlarmHistoryCommand({ HistoryItemType: 'StateUpdate', StartDate: since, nextToken })
     );
     for (const item of response.alarmHistoryItems ?? []) {
       let newState;
