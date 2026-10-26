@@ -8,7 +8,10 @@ and dispatch one fixing agent per task.
 Two workflows, coupled only by files in `agent-tasks/` and git:
 
 1. **errorScan** (cron Mondays 06:00 UTC, or manual) — runs `src/scan.js`:
-   - Lists CloudWatch alarms in `ALARM` state and turns each into a task.
+   - Lists CloudWatch alarms that entered `ALARM` state since the last successful scan
+     (plus any still in `ALARM`) and turns each into a task.
+   - The scan window start (`state.lastScanAt`) advances only after a successful, non-dry
+     run, so a failed scan never skips alarms.
    - Tasks are identified by the alarm name (sanitized to `[A-Za-z0-9._-]`): the task file,
      branch, PR title, and state key all use it — one task file per alarm for its whole life.
    - Dedupes against `agent-tasks/state.json` and open PRs:

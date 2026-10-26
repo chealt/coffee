@@ -1,4 +1,4 @@
-import { listAlarmsInAlarm } from './lib/aws.js';
+import { listFiredAlarms } from './lib/aws.js';
 import { extractJson, runPi } from './lib/pi.js';
 import * as prs from './lib/prs.js';
 import { alarmSignature } from './lib/signature.js';
@@ -256,8 +256,8 @@ const settleAbsentEntries = (seen, ctx) => {
   }
 };
 
-const printSummary = (clusters, alarms, ctx) => {
-  console.log(`Scanned ${clusters.length} error clusters (${alarms.length} alarms in ALARM).`);
+const printSummary = (clusters, alarms, ctx, since) => {
+  console.log(`Scanned ${clusters.length} error clusters (${alarms.length} alarms fired since ${since.toISOString().slice(0, 10)}).`);
   const sections = [
     ['Covered by open PR', ctx.coveredByPr],
     ['New tasks', ctx.created],
@@ -275,15 +275,15 @@ const printSummary = (clusters, alarms, ctx) => {
   }
 };
 
-const collectClusters = async (region) => {
-  const alarms = await listAlarmsInAlarm({ region });
+const collectClusters = async (region, since) => {
+  const alarms = await listFiredAlarms({ region, since });
   const clusters = alarms.map((alarm) => ({
     signature: alarmSignature(alarm),
     alarm,
     logGroup: alarm.dimensions.find((dimension) => dimension.startsWith('/aws/lambda/')) ?? '',
-    occurrences: 1,
+    occurrences: alarm.occurrences,
     samples: [`${alarm.name}: ${alarm.reason}`.slice(0, 2000)],
-    lastTimestamp: null,
+    lastTimestamp: alarm.lastTimestamp,
     source: 'alarm'
   }));
   return { clusters, alarms };
@@ -313,7 +313,8 @@ const main = async () => {
     coveredByPr: []
   };
 
-  const { clusters, alarms } = await collectClusters(region);
+  const since = ctx.state.lastScanAt ? new Date(ctx.state.lastScanAt) : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const { clusters, alarms } = await collectClusters(region, since);
   const seen = new Set();
   for (const cluster of clusters) {
     seen.add(cluster.signature);
@@ -325,13 +326,14 @@ const main = async () => {
     }
   }
   settleAbsentEntries(seen, ctx);
-  printSummary(clusters, alarms, ctx);
+  printSummary(clusters, alarms, ctx, since);
 
   if (args.dryRun) {
     console.log('\nDry run: nothing written, nothing committed, no dispatch.');
     return;
   }
 
+  ctx.state.lastScanAt = new Date().toISOString();
   tasks.saveState(root, ctx.state);
   const message = `chore(error-scan): ${ctx.todayStr} — ${ctx.created.length} new, ${ctx.updated.length} updated, ${ctx.reopened.length} reopened`;
   if (!tasks.commitAndPush(root, message)) {
