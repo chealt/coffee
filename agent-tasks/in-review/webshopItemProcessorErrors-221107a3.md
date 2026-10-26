@@ -1,6 +1,6 @@
 ---
 id: "webshopItemProcessorErrors-221107a3"
-status: "open"
+status: "in-review"
 alarm: "webshopItemProcessorErrors"
 signature: "/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR Invoke Error {<string>:<string>,<string>:<string>,<string>:[<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>]} | <num> (file://src/parsers.js:<num>:<num>)\",<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<stri"
 logGroup: "/aws/lambda/webshopItemProcessor"
@@ -40,8 +40,30 @@ Alarm console: https://eu-central-1.console.aws.amazon.com/cloudwatch/home?regio
 
 ## Definition of done
 
-- [ ] Root cause identified and reproduced (add a short note to this file)
-- [ ] Minimal fix implemented
-- [ ] Relevant tests run and passing
-- [ ] `yarn lint` passes
-- [ ] This file moved to `agent-tasks/in-review/` with status "in-review" in the fix commit
+- [x] Root cause identified and reproduced (add a short note to this file)
+- [x] Minimal fix implemented
+- [x] Relevant tests run and passing
+- [x] `yarn lint` passes
+- [x] This file moved to `agent-tasks/in-review/` with status "in-review" in the fix commit
+
+## Root cause and fix
+
+**Root cause:** The El Cafetero (roaster 7) product pages no longer render the weight variant
+as `<select name="group[8]">` with an `option[selected]`. The theme now renders radio tiles
+(`input[name="group[8]"][checked]` with the weight text in `.elc-wp__label` inside the parent
+`label.elc-wp__tile`), so `document.querySelector('select[name="group[8]"] option[selected]')`
+returned `null` and `.textContent` threw `TypeError: Cannot read properties of null (reading
+'textContent')` at `src/parsers.js:445` for every item, crashing the invocation (32 occurrences).
+
+Reproduced by saving the live HTML via `save-html.js` (ROASTER_ID=7): all 9 product pages
+return `null` for the old selector.
+
+**Fix (minimal):** In the roaster 7 parser, read the weight from the checked radio tile first
+(`input[name="group[8]"]:checked` → closest `label` → `.elc-wp__label`), falling back to the
+legacy `select option[selected]` markup, and use optional chaining so a missing element now
+yields the intended handled `weightMissing` error instead of a crash (same pattern as the
+Miga parser weight fallback).
+
+**Tested:** `ROASTER_ID=7 node test.js` against the live site (all items processed, no errors);
+verified against all saved pages in `test-html/7/` (9/9 success with weight parsed) plus a
+synthetic legacy-markup check; `yarn lint` and `yarn format:check` pass.
