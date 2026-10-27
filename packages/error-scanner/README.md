@@ -22,15 +22,22 @@ Two workflows, coupled only by files in `agent-tasks/` and git:
    - Dedupes against `agent-tasks/state.json` and open PRs:
      - task already open → bump counts
      - agent PR (`task/<alarm>` branch) in flight → mark `pr-open`, never recreate
-     - new alarm + an unrelated open PR touches related files → an agent validates the PR
-       diff against the alarm; if it fixes it, no task is created
+     - new alarm + an open PR that may already fix it → an agent validates the PR diff against
+       the alarm; if it fixes it, no task is created. Another task's PR counts here, since one
+       root cause often raises several signatures. Unrelated PRs are screened by whether they
+       touch files the error names; sibling `task/` PRs are always judged, because that kind of
+       fix routinely lands in a file the error evidence never mentions
      - task in `in-review` → settled from the state of its `task/<id>` pull request, in any
        state, so a merged fix closes the task and an abandoned one reopens it
    - Commits new task files + state to `main` and dispatches **errorFix**.
 2. **errorFix** (dispatched, or manual with/without an alarm name) — fans out one job per open
    task (`max-parallel: 2`). Each job checks out the repo, reuses branch `task/<alarm>` if it
    exists (long-running fixes are resumable), and runs a headless Claude Code agent that fixes,
-   tests, moves the task file to `in-review/`, and opens a PR.
+   tests, moves the task file to `in-review/`, and opens a PR. Before starting the agent the job
+   judges every other open `task/` PR against this task's brief, and skips the task when one of
+   them already fixes it: the jobs in a wave cannot see each other, so without this check one
+   root cause produces one near-identical PR per signature. The agent is told not to write
+   tests.
 
 Task lifecycle: `open/<id>.md` → (the agent's PR moves it) → `in-review/` → `done/` once that PR
 merged, or back to `open/` when the PR was closed without merging, was never opened, or merged

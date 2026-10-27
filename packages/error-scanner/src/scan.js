@@ -1,22 +1,8 @@
 import { listFiredAlarms, queryLogErrors } from './lib/aws.js';
-import { logUsage, runClaude } from './lib/claude.js';
 import * as prs from './lib/prs.js';
 import { clusterBySignature, sanitizeAlarmId, shortHash } from './lib/signature.js';
 import * as tasks from './lib/tasks.js';
-
-// The scan only ever asks for a one-shot verdict on a diff, so it runs on the cheaper model.
-const VERDICT_MODEL = process.env.AGENT_VERDICT_MODEL || 'claude-sonnet-5';
-
-const VERDICT_SCHEMA = {
-  type: 'object',
-  properties: {
-    fixes: { type: 'boolean' },
-    confidence: { enum: ['high', 'medium', 'low'] },
-    reason: { type: 'string' }
-  },
-  required: ['fixes', 'confidence', 'reason'],
-  additionalProperties: false
-};
+import { diffFixesError, mentionedFiles, touchesMentionedFiles } from './lib/verdict.js';
 
 const parseArgs = (argv) => {
   const args = {
@@ -36,69 +22,29 @@ const parseArgs = (argv) => {
 
 const today = () => new Date().toISOString().slice(0, 10);
 
-const mentionedFiles = (cluster) => {
-  const names = new Set();
-  const functionName = cluster.logGroup?.split('/').pop();
-  if (functionName) {
-    names.add(functionName);
-  }
-  for (const sample of cluster.samples) {
-    for (const match of sample.matchAll(/[\w.-]+\.(?:js|mjs|cjs|ts|astro)(?=:\d+|\W|$)/g)) {
-      names.add(match[0]);
-    }
-  }
-  return names;
-};
-
+// Another task's open PR counts as coverage: one root cause often fires several signatures,
+// and the agents fixing them cannot see each other's work. A sibling task PR is judged on its
+// diff with no file-overlap screening, because that kind of fix routinely lands in a file the
+// error evidence never names. Unrelated PRs are screened, since there can be many of them.
 const findCandidatePrs = (cluster, openPrs) => {
-  // Task ids are alarm based, so match the branch prefix rather than the retired numeric ids.
-  const external = openPrs.filter((pr) => !pr.headRefName.startsWith('task/'));
-  const names = mentionedFiles(cluster);
+  const ownBranch = `task/${cluster.signature}`;
+  const names = mentionedFiles(cluster.samples, cluster.logGroup);
   const candidates = [];
-  for (const pr of external) {
+  for (const pr of openPrs.filter((candidate) => candidate.headRefName !== ownBranch)) {
+    if (pr.headRefName.startsWith('task/')) {
+      candidates.push(pr);
+      continue;
+    }
     try {
-      const changedFiles = prs.prChangedFiles(pr.number);
-      const touches = changedFiles.some((file) => {
-        const base = file.split('/').pop();
-        return [...names].some((name) => base.includes(name) || name.includes(base));
-      });
-      if (touches) {
-        candidates.push({ pr, changedFiles });
+      const changedFiles = prs.prChangedFiles(pr.number).filter((file) => !file.startsWith('agent-tasks/'));
+      if (touchesMentionedFiles(changedFiles, names)) {
+        candidates.push(pr);
       }
     } catch (error) {
       console.error(`Could not inspect PR #${pr.number}: ${error.message}`);
     }
   }
-  return candidates;
-};
-
-const validatePrFixesError = async (cluster, pr, root) => {
-  const diff = prs.prDiff(pr.number).slice(0, 40000);
-  const prompt = [
-    'You validate whether an open pull request already fixes a production error, so a duplicate fix task is not created.',
-    '',
-    'Production error evidence:',
-    '```',
-    ...cluster.samples.map((sample) => sample.slice(0, 2000)),
-    '```',
-    '',
-    `Diff of open PR #${pr.number} (possibly truncated):`,
-    '```diff',
-    diff,
-    '```',
-    '',
-    'Does the PR diff address the error above? Give the reason in one sentence.'
-  ].join('\n');
-  const payload = await runClaude({
-    prompt,
-    model: VERDICT_MODEL,
-    cwd: root,
-    timeoutMinutes: 10,
-    jsonSchema: VERDICT_SCHEMA,
-    noTools: true
-  });
-  logUsage(`PR #${pr.number} verdict`, payload);
-  return payload.structured_output;
+  return candidates.slice(0, 8);
 };
 
 const checkOpenPrCoverage = async (cluster, ctx) => {
@@ -106,10 +52,14 @@ const checkOpenPrCoverage = async (cluster, ctx) => {
     return { pr: null, note: '' };
   }
   let note = '';
-  for (const { pr } of findCandidatePrs(cluster, ctx.openPrs)) {
+  for (const pr of findCandidatePrs(cluster, ctx.openPrs)) {
     let verdict;
     try {
-      verdict = await validatePrFixesError(cluster, pr, ctx.root);
+      verdict = await diffFixesError({
+        evidence: cluster.samples.map((sample) => sample.slice(0, 2000)),
+        pr,
+        root: ctx.root
+      });
     } catch (error) {
       note = `PR #${pr.number} validation failed: ${error.message}`;
       continue;
