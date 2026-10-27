@@ -70,11 +70,16 @@ In `packages/webshop-item-processor/src/parsers.js` (parser 11):
   instead of removing a literal `Buy` prefix; comma decimals are normalized.
 - Extract weight via a `\d+\s*g` match on the description text with an optional-chained
   fallback to the variant option value.
-- Skip advent-calendar gift sets via the `h1` title, matching the existing `isGiftSet`
-  convention used by other parsers.
+
+In `packages/webshop-processor/src/parsers.js` (parser 11):
+
+- Filter `advent-calendar` out of the product link list, alongside the existing `pack` and
+  `blend` filters, so gift sets never reach the item processor.
 
 ## Testing
 
-- `ROASTER_ID=11 yarn workspace @centralbeans/webshop-item-processor test`: all 20 current
-  product URLs parse (advent calendar skipped as gift set), no `No price found` errors.
+- `ROASTER_ID=11 yarn workspace @centralbeans/webshop-processor test`: 19 product URLs, the
+  advent calendar excluded.
+- `ROASTER_ID=11 yarn workspace @centralbeans/webshop-item-processor test`: all 19 product
+  URLs parse, no `No price found` errors.
 - `yarn lint` and `yarn format` pass.

@@ -757,12 +757,6 @@ const parsers = {
 
     const document = getDocument(html);
 
-    if (document.querySelector('h1').textContent.toLowerCase().includes('advent calendar')) {
-      logger.info(`Skipping advent calendar gift set ${url}`);
-
-      return { isGiftSet: true };
-    }
-
     const description = document.querySelector('.product__description p').textContent.trim().toLowerCase();
 
     const [priceText, currency] =
