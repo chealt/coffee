@@ -1,6 +1,6 @@
 ---
 id: "webshopItemProcessorErrors-221107a3"
-status: "in-review"
+status: "done"
 alarm: "webshopItemProcessorErrors"
 signature: "/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR Invoke Error {<string>:<string>,<string>:<string>,<string>:[<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>]} | <num> (file://src/parsers.js:<num>:<num>)\",<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<stri"
 logGroup: "/aws/lambda/webshopItemProcessor"
@@ -8,7 +8,6 @@ firstSeen: "2026-10-26"
 lastSeen: "2026-10-26"
 occurrences: 32
 ---
-
 # Task webshopItemProcessorErrors-221107a3
 
 Detected by the weekly error scan on 2026-10-26. Triggering alarm: `webshopItemProcessorErrors`.

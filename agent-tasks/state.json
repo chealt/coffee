@@ -1,7 +1,7 @@
 {
   "signatures": {
     "webshopItemProcessorErrors-221107a3": {
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-26",
       "lastSeen": "2026-10-26",
       "occurrences": 32
@@ -49,11 +49,11 @@
       "occurrences": 1
     },
     "flagRemovedErrors-96634270": {
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-26",
       "lastSeen": "2026-10-26",
       "occurrences": 3
     }
   },
-  "lastScanAt": "2026-10-26T19:28:10.687Z"
+  "lastScanAt": "2026-10-27T06:38:21.919Z"
 }

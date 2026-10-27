@@ -1,6 +1,6 @@
 ---
 id: "flagRemovedErrors-96634270"
-status: "in-review"
+status: "done"
 alarm: "flagRemovedErrors"
 signature: "/aws/lambda/flagRemoved | <time> <uuid> INFO Checking coffee: <url>"
 logGroup: "/aws/lambda/flagRemoved"
@@ -8,7 +8,6 @@ firstSeen: "2026-10-26"
 lastSeen: "2026-10-26"
 occurrences: 3
 ---
-
 # Task flagRemovedErrors-96634270
 
 Detected by the weekly error scan on 2026-10-26. Triggering alarm: `flagRemovedErrors`.
