@@ -24,15 +24,24 @@ Two workflows, coupled only by files in `agent-tasks/` and git:
      - agent PR (`task/<alarm>` branch) in flight → mark `pr-open`, never recreate
      - new alarm + an unrelated open PR touches related files → an agent validates the PR
        diff against the alarm; if it fixes it, no task is created
+     - task in `in-review` → settled from the state of its `task/<id>` pull request, in any
+       state, so a merged fix closes the task and an abandoned one reopens it
    - Commits new task files + state to `main` and dispatches **errorFix**.
 2. **errorFix** (dispatched, or manual with/without an alarm name) — fans out one job per open
    task (`max-parallel: 2`). Each job checks out the repo, reuses branch `task/<alarm>` if it
    exists (long-running fixes are resumable), and runs a headless Claude Code agent that fixes,
    tests, moves the task file to `in-review/`, and opens a PR.
 
-Task lifecycle: `open/<alarm>.md` → (agent PR moves it) → `in-review/` → (next scan confirms the
-alarm cleared after merge) → `done/`. If the alarm re-enters ALARM, the same task file is
-reopened — incident history is not kept.
+Task lifecycle: `open/<id>.md` → (the agent's PR moves it) → `in-review/` → `done/` once that PR
+merged, or back to `open/` when the PR was closed without merging, was never opened, or merged
+while the error kept firing afterwards.
+
+Every scan settles the in-review tasks from their pull request rather than from the alarm, because
+the fix landing is exactly what stops the alarm firing again: waiting for another occurrence would
+leave a finished task in `in-review` forever. A merged PR whose error only occurred before the
+merge closes the task; errors timestamped after the merge reopen it as a regression. If the alarm
+re-enters ALARM for a task already in `done`, the same file is reopened — incident history is not
+kept.
 
 Concurrency: `errorScan` has a workflow-level group (scans serialize); each fix job has a
 per-task group `errorFix-<alarm>` with `cancel-in-progress` so a newer attempt supersedes a

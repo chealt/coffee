@@ -51,7 +51,8 @@ const mentionedFiles = (cluster) => {
 };
 
 const findCandidatePrs = (cluster, openPrs) => {
-  const external = openPrs.filter((pr) => !/^task\/\d+$/.test(pr.headRefName));
+  // Task ids are alarm based, so match the branch prefix rather than the retired numeric ids.
+  const external = openPrs.filter((pr) => !pr.headRefName.startsWith('task/'));
   const names = mentionedFiles(cluster);
   const candidates = [];
   for (const pr of external) {
@@ -167,109 +168,165 @@ const handleNewCluster = async (cluster, ctx) => {
   createTask(cluster, coverage.note || undefined, ctx);
 };
 
-const labelEntry = (entry, alarmId, root) =>
-  alarmId && tasks.findTaskFile(root, alarmId) ? alarmId : `PR #${entry.prNumber}`;
-
-const findPrForEntry = (entry, openPrs, root, alarmId) => {
-  if (alarmId && tasks.findTaskFile(root, alarmId)) {
-    return prs.prForBranch(openPrs, `task/${alarmId}`);
+const taskPr = (ctx, signature) => {
+  if (!ctx.usePrs) {
+    return { state: 'unknown' };
   }
-  return openPrs.find((candidate) => candidate.number === entry.prNumber);
+  const branch = `task/${signature}`;
+  const open = prs.prForBranch(ctx.openPrs, branch);
+  if (open) {
+    return { state: 'open', pr: open };
+  }
+  let pr;
+  try {
+    pr = prs.prForBranchAnyState(branch);
+  } catch (error) {
+    console.error(`Could not look up the pull request for ${branch}: ${error.message}`);
+    return { state: 'unknown' };
+  }
+  if (!pr) {
+    return { state: 'none' };
+  }
+  if (pr.state === 'OPEN') {
+    return { state: 'open', pr };
+  }
+  return { state: pr.state === 'MERGED' ? 'merged' : 'closed', pr };
 };
 
-const reopenEntry = (entry, reason, ctx, alarmId) => {
-  tasks.moveTaskFile(ctx.root, alarmId, 'in-review', 'open');
-  const found = tasks.findTaskFile(ctx.root, alarmId);
-  if (found) {
-    tasks.updateFrontMatter(found.path, { status: 'open' });
+// Every task file move goes through here, so a dry run really does write nothing.
+const setTaskStatus = (ctx, signature, fromStatus, toStatus, updates = {}) => {
+  if (ctx.args.dryRun) {
+    return;
   }
+  tasks.moveTaskFile(ctx.root, signature, fromStatus, toStatus);
+  const found = tasks.findTaskFile(ctx.root, signature);
+  if (found) {
+    tasks.updateFrontMatter(found.path, { status: toStatus, ...updates });
+  }
+};
+
+const touchOpenTask = (ctx, signature, updates) => {
+  if (ctx.args.dryRun) {
+    return;
+  }
+  const found = tasks.findTaskFile(ctx.root, signature);
+  if (found?.status === 'open') {
+    tasks.updateFrontMatter(found.path, updates);
+  }
+};
+
+const reopenTask = (ctx, signature, entry, fromStatus, reason) => {
+  setTaskStatus(ctx, signature, fromStatus, 'open', { lastSeen: ctx.todayStr, occurrences: entry.occurrences });
   entry.status = 'open';
   delete entry.prNumber;
-  ctx.reopened.push(`${alarmId}: PR ${reason}`);
+  ctx.reopened.push(`${signature}: ${reason}`);
 };
 
-const handleOpenEntry = (entry, pr, ctx, alarmId) => {
-  if (pr) {
-    entry.status = 'pr-open';
-    entry.prNumber = pr.number;
-    ctx.updated.push(`${alarmId}: agent PR #${pr.number} in flight`);
-    return;
-  }
-  const found = tasks.findTaskFile(ctx.root, alarmId);
-  if (found?.status === 'open') {
-    tasks.updateFrontMatter(found.path, { lastSeen: ctx.todayStr, occurrences: entry.occurrences });
-  }
-  ctx.updated.push(`${alarmId}: still open (${entry.occurrences} total occurrences)`);
+const markPrOpen = (ctx, signature, entry, pr) => {
+  entry.status = 'pr-open';
+  entry.prNumber = pr.number;
+  ctx.updated.push(`${signature}: agent PR #${pr.number} in flight`);
 };
 
-const handleInFlightEntry = (cluster, entry, pr, ctx) => {
-  if (pr) {
-    ctx.updated.push(`${labelEntry(entry, cluster.signature, ctx.root)}: PR in flight, counts updated`);
+const coveringPr = (ctx, entry) =>
+  entry.prNumber === undefined ? undefined : ctx.openPrs.find((candidate) => candidate.number === entry.prNumber);
+
+// A task the agent moved to in-review is settled by its pull request, not by the alarm: the fix
+// landing is what stops the error from firing, so waiting for another occurrence settles nothing.
+const settleReviewedTask = (ctx, signature, entry, lastErrorAt) => {
+  const resolved = taskPr(ctx, signature);
+  if (resolved.state === 'unknown') {
     return;
   }
-  const prInfo = entry.prNumber !== undefined && ctx.usePrs ? JSON.parse(prs.prState(entry.prNumber)) : null;
-  const merged = Boolean(prInfo?.mergedAt);
-  if (tasks.findTaskFile(ctx.root, cluster.signature)) {
-    reopenEntry(
-      entry,
-      merged ? 'merged but error persists (regression)' : 'closed without merge',
-      ctx,
-      cluster.signature
-    );
+  if (resolved.state === 'open') {
+    markPrOpen(ctx, signature, entry, resolved.pr);
     return;
   }
-  createTask(
-    cluster,
-    `Previously covered by PR #${entry.prNumber} which was ${merged ? 'merged' : 'closed'}, but the error persists.`,
-    ctx
+  if (resolved.state === 'merged') {
+    const mergedAt = Date.parse(resolved.pr.mergedAt ?? '');
+    // Log entries carry ISO timestamps, so both sides have to be numbers before comparing.
+    const lastError = typeof lastErrorAt === 'number' ? lastErrorAt : Date.parse(lastErrorAt ?? '');
+    if (Number.isFinite(lastError) && Number.isFinite(mergedAt) && lastError > mergedAt) {
+      reopenTask(ctx, signature, entry, 'in-review', `PR #${resolved.pr.number} merged but the error came back`);
+      return;
+    }
+    setTaskStatus(ctx, signature, 'in-review', 'done');
+    entry.status = 'done';
+    delete entry.prNumber;
+    ctx.closed.push(`${signature}: PR #${resolved.pr.number} merged`);
+    return;
+  }
+  reopenTask(
+    ctx,
+    signature,
+    entry,
+    'in-review',
+    resolved.state === 'closed' ? `PR #${resolved.pr.number} closed without merging` : 'no pull request was opened'
   );
-};
-
-const handleDoneEntry = (entry, ctx, alarmId) => {
-  tasks.moveTaskFile(ctx.root, alarmId, 'done', 'open');
-  const found = tasks.findTaskFile(ctx.root, alarmId);
-  if (found) {
-    tasks.updateFrontMatter(found.path, { status: 'open', lastSeen: ctx.todayStr, occurrences: entry.occurrences });
-  }
-  entry.status = 'open';
-  ctx.reopened.push(`${alarmId}: error reappeared after being fixed`);
 };
 
 const handleExistingCluster = (cluster, entry, ctx) => {
   entry.lastSeen = ctx.todayStr;
   entry.occurrences = (entry.occurrences ?? 0) + cluster.occurrences;
-  const pr = findPrForEntry(entry, ctx.openPrs, ctx.root, cluster.signature);
-  if (entry.status === 'open') {
-    handleOpenEntry(entry, pr, ctx, cluster.signature);
-  } else if (entry.status === 'pr-open') {
-    handleInFlightEntry(cluster, entry, pr, ctx);
-  } else if (entry.status === 'done') {
-    handleDoneEntry(entry, ctx, cluster.signature);
+  const found = tasks.findTaskFile(ctx.root, cluster.signature);
+  if (!found) {
+    const covering = coveringPr(ctx, entry);
+    if (covering) {
+      ctx.updated.push(`PR #${covering.number}: still in flight, counts updated`);
+      return;
+    }
+    createTask(
+      cluster,
+      entry.prNumber === undefined
+        ? 'Seen in an earlier scan, but the task file is gone.'
+        : `Previously covered by PR #${entry.prNumber}, but the error persists.`,
+      ctx
+    );
+    return;
   }
+  if (found.status === 'in-review') {
+    settleReviewedTask(ctx, cluster.signature, entry, cluster.lastTimestamp);
+    return;
+  }
+  if (found.status === 'done') {
+    reopenTask(ctx, cluster.signature, entry, 'done', 'the error reappeared after being fixed');
+    return;
+  }
+  const resolved = taskPr(ctx, cluster.signature);
+  if (resolved.state === 'open') {
+    markPrOpen(ctx, cluster.signature, entry, resolved.pr);
+    return;
+  }
+  entry.status = 'open';
+  delete entry.prNumber;
+  touchOpenTask(ctx, cluster.signature, { lastSeen: ctx.todayStr, occurrences: entry.occurrences });
+  ctx.updated.push(`${cluster.signature}: still open (${entry.occurrences} total occurrences)`);
 };
 
-const settleAbsentEntries = (seen, ctx) => {
+// Signatures that did not fire this scan still need settling, because a landed fix is exactly
+// what stops a signature from showing up again.
+const settleUnseenEntries = (seen, ctx) => {
   for (const [signature, entry] of Object.entries(ctx.state.signatures)) {
-    if (seen.has(signature) || entry.status !== 'pr-open') {
-      continue;
-    }
-    if (findPrForEntry(entry, ctx.openPrs, ctx.root, signature)) {
+    if (seen.has(signature)) {
       continue;
     }
     const found = tasks.findTaskFile(ctx.root, signature);
     if (!found) {
+      if (coveringPr(ctx, entry)) {
+        continue;
+      }
       entry.status = 'done';
+      delete entry.prNumber;
       continue;
     }
-    if (found.status !== 'in-review') {
+    if (found.status === 'in-review') {
+      settleReviewedTask(ctx, signature, entry, undefined);
       continue;
     }
-    tasks.moveTaskFile(ctx.root, signature, 'in-review', 'done');
-    const moved = tasks.findTaskFile(ctx.root, signature);
-    if (moved) {
-      tasks.updateFrontMatter(moved.path, { status: 'done' });
+    if (found.status === 'done') {
+      entry.status = 'done';
+      delete entry.prNumber;
     }
-    entry.status = 'done';
   }
 };
 
@@ -281,7 +338,8 @@ const printSummary = (clusters, alarms, ctx, since, entriesCount) => {
     ['Covered by open PR', ctx.coveredByPr],
     ['New tasks', ctx.created],
     ['Updated', ctx.updated],
-    ['Reopened', ctx.reopened]
+    ['Reopened', ctx.reopened],
+    ['Closed', ctx.closed]
   ];
   for (const [label, items] of sections) {
     if (items.length === 0) {
@@ -347,6 +405,7 @@ const main = async () => {
     created: [],
     updated: [],
     reopened: [],
+    closed: [],
     coveredByPr: []
   };
 
@@ -362,7 +421,7 @@ const main = async () => {
       handleExistingCluster(cluster, entry, ctx);
     }
   }
-  settleAbsentEntries(seen, ctx);
+  settleUnseenEntries(seen, ctx);
   printSummary(clusters, alarms, ctx, since, entriesCount);
 
   if (args.dryRun) {
@@ -372,7 +431,7 @@ const main = async () => {
 
   ctx.state.lastScanAt = new Date().toISOString();
   tasks.saveState(root, ctx.state);
-  const message = `chore(error-scan): ${ctx.todayStr} — ${ctx.created.length} new, ${ctx.updated.length} updated, ${ctx.reopened.length} reopened`;
+  const message = `chore(error-scan): ${ctx.todayStr} — ${ctx.created.length} new, ${ctx.updated.length} updated, ${ctx.reopened.length} reopened, ${ctx.closed.length} closed`;
   if (!tasks.commitAndPush(root, message)) {
     console.log('No agent-tasks changes to commit.');
   }

@@ -23,12 +23,28 @@ const prChangedFiles = (number) =>
     .split('\n')
     .filter(Boolean);
 
-const prState = (number) => gh(['pr', 'view', String(number), '--json', 'state,mergedAt,url']);
-
 const prForBranch = (openPrs, branch) => openPrs.find((pr) => pr.headRefName === branch);
+
+// Open pull requests are not enough to settle a task: a merged or closed one decides whether
+// the fix landed or needs another attempt.
+const prForBranchAnyState = (branch) => {
+  const output = gh([
+    'pr',
+    'list',
+    '--head',
+    branch,
+    '--state',
+    'all',
+    '--limit',
+    '1',
+    '--json',
+    'number,state,mergedAt,url'
+  ]);
+  return JSON.parse(output || '[]')[0];
+};
 
 const dispatchWorkflow = (workflow) => {
   gh(['workflow', 'run', workflow]);
 };
 
-export { dispatchWorkflow, hasGh, listOpenPrs, parseOpenPrs, prChangedFiles, prDiff, prForBranch, prState };
+export { dispatchWorkflow, hasGh, listOpenPrs, parseOpenPrs, prChangedFiles, prDiff, prForBranch, prForBranchAnyState };
