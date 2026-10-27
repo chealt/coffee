@@ -42,12 +42,17 @@ Alarm console: https://eu-central-1.console.aws.amazon.com/cloudwatch/home?regio
 
 Both parsers assumed every product is a variable product and threw `detailsMissing` ("No variation data found") when the variations form was absent.
 
-**Fix:** Skip gift sets via the product title, returning `{ isGiftSet: true }` (the handler already skips these gracefully), following the Prolog advent-calendar precedent (ee9f070e):
+**Fix:** Filter the gift sets out in the webshop parser (`packages/webshop-processor/src/parsers.js`), so these
+URLs never reach the item processor (review feedback on #98 — the item parser should not have to recognise them):
 
-- Parser 94: when no variation data exists and the title contains the word "set", skip as gift set. Variable products named "…set" (e.g. `/054 Brazil Exceptional set`) still parse as before.
-- Parser 305: skip products whose title contains "advent calendar".
+- Parser 94: select only `.product-type-variable` loop products. The collab set is the only
+  `product-type-simple` entry in the listing; every coffee (including the variable `/054-set/`) is a variable
+  product, so it keeps being picked up.
+- Parser 305: skip `/bundles/` URLs. All coffees live under `/product/coffees/`.
 
-**Tested:** `ROASTER_ID=94` and `ROASTER_ID=305 yarn workspace @centralbeans/webshop-item-processor test` — both erroring URLs now skip as gift sets, all other items parse unchanged, no failures. `yarn lint` and `yarn format` pass.
+**Tested:** `ROASTER_ID=94` and `ROASTER_ID=305` for both `@centralbeans/webshop-processor` and
+`@centralbeans/webshop-item-processor` — both erroring URLs are no longer listed, all other items parse
+unchanged, no errors. `yarn lint` and `yarn format` pass.
 
 ## Definition of done
 

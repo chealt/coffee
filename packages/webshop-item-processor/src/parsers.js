@@ -2276,17 +2276,9 @@ const parsers = {
 
     const document = getDocument(html);
 
-    const title = document.querySelector('h1.product_title')?.textContent.trim().toLowerCase() || '';
-
     const variationsData = document.querySelector('.variations_form')?.dataset?.product_variations;
 
     if (!variationsData) {
-      if (/\bset\b/u.test(title)) {
-        logger.info(`Skipping gift set ${url}`);
-
-        return { isGiftSet: true };
-      }
-
       logger.error(`No variation data found for ${url}`);
 
       throw new Error(errors.detailsMissing);
@@ -2406,6 +2398,7 @@ const parsers = {
       logger.info(`Missing brewing method: ${roastAttr}`);
     }
 
+    const title = document.querySelector('h1.product_title')?.textContent.trim().toLowerCase() || '';
     const isDecaf = title.includes('decaf') || url.includes('decaf');
 
     const image = document.querySelector('.woocommerce-product-gallery__image img')?.src;
@@ -5081,14 +5074,6 @@ const parsers = {
 
     const document = getDocument(html);
 
-    const title = document.querySelector('h1.product_title')?.textContent.trim().toLowerCase() || '';
-
-    if (title.includes('advent calendar')) {
-      logger.info(`Skipping advent calendar gift set ${url}`);
-
-      return { isGiftSet: true };
-    }
-
     const variationsData = document.querySelector('.variations_form')?.dataset?.product_variations;
 
     if (!variationsData) {
@@ -5165,6 +5150,7 @@ const parsers = {
     }
 
     const farmText = details.farm || '';
+    const title = document.querySelector('h1.product_title')?.textContent.trim().toLowerCase() || '';
     const originFarmId =
       originFarms.find(({ name }) => name === farmText)?.id ||
       originFarms.find(({ name }) => farmText.includes(name))?.id ||
