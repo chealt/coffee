@@ -89,7 +89,9 @@ const parsers = {
 
     return Array.from(new Set(Array.from(productLinks).map((productLink) => productLink.href)))
       .map((href) => `${origin}${href}`)
-      .filter((itemUrl) => !itemUrl.includes('pack') && !itemUrl.includes('blend'));
+      .filter(
+        (itemUrl) => !itemUrl.includes('pack') && !itemUrl.includes('blend') && !itemUrl.includes('advent-calendar')
+      );
   },
   // Friedhats
   12: ({ html }) => {
