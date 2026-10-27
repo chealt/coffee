@@ -1,6 +1,6 @@
 ---
 id: "webshopItemProcessorErrors-de54d180"
-status: "open"
+status: "done"
 alarm: "webshopItemProcessorErrors"
 signature: "/aws/lambda/webshopItemProcessor | <time> <uuid> INFO Calling record webshop item details for <url>"
 logGroup: "/aws/lambda/webshopItemProcessor"
@@ -35,3 +35,5 @@ Alarm console: https://eu-central-1.console.aws.amazon.com/cloudwatch/home?regio
 - [ ] Relevant tests run and passing
 - [ ] `yarn lint` passes
 - [ ] This file moved to `agent-tasks/in-review/` with status "in-review" in the fix commit
+
+> Closed by the error-scan review: the fix for this signature is already on main (#97). The duplicate PR was closed without merging.

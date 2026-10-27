@@ -1,26 +1,26 @@
 ---
-id: "webshopItemProcessorErrors-7f29cbc7"
-status: "open"
+id: "webshopItemProcessorErrors-4366afc2"
+status: "done"
 alarm: "webshopItemProcessorErrors"
-signature: "/aws/lambda/webshopItemProcessor | <time> <uuid> INFO Parsing item page: <url>"
+signature: "/aws/lambda/webshopItemProcessor | <time> <uuid> INFO Processing <url>"
 logGroup: "/aws/lambda/webshopItemProcessor"
 firstSeen: "2026-10-26"
 lastSeen: "2026-10-26"
 occurrences: 1
 ---
 
-# Task webshopItemProcessorErrors-7f29cbc7
+# Task webshopItemProcessorErrors-4366afc2
 
 Detected by the weekly error scan on 2026-10-26. Triggering alarm: `webshopItemProcessorErrors`.
 
 - **Occurrences:** 1
 - **Log group:** `/aws/lambda/webshopItemProcessor`
-- **Signature:** `/aws/lambda/webshopItemProcessor | <time> <uuid> INFO Parsing item page: <url>`
+- **Signature:** `/aws/lambda/webshopItemProcessor | <time> <uuid> INFO Processing <url>`
 
 ## Sample errors
 
 ```
-2026-10-26T03:42:46.994Z	76da7cb7-7812-40c0-8ccc-5b7f9616b3a3	INFO	Parsing item page: https://manhattancoffeeroasters.com/product/coffees/exceptional/bombe/
+2026-10-26T03:42:46.994Z	76da7cb7-7812-40c0-8ccc-5b7f9616b3a3	INFO	Processing https://manhattancoffeeroasters.com/product/coffees/exceptional/bombe/
 
 ```
 
@@ -35,3 +35,5 @@ Alarm console: https://eu-central-1.console.aws.amazon.com/cloudwatch/home?regio
 - [ ] Relevant tests run and passing
 - [ ] `yarn lint` passes
 - [ ] This file moved to `agent-tasks/in-review/` with status "in-review" in the fix commit
+
+> Closed by the error-scan review: the fix for this signature is already on main (#97). The duplicate PR was closed without merging.
