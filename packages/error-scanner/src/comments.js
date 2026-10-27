@@ -30,9 +30,19 @@ const collectFeedback = (number, details) => {
     }
   }
   for (const review of prs.prReviews(number)) {
-    if (isPerson(review.user?.login) && review.body?.trim()) {
-      feedback.push(`[review ${review.state}, ${review.submitted_at}] ${review.user.login}: ${review.body}`);
+    // A changes-requested review usually carries no summary of its own, all the detail being
+    // in its inline comments. It still has to reach the agent: it is the thing that decides
+    // whether the review gets re-requested.
+    if (!isPerson(review.user?.login)) {
+      continue;
     }
+    const body = review.body?.trim();
+    if (!body && review.state !== 'CHANGES_REQUESTED') {
+      continue;
+    }
+    feedback.push(
+      `[review ${review.state}, ${review.submitted_at}] ${review.user.login}: ${body || '(no summary, the detail is in the inline comments)'}`
+    );
   }
   for (const comment of prs.prReviewComments(number)) {
     if (isPerson(comment.user?.login)) {
@@ -89,6 +99,7 @@ const main = async () => {
     '5. Run the relevant workspace tests, `yarn lint`, and `yarn format`. Fix any failures caused by your changes. Run the tests that already exist; do not write new ones.',
     '6. Commit with a message describing what the feedback asked for, then push to the same branch.',
     '7. Reply once on the pull request with `gh pr comment` summarising what you changed and anything you deliberately did not change, with the reason.',
+    `8. If the newest review from a person is "CHANGES_REQUESTED" and you pushed a change that answers it, re-request that reviewer: \`gh pr edit ${number} --add-reviewer <their login>\`. This is the same action as the re-request button on the pull request. Re-request nobody when you pushed nothing, or when you decided against the change: explain it in your reply instead and leave the review as it stands.`,
     '',
     'Hard rules: never push to main, never modify .github/workflows, never touch agent-tasks/state.json, never change the pull request title or base branch, and never force push.',
     'Write no tests: never add a test file, a test case, or a test script.',

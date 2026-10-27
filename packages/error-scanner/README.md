@@ -43,7 +43,11 @@ reacts to review feedback on the pull requests the second one opens:
 3. **prComment** (on every comment, review, and inline review comment) — runs `src/comments.js`
    for pull requests on a `task/` branch. It reads the whole thread rather than the one comment
    that fired it, skips anything already handled by a later commit on the branch, pushes a
-   follow-up commit, and replies once with what it changed. Comments from bots never trigger it,
+   follow-up commit, and replies once with what it changed. When the newest review requested
+   changes and the agent pushed something that answers it, the agent re-requests that reviewer
+   with `gh pr edit --add-reviewer`, which is the re-request button's own action. A review that
+   requested changes counts even with an empty body, which is the usual shape when all the
+   detail sits in the inline comments. Comments from bots never trigger it,
    and `[skip claude]` in a comment suppresses it. A review submitted with several inline
    comments fires one event each; the runs supersede each other, and the last one answers
    everything.
