@@ -5,7 +5,8 @@ and dispatch one fixing agent per task.
 
 ## How it works
 
-Two workflows, coupled only by files in `agent-tasks/` and git:
+Three workflows. The first two are coupled only by files in `agent-tasks/` and git; the third
+reacts to review feedback on the pull requests the second one opens:
 
 1. **errorScan** (cron Mondays 06:00 UTC, or manual) — runs `src/scan.js`:
    - Lists CloudWatch alarms that entered `ALARM` state since the last successful scan
@@ -39,6 +40,14 @@ Two workflows, coupled only by files in `agent-tasks/` and git:
    root cause produces one near-identical PR per signature. The agent is told not to write
    tests.
 
+3. **prComment** (on every comment, review, and inline review comment) — runs `src/comments.js`
+   for pull requests on a `task/` branch. It reads the whole thread rather than the one comment
+   that fired it, skips anything already handled by a later commit on the branch, pushes a
+   follow-up commit, and replies once with what it changed. Comments from bots never trigger it,
+   and `[skip claude]` in a comment suppresses it. A review submitted with several inline
+   comments fires one event each; the runs supersede each other, and the last one answers
+   everything.
+
 Task lifecycle: `open/<id>.md` → (the agent's PR moves it) → `in-review/` → `done/` once that PR
 merged, or back to `open/` when the PR was closed without merging, was never opened, or merged
 while the error kept firing afterwards.
@@ -52,7 +61,8 @@ kept.
 
 Concurrency: `errorScan` has a workflow-level group (scans serialize); each fix job has a
 per-task group `errorFix-<alarm>` with `cancel-in-progress` so a newer attempt supersedes a
-stale one without duplicate agents on the same task.
+stale one without duplicate agents on the same task; `prComment` groups per pull request the
+same way.
 
 A resumed `task/` branch can predate the scanner's own code, so nothing the agents need may be
 read from a file in the working tree. Settings reach Claude Code as inline JSON for that reason:
@@ -61,7 +71,7 @@ agent started.
 
 ## Setup
 
-Both workflows run the agents through headless Claude Code (`claude --print`). The CLI is
+All three workflows run the agents through headless Claude Code (`claude --print`). The CLI is
 installed by its own workflow step (`npm install -g @anthropic-ai/claude-code@2`) rather than as a
 yarn devDependency: its binary is produced by an install script, and yarn 4 disables those by
 default, so a workspace dependency would resolve to a missing binary.
@@ -97,6 +107,9 @@ AWS_REGION=... yarn workspace @centralbeans/error-scanner scan --dry-run
 
 # run one fix agent locally (no gh available: pushes the branch, you open the PR)
 yarn workspace @centralbeans/error-scanner fix --task flagRemovedErrors
+
+# answer the review feedback on one agent PR
+yarn workspace @centralbeans/error-scanner comments --pr 98
 ```
 
 Local runs reuse your own `claude` login, so they need no token in the environment.

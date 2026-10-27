@@ -3,8 +3,9 @@
   "type": "module",
   "scripts": {
     "scan": "node src/scan.js",
-    "test": "node --test test.js",
     "fix": "node src/fix.js",
+    "comments": "node src/comments.js",
+    "test": "node --test test.js",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "lint": "oxlint"

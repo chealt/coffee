@@ -47,4 +47,28 @@ const dispatchWorkflow = (workflow) => {
   gh(['workflow', 'run', workflow]);
 };
 
-export { dispatchWorkflow, hasGh, listOpenPrs, parseOpenPrs, prChangedFiles, prDiff, prForBranch, prForBranchAnyState };
+const prDetails = (number) =>
+  JSON.parse(gh(['pr', 'view', String(number), '--json', 'number,title,state,headRefName,url,comments']));
+
+const prReviewComments = (number) =>
+  JSON.parse(gh(['api', `repos/{owner}/{repo}/pulls/${number}/comments`, '--paginate']) || '[]');
+
+const prReviews = (number) =>
+  JSON.parse(gh(['api', `repos/{owner}/{repo}/pulls/${number}/reviews`, '--paginate']) || '[]');
+
+const prCheckout = (number) => gh(['pr', 'checkout', String(number)]);
+
+export {
+  dispatchWorkflow,
+  hasGh,
+  listOpenPrs,
+  parseOpenPrs,
+  prChangedFiles,
+  prCheckout,
+  prDetails,
+  prDiff,
+  prForBranch,
+  prForBranchAnyState,
+  prReviewComments,
+  prReviews
+};

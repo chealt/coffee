@@ -1,0 +1,52 @@
+name: Answer PR Comments
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  pull_request_review:
+    types: [submitted]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+# A review arrives as a burst of one event per inline comment. Superseding the earlier runs
+# is safe because each run reads the whole thread, so the last one answers everything.
+concurrency:
+  group: prComment-${{ github.event.issue.number || github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  answer:
+    # Bots never trigger this, or the agent's own reply would start it again.
+    if: >-
+      github.event.sender.type != 'Bot' &&
+      !contains(github.event.comment.body, '[skip claude]') &&
+      !contains(github.event.review.body, '[skip claude]') &&
+      (github.event_name != 'issue_comment' || github.event.issue.pull_request)
+    runs-on: ubuntu-latest
+    # Same three nested limits as the fix workflow, innermost first.
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.GIT_WRITE_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          cache: 'yarn'
+      - run: yarn install --immutable
+      # Not a yarn devDependency: its binary comes from an install script, which yarn disables.
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code@2
+      - name: Answer comments on PR ${{ github.event.issue.number || github.event.pull_request.number }}
+        timeout-minutes: 8
+        run: yarn workspace @centralbeans/error-scanner comments --pr "$PR_NUMBER"
+        env:
+          PR_NUMBER: ${{ github.event.issue.number || github.event.pull_request.number }}
+          GH_TOKEN: ${{ secrets.GIT_WRITE_TOKEN }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          AGENT_MODEL: ${{ vars.AGENT_MODEL || 'claude-opus-5' }}
+          AGENT_TIMEOUT_MINUTES: '5'
