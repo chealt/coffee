@@ -1,8 +1,9 @@
 import { spawn } from 'node:child_process';
-import { fileURLToPath } from 'node:url';
 
-// Keeps Claude Code from adding a Co-Authored-By trailer to agent commits.
-const settingsPath = fileURLToPath(new URL('../../agent-settings.json', import.meta.url));
+// Keeps Claude Code from adding a Co-Authored-By trailer to agent commits. Passed inline
+// rather than as a repo file: an agent resuming an older task branch checks out a tree that
+// predates any file the harness itself needs, and the run dies before it starts.
+const SETTINGS = JSON.stringify({ attribution: { commit: '', pr: '' } });
 
 const KILL_GRACE_MS = 5 * 1000;
 
@@ -20,7 +21,7 @@ const runClaude = ({ prompt, stdin, model, cwd, timeoutMinutes = 80, jsonSchema,
       '--permission-prompts',
       'none',
       '--settings',
-      settingsPath,
+      SETTINGS,
       '--output-format',
       'json'
     ];

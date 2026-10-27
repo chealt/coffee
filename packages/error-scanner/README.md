@@ -54,6 +54,11 @@ Concurrency: `errorScan` has a workflow-level group (scans serialize); each fix 
 per-task group `errorFix-<alarm>` with `cancel-in-progress` so a newer attempt supersedes a
 stale one without duplicate agents on the same task.
 
+A resumed `task/` branch can predate the scanner's own code, so nothing the agents need may be
+read from a file in the working tree. Settings reach Claude Code as inline JSON for that reason:
+an earlier version passed a checked-in settings file and every resumed branch failed before the
+agent started.
+
 ## Setup
 
 Both workflows run the agents through headless Claude Code (`claude --print`). The CLI is
