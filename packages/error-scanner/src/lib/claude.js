@@ -4,6 +4,8 @@ import { fileURLToPath } from 'node:url';
 // Keeps Claude Code from adding a Co-Authored-By trailer to agent commits.
 const settingsPath = fileURLToPath(new URL('../../agent-settings.json', import.meta.url));
 
+const KILL_GRACE_MS = 5 * 1000;
+
 const runClaude = ({ prompt, stdin, model, cwd, timeoutMinutes = 80, jsonSchema, noTools = false }) =>
   new Promise((resolve, reject) => {
     const bin = process.env.CLAUDE_BIN || 'claude';
@@ -33,16 +35,41 @@ const runClaude = ({ prompt, stdin, model, cwd, timeoutMinutes = 80, jsonSchema,
       args.push('--json-schema', JSON.stringify(jsonSchema));
     }
     args.push(prompt);
-    const child = spawn(bin, args, { cwd });
+    // detached makes the child a process group leader, so a timeout can signal the agent's
+    // whole tree. Killing just the agent leaves its commands running, and a survivor holding
+    // the output pipes means the close event never arrives.
+    const child = spawn(bin, args, { cwd, detached: true });
     let stdout = '';
     let stderr = '';
+    let timedOut = false;
+    let killTimer;
+    const signalTree = (signal) => {
+      try {
+        process.kill(-child.pid, signal);
+      } catch {
+        child.kill(signal);
+      }
+    };
+    // On the deadline the agent gets SIGTERM and a short grace to shut down, which is the
+    // path Claude Code takes. An agent still alive after it is killed outright and the run is
+    // failed from here, because a survivor holding the output pipes means no close event ever
+    // arrives. Either way the run ends within the grace period of its budget.
+    const failTimedOut = () => reject(new Error(`claude timed out after ${timeoutMinutes.toFixed(1)} minutes`));
     const timer = setTimeout(
       () => {
-        child.kill('SIGTERM');
-        reject(new Error(`claude timed out after ${timeoutMinutes} minutes`));
+        timedOut = true;
+        signalTree('SIGTERM');
+        killTimer = setTimeout(() => {
+          signalTree('SIGKILL');
+          failTimedOut();
+        }, KILL_GRACE_MS);
       },
       timeoutMinutes * 60 * 1000
     );
+    const stopTimers = () => {
+      clearTimeout(timer);
+      clearTimeout(killTimer);
+    };
     child.stdout.on('data', (chunk) => {
       stdout += chunk;
     });
@@ -50,11 +77,15 @@ const runClaude = ({ prompt, stdin, model, cwd, timeoutMinutes = 80, jsonSchema,
       stderr += chunk;
     });
     child.on('error', (error) => {
-      clearTimeout(timer);
+      stopTimers();
       reject(error);
     });
     child.on('close', (code) => {
-      clearTimeout(timer);
+      stopTimers();
+      if (timedOut) {
+        failTimedOut();
+        return;
+      }
       if (code !== 0) {
         reject(new Error(`claude exited with code ${code}: ${(stderr || stdout).slice(-2000)}`));
         return;

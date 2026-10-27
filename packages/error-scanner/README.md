@@ -78,7 +78,11 @@ Optional environment overrides, unset in CI:
 - `CLAUDE_BIN` — path to the `claude` binary.
 - `AGENT_PERMISSION_MODE` — permission mode for the agents (default `bypassPermissions`, which is
   what makes an unattended run able to edit, commit and push).
-- `AGENT_MAX_BUDGET_USD` — caps the estimated spend of a single agent run.
+- `AGENT_TIMEOUT_MINUTES` — budget for a whole fix run, the duplicate check and the agent
+  together (default 5). The fix workflow sets it, and its step timeout is sized just above it as
+  a backstop, so raising one without the other means the less informative limit fires first.
+- `AGENT_MAX_BUDGET_USD` — caps the estimated spend of a single agent run. Unset: the fix agent
+  is bounded by time instead.
 
 ## Local usage
 

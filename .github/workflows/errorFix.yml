@@ -34,7 +34,10 @@ jobs:
     needs: list
     if: needs.list.outputs.matrix != '[]'
     runs-on: ubuntu-latest
-    timeout-minutes: 100
+    # Three nested limits, innermost first so the most informative one fires:
+    # AGENT_TIMEOUT_MINUTES stops the agent and reports it, the step timeout catches a wrapper
+    # that failed to stop it, and the job timeout catches everything else.
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -58,9 +61,12 @@ jobs:
       - name: Install Claude Code
         run: npm install -g @anthropic-ai/claude-code@2
       - name: Run fix agent for task ${{ matrix.task }}
+        timeout-minutes: 8
         run: yarn workspace @centralbeans/error-scanner fix --task ${{ matrix.task }}
         env:
           GH_TOKEN: ${{ github.token }}
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           AGENT_MODEL: ${{ vars.AGENT_MODEL || 'claude-opus-5' }}
-          AGENT_TIMEOUT_MINUTES: '75'
+          # Budget for the whole run, duplicate check and agent together. Raising it past the
+          # step timeout above makes the step the one that fires, which reports nothing useful.
+          AGENT_TIMEOUT_MINUTES: '5'

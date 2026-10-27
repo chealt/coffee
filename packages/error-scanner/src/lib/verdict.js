@@ -37,7 +37,7 @@ const touchesMentionedFiles = (changedFiles, names) =>
     return [...names].some((name) => base.includes(name) || name.includes(base));
   });
 
-const diffFixesError = async ({ evidence, pr, root, timeoutMinutes = 10 }) => {
+const diffFixesError = async ({ evidence, pr, root, timeoutMinutes = 5 }) => {
   const diff = prs.prDiff(pr.number).slice(0, 40000);
   const prompt = [
     'You validate whether a pull request already fixes a production error, so the same fix is not written twice.',

@@ -6,6 +6,16 @@ import { diffFixesError } from './lib/verdict.js';
 
 const MODEL = process.env.AGENT_MODEL || 'claude-opus-5';
 
+// One budget covers the whole run, the duplicate check and the agent together, so the job
+// cannot overrun its step timeout however many sibling PRs there are to judge.
+const BUDGET_MINUTES = Number(process.env.AGENT_TIMEOUT_MINUTES ?? 5);
+const VERDICT_MINUTES = 2;
+// Most of the budget is the agent's; the duplicate check gets what is left in front of it.
+const AGENT_RESERVE_MINUTES = Math.max(1, BUDGET_MINUTES * 0.6);
+const MINIMUM_AGENT_MINUTES = 1;
+const startedAt = Date.now();
+const remainingMinutes = () => BUDGET_MINUTES - (Date.now() - startedAt) / 60000;
+
 const parseArgs = (argv) => {
   const args = {};
   for (let i = 0; i < argv.length; i++) {
@@ -39,9 +49,18 @@ const duplicateFix = async (taskContent, root, branch, openPrs) => {
     .filter((pr) => pr.headRefName.startsWith('task/') && pr.headRefName !== branch)
     .slice(0, SIBLINGS_TO_JUDGE);
   for (const pr of siblings) {
+    if (remainingMinutes() < AGENT_RESERVE_MINUTES) {
+      console.log('Budget nearly spent, stopping the duplicate check so the agent can still run.');
+      break;
+    }
     let verdict;
     try {
-      verdict = await diffFixesError({ evidence: [taskContent.slice(0, 6000)], pr, root });
+      verdict = await diffFixesError({
+        evidence: [taskContent.slice(0, 6000)],
+        pr,
+        root,
+        timeoutMinutes: VERDICT_MINUTES
+      });
     } catch (error) {
       console.error(`PR #${pr.number} validation failed: ${error.message}`);
       continue;
@@ -127,13 +146,20 @@ const main = async () => {
   // The agent commits on its own, and a fresh CI checkout has no git identity to commit with.
   tasks.configureBotIdentity(root);
 
-  console.log(`Starting fix agent for task ${alarmId}...`);
+  const agentMinutes = remainingMinutes();
+  if (agentMinutes < MINIMUM_AGENT_MINUTES) {
+    throw new Error(
+      `Only ${agentMinutes.toFixed(1)} minutes left of the ${BUDGET_MINUTES} minute budget, too little to start the agent.`
+    );
+  }
+
+  console.log(`Starting fix agent for task ${alarmId} with ${agentMinutes.toFixed(1)} minutes...`);
   const payload = await runClaude({
     prompt: instructions,
     stdin: taskContent,
     model: MODEL,
     cwd: root,
-    timeoutMinutes: Number(process.env.AGENT_TIMEOUT_MINUTES ?? 75)
+    timeoutMinutes: agentMinutes
   });
   logUsage(`Fix agent for ${alarmId}`, payload);
   console.log(payload.result ?? '');
