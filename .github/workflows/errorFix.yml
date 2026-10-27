@@ -54,11 +54,13 @@ jobs:
           node-version-file: package.json
           cache: 'yarn'
       - run: yarn install --immutable
+      # Not a yarn devDependency: its binary comes from an install script, which yarn disables.
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code@2
       - name: Run fix agent for task ${{ matrix.task }}
         run: yarn workspace @centralbeans/error-scanner fix --task ${{ matrix.task }}
         env:
           GH_TOKEN: ${{ github.token }}
-          ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
-          AGENT_MODEL: ${{ vars.AGENT_MODEL || 'glm-5.3' }}
-          PI_PROVIDER: ${{ vars.PI_PROVIDER || 'zai' }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          AGENT_MODEL: ${{ vars.AGENT_MODEL || 'claude-opus-5' }}
           AGENT_TIMEOUT_MINUTES: '75'

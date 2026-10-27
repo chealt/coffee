@@ -148,16 +148,21 @@ const moveTaskFile = (root, alarmId, fromStatus, toStatus) => {
   return true;
 };
 
+const configureBotIdentity = (root) => {
+  if (!process.env.GITHUB_ACTIONS) {
+    return;
+  }
+  git(['config', 'user.name', 'github-actions[bot]'], { cwd: root });
+  git(['config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com'], { cwd: root });
+};
+
 const commitAndPush = (root, message) => {
   git(['add', 'agent-tasks'], { cwd: root });
   const status = git(['status', '--porcelain', '--', 'agent-tasks'], { cwd: root });
   if (!status) {
     return false;
   }
-  if (process.env.GITHUB_ACTIONS) {
-    git(['config', 'user.name', 'github-actions[bot]'], { cwd: root });
-    git(['config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com'], { cwd: root });
-  }
+  configureBotIdentity(root);
   git(['commit', '-m', message], { cwd: root });
   git(['pull', '--rebase', 'origin', 'main'], { cwd: root });
   git(['push', 'origin', 'HEAD'], { cwd: root });
@@ -166,6 +171,7 @@ const commitAndPush = (root, message) => {
 
 export {
   commitAndPush,
+  configureBotIdentity,
   findTaskFile,
   git,
   loadState,

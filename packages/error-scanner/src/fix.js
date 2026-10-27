@@ -1,9 +1,9 @@
 import { readFileSync } from 'node:fs';
-import { runPi } from './lib/pi.js';
+import { logUsage, runClaude } from './lib/claude.js';
 import * as prs from './lib/prs.js';
 import * as tasks from './lib/tasks.js';
 
-const MODEL = process.env.AGENT_MODEL || 'sonnet';
+const MODEL = process.env.AGENT_MODEL || 'claude-opus-5';
 
 const parseArgs = (argv) => {
   const args = {};
@@ -84,18 +84,23 @@ const main = async () => {
       : '8. gh is unavailable: push the branch to the origin remote (and github, if present) and stop. A human opens the PR.',
     '',
     `Hard rules: never commit on or push to ${base}, never modify .github/workflows, never touch other task files or agent-tasks/state.json.`,
+    'Add no attribution to your work: no Co-Authored-By trailer on commits, no generated-with footer in the pull request body.',
     `If branch ${branch} already contains earlier work-in-progress commits for this task, review them and continue from there instead of restarting.`
   ].join('\n');
 
+  // The agent commits on its own, and a fresh CI checkout has no git identity to commit with.
+  tasks.configureBotIdentity(root);
+
   console.log(`Starting fix agent for task ${alarmId}...`);
-  await runPi({
+  const payload = await runClaude({
     prompt: instructions,
     stdin: taskContent,
     model: MODEL,
-    provider: process.env.PI_PROVIDER,
     cwd: root,
     timeoutMinutes: Number(process.env.AGENT_TIMEOUT_MINUTES ?? 75)
   });
+  logUsage(`Fix agent for ${alarmId}`, payload);
+  console.log(payload.result ?? '');
 
   if (useGh) {
     const pr = prs.prForBranch(prs.parseOpenPrs(prs.listOpenPrs()), branch);

@@ -1,10 +1,22 @@
 import { listFiredAlarms, queryLogErrors } from './lib/aws.js';
-import { extractJson, runPi } from './lib/pi.js';
+import { logUsage, runClaude } from './lib/claude.js';
 import * as prs from './lib/prs.js';
 import { clusterBySignature, sanitizeAlarmId, shortHash } from './lib/signature.js';
 import * as tasks from './lib/tasks.js';
 
-const MODEL = process.env.AGENT_MODEL || 'sonnet';
+// The scan only ever asks for a one-shot verdict on a diff, so it runs on the cheaper model.
+const VERDICT_MODEL = process.env.AGENT_VERDICT_MODEL || 'claude-sonnet-5';
+
+const VERDICT_SCHEMA = {
+  type: 'object',
+  properties: {
+    fixes: { type: 'boolean' },
+    confidence: { enum: ['high', 'medium', 'low'] },
+    reason: { type: 'string' }
+  },
+  required: ['fixes', 'confidence', 'reason'],
+  additionalProperties: false
+};
 
 const parseArgs = (argv) => {
   const args = {
@@ -74,17 +86,18 @@ const validatePrFixesError = async (cluster, pr, root) => {
     diff,
     '```',
     '',
-    'Does the PR diff address the error above? Answer ONLY with JSON:',
-    '{"fixes": true|false, "confidence": "high"|"medium"|"low", "reason": "one sentence"}'
+    'Does the PR diff address the error above? Give the reason in one sentence.'
   ].join('\n');
-  const output = await runPi({
+  const payload = await runClaude({
     prompt,
-    model: MODEL,
-    provider: process.env.PI_PROVIDER,
+    model: VERDICT_MODEL,
     cwd: root,
-    timeoutMinutes: 10
+    timeoutMinutes: 10,
+    jsonSchema: VERDICT_SCHEMA,
+    noTools: true
   });
-  return extractJson(output);
+  logUsage(`PR #${pr.number} verdict`, payload);
+  return payload.structured_output;
 };
 
 const checkOpenPrCoverage = async (cluster, ctx) => {
