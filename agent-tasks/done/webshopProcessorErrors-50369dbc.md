@@ -1,6 +1,6 @@
 ---
 id: "webshopProcessorErrors-50369dbc"
-status: "in-review"
+status: "done"
 alarm: "webshopProcessorErrors"
 signature: "/aws/lambda/webshopProcessor | <time> <uuid> ERROR Invoke Error {<string>:<string>,<string>:<string>,<string>:[<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>]} | <num> (file://src/parsers.js:<num>:<num>)\",<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<stri"
 logGroup: "/aws/lambda/webshopProcessor"
@@ -8,7 +8,6 @@ firstSeen: "2026-10-26"
 lastSeen: "2026-10-26"
 occurrences: 1
 ---
-
 # Task webshopProcessorErrors-50369dbc
 
 Detected by the weekly error scan on 2026-10-26. Triggering alarm: `webshopProcessorErrors`.
