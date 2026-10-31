@@ -41,8 +41,9 @@ Alarm console: https://eu-central-1.console.aws.amazon.com/cloudwatch/home?regio
 The product `https://nolensvolens.shop/product/smoke-bros-x-nolens-volens/` (roaster 258, Nolens Volens) is
 password protected in WordPress (`post-password-required`, the item page renders a `post-password-form`). The
 Nolens Volens item parser expects a WooCommerce `.variations_form`, which is absent on a password-protected
-page, so it logged `No variations found` and threw `detailsMissing`. Reproduced locally with the saved HTML
-from `save-html.js` (`test-html/258/`).
+page, so it logged `No variations found` and threw `detailsMissing`. Reproduced against the live page, which
+returns HTTP 200 with the title `Zabezpieczone: SMOKE BROS x NOLENS VOLENS`, one `post-password-form` and no
+`variations_form`.
 
 ## Fix
 
@@ -52,5 +53,13 @@ from `save-html.js` (`test-html/258/`).
   `.post-password-form`, the parser logs an info message and returns `{ isOutOfStock: true }` instead of
   throwing.
 
-Verified with `ROASTER_ID=258` workspace tests for both packages: 5 products collected (smoke-bros no longer
-queued), all items processed without errors.
+The `ROASTER_ID=258` workspace test scripts could not be run here: both require
+`packages/coffee-admin/.env`, which is not present in this environment. Verification was done by invoking
+each roaster 258 parser directly against the live pages:
+
+- Listing parser: 6 links before the fix (including `smoke-bros-x-nolens-volens`), 5 after, with
+  `smoke-bros` excluded.
+- Item parser: returns `{ isOutOfStock: true }` and logs `Skipping password protected item` instead of
+  throwing `detailsMissing`.
+
+`yarn lint` and `yarn format` both pass with no changes.
