@@ -278,9 +278,9 @@ const parsers = {
     const document = getDocument(html);
 
     const productSelectors = [
-      '.instock.product_cat-espresso a.ast-loop-product__link',
-      '.instock.product_cat-filtr a.ast-loop-product__link',
-      '.instock.product_cat-omniroast a.ast-loop-product__link'
+      '.instock.product_cat-espresso:not(.post-password-required) a.ast-loop-product__link',
+      '.instock.product_cat-filtr:not(.post-password-required) a.ast-loop-product__link',
+      '.instock.product_cat-omniroast:not(.post-password-required) a.ast-loop-product__link'
     ];
 
     return Array.from(
