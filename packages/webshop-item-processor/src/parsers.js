@@ -23,6 +23,56 @@ const getDocument = (html) => {
   return document;
 };
 
+const getNextFlightProduct = (html) => {
+  const pushes = html.matchAll(/self\.__next_f\.push\(\[1,("(?:[^"\\]|\\.)*")\]\)/g);
+
+  let payload = '';
+
+  for (const [, chunk] of pushes) {
+    try {
+      payload += JSON.parse(chunk);
+    } catch {
+      continue;
+    }
+  }
+
+  const start = payload.indexOf('{"product":{');
+
+  if (start === -1) {
+    return undefined;
+  }
+
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+
+  for (let index = start; index < payload.length; index++) {
+    const char = payload[index];
+
+    if (escaped) {
+      escaped = false;
+    } else if (char === '\\') {
+      escaped = true;
+    } else if (char === '"') {
+      inString = !inString;
+    } else if (!inString && char === '{') {
+      depth++;
+    } else if (!inString && char === '}') {
+      depth--;
+
+      if (depth === 0) {
+        try {
+          return JSON.parse(payload.slice(start, index + 1)).product;
+        } catch {
+          return undefined;
+        }
+      }
+    }
+  }
+
+  return undefined;
+};
+
 const getWindow = (html) => {
   const { window } = new JSDOM(html);
 
@@ -1616,17 +1666,31 @@ const parsers = {
   47: ({ html, url, roasterId }) => {
     logger.info(`Parsing item page: ${url}`);
 
-    const document = getDocument(html);
+    const storefrontProduct = getNextFlightProduct(html);
 
-    const productScriptEl = document.querySelector('script[data-section-type="static-product"]');
-
-    if (!productScriptEl) {
+    if (!storefrontProduct) {
       logger.error(`No product data found for ${url}`);
 
       throw new Error(errors.detailsMissing);
     }
 
-    const { product } = JSON.parse(productScriptEl.textContent);
+    const product = {
+      title: storefrontProduct.title,
+      description: storefrontProduct.descriptionHtml || storefrontProduct.description || '',
+      featured_image: storefrontProduct.featuredImage?.url || storefrontProduct.images?.[0]?.url || null,
+      variants: (storefrontProduct.variants || []).map((variant) => ({
+        title: variant.title,
+        available: variant.availableForSale,
+        price: Math.round(Number(variant.price?.amount) * 100)
+      }))
+    };
+    const currency = (storefrontProduct.variants || []).find(({ price }) => price?.currencyCode)?.price.currencyCode;
+
+    if (!currency) {
+      logger.error(`No currency found for ${url}`);
+
+      throw new Error(errors.currencyMissing);
+    }
 
     const availableVariants = product.variants.filter((v) => v.available);
 
@@ -1665,27 +1729,7 @@ const parsers = {
 
     const pricePerGram = Number((price / weight).toFixed(2));
 
-    const allScripts = Array.from(document.querySelectorAll('script:not([src])'));
-    const productSchemaEl = allScripts.find(
-      (s) => s.textContent.includes('"Product"') && s.textContent.includes('priceCurrency')
-    );
-
-    if (!productSchemaEl) {
-      logger.error(`No currency found for ${url}`);
-
-      throw new Error(errors.currencyMissing);
-    }
-
-    const schemaData = JSON.parse(productSchemaEl.textContent);
-    const currency = schemaData.offers?.priceCurrency || schemaData.offers?.[0]?.priceCurrency;
-
-    if (!currency) {
-      logger.error(`No currency found for ${url}`);
-
-      throw new Error(errors.currencyMissing);
-    }
-
-    const image = product.featured_image ? `https:${product.featured_image}` : null;
+    const image = product.featured_image;
 
     if (!image) {
       logger.error(`No image found for ${url}`);
