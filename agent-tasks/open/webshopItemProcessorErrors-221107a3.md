@@ -5,24 +5,14 @@ alarm: "webshopItemProcessorErrors"
 signature: "/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR Invoke Error {<string>:<string>,<string>:<string>,<string>:[<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>]} | <num> (file://src/parsers.js:<num>:<num>)\",<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<stri"
 logGroup: "/aws/lambda/webshopItemProcessor"
 firstSeen: "2026-10-26"
-lastSeen: "2026-10-31"
-occurrences: 44
----# Task webshopItemProcessorErrors-221107a3
-
-Detected by the weekly error scan on 2026-10-26. Triggering alarm: `webshopItemProcessorErrors`.
-
-- **Occurrences:** 32
-- **Log group:** `/aws/lambda/webshopItemProcessor`
-- **Signature:** `/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR Invoke Error {<string>:<string>,<string>:<string>,<string>:[<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>]} | <num> (file://src/parsers.js:<num>:<num>)",<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<stri`
-
-## Sample errors
-
-```
-2026-10-26T00:11:48.642Z	63060025-736b-4cae-a628-c50cd869bda2	ERROR	Invoke Error 	{"errorType":"TypeError","errorMessage":"Cannot read properties of null (reading 'textContent')","stack":["TypeError: Cannot read properties of null (reading 'textContent')","    at 7 (file:///var/task/src/parsers.js:445:73)","    at handler (file:///var/task/src/index.js:40:25)","    at file:///var/task/node_modules/@sentry/aws-serverless/build/npm/run-lambda-handler.mjs:365:35","    at file:///var/task/node_modules/@sentry/core/build/esm/tracing/trace.js:73:60","    at file:///var/task/node_modules/@sentry/core/build/esm/tracing/trace.js:388:13","    at handleCallbackErrors (file:///var/task/node_modules/@sentry/core/build/esm/utils/handleCallbackErrors.js:9:26)","    at file:///var/task/node_modules/@sentry/core/build/esm/tracing/trace.js:387:11","    at file:///var/task/node_modules/@sentry/core/build/esm/tracing/trace.js:383:14","    at file:///var/task/node_modules/@sentry/core/build/esm/tracing/trace.js:122:12","    at file:///var/task/node_modules/@sentry/server-utils/build/esm/async-context.js:21:14"]}
-
-
+lastSeen: "2026-11-02"
+occurrences: 58
+Detected by the weekly error scan on 2026-10-26. Triggering alarm: "`webshopItemProcessorErrors`."
+- **Occurrences: "** 32"
+- **Log group: "** `/aws/lambda/webshopItemProcessor`"
+- **Signature: "** `/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR Invoke Error {<string>:<string>,<string>:<string>,<string>:[<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>]} | <num> (file://src/parsers.js:<num>:<num>)\",<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<stri`"
+2026-10-26T00: "11:48.642Z\t63060025-736b-4cae-a628-c50cd869bda2\tERROR\tInvoke Error \t{\"errorType\":\"TypeError\",\"errorMessage\":\"Cannot read properties of null (reading 'textContent')\",\"stack\":[\"TypeError: Cannot read properties of null (reading 'textContent')\",\"    at 7 (file:///var/task/src/parsers.js:445:73)\",\"    at handler (file:///var/task/src/index.js:40:25)\",\"    at file:///var/task/node_modules/@sentry/aws-serverless/build/npm/run-lambda-handler.mjs:365:35\",\"    at file:///var/task/node_modules/@sentry/core/build/esm/tracing/trace.js:73:60\",\"    at file:///var/task/node_modules/@sentry/core/build/esm/tracing/trace.js:388:13\",\"    at handleCallbackErrors (file:///var/task/node_modules/@sentry/core/build/esm/utils/handleCallbackErrors.js:9:26)\",\"    at file:///var/task/node_modules/@sentry/core/build/esm/tracing/trace.js:387:11\",\"    at file:///var/task/node_modules/@sentry/core/build/esm/tracing/trace.js:383:14\",\"    at file:///var/task/node_modules/@sentry/core/build/esm/tracing/trace.js:122:12\",\"    at file:///var/task/node_modules/@sentry/server-utils/build/esm/async-context.js:21:14\"]}"
 ---
-
 2026-10-26T00:11:49.040Z	cc679d58-476d-4d15-b2fb-66236ab4b7ca	ERROR	Invoke Error 	{"errorType":"TypeError","errorMessage":"Cannot read properties of null (reading 'textContent')","stack":["TypeError: Cannot read properties of null (reading 'textContent')","    at 7 (file:///var/task/src/parsers.js:445:73)","    at handler (file:///var/task/src/index.js:40:25)","    at file:///var/task/node_modules/@sentry/aws-serverless/build/npm/run-lambda-handler.mjs:365:35","    at file:///var/task/node_modules/@sentry/core/build/esm/tracing/trace.js:73:60","    at file:///var/task/node_modules/@sentry/core/build/esm/tracing/trace.js:388:13","    at handleCallbackErrors (file:///var/task/node_modules/@sentry/core/build/esm/utils/handleCallbackErrors.js:9:26)","    at file:///var/task/node_modules/@sentry/core/build/esm/tracing/trace.js:387:11","    at file:///var/task/node_modules/@sentry/core/build/esm/tracing/trace.js:383:14","    at file:///var/task/node_modules/@sentry/core/build/esm/tracing/trace.js:122:12","    at file:///var/task/node_modules/@sentry/server-utils/build/esm/async-context.js:21:14"]}
 
 

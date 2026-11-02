@@ -1,6 +1,6 @@
 ---
 id: "webshopItemProcessorErrors-e7d1ebc1"
-status: "in-review"
+status: "done"
 alarm: "webshopItemProcessorErrors"
 signature: "/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR No variations found for <url>"
 logGroup: "/aws/lambda/webshopItemProcessor"
@@ -8,7 +8,6 @@ firstSeen: "2026-10-26"
 lastSeen: "2026-10-26"
 occurrences: 1
 ---
-
 # Task webshopItemProcessorErrors-e7d1ebc1
 
 Detected by the weekly error scan on 2026-10-26. Triggering alarm: `webshopItemProcessorErrors`.
