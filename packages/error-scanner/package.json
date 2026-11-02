@@ -11,6 +11,7 @@
     "lint": "oxlint"
   },
   "dependencies": {
+    "@anthropic-ai/claude-code": "^2.1.316",
     "@aws-sdk/client-cloudwatch-logs": "^3.1157.0"
   },
   "devDependencies": {

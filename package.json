@@ -23,6 +23,11 @@
     "supports-color": "^11.0.0",
     "wrangler": "^4.147.0"
   },
+  "dependenciesMeta": {
+    "@anthropic-ai/claude-code": {
+      "built": true
+    }
+  },
   "resolutions": {
     "@asamuzakjp/css-color": "4.1.1"
   },

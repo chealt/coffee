@@ -57,9 +57,6 @@ jobs:
           node-version-file: package.json
           cache: 'yarn'
       - run: yarn install --immutable
-      # Not a yarn devDependency: its binary comes from an install script, which yarn disables.
-      - name: Install Claude Code
-        run: npm install -g @anthropic-ai/claude-code@2
       - name: Run fix agent for task ${{ matrix.task }}
         timeout-minutes: 8
         run: yarn workspace @centralbeans/error-scanner fix --task ${{ matrix.task }}
