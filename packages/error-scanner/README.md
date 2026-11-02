@@ -75,10 +75,11 @@ agent started.
 
 ## Setup
 
-All three workflows run the agents through headless Claude Code (`claude --print`). The CLI is
-installed by its own workflow step (`npm install -g @anthropic-ai/claude-code@2`) rather than as a
-yarn devDependency: its binary is produced by an install script, and yarn 4 disables those by
-default, so a workspace dependency would resolve to a missing binary.
+All three workflows run the agents through headless Claude Code (`claude --print`). The CLI is a
+dependency of this workspace, so `yarn.lock` pins its version. Its binary is produced by an
+install script, and yarn 4 disables those by default, so the root `package.json` allows that one
+package through `dependenciesMeta`. The entry has to stay in the root: yarn ignores it in a
+workspace and leaves a placeholder that fails at startup.
 
 Secrets (repository level):
 

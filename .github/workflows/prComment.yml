@@ -38,9 +38,6 @@ jobs:
           node-version-file: package.json
           cache: 'yarn'
       - run: yarn install --immutable
-      # Not a yarn devDependency: its binary comes from an install script, which yarn disables.
-      - name: Install Claude Code
-        run: npm install -g @anthropic-ai/claude-code@2
       - name: Answer comments on PR ${{ github.event.issue.number || github.event.pull_request.number }}
         timeout-minutes: 8
         run: yarn workspace @centralbeans/error-scanner comments --pr "$PR_NUMBER"
