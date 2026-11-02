@@ -169,6 +169,24 @@ const commitAndPush = (root, message) => {
   return true;
 };
 
+// A killed agent leaves its work uncommitted, and the runner's disk goes with the job. Saving it
+// here is what lets the next run resume instead of starting over.
+const pushWorkInProgress = (root, branch, base) => {
+  if (git(['branch', '--show-current'], { cwd: root }) !== branch) {
+    console.error(`Not on ${branch}, leaving the agent's work unsaved.`);
+    return;
+  }
+  git(['add', '--all'], { cwd: root });
+  if (git(['status', '--porcelain'], { cwd: root })) {
+    git(['commit', '--no-verify', '-m', 'wip: work saved when the agent stopped'], { cwd: root });
+  }
+  if (git(['rev-list', '--count', `origin/${base}..HEAD`], { cwd: root }) === '0') {
+    return;
+  }
+  git(['push', 'origin', `HEAD:refs/heads/${branch}`], { cwd: root });
+  console.log(`Saved the agent's work on ${branch} for the next run.`);
+};
+
 export {
   commitAndPush,
   configureBotIdentity,
@@ -176,6 +194,7 @@ export {
   git,
   loadState,
   moveTaskFile,
+  pushWorkInProgress,
   repoRoot,
   saveState,
   tasksDir,
