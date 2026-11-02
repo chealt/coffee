@@ -1,6 +1,6 @@
 ---
 id: "webshopItemProcessorErrors-221107a3"
-status: "open"
+status: "in-review"
 alarm: "webshopItemProcessorErrors"
 signature: "/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR Invoke Error {<string>:<string>,<string>:<string>,<string>:[<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>]} | <num> (file://src/parsers.js:<num>:<num>)\",<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<stri"
 logGroup: "/aws/lambda/webshopItemProcessor"
@@ -55,3 +55,18 @@ Miga parser weight fallback).
 **Tested:** `ROASTER_ID=7 node test.js` against the live site (all items processed, no errors);
 verified against all saved pages in `test-html/7/` (9/9 success with weight parsed) plus a
 synthetic legacy-markup check; `yarn lint` and `yarn format:check` pass.
+
+## Re-open on 2026-10-31 — no reproduction
+
+The weekly error scan reopened this task, but the fix above is already on `main`
+(`a4bd83b5`, PR #96, merged 2026-10-26 20:35 +0100). All log samples attached to this file are
+from 2026-10-26T00:11Z, which predates that commit.
+
+Re-ran `ROASTER_ID=7 yarn workspace @centralbeans/webshop-item-processor test` against the live
+site on 2026-11-02: every El Cafetero product page parsed successfully (weight, price, origin,
+taste notes), and the run reported no errors. The `TypeError: Cannot read properties of null
+(reading 'textContent')` at `src/parsers.js:445` does not reproduce.
+
+No code change was made. If the alarm keeps firing, the remaining signal is most likely either
+a lambda deployment that predates `a4bd83b5` or a different roaster bucketed under the same
+generic `src/parsers.js:<num>:<num>` signature — neither is fixable from this task's samples.
