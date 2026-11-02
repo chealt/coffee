@@ -20,6 +20,10 @@ const parseArgs = (argv) => {
   return args;
 };
 
+// These report failures through a Lambda destination, see infra/failure-handling.yml next to
+// each function. Scanning them too would raise a second task for every error.
+const EVENT_DRIVEN_ALARMS = new Set(['webshopItemProcessorErrors']);
+
 const today = () => new Date().toISOString().slice(0, 10);
 
 // Another task's open PR counts as coverage: one root cause often fires several signatures,
@@ -303,7 +307,7 @@ const printSummary = (clusters, alarms, ctx, since, entriesCount) => {
 };
 
 const collectClusters = async (region, since) => {
-  const alarms = await listFiredAlarms({ region, since });
+  const alarms = (await listFiredAlarms({ region, since })).filter(({ name }) => !EVENT_DRIVEN_ALARMS.has(name));
   const clusters = [];
   let entriesCount = 0;
   for (const alarm of alarms) {
