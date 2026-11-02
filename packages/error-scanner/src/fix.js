@@ -159,7 +159,8 @@ const main = async () => {
     stdin: taskContent,
     model: MODEL,
     cwd: root,
-    timeoutMinutes: agentMinutes
+    timeoutMinutes: agentMinutes,
+    stream: true
   });
   logUsage(`Fix agent for ${alarmId}`, payload);
   console.log(payload.result ?? '');

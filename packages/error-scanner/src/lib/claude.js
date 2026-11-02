@@ -6,8 +6,48 @@ import { spawn } from 'node:child_process';
 const SETTINGS = JSON.stringify({ attribution: { commit: '', pr: '' } });
 
 const KILL_GRACE_MS = 5 * 1000;
+const LOG_LINE_LIMIT = 300;
 
-const runClaude = ({ prompt, stdin, model, cwd, timeoutMinutes = 80, jsonSchema, noTools = false }) =>
+const clip = (text) => text.replace(/\s+/g, ' ').trim().slice(0, LOG_LINE_LIMIT);
+
+const toolDetail = (input = {}) => input.command ?? input.file_path ?? input.pattern ?? input.description ?? '';
+
+const logBlock = (block) => {
+  if (block.type === 'text') {
+    console.log(`[agent] ${clip(block.text)}`);
+  } else if (block.type === 'tool_use') {
+    console.log(`[agent] ${block.name}: ${clip(String(toolDetail(block.input)))}`);
+  } else if (block.type === 'tool_result' && block.is_error) {
+    console.log(`[agent] tool error: ${clip(JSON.stringify(block.content))}`);
+  }
+};
+
+const parseLine = (line) => {
+  try {
+    return JSON.parse(line);
+  } catch {
+    return undefined;
+  }
+};
+
+const logEvent = (line) => {
+  const content = parseLine(line)?.message?.content;
+  if (Array.isArray(content)) {
+    content.forEach(logBlock);
+  }
+};
+
+const parsePayload = (stdout, stream) =>
+  stream
+    ? stdout
+        .split('\n')
+        .map(parseLine)
+        .findLast((event) => event?.type === 'result')
+    : parseLine(stdout);
+
+// stream prints the agent's progress as it works, so a run killed at its deadline still shows
+// how far it got. The json format only reports once the run has finished.
+const runClaude = ({ prompt, stdin, model, cwd, timeoutMinutes = 80, jsonSchema, noTools = false, stream = false }) =>
   new Promise((resolve, reject) => {
     const bin = process.env.CLAUDE_BIN || 'claude';
     // A --print run starts in manual mode, where every edit, command and push the agent
@@ -23,8 +63,11 @@ const runClaude = ({ prompt, stdin, model, cwd, timeoutMinutes = 80, jsonSchema,
       '--settings',
       SETTINGS,
       '--output-format',
-      'json'
+      stream ? 'stream-json' : 'json'
     ];
+    if (stream) {
+      args.push('--verbose');
+    }
     if (process.env.AGENT_MAX_BUDGET_USD) {
       args.push('--max-budget-usd', process.env.AGENT_MAX_BUDGET_USD);
     }
@@ -42,6 +85,7 @@ const runClaude = ({ prompt, stdin, model, cwd, timeoutMinutes = 80, jsonSchema,
     const child = spawn(bin, args, { cwd, detached: true });
     let stdout = '';
     let stderr = '';
+    let unfinishedLine = '';
     let timedOut = false;
     let killTimer;
     const signalTree = (signal) => {
@@ -71,8 +115,14 @@ const runClaude = ({ prompt, stdin, model, cwd, timeoutMinutes = 80, jsonSchema,
       clearTimeout(timer);
       clearTimeout(killTimer);
     };
+    child.stdout.setEncoding('utf8');
     child.stdout.on('data', (chunk) => {
       stdout += chunk;
+      if (stream) {
+        const lines = (unfinishedLine + chunk).split('\n');
+        unfinishedLine = lines.pop();
+        lines.forEach(logEvent);
+      }
     });
     child.stderr.on('data', (chunk) => {
       stderr += chunk;
@@ -91,10 +141,8 @@ const runClaude = ({ prompt, stdin, model, cwd, timeoutMinutes = 80, jsonSchema,
         reject(new Error(`claude exited with code ${code}: ${(stderr || stdout).slice(-2000)}`));
         return;
       }
-      let payload;
-      try {
-        payload = JSON.parse(stdout);
-      } catch {
+      const payload = parsePayload(stdout, stream);
+      if (!payload) {
         reject(new Error(`claude returned unparseable output: ${stdout.slice(-2000)}`));
         return;
       }

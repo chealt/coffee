@@ -38,7 +38,8 @@ reacts to review feedback on the pull requests the second one opens:
    judges every other open `task/` PR against this task's brief, and skips the task when one of
    them already fixes it: the jobs in a wave cannot see each other, so without this check one
    root cause produces one near-identical PR per signature. The agent is told not to write
-   tests.
+   tests. Its tool calls and messages stream to the job log as `[agent]` lines, clipped to 300
+   characters, so a run killed at its deadline still shows how far it got.
 
 3. **prComment** (on every comment, review, and inline review comment) — runs `src/comments.js`
    for pull requests on a `task/` branch. It reads the whole thread rather than the one comment
