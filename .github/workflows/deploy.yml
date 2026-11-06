@@ -884,6 +884,13 @@ jobs:
           template: packages/webshop-item-processor/infra/alarm.yml
           capabilities: CAPABILITY_IAM
           fail-on-empty-changeset: false
+      - name: deploy failure handling
+        uses: aws-actions/aws-cloudformation-github-deploy@v2
+        with:
+          name: webshop-item-processor-failure-handling
+          template: packages/webshop-item-processor/infra/failure-handling.yml
+          capabilities: CAPABILITY_IAM
+          fail-on-empty-changeset: false
   webshop-processor:
     runs-on: ubuntu-latest
     steps:
