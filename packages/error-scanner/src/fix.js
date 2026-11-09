@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { logUsage, runClaude } from './lib/claude.js';
+import { parseFailure, renderFailureBrief } from './lib/failure-brief.js';
 import * as prs from './lib/prs.js';
 import * as tasks from './lib/tasks.js';
 import { diffFixesError } from './lib/verdict.js';
@@ -84,6 +85,63 @@ const saveWork = (root, branch, base) => {
   }
 };
 
+const loadBrief = (root, alarmId, failure) => {
+  if (failure) {
+    return { content: renderFailureBrief(alarmId, failure) };
+  }
+  const file = tasks.findTaskFile(root, alarmId);
+  if (!file) {
+    throw new Error(`No task file found for task ${alarmId}`);
+  }
+  return { content: readFileSync(file.path, 'utf8'), file };
+};
+
+const numbered = (steps) => steps.map((step, index) => `${index + 1}. ${step}`);
+
+const agentInstructions = ({ agentMinutes, alarmId, base, branch, brief, useGh }) =>
+  [
+    'You are an autonomous agent fixing a production error in this repository. You run non-interactively, so never ask questions — make reasonable decisions and record them.',
+    '',
+    brief
+      ? `The full task brief is piped via stdin and also saved at agent-tasks/${brief.status}/${brief.fileName}.`
+      : 'The full task brief is piped via stdin. This task has no file in agent-tasks.',
+    '',
+    `You have ${Math.floor(agentMinutes)} minutes, then you are killed. Go straight from the brief to the failing code.`,
+    '',
+    'Facts about this job, so you need not discover them:',
+    '- The samples in the brief are all the production evidence there is. This job has no AWS credentials, so do not look for more logs.',
+    '- Roasters are in packages/coffee.chealt.com/data/roasters.json. Find one by the domain in the samples, or by the parser number in a stack frame. Parsers are keyed by roaster id in packages/webshop-processor/src/parsers.js (listing pages) and packages/webshop-item-processor/src/parsers.js (product pages).',
+    '- `ROASTER_ID=<id> yarn workspace @centralbeans/webshop-item-processor test` runs one roaster end to end and is ready to use. It reports errors in its output, so grep that for them.',
+    '- Live sites are reachable, so curl one product page rather than saving many.',
+    '- Work only on what the brief names: never sweep other roasters, and leave packages/error-scanner alone unless the samples point at it.',
+    '- Do not use background jobs or sleep.',
+    '- If the sample does not reproduce after a direct attempt, stop and say so instead of searching further.',
+    '',
+    'Steps:',
+    ...numbered([
+      'Read AGENTS.md and follow the repository conventions.',
+      'Find the root cause of the error in the brief.',
+      'Implement a minimal fix. Only touch packages related to the error.',
+      'Run the relevant workspace test. Run the tests that already exist; do not write new ones.',
+      `As soon as that test passes, commit with the message fix(${alarmId}): <short description> and push: git push -u origin ${branch}`,
+      'Run `yarn lint` and `yarn format`, fixing any failures caused by your changes.',
+      ...(brief
+        ? [
+            `Move the task file: git mv agent-tasks/${brief.status}/${brief.fileName} agent-tasks/in-review/${brief.fileName} (skip the move if it is already there), set its front matter status to "in-review", and add a short root-cause and fix note to the file. Commit and push.`
+          ]
+        : []),
+      useGh
+        ? `Create the pull request: gh pr create --base ${base} --head ${branch} --title "fix(${alarmId}): <short description>" with a body covering what was wrong, what changed, and how it was tested. Include the error signature from the brief.`
+        : 'gh is unavailable: push the branch to the origin remote (and github, if present) and stop. A human opens the PR.'
+    ]),
+    '',
+    `Hard rules: never commit on or push to ${base}, never modify .github/workflows, never touch other task files or agent-tasks/state.json.`,
+    'Add no attribution to your work: no Co-Authored-By trailer on commits, no generated-with footer in the pull request body.',
+    'Write no tests: never add a test file, a test case, or a test script. The repository owner decides what gets tested, and an unasked-for test is a change they have to review and undo.',
+    'Keep the change to the error at hand. If the fix you are about to write looks like it belongs to a different task, say so in the PR body rather than widening the diff.',
+    `If branch ${branch} already contains earlier work-in-progress commits for this task, start from git diff ${base}...HEAD and finish that work instead of restarting.`
+  ].join('\n');
+
 const main = async () => {
   const args = parseArgs(process.argv.slice(2));
   if (!args.task) {
@@ -91,12 +149,10 @@ const main = async () => {
   }
   const alarmId = args.task.replace(/^task\//, '');
   const root = tasks.repoRoot();
-  const found = tasks.findTaskFile(root, alarmId);
-  if (!found) {
-    throw new Error(`No task file found for alarm ${alarmId}`);
-  }
-  if (found.status !== 'open') {
-    console.log(`Task ${alarmId} is "${found.status}", nothing to do.`);
+  const failure = parseFailure(process.env.ERROR_CONTEXT);
+  const found = loadBrief(root, alarmId, failure);
+  if (found.file && found.file.status !== 'open') {
+    console.log(`Task ${alarmId} is "${found.file.status}", nothing to do.`);
     return;
   }
 
@@ -108,7 +164,7 @@ const main = async () => {
     return;
   }
 
-  const duplicate = useGh ? await duplicateFix(readFileSync(found.path, 'utf8'), root, branch, openPrs) : undefined;
+  const duplicate = useGh ? await duplicateFix(found.content, root, branch, openPrs) : undefined;
   if (duplicate) {
     console.log(`Task ${alarmId} is already fixed by PR #${duplicate.pr.number}: ${duplicate.verdict.reason}`);
     console.log('Leaving the task open so the next scan can settle it against that PR.');
@@ -126,11 +182,7 @@ const main = async () => {
 
   const base = defaultBranch(root);
   // found was resolved before the checkout; a resumed task branch may already have moved the file to in-review
-  const brief = tasks.findTaskFile(root, alarmId);
-  if (!brief) {
-    throw new Error(`No task file found for task ${alarmId} on branch ${branch}`);
-  }
-  const taskContent = readFileSync(brief.path, 'utf8');
+  const { content: taskContent, file: brief } = loadBrief(root, alarmId, failure);
   // The agent commits on its own, and a fresh CI checkout has no git identity to commit with.
   tasks.configureBotIdentity(root);
   prepareTestEnv(root);
@@ -142,40 +194,7 @@ const main = async () => {
     );
   }
 
-  const instructions = [
-    'You are an autonomous agent fixing a production error in this repository. You run non-interactively, so never ask questions — make reasonable decisions and record them.',
-    '',
-    `The full task brief is piped via stdin and also saved at agent-tasks/${brief.status}/${brief.fileName}.`,
-    '',
-    `You have ${Math.floor(agentMinutes)} minutes, then you are killed. Go straight from the brief to the failing code.`,
-    '',
-    'Facts about this job, so you need not discover them:',
-    '- The samples in the brief are all the production evidence there is. This job has no AWS credentials, so do not look for more logs.',
-    '- Roasters are in packages/coffee.chealt.com/data/roasters.json. Find one by the domain in the samples, or by the parser number in a stack frame. Parsers are keyed by roaster id in packages/webshop-processor/src/parsers.js (listing pages) and packages/webshop-item-processor/src/parsers.js (product pages).',
-    '- `ROASTER_ID=<id> yarn workspace @centralbeans/webshop-item-processor test` runs one roaster end to end and is ready to use. It reports errors in its output, so grep that for them.',
-    '- Live sites are reachable, so curl one product page rather than saving many.',
-    '- Work only on what the brief names: never sweep other roasters, and leave packages/error-scanner alone unless the samples point at it.',
-    '- Do not use background jobs or sleep.',
-    '- If the sample does not reproduce after a direct attempt, stop and say so instead of searching further.',
-    '',
-    'Steps:',
-    '1. Read AGENTS.md and follow the repository conventions.',
-    '2. Find the root cause of the error in the brief.',
-    '3. Implement a minimal fix. Only touch packages related to the error.',
-    '4. Run the relevant workspace test. Run the tests that already exist; do not write new ones.',
-    `5. As soon as that test passes, commit with the message fix(${alarmId}): <short description> and push: git push -u origin ${branch}`,
-    '6. Run `yarn lint` and `yarn format`, fixing any failures caused by your changes.',
-    `7. Move the task file: git mv agent-tasks/${brief.status}/${brief.fileName} agent-tasks/in-review/${brief.fileName} (skip the move if it is already there), set its front matter status to "in-review", and add a short root-cause and fix note to the file. Commit and push.`,
-    useGh
-      ? `8. Create the pull request: gh pr create --base ${base} --head ${branch} --title "fix(${alarmId}): <short description>" with a body covering what was wrong, what changed, and how it was tested. Include the error signature from the task file.`
-      : '8. gh is unavailable: push the branch to the origin remote (and github, if present) and stop. A human opens the PR.',
-    '',
-    `Hard rules: never commit on or push to ${base}, never modify .github/workflows, never touch other task files or agent-tasks/state.json.`,
-    'Add no attribution to your work: no Co-Authored-By trailer on commits, no generated-with footer in the pull request body.',
-    'Write no tests: never add a test file, a test case, or a test script. The repository owner decides what gets tested, and an unasked-for test is a change they have to review and undo.',
-    'Keep the change to the error at hand. If the fix you are about to write looks like it belongs to a different task, say so in the PR body rather than widening the diff.',
-    `If branch ${branch} already contains earlier work-in-progress commits for this task, start from git diff ${base}...HEAD and finish that work instead of restarting.`
-  ].join('\n');
+  const instructions = agentInstructions({ agentMinutes, alarmId, base, branch, brief, useGh });
 
   console.log(`Starting fix agent for task ${alarmId} with ${agentMinutes.toFixed(1)} minutes...`);
   let payload;

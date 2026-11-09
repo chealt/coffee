@@ -5,6 +5,9 @@ on:
       taskId:
         description: 'Task id to fix (e.g. 0007). Empty = all open tasks.'
         type: string
+      errorContext:
+        description: 'Failure details as JSON, sent by the failure handler. Replaces the task file.'
+        type: string
 
 permissions:
   contents: write
@@ -21,7 +24,16 @@ jobs:
       - id: set
         env:
           TASK_ID: ${{ inputs.taskId }}
+          ERROR_CONTEXT: ${{ inputs.errorContext }}
         run: |
+          if [ -n "$ERROR_CONTEXT" ]; then
+            if ! printf '%s' "$TASK_ID" | grep -Eqx '[A-Za-z0-9._-]+'; then
+              echo "::error::Invalid task id"
+              exit 1
+            fi
+            echo "matrix=$(jq -cn --arg id "$TASK_ID" '[$id]')" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           mkdir -p agent-tasks/open
           ids=$(find agent-tasks/open -name '*.md' 2>/dev/null | sed -E 's#^.*/(.*)\.md$#\1#' | sort -u)
           if [ -n "$TASK_ID" ]; then
@@ -43,11 +55,12 @@ jobs:
       max-parallel: 2
       matrix:
         task: ${{ fromJson(needs.list.outputs.matrix) }}
-    # One attempt per task at a time: a newer dispatch supersedes a stale run,
-    # WIP survives on the task/<id> branch so nothing is lost.
+    # One attempt per task at a time. A running attempt is never cancelled, because failures
+    # arriving in a later batch would otherwise kill it. GitHub keeps one waiting run per group
+    # and drops the rest, and that run skips once the first has opened its PR.
     concurrency:
       group: errorFix-${{ matrix.task }}
-      cancel-in-progress: true
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v6
         with:
@@ -62,6 +75,7 @@ jobs:
         run: yarn workspace @centralbeans/error-scanner fix --task ${{ matrix.task }}
         env:
           GH_TOKEN: ${{ github.token }}
+          ERROR_CONTEXT: ${{ inputs.errorContext }}
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           AGENT_MODEL: ${{ vars.AGENT_MODEL || 'claude-opus-5' }}
           # Budget for the whole run, duplicate check and agent together. Raising it past the

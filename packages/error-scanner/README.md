@@ -1,7 +1,8 @@
 # error-scanner
 
-Weekly AWS error triage: detect production errors in CloudWatch, turn them into task files,
-and dispatch one fixing agent per task.
+AWS error triage: detect production errors, and dispatch one fixing agent per error. Most alarms
+are scanned weekly into task files. `webshopItemProcessor` reports its failures as they happen,
+see [Event-driven failures](#event-driven-failures).
 
 ## How it works
 
@@ -76,6 +77,30 @@ A resumed `task/` branch can predate the scanner's own code, so nothing the agen
 read from a file in the working tree. Settings reach Claude Code as inline JSON for that reason:
 an earlier version passed a checked-in settings file and every resumed branch failed before the
 agent started.
+
+## Event-driven failures
+
+A function with an `infra/failure-handling.yml` next to it does not wait for the weekly scan:
+
+1. A failed asynchronous invocation goes to the function's on-failure Lambda destination, an SQS
+   queue. Only thrown errors get there: a handled error that is merely logged does not.
+2. The queue holds failures for up to five minutes, so a roaster failing once per product arrives
+   as one batch.
+3. `triggerGithubAction` groups the batch by function, roaster, error and stack frame, and
+   dispatches **errorFix** once per group with the details in the `errorContext` input. The HTML
+   in the event is dropped, the agent fetches the page from the URL instead.
+4. `src/fix.js` turns `errorContext` into the brief. There is no task file and no entry in
+   `state.json`, so such a task is tracked only by its `task/<id>` branch and pull request. An
+   open PR for that id skips the run, and the same error firing after the fix merged starts a
+   new one.
+
+The alarm stays, so the email still arrives. Add its name to `EVENT_DRIVEN_ALARMS` in `src/scan.js`
+so the scan does not raise a second task. To cover another function, copy the template next to it,
+change the parameter defaults, and deploy it from `deploy.yml`.
+
+The stack needs more than the deploy user has by default: `sqs:*` on the
+`webshopItemProcessorFailures*` queues, and `lambda:*FunctionEventInvokeConfig` and
+`lambda:*EventSourceMapping*`.
 
 ## Setup
 

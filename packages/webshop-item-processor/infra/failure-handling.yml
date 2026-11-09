@@ -1,0 +1,91 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Sends failed Webshop Item Processor invocations to the error fix workflow
+
+Parameters:
+  FunctionName:
+    Type: String
+    Default: webshopItemProcessor
+    Description: Lambda function whose failed invocations are handled
+  FunctionRoleName:
+    Type: String
+    Default: webshopItemProcessor-role-ykqx227u
+    Description: Execution role of the function, which is what sends to the destination
+  HandlerFunctionName:
+    Type: String
+    Default: triggerGithubAction
+    Description: Lambda function that dispatches the error fix workflow
+  HandlerRoleName:
+    Type: String
+    Default: triggerGithubAction-role-upfhiwqa
+    Description: Execution role of the handler function
+
+Resources:
+  FailureDeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: webshopItemProcessorFailuresDlq
+      MessageRetentionPeriod: 1209600
+
+  # SQS rather than SNS because the invocation record embeds the event, compressed HTML here,
+  # and SNS stops at 256 KB.
+  FailureQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: webshopItemProcessorFailures
+      MessageRetentionPeriod: 345600
+      # Six times the handler's timeout plus the batching window, as Lambda recommends.
+      VisibilityTimeout: 480
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt FailureDeadLetterQueue.Arn
+        maxReceiveCount: 3
+
+  FunctionSendPolicy:
+    Type: AWS::IAM::RolePolicy
+    Properties:
+      RoleName: !Ref FunctionRoleName
+      PolicyName: sendFailuresToQueue
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action: sqs:SendMessage
+            Resource: !GetAtt FailureQueue.Arn
+
+  HandlerReceivePolicy:
+    Type: AWS::IAM::RolePolicy
+    Properties:
+      RoleName: !Ref HandlerRoleName
+      PolicyName: receiveWebshopItemProcessorFailures
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - sqs:ReceiveMessage
+              - sqs:DeleteMessage
+              - sqs:GetQueueAttributes
+            Resource: !GetAtt FailureQueue.Arn
+
+  # Lambda checks the role can reach the destination when this is saved.
+  AsyncInvokeConfig:
+    Type: AWS::Lambda::EventInvokeConfig
+    DependsOn: FunctionSendPolicy
+    Properties:
+      FunctionName: !Ref FunctionName
+      Qualifier: $LATEST
+      MaximumRetryAttempts: 0
+      MaximumEventAgeInSeconds: 21600
+      DestinationConfig:
+        OnFailure:
+          Destination: !GetAtt FailureQueue.Arn
+
+  # A broken roaster fails once per product within seconds, so the window is what turns that
+  # burst into one workflow dispatch.
+  HandlerEventSource:
+    Type: AWS::Lambda::EventSourceMapping
+    DependsOn: HandlerReceivePolicy
+    Properties:
+      EventSourceArn: !GetAtt FailureQueue.Arn
+      FunctionName: !Ref HandlerFunctionName
+      BatchSize: 100
+      MaximumBatchingWindowInSeconds: 300
