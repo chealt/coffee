@@ -1,14 +1,13 @@
 ---
 id: "webshopItemProcessorErrors-5c09a48a"
-status: "in-review"
+status: "done"
 alarm: "webshopItemProcessorErrors"
 signature: "/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR No product data found for <url>"
 logGroup: "/aws/lambda/webshopItemProcessor"
 firstSeen: "2026-10-31"
 lastSeen: "2026-11-02"
 occurrences: 24
----
-# Task webshopItemProcessorErrors-5c09a48a
+---# Task webshopItemProcessorErrors-5c09a48a
 
 Detected by the weekly error scan on 2026-10-31. Triggering alarm: `webshopItemProcessorErrors`.
 

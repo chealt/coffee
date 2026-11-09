@@ -3,8 +3,8 @@
     "webshopItemProcessorErrors-221107a3": {
       "status": "open",
       "firstSeen": "2026-10-26",
-      "lastSeen": "2026-11-02",
-      "occurrences": 58
+      "lastSeen": "2026-11-09",
+      "occurrences": 64
     },
     "webshopItemProcessorErrors-3a559474": {
       "status": "done",
@@ -55,11 +55,23 @@
       "occurrences": 3
     },
     "webshopItemProcessorErrors-5c09a48a": {
-      "status": "open",
+      "status": "done",
       "firstSeen": "2026-10-31",
       "lastSeen": "2026-11-02",
       "occurrences": 24
+    },
+    "webshopItemProcessorErrors-c03feb9c": {
+      "status": "open",
+      "firstSeen": "2026-11-09",
+      "lastSeen": "2026-11-09",
+      "occurrences": 2
+    },
+    "webshopItemProcessorErrors-7af17a18": {
+      "status": "open",
+      "firstSeen": "2026-11-09",
+      "lastSeen": "2026-11-09",
+      "occurrences": 1
     }
   },
-  "lastScanAt": "2026-11-02T16:38:35.538Z"
+  "lastScanAt": "2026-11-09T14:29:39.353Z"
 }
