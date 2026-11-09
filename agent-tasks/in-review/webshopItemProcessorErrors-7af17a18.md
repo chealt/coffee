@@ -1,6 +1,6 @@
 ---
 id: "webshopItemProcessorErrors-7af17a18"
-status: "open"
+status: "in-review"
 alarm: "webshopItemProcessorErrors"
 signature: "/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR Invoke Error {<string>:<string>,<string>:<string>,<string>:[<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>]} | <num> (file://src/parsers.js:<num>:<num>)\",<string>,<string>,<string>,<string>,<string>,<string>,<string>]}"
 logGroup: "/aws/lambda/webshopItemProcessor"
@@ -37,3 +37,30 @@ Alarm console: https://eu-central-1.console.aws.amazon.com/cloudwatch/home?regio
 - [ ] Relevant tests run and passing
 - [ ] `yarn lint` passes
 - [ ] This file moved to `agent-tasks/in-review/` with status "in-review" in the fix commit
+
+## Root cause
+
+Parser `82` (Spojka, `shop.spojkaroastery.com`) reads the product detail table by its Slovak
+labels: `lokalita`, `spracovanie` and `chuťový profil`. The shop now serves its `/en/` product
+pages with English labels (`origin`, `processing`, `taste profile`), so `details.lokalita` was
+`undefined` and the parser threw `Missing origin country`.
+
+Confirmed by fetching all 16 live product pages for roaster 82 and dumping the `.product__sku2`
+key/value pairs: every page uses the English labels. Two pages additionally carry a value that
+never matched a country directly — a blend (`costa rica, kenya`) and a Slovak value (`keňa`).
+
+## Fix
+
+- Read each detail with an English fallback: `details.lokalita || details.origin`,
+  `details.spracovanie || details.processing`, `details['chuťový profil'] || details['taste profile']`.
+- When the origin is a blend, fall back to the first comma-separated country.
+- Skip the AWS Translate call when the processing/taste-note detail is empty, so a missing
+  optional field cannot turn into a Translate validation error.
+
+## Verification
+
+`ROASTER_ID=82 yarn workspace @centralbeans/webshop-item-processor test` no longer reports any
+`Missing origin country`. The run still logs `CredentialsProviderError` for every item because
+this environment has no AWS credentials, so the Translate-dependent paths cannot be exercised
+locally; origin resolution was verified separately against the saved pages and
+`data/originCountries.json` (all 16 pages resolve, `keňa` via the existing cs→en translation).
