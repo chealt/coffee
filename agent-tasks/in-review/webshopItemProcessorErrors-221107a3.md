@@ -1,6 +1,6 @@
 ---
 id: "webshopItemProcessorErrors-221107a3"
-status: "open"
+status: "in-review"
 alarm: "webshopItemProcessorErrors"
 signature: "/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR Invoke Error {<string>:<string>,<string>:<string>,<string>:[<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>]} | <num> (file://src/parsers.js:<num>:<num>)\",<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<stri"
 logGroup: "/aws/lambda/webshopItemProcessor"
@@ -69,3 +69,23 @@ taste notes), and the run reported no errors. The `TypeError: Cannot read proper
 No code change was made. If the alarm keeps firing, the remaining signal is most likely either
 a lambda deployment that predates `a4bd83b5` or a different roaster bucketed under the same
 generic `src/parsers.js:<num>:<num>` signature — neither is fixable from this task's samples.
+
+## Re-open on 2026-11-09 — latent crash guarded
+
+The 2026-10-26 samples still do not reproduce: `ROASTER_ID=7 yarn workspace
+@centralbeans/webshop-item-processor test` run against the live site on 2026-11-09 parsed all 9
+El Cafetero products (weight, price, origin, taste notes) with no errors.
+
+**Root cause (remaining):** after the 2026-10-26 weight fix, the only unguarded `.textContent`
+left in the roaster 7 parser was the origin-country fallback
+`document.querySelector('h1').textContent` (now `src/parsers.js:533`, which matches the
+deployed `src/parsers.js:445:73` frame once the shifted line numbers are accounted for). A
+product page served without an `<h1>` (error/redirect/variant page) makes that throw
+`TypeError: Cannot read properties of null (reading 'textContent')`, crashing the whole lambda
+invocation instead of producing the handled `originCountryMissing` error.
+
+**Fix:** optional-chain the `h1` lookup, so a missing heading falls through to the existing
+blend detection and the handled `originCountryMissing` error.
+
+**Tested:** `ROASTER_ID=7 yarn workspace @centralbeans/webshop-item-processor test` (9/9 items
+parsed, no errors); `yarn lint` and `yarn format` pass.
