@@ -2236,30 +2236,35 @@ const parsers = {
       return previousValue;
     }, {});
 
+    const originDetail = details.lokalita || details.origin;
     const originCountry =
-      details.lokalita === 'cherry likér, jablko, hrozno, čierna ríbezľa, jahoda' // bad data
+      originDetail === 'cherry likér, jablko, hrozno, čierna ríbezľa, jahoda' // bad data
         ? 'indonesia'
-        : details.lokalita;
+        : originDetail;
 
     if (!originCountry) {
       throw new Error(errors.originCountryMissing);
     }
 
     const originCountryTranslated = await translate({ text: originCountry, from: 'cs', to: 'en' });
+    const findOriginCountryId = (name) =>
+      originCountries.find(({ name: countryName }) => countryName === name)?.origin_country_id;
     const originCountryId =
-      originCountries.find(({ name }) => name === originCountry)?.origin_country_id ||
-      originCountries.find(({ name }) => name === originCountryTranslated)?.origin_country_id ||
+      findOriginCountryId(originCountry) ||
+      findOriginCountryId(originCountryTranslated) ||
+      findOriginCountryId(originCountryTranslated.split(',')[0].trim()) ||
       null;
 
     if (!originCountryId) {
       throw new Error(errors.originCountryMissing);
     }
 
-    const processingMethod = (await translate({ text: details.spracovanie, from: 'cs', to: 'en' }))
-      .trim()
-      .toLowerCase();
+    const processingDetail = details.spracovanie || details.processing || '';
+    const processingMethod = processingDetail
+      ? (await translate({ text: processingDetail, from: 'cs', to: 'en' })).trim().toLowerCase()
+      : '';
     const processingMethodId =
-      processingMethods.find(({ name }) => name.toLowerCase() === details.spracovanie)?.processing_method_id ||
+      processingMethods.find(({ name }) => name.toLowerCase() === processingDetail)?.processing_method_id ||
       processingMethods.find(({ name }) => name.toLowerCase() === processingMethod)?.processing_method_id ||
       processingMethods.find(({ name }) => processingMethod.includes(name.toLowerCase()))?.processing_method_id;
 
@@ -2269,8 +2274,10 @@ const parsers = {
 
     const brewingMethodId = brewingMethods.find(({ name }) => name === 'omni')?.brewing_method_id || null;
 
-    const tasteNotesStrings = details['chuťový profil'];
-    const translatedTasteNotes = await translate({ text: tasteNotesStrings, from: 'cs', to: 'en' });
+    const tasteNotesStrings = details['chuťový profil'] || details['taste profile'] || '';
+    const translatedTasteNotes = tasteNotesStrings
+      ? await translate({ text: tasteNotesStrings, from: 'cs', to: 'en' })
+      : '';
     const cleanTranslation = translatedTasteNotes.toLowerCase().split(', ');
 
     const tasteNotesFound = tasteNotes.filter(({ name }) => cleanTranslation.includes(name));
