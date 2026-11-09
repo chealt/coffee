@@ -1710,7 +1710,15 @@ const parsers = {
       return match[2].toLowerCase() === 'kg' ? num * 1000 : num;
     };
 
-    const sortedVariants = availableVariants.sort((a, b) => parseVariantWeight(a.title) - parseVariantWeight(b.title));
+    const weightedVariants = availableVariants.filter(({ title }) => parseVariantWeight(title));
+
+    if (!weightedVariants.length) {
+      logger.info(`Skipping item without a weighted variant ${url}`);
+
+      return { isGiftSet: true };
+    }
+
+    const sortedVariants = weightedVariants.sort((a, b) => parseVariantWeight(a.title) - parseVariantWeight(b.title));
     const smallestVariant = sortedVariants[0];
     const price = Number((smallestVariant.price / 100).toFixed(2));
     const weight = parseVariantWeight(smallestVariant.title);
