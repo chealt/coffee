@@ -486,7 +486,7 @@ const parsers = {
     return Array.from(
       new Set(
         Array.from(document.querySelectorAll('.product-card-wrapper .full-unstyled-link[id^="CardLink"]'))
-          .filter(({ href }) => !href.includes('2x25g') && !href.includes('blend'))
+          .filter(({ href }) => !href.includes('2x25g') && !href.includes('blend') && !href.includes('tasting-set'))
           .map(({ href }) => `${origin}${href}`)
       )
     );
