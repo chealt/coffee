@@ -1,6 +1,6 @@
 ---
 id: "webshopItemProcessorErrors-c03feb9c"
-status: "open"
+status: "in-review"
 alarm: "webshopItemProcessorErrors"
 signature: "/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR No weight found for <url>"
 logGroup: "/aws/lambda/webshopItemProcessor"
@@ -60,3 +60,17 @@ none has one the item is not a coffee bag, so it returns `{ isGiftSet: true }` a
 After the fix the same test run logs `Skipping item without a weighted variant` /
 `Skipping gift set` for that URL and reports no errors; all other april products still parse
 with weight and price.
+
+## Re-check 2026-11-16
+
+The weekly scan reopened this task, but the fix described above is already merged
+(`8b3f3ba7` / PR #111) and the error does not reproduce any more.
+
+- Fetched the live page: the only available variant is still `Default Title`, so
+  `parseVariantWeight` finds no weight.
+- `ROASTER_ID=47 yarn workspace @centralbeans/webshop-item-processor test` logs
+  `Skipping item without a weighted variant` then `Skipping gift set` for
+  `https://www.aprilcoffeeroasters.com/product/april-tasting-menu` and reports no errors.
+
+Both sample occurrences (2026-11-02, 2026-11-09) predate the deployed fix, so the reopen is
+stale evidence rather than a regression. No code change in this commit.
