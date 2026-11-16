@@ -15,10 +15,22 @@ import tasteNotes from '../data/tasteNotes.json' with { type: 'json' };
 import varieties from '../data/varieties.json' with { type: 'json' };
 /* eslint-enable import/no-unresolved */
 
+const createVirtualConsole = () => {
+  const virtualConsole = new VirtualConsole();
+
+  virtualConsole.on('jsdomError', (error) => {
+    if (!error.message.includes('Could not parse CSS stylesheet')) {
+      logger.error(error);
+    }
+  });
+
+  return virtualConsole;
+};
+
 const getDocument = (html) => {
   const {
     window: { document }
-  } = new JSDOM(html);
+  } = new JSDOM(html, { virtualConsole: createVirtualConsole() });
 
   return document;
 };
@@ -74,7 +86,7 @@ const getNextFlightProduct = (html) => {
 };
 
 const getWindow = (html) => {
-  const { window } = new JSDOM(html);
+  const { window } = new JSDOM(html, { virtualConsole: createVirtualConsole() });
 
   return window;
 };
@@ -6951,11 +6963,9 @@ const parsers = {
   318: ({ html, url, roasterId }) => {
     logger.info(`Parsing webshop item page ${url}`);
 
-    // Onyx ships inline CSS that JSDOM can't parse; suppress its noisy warnings.
-    const virtualConsole = new VirtualConsole();
     const {
       window: { document }
-    } = new JSDOM(html, { virtualConsole });
+    } = new JSDOM(html, { virtualConsole: createVirtualConsole() });
 
     const productElement = document.querySelector('.selling-plan-fieldset[data-product]');
 
