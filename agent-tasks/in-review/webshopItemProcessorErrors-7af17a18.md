@@ -1,6 +1,6 @@
 ---
 id: "webshopItemProcessorErrors-7af17a18"
-status: "open"
+status: "in-review"
 alarm: "webshopItemProcessorErrors"
 signature: "/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR Invoke Error {<string>:<string>,<string>:<string>,<string>:[<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>]} | <num> (file://src/parsers.js:<num>:<num>)\",<string>,<string>,<string>,<string>,<string>,<string>,<string>]}"
 logGroup: "/aws/lambda/webshopItemProcessor"
@@ -63,3 +63,37 @@ never matched a country directly — a blend (`costa rica, kenya`) and a Slovak 
 this environment has no AWS credentials, so the Translate-dependent paths cannot be exercised
 locally; origin resolution was verified separately against the saved pages and
 `data/originCountries.json` (all 16 pages resolve, `keňa` via the existing cs→en translation).
+
+## Root cause (reopened 2026-11-16)
+
+The first fix (PR #109) assumed the shop had switched to English detail labels. The live
+`/en/` product pages use the Slovak labels (`lokalita`, `spracovanie`, `chuťový profil`) with
+Slovak values, so the English fallbacks never fire and the reopened occurrence has a different
+cause.
+
+Fetching all 13 live product pages shows one page, `/en/products/hakuna-matata-filter`, whose
+origin is `keňa`. That spelling is not in `data/originCountries.json` (which has `kenia`,
+`kenija`, `kenya`), so the parser fell through to the translated value. AWS Translate returns
+`Kenya` with a capital K, while every name in `originCountries.json` is lowercase, so
+`findOriginCountryId(originCountryTranslated)` missed and the parser threw
+`Missing origin country`.
+
+The blend page `kostarika, keňa` only survives because `kostarika` matches directly — the
+comma fallback was applied to the translated string only, not to the raw value.
+
+## Fix (reopened)
+
+- `findOriginCountryId` now lowercases and trims the candidate before comparing, so a
+  capitalised translation such as `Kenya` matches `kenya`.
+- The raw origin is also tried comma-split, not just the translated one.
+- Translate is skipped when the raw origin already resolves, removing a network call for 12 of
+  the 13 products.
+
+## Verification (reopened)
+
+`ROASTER_ID=82 yarn workspace @centralbeans/webshop-item-processor test` reports no
+`Missing origin country`. Every item still logs `CredentialsProviderError` from the Translate
+calls for processing method and taste notes, because this environment has no AWS credentials;
+origin resolution for all 13 live pages was checked directly against
+`data/originCountries.json` (12 resolve without translation, `keňa` needs the now
+case-insensitive translated match).
