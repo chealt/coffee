@@ -1,6 +1,6 @@
 ---
 id: "webshopItemProcessorErrors-221107a3"
-status: "open"
+status: "in-review"
 alarm: "webshopItemProcessorErrors"
 signature: "/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR Invoke Error {<string>:<string>,<string>:<string>,<string>:[<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>]} | <num> (file://src/parsers.js:<num>:<num>)\",<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<stri"
 logGroup: "/aws/lambda/webshopItemProcessor"
@@ -86,3 +86,27 @@ blend detection and the handled `originCountryMissing` error.
 
 **Tested:** `ROASTER_ID=7 yarn workspace @centralbeans/webshop-item-processor test` (9/9 items
 parsed, no errors); `yarn lint` and `yarn format` pass.
+
+## Re-open on 2026-11-16 — no reproduction, no code change
+
+The attached samples are still the 2026-10-26T00:11Z ones, which predate both earlier fixes on
+`main` (`a4bd83b5` weight variant, `cc4ad88b` guarded `h1`).
+
+**Direct attempt:** `ROASTER_ID=7 yarn workspace @centralbeans/webshop-item-processor test`
+against the live El Cafetero site on 2026-11-16 parsed every product page (price, weight,
+origin country/region, processing method, taste notes, varieties) and reported no errors — a
+grep of the full run output for `error`/`cannot read` matched nothing. The
+`TypeError: Cannot read properties of null (reading 'textContent')` at `src/parsers.js:445:73`
+does not reproduce.
+
+**Code audit:** every `textContent` read in the roaster 7 parser is now guarded — the weight
+variant (`input[name="group[8]"]:checked` → `label` → `.elc-wp__label`, falling back to the
+legacy `select option[selected]`), the `h1` origin-country fallback, `collectDetails`'
+`nextElementSibling`, and the `.product-description b, strong` taste-note fallback all use
+optional chaining. There is no unguarded `.textContent` left that could throw this message.
+
+**Decision:** no code change. The remaining alarm signal is not fixable from these samples; the
+likely explanations are unchanged from the 2026-10-31 note — a lambda deployment predating the
+fixes, or a different roaster bucketed under the same generic `src/parsers.js:<num>:<num>`
+signature. Resolving it needs a log sample newer than `cc4ad88b` (2026-11-09), which this job
+has no AWS access to pull.
