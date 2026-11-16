@@ -2254,13 +2254,19 @@ const parsers = {
       throw new Error(errors.originCountryMissing);
     }
 
-    const originCountryTranslated = await translate({ text: originCountry, from: 'cs', to: 'en' });
     const findOriginCountryId = (name) =>
-      originCountries.find(({ name: countryName }) => countryName === name)?.origin_country_id;
+      name
+        ? originCountries.find(({ name: countryName }) => countryName === name.trim().toLowerCase())?.origin_country_id
+        : undefined;
+    const originCountryTranslated =
+      findOriginCountryId(originCountry) || findOriginCountryId(originCountry.split(',')[0])
+        ? ''
+        : await translate({ text: originCountry, from: 'cs', to: 'en' });
     const originCountryId =
       findOriginCountryId(originCountry) ||
+      findOriginCountryId(originCountry.split(',')[0]) ||
       findOriginCountryId(originCountryTranslated) ||
-      findOriginCountryId(originCountryTranslated.split(',')[0].trim()) ||
+      findOriginCountryId(originCountryTranslated.split(',')[0]) ||
       null;
 
     if (!originCountryId) {
