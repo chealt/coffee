@@ -1,14 +1,13 @@
 ---
 id: "webshopItemProcessorErrors-c03feb9c"
-status: "in-review"
+status: "open"
 alarm: "webshopItemProcessorErrors"
 signature: "/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR No weight found for <url>"
 logGroup: "/aws/lambda/webshopItemProcessor"
 firstSeen: "2026-11-09"
-lastSeen: "2026-11-09"
-occurrences: 2
+lastSeen: "2026-11-16"
+occurrences: 3
 ---
-
 # Task webshopItemProcessorErrors-c03feb9c
 
 Detected by the weekly error scan on 2026-11-09. Triggering alarm: `webshopItemProcessorErrors`.

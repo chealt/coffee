@@ -1,14 +1,13 @@
 ---
 id: "webshopItemProcessorErrors-7af17a18"
-status: "in-review"
+status: "open"
 alarm: "webshopItemProcessorErrors"
 signature: "/aws/lambda/webshopItemProcessor | <time> <uuid> ERROR Invoke Error {<string>:<string>,<string>:<string>,<string>:[<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>,<string>]} | <num> (file://src/parsers.js:<num>:<num>)\",<string>,<string>,<string>,<string>,<string>,<string>,<string>]}"
 logGroup: "/aws/lambda/webshopItemProcessor"
 firstSeen: "2026-11-09"
-lastSeen: "2026-11-09"
-occurrences: 1
+lastSeen: "2026-11-16"
+occurrences: 2
 ---
-
 # Task webshopItemProcessorErrors-7af17a18
 
 Detected by the weekly error scan on 2026-11-09. Triggering alarm: `webshopItemProcessorErrors`.
