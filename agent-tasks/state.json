@@ -1,10 +1,11 @@
 {
   "signatures": {
     "webshopItemProcessorErrors-221107a3": {
-      "status": "open",
+      "status": "pr-open",
       "firstSeen": "2026-10-26",
-      "lastSeen": "2026-11-16",
-      "occurrences": 68
+      "lastSeen": "2026-11-23",
+      "occurrences": 72,
+      "prNumber": 113
     },
     "webshopItemProcessorErrors-3a559474": {
       "status": "done",
@@ -61,23 +62,26 @@
       "occurrences": 24
     },
     "webshopItemProcessorErrors-c03feb9c": {
-      "status": "open",
+      "status": "pr-open",
       "firstSeen": "2026-11-09",
-      "lastSeen": "2026-11-16",
-      "occurrences": 3
+      "lastSeen": "2026-11-23",
+      "occurrences": 4,
+      "prNumber": 114
     },
     "webshopItemProcessorErrors-7af17a18": {
-      "status": "open",
+      "status": "pr-open",
       "firstSeen": "2026-11-09",
-      "lastSeen": "2026-11-16",
-      "occurrences": 2
+      "lastSeen": "2026-11-23",
+      "occurrences": 3,
+      "prNumber": 115
     },
     "webshopItemProcessorErrors-59182de9": {
-      "status": "open",
+      "status": "pr-open",
       "firstSeen": "2026-11-16",
-      "lastSeen": "2026-11-16",
-      "occurrences": 19
+      "lastSeen": "2026-11-23",
+      "occurrences": 64,
+      "prNumber": 112
     }
   },
-  "lastScanAt": "2026-11-16T14:06:01.163Z"
+  "lastScanAt": "2026-11-23T16:38:04.939Z"
 }
